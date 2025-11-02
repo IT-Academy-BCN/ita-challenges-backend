@@ -20,13 +20,14 @@ It centralizes error-handling logic into a reusable component, ensuring every se
 
 ### **Main Components**
 
-| Package | Class | Description |
-|----------|--------|-------------|
-| `com.itachallenge.errorcore.builder` | **`ErrorResponseBuilder`** | Core utility that builds `APIErrorResponse` objects. Interprets validation errors, type mismatches, and generic exceptions, mapping them to localized messages and HTTP status codes. |
-| `com.itachallenge.errorcore.dto` | **`APIErrorResponse`** | DTO representing the unified error payload returned to clients (ISO-8601 `timestamp`, status, error, message, path, and optional field errors). |
-|  | **`FieldErrorDto`** | DTO containing per-field validation details (`field`, `objectName`, `message`). |
-| `com.itachallenge.errorcore.exception` | **`BaseApiException`** | Abstract base class for user-facing, service-defined exceptions. Encapsulates `HttpStatus`, a message key for i18n, and optional arguments. |
-| `com.itachallenge.errorcore.exceptionhandler` | **`GlobalExceptionHandler`** | `@RestControllerAdvice` that catches framework exceptions and delegates to `ErrorResponseBuilder`. |
+| Package | Class                        | Description                                                                                                                                                                           |
+|----------|------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `com.itachallenge.errorcore.builder` | **`ErrorResponseBuilder`**   | Core utility that builds `APIErrorResponse` objects. Interprets validation errors, type mismatches, and generic exceptions, mapping them to localized messages and HTTP status codes. |
+| `com.itachallenge.errorcore.dto` | **`APIErrorResponse`**       | DTO representing the unified error payload returned to clients (ISO-8601 `timestamp`, status, error, message, path, and optional field errors).                                       |
+|  | **`FieldErrorDto`**          | DTO containing per-field validation details (`field`, `objectName`, `message`).                                                                                                       |
+| `com.itachallenge.errorcore.exception` | **`BaseApiException`**       | Abstract base class for service-defined user-facing exceptions — encapsulates ApiErrorInfo as a field.                                                                                |
+| `com.itachallenge.errorcore.exception` | **`ApiErrorInfo`**           | Record class which encapsulates all the information needed to build error objects with i18n messages: httpStatus, messagekey (reference to messages.properties file), args to populate the message if needed .                                        |
+| `com.itachallenge.errorcore.exceptionhandler` | **`GlobalExceptionHandler`** | `@RestControllerAdvice` that catches framework exceptions and delegates to `ErrorResponseBuilder`.                                                                                    |
 
 ### **Supporting Resources**
 
@@ -96,7 +97,7 @@ In your microservice’s main Spring application class:
 
 All framework exceptions are now intercepted by `GlobalExceptionHandler` and serialized using `ErrorResponseBuilder`.
 
-To handle **service-specific** exceptions, create a local `@RestControllerAdvice` and inject `ErrorResponseBuilder`:
+Shall you need to define a local handler (but think twice before doing it - in principle it shouldn't be necessary), create a local `@RestControllerAdvice` and inject `ErrorResponseBuilder`:
 
 ```java
 @RestControllerAdvice
@@ -121,12 +122,16 @@ To override default behavior, annotate your local handler with:
 
 ### 3. Define your custom exceptions
 
-Extend `BaseApiException` in your service:
+Custom service exceptions that extends `BaseApiException` will be automatically handled by the `GlobalExceptionHandler`.
+To create subClasses of BaseApiException:
+
+1. Write the subclass, using the ApiErrorInfo factory ".of" to hide the constructor and shield your exception against future enhancements.
+2. Configure the messageKey and it's corresponding message in the local messages.properties.
 
 ```java
 public class UserNotFoundException extends BaseApiException {
     public UserNotFoundException(String username) {
-        super(HttpStatus.NOT_FOUND, "error.user.notFound", username);
+        super(ApiErrorInfo.of(HttpStatus.NOT_FOUND, "error.user.notFound", username));
     }
 }
 ```
