@@ -5,6 +5,7 @@ import com.itachallenge.challenge.dto.ResourceDto;
 import com.itachallenge.challenge.dto.SolutionDto;
 import com.itachallenge.challenge.enums.Topic;
 import com.itachallenge.errorcore.dto.APIErrorResponse;
+import com.itachallenge.errorcore.exceptionhandler.GlobalExceptionHandler;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -31,10 +32,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-class ChallengeExceptionHandlerIntegrationTest {
+class GlobalExceptionHandlerIntegrationTest {
 
     @Autowired
-    private ChallengeExceptionHandler handler;
+    private GlobalExceptionHandler handler;
 
     @Autowired
     private MessageSource messageSource;
@@ -67,7 +68,7 @@ class ChallengeExceptionHandlerIntegrationTest {
         );
 
         // Build a synthetic MethodArgumentNotValidException
-        Method method = ChallengeExceptionHandlerIntegrationTest.class.getMethod("dummyMethod", ChallengeCreateDto.class);
+        Method method = GlobalExceptionHandlerIntegrationTest.class.getMethod("emptyMethod", ChallengeCreateDto.class);
         MethodArgumentNotValidException ex = new MethodArgumentNotValidException(method, bindingResult);
 
         // Call the handler
@@ -86,7 +87,7 @@ class ChallengeExceptionHandlerIntegrationTest {
     }
 
 
-    public void dummyMethod(ChallengeCreateDto dto) { /* This is a dummy method to test */ }
+    public void emptyMethod(ChallengeCreateDto dto) { /* This is an empty method to test */ }
 
     // 2️⃣ ConstraintViolationException
     @Test
@@ -130,6 +131,33 @@ class ChallengeExceptionHandlerIntegrationTest {
         assertThat(response.getMessage()).contains("Parameter").doesNotContain("unknown");
         assertThat(response.getErrors()).isNotEmpty();
         assertThat(response.getErrors().getFirst().getField()).isEqualTo("topic");
+    }
+
+    // 3️⃣ ChallengeNotFoundException
+    @Test
+    void shouldHandleChallengeNotFoundException_usingLocalizedMessages() {
+
+        ChallengeNotFoundException ex = new ChallengeNotFoundException("challenge not found");
+
+        APIErrorResponse response = handler.handleApiCustomException(ex, mockRequest).getBody();
+        // Assertions
+        assertThat(response).isNotNull();
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.NOT_FOUND.value());
+        assertThat(response.getMessage()).contains("challenge not found");
+        assertThat(response.getErrors()).isNull();
+    }
+
+    @Test
+    void shouldBadUUIDException_usingLocalizedMessages() {
+
+        BadUUIDException ex = new BadUUIDException("invalid uuid");
+
+        APIErrorResponse response = handler.handleApiCustomException(ex, mockRequest).getBody();
+        // Assertions
+        assertThat(response).isNotNull();
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        assertThat(response.getMessage()).contains("invalid uuid");
+        assertThat(response.getErrors()).isNull();
     }
 
 }

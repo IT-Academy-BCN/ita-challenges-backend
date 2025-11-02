@@ -22,7 +22,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
-class ChallengeExceptionHandlerTest {
+class GlobalExceptionHandlerTest {
 
     @Mock
     private ErrorResponseBuilder responseBuilder;
@@ -91,7 +91,7 @@ class ChallengeExceptionHandlerTest {
     void handleInternalServerError_ShouldReturn500() {
         InternalServerErrorException ex = new InternalServerErrorException("Internal error");
 
-        when(responseBuilder.buildError(eq(ex), any()))
+        when(responseBuilder.buildCustomExceptionError(eq(ex), any()))
                 .thenReturn(fakeResponse(500, "Internal error"));
 
         ResponseEntity<APIErrorResponse> response = handler.handleApiCustomException(ex, request);
@@ -104,10 +104,10 @@ class ChallengeExceptionHandlerTest {
     void handleChallengeNotFound_ShouldReturn404() {
         ChallengeNotFoundException ex = new ChallengeNotFoundException("Challenge not found");
 
-        when(responseBuilder.buildNotFoundError(eq(ex), any()))
+        when(responseBuilder.buildCustomExceptionError(eq(ex), any()))
                 .thenReturn(fakeResponse(404, "Challenge not found"));
 
-        ResponseEntity<APIErrorResponse> response = handler.handleChallengeNotFoundException(ex, request);
+        ResponseEntity<APIErrorResponse> response = handler.handleApiCustomException(ex, request);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(response.getBody().getMessage()).contains("Challenge not found");
@@ -117,10 +117,10 @@ class ChallengeExceptionHandlerTest {
     void handleTagNotFound_ShouldReturn404() {
         TagNotFoundException ex = new TagNotFoundException("Tag not found");
 
-        when(responseBuilder.buildNotFoundError(eq(ex), any()))
+        when(responseBuilder.buildCustomExceptionError(eq(ex), any()))
                 .thenReturn(fakeResponse(404, "Tag not found"));
 
-        ResponseEntity<APIErrorResponse> response = handler.handleTagNotFoundException(ex, request);
+        ResponseEntity<APIErrorResponse> response = handler.handleApiCustomException(ex, request);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(response.getBody().getMessage()).contains("Tag not found");
@@ -130,10 +130,10 @@ class ChallengeExceptionHandlerTest {
     void handleLanguageNotFound_ShouldReturn404() {
         LanguageNotFoundException ex = new LanguageNotFoundException("Language not found");
 
-        when(responseBuilder.buildNotFoundError(eq(ex), any()))
+        when(responseBuilder.buildCustomExceptionError(eq(ex), any()))
                 .thenReturn(fakeResponse(404, "Language not found"));
 
-        ResponseEntity<APIErrorResponse> response = handler.handleLanguageNotFoundException(ex, request);
+        ResponseEntity<APIErrorResponse> response = handler.handleApiCustomException(ex, request);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(response.getBody().getMessage()).contains("Language not found");
@@ -143,10 +143,10 @@ class ChallengeExceptionHandlerTest {
     void handleResourceNotFound_ShouldReturn404() {
         ResourceNotFoundException ex = new ResourceNotFoundException("Resource not found");
 
-        when(responseBuilder.buildNotFoundError(eq(ex), any()))
+        when(responseBuilder.buildCustomExceptionError(eq(ex), any()))
                 .thenReturn(fakeResponse(404, "Resource not found"));
 
-        ResponseEntity<APIErrorResponse> response = handler.handleResourceNotFoundException(ex, request);
+        ResponseEntity<APIErrorResponse> response = handler.handleApiCustomException(ex, request);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(response.getBody().getMessage()).contains("Resource not found");
@@ -156,10 +156,10 @@ class ChallengeExceptionHandlerTest {
     void handleBadUUID_ShouldReturn400() {
         BadUUIDException ex = new BadUUIDException("Invalid UUID");
 
-        when(responseBuilder.buildError(eq(HttpStatus.BAD_REQUEST), eq("Invalid UUID"), any()))
+        when(responseBuilder.buildCustomExceptionError(eq(ex), any()))
                 .thenReturn(fakeResponse(400, "Invalid UUID"));
 
-        ResponseEntity<APIErrorResponse> response = handler.handleBadUUIDException(ex, request);
+        ResponseEntity<APIErrorResponse> response = handler.handleApiCustomException(ex, request);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         assertThat(response.getBody().getMessage()).contains("Invalid UUID");

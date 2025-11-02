@@ -5,6 +5,7 @@ import com.itachallenge.challenge.dto.ChallengeCreateDto;
 import com.itachallenge.challenge.exception.*;
 import com.itachallenge.challenge.repository.ChallengeRepository;
 import com.itachallenge.challenge.service.*;
+import com.itachallenge.errorcore.config.ErrorHandlingConfig;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -15,6 +16,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
@@ -37,10 +39,8 @@ import static org.mockito.Mockito.when;
  * - This split is recommended because of the hybrid system in place in itachallenge-challenge, mixing blocking and reactive stacks.
  */
 @WebMvcTest(controllers = ChallengeController.class)
-@ComponentScan(basePackages = {
-        "com.itachallenge.errorcore",           // BaseExceptionHandler, ErrorMessageConfig, etc.
-        "com.itachallenge.challenge.exception"  // If you have ChallengeExceptionHandler extending BaseExceptionHandler
-})
+@ComponentScan(basePackages = {"com.itachallenge.challenge.exception"})
+@Import(ErrorHandlingConfig.class)
 @ActiveProfiles("test")
 class ChallengeControllerExceptionPathTest {
 
