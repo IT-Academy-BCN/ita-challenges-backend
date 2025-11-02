@@ -158,7 +158,7 @@ class GlobalExceptionHandlerUnitTest {
 
         class GenericNotFoundException extends BaseApiException {
             GenericNotFoundException(String arg){
-                super(ApiCustomErrorInfo.of(HttpStatus.NOT_FOUND,"error.notFound",new Object[]{arg}));
+                super(arg, ApiCustomErrorInfo.of(HttpStatus.NOT_FOUND,"error.notFound",new Object[]{arg}));
             }
         }
         GenericNotFoundException ex = new GenericNotFoundException("GenericNotFound");

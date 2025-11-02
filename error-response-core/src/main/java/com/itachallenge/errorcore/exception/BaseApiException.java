@@ -12,9 +12,10 @@ public abstract class BaseApiException extends RuntimeException {
 
     private final transient ApiCustomErrorInfo info;
 
-    protected BaseApiException(ApiCustomErrorInfo info) {
-        super(info.messageKey());
+    protected BaseApiException(String message, ApiCustomErrorInfo info) {
+        super(message);
         this.info = info;// ensures the message field in Throwable is set
     }
+
 }
 

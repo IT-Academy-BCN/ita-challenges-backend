@@ -170,7 +170,7 @@ class ErrorResponseBuilderTest {
     void buildNotFoundError_shouldReturnNotFoundResponse() {
         class GenericNotFoundException extends BaseApiException{
             GenericNotFoundException(String arg){
-                super(ApiCustomErrorInfo.of(HttpStatus.NOT_FOUND,"error.notFound",new Object[]{arg}));
+                super(arg,ApiCustomErrorInfo.of(HttpStatus.NOT_FOUND,"error.notFound",new Object[]{arg}));
             }
         }
         // Given
