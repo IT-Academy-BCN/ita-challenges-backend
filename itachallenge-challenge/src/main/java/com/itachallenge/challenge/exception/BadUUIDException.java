@@ -1,8 +1,11 @@
 package com.itachallenge.challenge.exception;
 
-public class BadUUIDException extends Exception {
+import com.itachallenge.errorcore.exception.ApiCustomErrorInfo;
+import com.itachallenge.errorcore.exception.BaseApiException;
+import org.springframework.http.HttpStatus;
+
+public class BadUUIDException extends BaseApiException {
     public BadUUIDException(String msg){
-        super(msg);
+        super(ApiCustomErrorInfo.of(HttpStatus.BAD_REQUEST,"custom.bad.uuid", new Object[]{msg}));
     }
-    public BadUUIDException(){}
 }

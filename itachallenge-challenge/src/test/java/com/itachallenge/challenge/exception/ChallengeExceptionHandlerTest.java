@@ -2,6 +2,7 @@ package com.itachallenge.challenge.exception;
 
 import com.itachallenge.errorcore.builder.ErrorResponseBuilder;
 import com.itachallenge.errorcore.dto.APIErrorResponse;
+import com.itachallenge.errorcore.exceptionhandler.GlobalExceptionHandler;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,7 +31,7 @@ class ChallengeExceptionHandlerTest {
     private HttpServletRequest request;
 
     @InjectMocks
-    private ChallengeExceptionHandler handler;
+    private GlobalExceptionHandler handler;
 
     private APIErrorResponse fakeResponse(int status, String message) {
         return APIErrorResponse.builder()
@@ -90,10 +91,10 @@ class ChallengeExceptionHandlerTest {
     void handleInternalServerError_ShouldReturn500() {
         InternalServerErrorException ex = new InternalServerErrorException("Internal error");
 
-        when(responseBuilder.buildError(eq(HttpStatus.INTERNAL_SERVER_ERROR), eq("Internal error"), any()))
+        when(responseBuilder.buildError(eq(ex), any()))
                 .thenReturn(fakeResponse(500, "Internal error"));
 
-        ResponseEntity<APIErrorResponse> response = handler.handleCustomInternalServerErrorException(ex, request);
+        ResponseEntity<APIErrorResponse> response = handler.handleApiCustomException(ex, request);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
         assertThat(response.getBody().getMessage()).contains("Internal error");

@@ -1,8 +1,12 @@
 package com.itachallenge.challenge.exception;
 
-public class LanguageNotFoundException extends RuntimeException {
+import com.itachallenge.errorcore.exception.ApiCustomErrorInfo;
+import com.itachallenge.errorcore.exception.BaseApiException;
+import org.springframework.http.HttpStatus;
+
+public class LanguageNotFoundException extends BaseApiException {
 
     public LanguageNotFoundException(String message) {
-        super(message);
+        super(ApiCustomErrorInfo.of(HttpStatus.NOT_FOUND,"custom.language.not.found", new Object[]{message}));
     }
 }

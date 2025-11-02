@@ -1,8 +1,12 @@
 package com.itachallenge.challenge.exception;
 
-public class UserNotFoundException extends RuntimeException {
+import com.itachallenge.errorcore.exception.ApiCustomErrorInfo;
+import com.itachallenge.errorcore.exception.BaseApiException;
+import org.springframework.http.HttpStatus;
+
+public class UserNotFoundException extends BaseApiException {
 
     public UserNotFoundException(String message) {
-        super(message);
+        super(ApiCustomErrorInfo.of(HttpStatus.NOT_FOUND,"custom.user.not.found", new Object[]{message}));
     }
 }

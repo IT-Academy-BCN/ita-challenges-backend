@@ -1,7 +1,11 @@
 package com.itachallenge.challenge.exception;
 
-public class InternalServerErrorException extends RuntimeException {
+import com.itachallenge.errorcore.exception.ApiCustomErrorInfo;
+import com.itachallenge.errorcore.exception.BaseApiException;
+import org.springframework.http.HttpStatus;
+
+public class InternalServerErrorException extends BaseApiException {
     public InternalServerErrorException(String message) {
-        super(message);
+        super(ApiCustomErrorInfo.of(HttpStatus.INTERNAL_SERVER_ERROR,"custom.internal.server.error", new Object[]{message}));
     }
 }
