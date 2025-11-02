@@ -5,6 +5,7 @@ import com.itachallenge.challenge.dto.ChallengeCreateDto;
 import com.itachallenge.challenge.exception.*;
 import com.itachallenge.challenge.repository.ChallengeRepository;
 import com.itachallenge.challenge.service.*;
+import com.itachallenge.errorcore.config.ErrorHandlingConfig;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -15,6 +16,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
@@ -38,6 +40,7 @@ import static org.mockito.Mockito.when;
  */
 @WebMvcTest(controllers = ChallengeController.class)
 @ComponentScan(basePackages = {"com.itachallenge.challenge.exception"})
+@Import(ErrorHandlingConfig.class)
 @ActiveProfiles("test")
 class ChallengeControllerExceptionPathTest {
 
@@ -787,20 +790,32 @@ class ChallengeControllerExceptionPathTest {
                 .jsonPath("$.message").isEqualTo(errorMessage);
     }
 
-    // -------------------------------------------------------------------------
-    // getChallengesByFilter() unhappy paths (binding / validation issues)
-    //
-    // In the original "unhappy path" group we did not assert anything specific
-    // for /challenges/byFilter because the negative cases there were mostly
-    // about bad/missing params, malformed UUID, etc. The controller method:
-    //
-    //   public Flux<GenericResultDto<ChallengeDto>> getChallengesByFilter(@ModelAttribute ChallengeFilterDto filter)
-    //
-    // In your previous final breakdown for unhappy-path tests we did not include
-    // a dedicated failing getChallengesByFilter() case, so we're not adding
-    // a new test here. If you later want to assert 400 on malformed params,
-    // you can replicate the same "invalid enum" / "bad UUID" strategy:
-    // mock service to emit BadRequestException / BadUUIDException and assert 400.
-    // -------------------------------------------------------------------------
+    @Test
+    @DisplayName("POST /challenges with invalid UUID in tags → handled by ChallengeExceptionHandler → 400 + custom message")
+    void addChallenge_InvalidUuidInTags_HandledByLocalHandler() {
+        // given: body with invalid UUID value in "tags"
+        String body = """
+            {
+              "challengeTitle": "Valid title",
+              "description": "desc",
+              "level": "EASY",
+              "language": "Java",
+              "solution": "solution",
+              "topic": "LISTS",
+              "tags": ["not-a-uuid"]
+            }
+            """;
+
+        webTestClient.post()
+                .uri("/itachallenge/api/v1/challenge/challenges")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(body)
+                .exchange()
+                // then: should return 400 handled locally
+                .expectStatus().isBadRequest()
+                .expectBody()
+                .jsonPath("$.message").isEqualTo("invalid format UUID tag: not-a-uuid")
+                .jsonPath("$.status").isEqualTo(400);
+    }
 
 }
