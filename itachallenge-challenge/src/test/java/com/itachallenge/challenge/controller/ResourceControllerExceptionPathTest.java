@@ -4,6 +4,7 @@ import com.itachallenge.challenge.exception.InternalServerErrorException;
 import com.itachallenge.challenge.exception.ResourceNotFoundException;
 import com.itachallenge.challenge.repository.*;
 import com.itachallenge.challenge.service.IResourceService;
+import com.itachallenge.errorcore.config.ErrorHandlingConfig;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
@@ -37,10 +39,8 @@ import static org.mockito.Mockito.*;
  * - These tests run under Tomcat (@WebMvcTest) but use WebTestClient bound to MockMvc internally.
  */
 @WebMvcTest(controllers = ResourceController.class)
-@ComponentScan(basePackages = {
-        "com.itachallenge.errorcore",
-        "com.itachallenge.challenge.exception"
-})
+@ComponentScan(basePackages = {"com.itachallenge.challenge.exception"})
+@Import(ErrorHandlingConfig.class)
 @ActiveProfiles("test")
 class ResourceControllerExceptionPathTest {
 

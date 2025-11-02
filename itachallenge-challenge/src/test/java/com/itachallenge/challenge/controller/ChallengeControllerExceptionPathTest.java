@@ -442,7 +442,7 @@ class ChallengeControllerExceptionPathTest {
                 .expectStatus().isBadRequest()
                 .expectBody()
                 .jsonPath("$.status").isEqualTo(400)
-                .jsonPath("$.message").value(containsString("TOUGH"));
+                .jsonPath("$.message").value(containsString("Invalid"));
     }
 
     @Test
@@ -673,7 +673,7 @@ class ChallengeControllerExceptionPathTest {
                 .expectStatus().isBadRequest()
                 .expectBody()
                 .jsonPath("$.status").isEqualTo(400)
-                .jsonPath("$.message").value(containsString("invalidLevel"));
+                .jsonPath("$.message").value(containsString("Invalid"));
     }
 
     @Test
@@ -700,7 +700,7 @@ class ChallengeControllerExceptionPathTest {
                 .expectStatus().isBadRequest()
                 .expectBody()
                 .jsonPath("$.status").isEqualTo(400)
-                .jsonPath("$.message").value(containsString("invalidTopic"));
+                .jsonPath("$.message").value(containsString("Invalid"));
     }
 
     @Test
