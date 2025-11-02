@@ -102,7 +102,7 @@ public final class GlobalExceptionHandler {
     @ExceptionHandler(InvalidFormatException.class)
     public ResponseEntity<APIErrorResponse> handleInvalidFormat(
             InvalidFormatException ex, HttpServletRequest request) {
-
+        log.debug("Invalid format excetpion happened: {}", ex.getMessage());
         return ResponseEntity.badRequest()
                 .body(responseBuilder.buildError(ex,request));
     }
