@@ -194,55 +194,57 @@ itachallenge-user/
 │   └── main/java/com/itachallenge/user/
 │       (user structure)
 └── interactions/
-    ├── controller/
-    │   ├── bookmark/
-    │   │   └── BookmarkController.java
-    │   └── favourite/
-    │       └── FavouriteController.java
-    ├── document/
-    │   ├── bookmark/
-    │   │   └── Bookmark.java
-    │   └── favourite/
-    │       └── Favourite.java
-    ├── dto/
-    │   ├── bookmark/
-    │   │   └── BookmarkDto.java
-    │   ├── common/
-    │   │   ├── ErrorResponse.java
-    │   │   ├── PageResponse.java
-    │   │   └── ToggleRequest.java
-    │   └── favourite/
-    │       └── FavouriteDto.java
-    ├── events/
-    │   ├── contract/
-    │   │   ├── EventMetadata.java
-    │   │   ├── InteractionEvent.java
-    │   │   ├── UserBookmarkedToggledV1.java
-    │   │   └── UserFavouriteChangedV1.java
-    │   └── publisher/
-    │       ├── InteractionEventPublisher.java
-    │       ├── StubEventPublisher.java
-    │       ├── UserBookmarkEventPublisher.java
-    │       └── UserFavouriteEventPublisher.java
-    ├── exception/
-    │   ├── advice/
-    │   │   └── InteractionsGlobalHandler.java
-    │   ├── bookmark/
-    │   │   └── BookmarkException.java
-    │   └── favourite/
-    │       └── FavouriteException.java
-    ├── repository/
-    │   ├── bookmark/
-    │   │   └── BookmarkRepository.java
-    │   └── favourite/
-    │       └── FavouriteRepository.java
-    └── service/
-        ├── bookmark/
-        │   ├── IBookmarkService.java
-        │   └── BookmarkService.java
-        └── favourite/
-            ├── IFavouriteService.java
-            └── FavouriteService.java
+    └── src/
+        └── main/java/com/itachallenge/userInteractions/
+            ├── controller/
+            │   ├── bookmark/    
+            │   │   └── BookmarkController.java
+            │   └── favourite/
+            │       └── FavouriteController.java
+            ├── document/
+            │   ├── bookmark/
+            │   │   └── Bookmark.java
+            │   └── favourite/
+            │       └── Favourite.java
+            ├── dto/
+            │   ├── bookmark/
+            │   │   └── BookmarkDto.java
+            │   ├── common/
+            │   │   ├── ErrorResponse.java
+            │   │   ├── PageResponse.java
+            │   │   └── ToggleRequest.java
+            │   └── favourite/
+            │       └── FavouriteDto.java
+            ├── events/
+            │   ├── contract/
+            │   │   ├── EventMetadata.java
+            │   │   ├── InteractionEvent.java
+            │   │   ├── UserBookmarkedToggledV1.java
+            │   │   └── UserFavouriteChangedV1.java
+            │   └── publisher/
+            │       ├── InteractionEventPublisher.java
+            │       ├── StubEventPublisher.java
+            │       ├── UserBookmarkEventPublisher.java
+            │       └── UserFavouriteEventPublisher.java
+            ├── exception/
+            │   ├── advice/
+            │   │   └── InteractionsGlobalHandler.java
+            │   ├── bookmark/
+            │   │   └── BookmarkException.java
+            │   └── favourite/
+            │       └── FavouriteException.java
+            ├── repository/
+            │   ├── bookmark/
+            │   │   └── BookmarkRepository.java
+            │   └── favourite/
+            │       └── FavouriteRepository.java
+            └── service/
+                ├── bookmark/
+                │   ├── IBookmarkService.java
+                │   └── BookmarkService.java
+                └── favourite/
+                    ├── IFavouriteService.java
+                    └── FavouriteService.java
 ```
 
 ### 🧩 Purpose
