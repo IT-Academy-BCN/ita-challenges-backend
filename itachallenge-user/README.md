@@ -235,8 +235,10 @@ itachallenge-user/
             │       └── FavouriteRepository.java
             └── service/
                 ├── bookmark/
+                │   ├── BookmarkServiceImpl.java
                 │   └── BookmarkService.java
                 └── favourite/
+                    ├── FavouriteServiceImpl.java
                     └── FavouriteService.java
 ```
 
