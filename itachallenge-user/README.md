@@ -215,12 +215,12 @@ itachallenge-user/
             │   │   └── ToggleRequest.java
             │   └── favourite/
             │       └── FavouriteDto.java
-            ├── events/
+            ├── event/
             │   ├── contract/
             │   │   ├── EventMetadata.java
             │   │   ├── InteractionEvent.java
-            │   │   ├── UserBookmarkedToggledV1.java
-            │   │   └── UserFavouriteChangedV1.java
+            │   │   ├── UserBookmarkedToggled.java
+            │   │   └── UserFavouriteChanged.java
             │   └── publisher/
             │       ├── InteractionEventPublisher.java
             │       ├── StubEventPublisher.java
