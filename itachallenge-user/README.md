@@ -227,12 +227,7 @@ itachallenge-user/
             │       ├── UserBookmarkEventPublisher.java
             │       └── UserFavouriteEventPublisher.java
             ├── exception/
-            │   ├── advice/
-            │   │   └── InteractionsGlobalHandler.java
-            │   ├── bookmark/
-            │   │   └── BookmarkException.java
-            │   └── favourite/
-            │       └── FavouriteException.java
+            │ 
             ├── repository/
             │   ├── bookmark/
             │   │   └── BookmarkRepository.java
@@ -240,10 +235,8 @@ itachallenge-user/
             │       └── FavouriteRepository.java
             └── service/
                 ├── bookmark/
-                │   ├── IBookmarkService.java
                 │   └── BookmarkService.java
                 └── favourite/
-                    ├── IFavouriteService.java
                     └── FavouriteService.java
 ```
 
