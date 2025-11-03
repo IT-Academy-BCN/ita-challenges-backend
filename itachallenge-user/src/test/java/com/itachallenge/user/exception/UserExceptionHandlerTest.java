@@ -199,7 +199,6 @@ class UserExceptionHandlerTest {
     void handleGithubUnavailable_shouldReturn504() {
         Throwable timeoutCause = new SocketTimeoutException("Read timed out");
         GithubUnavailableException ex = new GithubUnavailableException("Service error occurred.", timeoutCause);
-        APIErrorResponse fake = fakeResponse(HttpStatus.GATEWAY_TIMEOUT, "The external GitHub service timed out.");
 
         ResponseEntity<APIErrorResponse> response = userExceptionHandler.handleGithubUnavailable(ex, request);
 
@@ -211,7 +210,6 @@ class UserExceptionHandlerTest {
     @Test
     void handleGithubUnavailable_shouldReturn503ForOtherCauses() {
         GithubUnavailableException ex = new GithubUnavailableException("Unknown error.");
-        APIErrorResponse fake = fakeResponse(HttpStatus.SERVICE_UNAVAILABLE, "An external service error occurred.");
 
         ResponseEntity<APIErrorResponse> response = userExceptionHandler.handleGithubUnavailable(ex, request);
 
