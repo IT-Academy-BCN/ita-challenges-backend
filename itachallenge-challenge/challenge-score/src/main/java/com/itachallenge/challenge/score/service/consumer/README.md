@@ -1,2 +1,0 @@
-# consumer
-Internal event consumers.
