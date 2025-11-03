@@ -189,48 +189,60 @@ This module handles user-specific actions such as favourites and bookmarks, sepa
 ### 📦 Package Overview
 
 ```
-src/main/java/com/itachallenge/user/interactions/
-├── controller/
-│ ├── bookmark/
-│ │ └── BookmarkController.java
-│ └── favourite/
-│ └── FavouriteController.java
-│
-├── service/
-│ ├── bookmark/
-│ │ ├── BookmarkService.java
-│ │ └── IBookmarkService.java
-│ └── favourite/
-│ ├── FavouriteService.java
-│ └── IFavouriteService.java
-│
-├── repository/
-│ ├── bookmark/
-│ │ └── BookmarkRepository.java
-│ └── favourite/
-│ └── FavouriteRepository.java
-│
-├── common/
-│ ├── dto/
-│ │ ├── ErrorResponse.java
-│ │ ├── PageResponse.java
-│ │ └── ToggleRequest.java
-│ ├── error/
-│ │ └── InteractionsGlobalHandler.java
-│ └── validation/
-│ └── ValidationUtils.java
-│
-└── events/
-├── contract/
-│ ├── EventMetadata.java
-│ ├── InteractionEvent.java
-│ ├── UserBookmarkedToggledV1.java
-│ └── UserFavouriteChangedV1.java
-└── publisher/
-├── InteractionEventPublisher.java
-├── StubEventPublisher.java
-├── UserBookmarkEventPublisher.java
-└── UserFavouriteEventPublisher.java
+itachallenge-user/
+├── src/
+│   └── main/java/com/itachallenge/user/
+│       (user structure)
+└── interactions/
+    ├── controller/
+    │   ├── bookmark/
+    │   │   └── BookmarkController.java
+    │   └── favourite/
+    │       └── FavouriteController.java
+    ├── document/
+    │   ├── bookmark/
+    │   │   └── Bookmark.java
+    │   └── favourite/
+    │       └── Favourite.java
+    ├── dto/
+    │   ├── bookmark/
+    │   │   └── BookmarkDto.java
+    │   ├── common/
+    │   │   ├── ErrorResponse.java
+    │   │   ├── PageResponse.java
+    │   │   └── ToggleRequest.java
+    │   └── favourite/
+    │       └── FavouriteDto.java
+    ├── events/
+    │   ├── contract/
+    │   │   ├── EventMetadata.java
+    │   │   ├── InteractionEvent.java
+    │   │   ├── UserBookmarkedToggledV1.java
+    │   │   └── UserFavouriteChangedV1.java
+    │   └── publisher/
+    │       ├── InteractionEventPublisher.java
+    │       ├── StubEventPublisher.java
+    │       ├── UserBookmarkEventPublisher.java
+    │       └── UserFavouriteEventPublisher.java
+    ├── exception/
+    │   ├── advice/
+    │   │   └── InteractionsGlobalHandler.java
+    │   ├── bookmark/
+    │   │   └── BookmarkException.java
+    │   └── favourite/
+    │       └── FavouriteException.java
+    ├── repository/
+    │   ├── bookmark/
+    │   │   └── BookmarkRepository.java
+    │   └── favourite/
+    │       └── FavouriteRepository.java
+    └── service/
+        ├── bookmark/
+        │   ├── IBookmarkService.java
+        │   └── BookmarkService.java
+        └── favourite/
+            ├── IFavouriteService.java
+            └── FavouriteService.java
 ```
 
 ### 🧩 Purpose
