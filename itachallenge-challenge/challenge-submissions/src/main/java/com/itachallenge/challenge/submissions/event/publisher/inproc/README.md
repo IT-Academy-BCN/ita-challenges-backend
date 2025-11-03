@@ -1,2 +1,0 @@
-# inproc
-Internal event publishers.
