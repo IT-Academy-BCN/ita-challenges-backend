@@ -3,6 +3,10 @@
 
 * Para habilitar / deshabilitar el registro Consul, modificar el valor de la propiedad `spring.cloud.consul.enabled` en el fichero `bootstrap.yml` (true/false)
 
+##### Submissions and Score modules
+As part of Sprint 15, two new modules named **score** and **submissions** were introduced within the Challenge microservice.  
+It aims to isolate all scoring logic and submissions lifecycle from the `user` microservice and prepare for future scoring and event-driven workflows.
+
 ##### Swagger
 
 - http://localhost:8762/swagger-ui/index.html

@@ -45,6 +45,10 @@ This project provides REST API services for the ITA challenges application and c
 
 Each microservice exposes REST APIs to interact with it. To use any microservice, you can refer to the [procedure](#procedure) section or start it from the App class in your IDE.
 
+#### Ongoing Modularization
+
+As part of our long-term architecture improvements, the modularization has been started as part of decoupling responsibilities from the main challenge microservice, there you'll see two empty modules, challenge-challenge, challenge-score and challenge-submissions.
+
 ### Installation
 
 #### Required programs
