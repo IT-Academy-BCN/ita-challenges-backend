@@ -107,4 +107,6 @@
 * Aurélien Darbellay - https://github.com/aurelien-darbellay
 * Adria Vargas - https://github.com/AdriaVH
 * Pablo Federico Gómez San Joaquín - https://github.com/Pablo2203
+* Eduardo Zavarce Forsythe - https://github.com/eduzavarce
 * Flavio Augusto D'Avirro - https://github.com/FlavioKde
+
