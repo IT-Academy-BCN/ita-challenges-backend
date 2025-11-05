@@ -183,63 +183,54 @@ The following endpoints are available for system monitoring and diagnostics:
 
 ## 🔄 Interactions Module (New - Sprint 15)
 
-As part of Sprint 15, a new module named interactions was introduced inside the User microservice.
-This module handles user-specific actions such as favourites and bookmarks, separating them from the Challenge microservice.
+The interactions module has been incorporated into the User microservice to manage 
+favorites and bookmarks. This is an internal reorganization by packages 
+(no new submodule/artifact is created) that separates the web layer (controllers/DTOs) 
+from the business layer (services/repositories/model), facilitating future scalability 
+(possible extraction to a library or microservice).
 
 ### 📦 Package Overview
 
 ```
 itachallenge-user/
-├── src/
-│   └── main/java/com/itachallenge/user/
-│       (user structure)
-└── interactions/
-    └── src/
-        └── main/java/com/itachallenge/userInteractions/
-            ├── controller/
-            │   ├── bookmark/    
-            │   │   └── BookmarkController.java
-            │   └── favourite/
-            │       └── FavouriteController.java
-            ├── document/
-            │   ├── bookmark/
-            │   │   └── Bookmark.java
-            │   └── favourite/
-            │       └── Favourite.java
-            ├── dto/
-            │   ├── bookmark/
-            │   │   └── BookmarkDto.java
-            │   ├── common/
-            │   │   ├── ErrorResponse.java
-            │   │   ├── PageResponse.java
-            │   │   └── ToggleRequest.java
-            │   └── favourite/
-            │       └── FavouriteDto.java
-            ├── event/
-            │   ├── contract/
-            │   │   ├── EventMetadata.java
-            │   │   ├── InteractionEvent.java
-            │   │   ├── UserBookmarkedToggled.java
-            │   │   └── UserFavouriteChanged.java
-            │   └── publisher/
-            │       ├── InteractionEventPublisher.java
-            │       ├── StubEventPublisher.java
-            │       ├── UserBookmarkEventPublisher.java
-            │       └── UserFavouriteEventPublisher.java
-            ├── exception/
-            │ 
-            ├── repository/
-            │   ├── bookmark/
-            │   │   └── BookmarkRepository.java
-            │   └── favourite/
-            │       └── FavouriteRepository.java
-            └── service/
-                ├── bookmark/
-                │   ├── BookmarkServiceImpl.java
-                │   └── BookmarkService.java
-                └── favourite/
-                    ├── FavouriteServiceImpl.java
-                    └── FavouriteService.java
+└─ src/main/java/com/itachallenge/
+   ├─ App.java                      # @SpringBootApplication in root
+   ├─ user/                         # micro web layer
+   │  ├─ annotations/
+   │  ├─ config/
+   │  ├─ controller/  
+   │  │  ├─ userinteraction/ 
+   │  │  │  ├─ favorite/FavoriteController.java
+   │  │  │  └─ bookmark/BookmarkController.java  
+   │  │  ├─ AdminCreateUserController.java
+   │  │  └─ UserController.java 
+   │  ├─ document/
+   │  ├─ dto/
+   │  │  ├─ userinteraction/ 
+   │  │  │  ├─ favorite/FavoriteDto.java
+   │  │  │  └─ bookmark/BookmarkDto.java
+   │  │  └─ OthersDtos
+   │  ├─ exception/    
+   │  ├─ filter/       
+   │  ├─ helper/    
+   │  ├─ repository/    
+   │  ├─ service/  
+   |  ├─ validator/   
+   └─ userinteraction/              # core business (without HTTP)
+      ├─ document/
+      │  ├─ favorite/Favorite.java
+      │  └─ bookmark/Bookmark.java
+      ├─ repository/
+      │  ├─ favorite/FavoriteRepository.java
+      │  └─ bookmark/BookmarkRepository.java
+      ├─ service/
+      │  ├─ UserInteractionFacade.java
+      │  ├─ favorite/FavoriteService.java
+      │  └─ bookmark/BookmarkService.java
+      ├─ exception/
+      └─ event/
+         ├─ contract/              
+         └─ publisher/             
 ```
 
 ### 🧩 Purpose
