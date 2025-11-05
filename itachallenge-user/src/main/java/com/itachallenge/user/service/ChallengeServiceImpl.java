@@ -35,7 +35,7 @@ public class ChallengeServiceImpl implements IChallengeService {
 
     @Override
     public Mono<SolvedDto> addChallengeToSolved(String challengeId) {
-        return callEndpoint(challengeId, ChallengeStatus.ENDED, X_SOLVED_MESSAGE, HttpMethod.POST);
+        return callEndpoint(challengeId, ChallengeStatus.SUBMITTED_COMPLETE, X_SOLVED_MESSAGE, HttpMethod.POST);
     }
 
     private Mono<SolvedDto> callEndpoint(String challengeId, ChallengeStatus type, String errorHeader, HttpMethod method) {

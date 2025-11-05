@@ -14,6 +14,8 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 import jakarta.validation.ConstraintViolationException;
 
+import java.net.ConnectException;
+import java.net.SocketTimeoutException;
 import java.util.Objects;
 
 class UserGlobalExceptionHandlerTest {
@@ -90,7 +92,7 @@ class UserGlobalExceptionHandlerTest {
 
     @Test
     void testHandleUnmodifiableSolutionException(){
-        String message = "There's an existing solution with status 'ENDED'.";
+        String message = "There's an existing solution with status 'SUBMITTED_COMPLETE'.";
         UnmodificableSolutionException exception = new UnmodificableSolutionException(message);
         ResponseEntity<String> response = exceptionHandler.handleUnmodifiableSolutionException(exception);
 
@@ -111,22 +113,40 @@ class UserGlobalExceptionHandlerTest {
 
     @Test
     void handleGithubUnavailable_shouldReturn503() {
-        GithubUnavailableException ex = new GithubUnavailableException("Some 5xx error");
+        Throwable connectCause = new ConnectException("Connection refused");
+        GithubUnavailableException ex = new GithubUnavailableException("Service error ocurred.", connectCause);
 
         ResponseEntity<APIErrorResponse> response = exceptionHandler.handleGithubUnavailable(ex);
 
-        assertEquals(HttpStatus.SERVICE_UNAVAILABLE, response.getStatusCode());
-        assertEquals("GitHub API error", response.getBody().getError());
+        assertEquals(HttpStatus.SERVICE_UNAVAILABLE, response.getStatusCode(),
+                "The handler must return HTTP 503 for a ConnectException cause.");
+        assertTrue(Objects.requireNonNull(response.getBody()).getMessage().contains("unavailable"),
+                "The secured message should indicate service unavailability.");
     }
 
     @Test
     void handleGithubUnavailable_shouldReturn504() {
-        GithubUnavailableException ex = new GithubUnavailableException("timeout");
+        Throwable timeoutCause = new SocketTimeoutException("Read timed out");
+        GithubUnavailableException ex = new GithubUnavailableException("Service error ocurred.", timeoutCause);
 
         ResponseEntity<APIErrorResponse> response = exceptionHandler.handleGithubUnavailable(ex);
 
-        assertEquals(HttpStatus.GATEWAY_TIMEOUT, response.getStatusCode());
-        assertEquals("GitHub API error", response.getBody().getError());
+        assertEquals(HttpStatus.GATEWAY_TIMEOUT, response.getStatusCode(),
+        "The handler must return HTTP 504 for a SocketTimeoutException cause.");
+        assertTrue(Objects.requireNonNull(response.getBody()).getMessage().contains("timed out"),
+                "The secured message should indicate a timeout.");
+    }
+
+    @Test
+    void handleGithubUnavailable_shouldReturn503ForOtherCauses() {
+        GithubUnavailableException ex = new GithubUnavailableException("Unknown error.");
+
+        ResponseEntity<APIErrorResponse> response = exceptionHandler.handleGithubUnavailable(ex);
+
+        assertEquals(HttpStatus.SERVICE_UNAVAILABLE, response.getStatusCode(),
+                "The handler must return HTTP 503 for other types of causes (not recognized or null).");
+        assertTrue(Objects.requireNonNull(response.getBody()).getMessage().contains("external service error"),
+                "The secured message should indicate an external service error.");
     }
 
 }
