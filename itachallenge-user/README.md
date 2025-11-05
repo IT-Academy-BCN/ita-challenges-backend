@@ -193,44 +193,54 @@ from the business layer (services/repositories/model), facilitating future scala
 
 ```
 itachallenge-user/
-└─ src/main/java/com/itachallenge/
-   ├─ App.java                      # @SpringBootApplication in root
-   ├─ user/                         # micro web layer
-   │  ├─ annotations/
-   │  ├─ config/
-   │  ├─ controller/  
-   │  │  ├─ userinteraction/ 
-   │  │  │  ├─ favorite/FavoriteController.java
-   │  │  │  └─ bookmark/BookmarkController.java  
-   │  │  ├─ AdminCreateUserController.java
-   │  │  └─ UserController.java 
-   │  ├─ document/
-   │  ├─ dto/
-   │  │  ├─ userinteraction/ 
-   │  │  │  ├─ favorite/FavoriteDto.java
-   │  │  │  └─ bookmark/BookmarkDto.java
-   │  │  └─ OthersDtos
-   │  ├─ exception/    
-   │  ├─ filter/       
-   │  ├─ helper/    
-   │  ├─ repository/    
-   │  ├─ service/  
-   |  ├─ validator/   
-   └─ userinteraction/              # core business (without HTTP)
-      ├─ document/
-      │  ├─ favorite/Favorite.java
-      │  └─ bookmark/Bookmark.java
-      ├─ repository/
-      │  ├─ favorite/FavoriteRepository.java
-      │  └─ bookmark/BookmarkRepository.java
-      ├─ service/
-      │  ├─ UserInteractionFacade.java
-      │  ├─ favorite/FavoriteService.java
-      │  └─ bookmark/BookmarkService.java
-      ├─ exception/
-      └─ event/
-         ├─ contract/              
-         └─ publisher/             
+└─ src
+   ├─ main
+   │  └─ java/com/itachallenge
+   │     ├─ user
+   │     │  ├─ controller/userinteraction
+   │     │  │  ├─ favorite/.gitkeep
+   │     │  │  └─ bookmark/.gitkeep
+   │     │  └─ dto/userinteraction
+   │     │     ├─ favorite/.gitkeep
+   │     │     └─ bookmark/.gitkeep
+   │     └─ userinteraction                 # core (without HTTP)
+   │        ├─ document
+   │        │  ├─ favorite/.gitkeep
+   │        │  └─ bookmark/.gitkeep
+   │        ├─ repository
+   │        │  ├─ favorite/.gitkeep
+   │        │  └─ bookmark/.gitkeep
+   │        ├─ service
+   │        │  ├─ favorite/.gitkeep
+   │        │  └─ bookmark/.gitkeep
+   │        ├─ exception/.gitkeep
+   │        └─ event
+   │           ├─ contract/.gitkeep
+   │           └─ publisher/.gitkeep
+   └─ test
+      └─ java/com/itachallenge
+         ├─ user
+         │  ├─ controller/userinteraction
+         │  │  ├─ favorite/.gitkeep
+         │  │  └─ bookmark/.gitkeep
+         │  └─ dto/userinteraction
+         │     ├─ favorite/.gitkeep
+         │     └─ bookmark/.gitkeep
+         └─ userinteraction
+            ├─ service
+            │  ├─ favorite/.gitkeep
+            │  └─ bookmark/.gitkeep
+            ├─ repository
+            │  ├─ favorite/.gitkeep
+            │  └─ bookmark/.gitkeep
+            ├─ event
+            │  ├─ contract/.gitkeep
+            │  └─ publisher/.gitkeep
+            ├─ exception/.gitkeep
+            └─ document
+               ├─ favorite/.gitkeep
+               └─ bookmark/.gitkeep
+
 ```
 
 ### 🧩 Purpose
