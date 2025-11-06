@@ -36,5 +36,5 @@ public class FavoriteDocument {
 
     @CreatedDate
     @Field(name = "createdAt")
-    private LocalDateTime creationDate;
+    private LocalDateTime createdAt;
 }
