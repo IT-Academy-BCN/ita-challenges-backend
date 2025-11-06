@@ -3,6 +3,20 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+### [itachallenge-user-3.0.2-RELEASE] - 2025-11-05
+
+### Added
+- Internal package skeleton for user interactions(favorites & bookmarks).
+  - Web (HTTP): `com.itachallenge.user.controller.userinteraction.{favorite,bookmark}` y `com.itachallenge.user.dto.userinteraction.{favorite,bookmark}`.
+  - Core (non-HTTP): `com.itachallenge.userinteraction.{document,repository,service,event,exception}`.
+  - Mirror of tests in `src/test/java` with the same structure (using `.gitkeep`), no sources.
+- Minimal test for `App.main()` to satisfy new-code coverage.
+- Docs: README updated explaining this is an internal package reorganization (not a new submodule/artifact) and the rationale for future extraction to a library or microservice.
+
+### Changed
+- Moved `App` to the root package (`com.itachallenge`) to simplify component scanning.  
+  No new endpoints, no DB changes, and no runtime behavior change.
+
 ### [error-response-core-1.0.0-RELEASE] - 2025-10-22
 
 ### Added
