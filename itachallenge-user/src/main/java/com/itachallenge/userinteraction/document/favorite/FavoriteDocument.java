@@ -1,0 +1,40 @@
+package com.itachallenge.userinteraction.document.favorite;
+
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+
+@AllArgsConstructor
+@Data
+@Builder
+@NoArgsConstructor
+@Document(collection="favorites")
+public class FavoriteDocument {
+
+    @Id
+    @Field("_id")
+    private UUID uuid;
+
+    @Field("userId")
+    @Indexed
+    private UUID userId;
+
+    @Field("challengeId")
+    @Indexed
+    private UUID challengeId;
+
+    @CreatedDate
+    @Field(name = "createdAt")
+    private LocalDateTime creationDate;
+}
