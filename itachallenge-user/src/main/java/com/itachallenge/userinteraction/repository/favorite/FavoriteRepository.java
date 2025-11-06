@@ -14,5 +14,6 @@ public interface FavoriteRepository extends ReactiveMongoRepository<FavoriteDocu
     Flux<FavoriteDocument> findByUserId(UUID userId);
     Mono<FavoriteDocument> findByUserIdAndChallengeId(UUID userId, UUID challengeId);
     Mono<Void> deleteByUserIdAndChallengeId(UUID userId, UUID challengeId);
+    Mono<Boolean> existsByUserIdAndChallengeId(UUID userId, UUID challengeId);
 
 }
