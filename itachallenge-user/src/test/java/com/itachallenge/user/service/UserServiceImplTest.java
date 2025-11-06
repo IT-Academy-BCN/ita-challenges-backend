@@ -12,6 +12,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
+import com.itachallenge.userinteraction.document.favorite.FavoriteDocument;
+import com.itachallenge.userinteraction.repository.favorite.FavoriteRepository;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -22,10 +25,13 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+
 class UserServiceImplTest {
 
     @Mock
     private UserRepository userRepository;
+    @Mock
+    private FavoriteRepository favoriteRepository;
 
     @InjectMocks
     private UserServiceImpl userService;
@@ -73,23 +79,25 @@ class UserServiceImplTest {
     }
 
     @Test
-    void addChallengeToFavorites_ShouldReturnTrue_WhenFavoritesIsNull() {
-        UUID challengeId = UUID.randomUUID();
+    void addChallengeToFavorites_ShouldReturnTrue_WhenFavoriteDoesNotExist() {
         UUID userId = UUID.randomUUID();
-        UserDocument user = new UserDocument(userId, "testUser", null, null, null, 0);
+        UUID challengeId = UUID.randomUUID();
+        UserDocument user = new UserDocument(userId, "testUser", null, new HashSet<>(), null, 0);
 
         when(userRepository.findById(userId)).thenReturn(Mono.just(user));
-        when(userRepository.save(user)).thenReturn(Mono.just(user));
+        when(favoriteRepository.existsByUserIdAndChallengeId(userId, challengeId))
+                .thenReturn(Mono.just(false));
+        when(favoriteRepository.save(any(FavoriteDocument.class)))
+                .thenReturn(Mono.just(new FavoriteDocument()));
 
         StepVerifier.create(userService.addChallengeToFavorites(userId.toString(), challengeId.toString()))
                 .expectNext(true)
                 .verifyComplete();
 
-        assertNotNull(user.getFavoriteChallenges());
-        assertTrue(user.getFavoriteChallenges().contains(challengeId));
-
         verify(userRepository, times(1)).findById(userId);
-        verify(userRepository, times(1)).save(user);
+        verify(favoriteRepository, times(1)).existsByUserIdAndChallengeId(userId, challengeId);
+        verify(favoriteRepository, times(1)).save(any(FavoriteDocument.class));
+        verify(userRepository, never()).save(any());
     }
 
     @Test
@@ -113,26 +121,6 @@ class UserServiceImplTest {
     }
 
     @Test
-    void addChallengeToFavorites_ShouldReturnTrue_WhenFavoritesIsEmpty() {
-        UUID challengeId = UUID.randomUUID();
-        UUID userId = UUID.randomUUID();
-        UserDocument user = new UserDocument(userId, "testUser", null, new HashSet<>(), null, 0);
-
-        when(userRepository.findById(userId)).thenReturn(Mono.just(user));
-        when(userRepository.save(user)).thenReturn(Mono.just(user));
-
-        StepVerifier.create(userService.addChallengeToFavorites(userId.toString(), challengeId.toString()))
-                .expectNext(true)
-                .verifyComplete();
-
-        assertNotNull(user.getFavoriteChallenges());
-        assertTrue(user.getFavoriteChallenges().contains(challengeId));
-
-        verify(userRepository, times(1)).findById(userId);
-        verify(userRepository, times(1)).save(user);
-    }
-
-    @Test
     void addChallengeToBookmarks_ShouldReturnTrue_WhenBookmarksIsEmpty() {
         UUID challengeId = UUID.randomUUID();
         UUID userId = UUID.randomUUID();
@@ -147,27 +135,6 @@ class UserServiceImplTest {
 
         assertNotNull(user.getBookmarkChallenges());
         assertTrue(user.getBookmarkChallenges().contains(challengeId));
-
-        verify(userRepository, times(1)).findById(userId);
-        verify(userRepository, times(1)).save(user);
-    }
-
-    @Test
-    void addChallengeToFavorites_ShouldReturnTrue_WhenFavoritesHasValues() {
-        UUID challengeId = UUID.randomUUID();
-        UUID userId = UUID.randomUUID();
-        Set<UUID> favorites = new HashSet<>(Set.of(UUID.randomUUID(), UUID.randomUUID()));
-        UserDocument user = new UserDocument(userId, "testUser", null, favorites, null, 0);
-
-        when(userRepository.findById(userId)).thenReturn(Mono.just(user));
-        when(userRepository.save(user)).thenReturn(Mono.just(user));
-
-        StepVerifier.create(userService.addChallengeToFavorites(userId.toString(), challengeId.toString()))
-                .expectNext(true)
-                .verifyComplete();
-
-        assertNotNull(user.getFavoriteChallenges());
-        assertTrue(user.getFavoriteChallenges().contains(challengeId));
 
         verify(userRepository, times(1)).findById(userId);
         verify(userRepository, times(1)).save(user);
@@ -202,6 +169,8 @@ class UserServiceImplTest {
         UserDocument user = new UserDocument(userId, "testUser", null, favorites, null, 0);
 
         when(userRepository.findById(userId)).thenReturn(Mono.just(user));
+        when(favoriteRepository.existsByUserIdAndChallengeId(userId, challengeId))
+                .thenReturn(Mono.just(true));
 
         StepVerifier.create(userService.addChallengeToFavorites(userId.toString(), challengeId.toString()))
                 .expectNext(false)
@@ -211,7 +180,8 @@ class UserServiceImplTest {
         assertTrue(user.getFavoriteChallenges().contains(challengeId));
 
         verify(userRepository, times(1)).findById(userId);
-        verify(userRepository, times(0)).save(any());
+        verify(favoriteRepository, times(1)).existsByUserIdAndChallengeId(userId, challengeId);
+        verify(favoriteRepository, never()).save(any());
     }
 
     @Test
