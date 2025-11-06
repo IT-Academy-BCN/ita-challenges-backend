@@ -62,17 +62,17 @@ public class UserServiceImpl implements UserService {
 
     //TODO : TO IMPLEMENT IN FAVORITE SERVICE IMPL
     @Override
-    public Mono<Boolean> deleteChallengeFromFavorites(String userId, String challengeId) {
-        return Mono.zip(parseAndValidateUUID(userId), parseAndValidateUUID(challengeId))
-                .flatMap(uuidTuple -> {
-                    UUID userUuid = uuidTuple.getT1();
-                    UUID challengeUuid = uuidTuple.getT2();
+        public Mono<Boolean> deleteChallengeFromFavorites(String userId, String challengeId) {
+            return Mono.zip(parseAndValidateUUID(userId), parseAndValidateUUID(challengeId))
+                    .flatMap(uuidTuple -> {
+                        UUID userUuid = uuidTuple.getT1();
+                        UUID challengeUuid = uuidTuple.getT2();
 
-                    return userRepository.findById(userUuid)
-                            .switchIfEmpty(Mono.error(new NotFoundException("User not found")))
-                            .flatMap(user -> deleteFromFavorites(userUuid, challengeUuid));
-                });
-    }
+                        return userRepository.findById(userUuid)
+                                .switchIfEmpty(Mono.error(new NotFoundException("User not found")))
+                                .flatMap(user -> deleteFromFavorites(userUuid, challengeUuid));
+                    });
+        }
 
     @Override
     public Mono<Boolean> deleteChallengeFromBookmarks(String userId, String challengeId) {
