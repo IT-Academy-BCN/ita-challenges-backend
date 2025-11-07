@@ -92,7 +92,7 @@ public class UserServiceImpl implements UserService {
     private Mono<Boolean> addToFavorites(UUID userUuid, UUID challengeUuid) {
         return favoriteRepository.existsByUserIdAndChallengeId(userUuid, challengeUuid)
                 .flatMap(exists -> {
-                    if (exists) {
+                    if (exists.booleanValue())
                         return Mono.just(false); // Ya existe, no lo añade
                     }
 
