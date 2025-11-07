@@ -87,25 +87,12 @@ public class UserServiceImpl implements UserService {
                 });
     }
 
-//    private Mono<Boolean> addToFavorites(UserDocument user, UUID challengeUuid) {
-//        Set<UUID> favorites = Optional.ofNullable(user.getFavoriteChallenges())
-//                .orElseGet(HashSet::new);
-//
-//        boolean added = favorites.add(challengeUuid);
-//
-//        if (added) {
-//            user.setFavoriteChallenges(favorites);
-//            return userRepository.save(user).then(Mono.just(true));
-//        }
-//
-//        return Mono.just(false);
-//    }
 
     //TODO : TO IMPLEMENT IN FAVORITE SERVICE IMPL
     private Mono<Boolean> addToFavorites(UUID userUuid, UUID challengeUuid) {
         return favoriteRepository.existsByUserIdAndChallengeId(userUuid, challengeUuid)
                 .flatMap(exists -> {
-                    if (exists) {
+                    if (exists.booleanValue())
                         return Mono.just(false); // Ya existe, no lo añade
                     }
 
@@ -132,20 +119,6 @@ public class UserServiceImpl implements UserService {
 
         return Mono.just(false);
     }
-
-//    private Mono<Boolean> deleteFromFavorites(UserDocument user, UUID challengeUuid) {
-//        Set<UUID> favorites = Optional.ofNullable(user.getFavoriteChallenges())
-//                .orElseGet(HashSet::new);
-//
-//        boolean deleted = favorites.remove(challengeUuid);
-//
-//        if (deleted) {
-//            user.setFavoriteChallenges(favorites);
-//            return userRepository.save(user).then(Mono.just(true));
-//        }
-//
-//        return Mono.just(false);
-//    }
 
     //TODO : TO IMPLEMENT IN FAVORITE SERVICE IMPL
     private Mono<Boolean> deleteFromFavorites(UUID userId, UUID challengeUuid) {
