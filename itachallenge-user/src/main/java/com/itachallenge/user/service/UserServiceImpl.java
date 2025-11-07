@@ -87,19 +87,6 @@ public class UserServiceImpl implements UserService {
                 });
     }
 
-//    private Mono<Boolean> addToFavorites(UserDocument user, UUID challengeUuid) {
-//        Set<UUID> favorites = Optional.ofNullable(user.getFavoriteChallenges())
-//                .orElseGet(HashSet::new);
-//
-//        boolean added = favorites.add(challengeUuid);
-//
-//        if (added) {
-//            user.setFavoriteChallenges(favorites);
-//            return userRepository.save(user).then(Mono.just(true));
-//        }
-//
-//        return Mono.just(false);
-//    }
 
     //TODO : TO IMPLEMENT IN FAVORITE SERVICE IMPL
     private Mono<Boolean> addToFavorites(UUID userUuid, UUID challengeUuid) {
