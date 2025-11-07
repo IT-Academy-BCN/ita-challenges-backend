@@ -260,21 +260,14 @@ class FavoriteDocumentTest {
 
     @Test
     void equals_WithDifferentUserId_test() {
-        UUID uuid = UUID.randomUUID();
-        UUID challengeId = UUID.randomUUID();
-        LocalDateTime createdAt = LocalDateTime.now();
-
         FavoriteDocument doc1 = new FavoriteDocument(uuid, UUID.randomUUID(), challengeId, createdAt);
         FavoriteDocument doc2 = new FavoriteDocument(uuid, UUID.randomUUID(), challengeId, createdAt);
 
         assertNotEquals(doc1, doc2);
     }
 
+    @Test
     void equals_WithDifferentChallengeId_test() {
-        UUID uuid = UUID.randomUUID();
-        UUID userId = UUID.randomUUID();
-        LocalDateTime createdAt = LocalDateTime.now();
-
         FavoriteDocument doc1 = new FavoriteDocument(uuid, userId, UUID.randomUUID(), createdAt);
         FavoriteDocument doc2 = new FavoriteDocument(uuid, userId, UUID.randomUUID(), createdAt);
 
@@ -283,10 +276,6 @@ class FavoriteDocumentTest {
 
     @Test
     void equals_WithDifferentCreatedAt_test() {
-        UUID uuid = UUID.randomUUID();
-        UUID userId = UUID.randomUUID();
-        UUID challengeId = UUID.randomUUID();
-
         FavoriteDocument doc1 = new FavoriteDocument(uuid, userId, challengeId, LocalDateTime.now());
         FavoriteDocument doc2 = new FavoriteDocument(uuid, userId, challengeId, LocalDateTime.now().plusDays(1));
 
@@ -295,10 +284,6 @@ class FavoriteDocumentTest {
 
     @Test
     void equals_WithNullUuidInBoth_test() {
-        UUID userId = UUID.randomUUID();
-        UUID challengeId = UUID.randomUUID();
-        LocalDateTime createdAt = LocalDateTime.now();
-
         FavoriteDocument doc1 = new FavoriteDocument(null, userId, challengeId, createdAt);
         FavoriteDocument doc2 = new FavoriteDocument(null, userId, challengeId, createdAt);
 
@@ -306,10 +291,6 @@ class FavoriteDocumentTest {
     }
 
     void equals_WithNullUserIdInBoth_test() {
-        UUID uuid = UUID.randomUUID();
-        UUID challengeId = UUID.randomUUID();
-        LocalDateTime createdAt = LocalDateTime.now();
-
         FavoriteDocument doc1 = new FavoriteDocument(uuid, null, challengeId, createdAt);
         FavoriteDocument doc2 = new FavoriteDocument(uuid, null, challengeId, createdAt);
 
@@ -318,21 +299,14 @@ class FavoriteDocumentTest {
 
     @Test
     void equals_WithNullChallengeIdInBoth_test() {
-        UUID uuid = UUID.randomUUID();
-        UUID userId = UUID.randomUUID();
-        LocalDateTime createdAt = LocalDateTime.now();
-
         FavoriteDocument doc1 = new FavoriteDocument(uuid, userId, null, createdAt);
         FavoriteDocument doc2 = new FavoriteDocument(uuid, userId, null, createdAt);
 
         assertEquals(doc1, doc2);
     }
 
+    @Test
     void equals_WithNullCreatedAtInBoth_test() {
-        UUID uuid = UUID.randomUUID();
-        UUID userId = UUID.randomUUID();
-        UUID challengeId = UUID.randomUUID();
-
         FavoriteDocument doc1 = new FavoriteDocument(uuid, userId, challengeId, null);
         FavoriteDocument doc2 = new FavoriteDocument(uuid, userId, challengeId, null);
 
@@ -346,12 +320,10 @@ class FavoriteDocumentTest {
 
     @Test
     void hashCode_WithMixedNulls_test() {
-        UUID uuid = UUID.randomUUID();
         FavoriteDocument doc1 = new FavoriteDocument(uuid, null, null, LocalDateTime.now());
         FavoriteDocument doc2 = new FavoriteDocument(uuid, null, null, LocalDateTime.now());
 
-        // hashCode might differ due to LocalDateTime, but should be consistent
-        assertEquals(doc1.hashCode(), doc1.hashCode());
+        assertEquals(doc1.hashCode(), doc2.hashCode());
     }
 
     @Test
@@ -371,11 +343,6 @@ class FavoriteDocumentTest {
 
     @Test
     void builder_ChainedCalls_test() {
-        UUID uuid = UUID.randomUUID();
-        UUID userId = UUID.randomUUID();
-        UUID challengeId = UUID.randomUUID();
-        LocalDateTime createdAt = LocalDateTime.now();
-
         FavoriteDocument doc = FavoriteDocument.builder()
                 .uuid(uuid)
                 .userId(userId)

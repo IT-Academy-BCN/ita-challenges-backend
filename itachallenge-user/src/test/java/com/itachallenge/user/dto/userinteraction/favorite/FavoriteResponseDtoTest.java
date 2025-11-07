@@ -406,7 +406,7 @@ class FavoriteResponseDtoTest {
     @Test
     void builder_WithOnlyUuid_test() {
         FavoriteResponseDto dto = FavoriteResponseDto.builder()
-                .uuid(randomUuid)
+                .uuid(uuid)
                 .build();
 
         assertThat(dto.getUuid()).isEqualTo(uuid);
