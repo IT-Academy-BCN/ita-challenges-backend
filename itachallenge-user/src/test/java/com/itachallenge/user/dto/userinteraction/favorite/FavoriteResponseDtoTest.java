@@ -405,9 +405,8 @@ class FavoriteResponseDtoTest {
 
     @Test
     void builder_WithOnlyUuid_test() {
-        UUID uuid = UUID.randomUUID();
         FavoriteResponseDto dto = FavoriteResponseDto.builder()
-                .uuid(uuid)
+                .uuid(randomUuid)
                 .build();
 
         assertThat(dto.getUuid()).isEqualTo(uuid);
@@ -418,7 +417,6 @@ class FavoriteResponseDtoTest {
 
     @Test
     void builder_WithOnlyCreatedAt_test() {
-        LocalDateTime createdAt = LocalDateTime.now();
         FavoriteResponseDto dto = FavoriteResponseDto.builder()
                 .createdAt(createdAt)
                 .build();
