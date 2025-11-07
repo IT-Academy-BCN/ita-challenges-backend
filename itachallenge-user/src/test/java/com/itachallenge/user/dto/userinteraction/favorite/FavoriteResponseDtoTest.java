@@ -15,6 +15,9 @@ class FavoriteResponseDtoTest {
     private UUID userId;
     private UUID challengeId;
     private LocalDateTime createdAt;
+    private FavoriteResponseDto dto1;
+    private FavoriteResponseDto dto2;
+    private FavoriteResponseDto dto3;
 
     @BeforeEach
     void setUp() {
@@ -22,6 +25,27 @@ class FavoriteResponseDtoTest {
         userId = UUID.randomUUID();
         challengeId = UUID.randomUUID();
         createdAt = LocalDateTime.now();
+
+        dto1 = FavoriteResponseDto.builder()
+                .uuid(uuid)
+                .userId(userId)
+                .challengeId(challengeId)
+                .createdAt(createdAt)
+                .build();
+
+        dto2 = FavoriteResponseDto.builder()
+                .uuid(uuid)
+                .userId(userId)
+                .challengeId(challengeId)
+                .createdAt(createdAt)
+                .build();
+
+        dto3 = FavoriteResponseDto.builder()
+                .uuid(UUID.randomUUID())
+                .userId(UUID.randomUUID())
+                .challengeId(UUID.randomUUID())
+                .createdAt(createdAt.plusDays(1))
+                .build();
     }
 
     @Test
@@ -76,8 +100,56 @@ class FavoriteResponseDtoTest {
         FavoriteResponseDto deserialized = mapper.readValue(json, FavoriteResponseDto.class);
 
         assertThat(deserialized).isEqualTo(dto);
-
     }
+
+    @Test
+    void equals_test() {
+        assertThat(dto1).isEqualTo(dto2);
+        assertThat(dto1).isNotEqualTo(dto3);
+        assertThat(dto1).isNotEqualTo(null);
+        assertThat(dto1).isNotEqualTo("string");
+    }
+
+    @Test
+    void hashCode_test() {
+        assertThat(dto1).hasSameHashCodeAs(dto2);
+        assertThat(dto1.hashCode()).isNotEqualTo(dto3.hashCode());
+    }
+
+    @Test
+    void toString_test() {
+        String toStringResult = dto1.toString();
+
+        assertThat(toStringResult)
+                .isNotNull()
+                .isNotEmpty()
+                .contains(uuid.toString())
+                .contains(userId.toString())
+                .contains(challengeId.toString());
+    }
+
+    @Test
+    void noArgsConstructor_test() {
+        FavoriteResponseDto dto = new FavoriteResponseDto();
+
+        assertThat(dto).isNotNull();
+        assertThat(dto.getUuid()).isNull();
+        assertThat(dto.getUserId()).isNull();
+        assertThat(dto.getChallengeId()).isNull();
+        assertThat(dto.getCreatedAt()).isNull();
+    }
+
+    @Test
+    void allArgsConstructor_test() {
+        FavoriteResponseDto dto = new FavoriteResponseDto(uuid, userId, challengeId, createdAt);
+
+        assertThat(dto.getUuid()).isEqualTo(uuid);
+        assertThat(dto.getUserId()).isEqualTo(userId);
+        assertThat(dto.getChallengeId()).isEqualTo(challengeId);
+        assertThat(dto.getCreatedAt()).isEqualTo(createdAt);
+    }
+
+
 
 
 }
