@@ -17,6 +17,7 @@ class FavoriteResponseDtoTest {
     private UUID challengeId;
     private LocalDateTime createdAt;
     private FavoriteResponseDto dto1;
+    private FavoriteResponseDto dto1Clone;
     private FavoriteResponseDto dto2;
     private FavoriteResponseDto dto3;
 
@@ -34,8 +35,15 @@ class FavoriteResponseDtoTest {
                 .createdAt(createdAt)
                 .build();
 
-        dto2 = FavoriteResponseDto.builder()
+        dto1Clone = FavoriteResponseDto.builder()
                 .uuid(uuid)
+                .userId(userId)
+                .challengeId(challengeId)
+                .createdAt(createdAt)
+                .build();
+
+        dto2 = FavoriteResponseDto.builder()
+                .uuid(UUID.randomUUID())
                 .userId(userId)
                 .challengeId(challengeId)
                 .createdAt(createdAt)
@@ -106,7 +114,7 @@ class FavoriteResponseDtoTest {
     @Test
     void equals_test() {
         assertAll(
-                () -> assertThat(dto1).isEqualTo(dto2),
+                () -> assertThat(dto1).isEqualTo(dto1Clone),
                 () -> assertThat(dto1).isNotEqualTo(dto3),
                 () -> assertThat(dto1).isNotEqualTo(null),
                 () -> assertThat(dto1).isNotEqualTo("string")
@@ -115,7 +123,7 @@ class FavoriteResponseDtoTest {
 
     @Test
     void hashCode_test() {
-        assertThat(dto1).hasSameHashCodeAs(dto2);
+        assertThat(dto1).hasSameHashCodeAs(dto1Clone);
         assertThat(dto1.hashCode()).isNotEqualTo(dto3.hashCode());
     }
 
@@ -254,22 +262,78 @@ class FavoriteResponseDtoTest {
 
     @Test
     void equals_WithNullUuidInBoth_test() {
-        assertThat(dto1).isEqualTo(dto2);
+        FavoriteResponseDto dtoA = FavoriteResponseDto.builder()
+                .uuid(null)
+                .userId(userId)
+                .challengeId(challengeId)
+                .createdAt(createdAt)
+                .build();
+
+        FavoriteResponseDto dtoB = FavoriteResponseDto.builder()
+                .uuid(null)
+                .userId(userId)
+                .challengeId(challengeId)
+                .createdAt(createdAt)
+                .build();
+
+        assertThat(dtoA).isEqualTo(dtoB);
     }
 
     @Test
     void equals_WithNullUserIdInBoth_test() {
-        assertThat(dto1).isEqualTo(dto2);
+        FavoriteResponseDto dtoA = FavoriteResponseDto.builder()
+                .uuid(uuid)
+                .userId(null)
+                .challengeId(challengeId)
+                .createdAt(createdAt)
+                .build();
+
+        FavoriteResponseDto dtoB = FavoriteResponseDto.builder()
+                .uuid(uuid)
+                .userId(null)
+                .challengeId(challengeId)
+                .createdAt(createdAt)
+                .build();
+
+        assertThat(dtoA).isEqualTo(dtoB);
     }
 
     @Test
     void equals_WithNullChallengeIdInBoth_test() {
-        assertThat(dto1).isEqualTo(dto2);
+        FavoriteResponseDto dtoA = FavoriteResponseDto.builder()
+                .uuid(uuid)
+                .userId(userId)
+                .challengeId(null)
+                .createdAt(createdAt)
+                .build();
+
+        FavoriteResponseDto dtoB = FavoriteResponseDto.builder()
+                .uuid(uuid)
+                .userId(userId)
+                .challengeId(null)
+                .createdAt(createdAt)
+                .build();
+
+        assertThat(dtoA).isEqualTo(dtoB);
     }
 
     @Test
     void equals_WithNullCreatedAtInBoth_test() {
-        assertThat(dto1).isEqualTo(dto2);
+        FavoriteResponseDto dtoA = FavoriteResponseDto.builder()
+                .uuid(uuid)
+                .userId(userId)
+                .challengeId(challengeId)
+                .createdAt(null)
+                .build();
+
+        FavoriteResponseDto dtoB = FavoriteResponseDto.builder()
+                .uuid(uuid)
+                .userId(userId)
+                .challengeId(challengeId)
+                .createdAt(null)
+                .build();
+
+        assertThat(dtoA).isEqualTo(dtoB);
     }
 
     @Test
@@ -313,7 +377,7 @@ class FavoriteResponseDtoTest {
         FavoriteResponseDto dtoA = new FavoriteResponseDto(uuid, userId, challengeId, createdAt);
         FavoriteResponseDto dtoB = new FavoriteResponseDto(uuid, userId, challengeId, createdAt);
 
-        assertThat(dtoA).isEqualTo(dtoB.hashCode());
+        assertThat(dtoA).hasSameHashCodeAs(dtoB);
     }
 
     @Test
