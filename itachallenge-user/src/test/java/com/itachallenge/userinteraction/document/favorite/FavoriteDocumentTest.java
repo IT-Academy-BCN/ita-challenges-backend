@@ -210,6 +210,63 @@ class FavoriteDocumentTest {
         assertTrue(toString.contains("createdAt=" + createdAt));
     }
 
+    @Test
+    void builder_PartialFields_test() {
+        UUID onlyUserId = UUID.randomUUID();
+        FavoriteDocument doc = FavoriteDocument.builder()
+                .userId(onlyUserId)
+                .build();
+        assertNull(doc.getUuid());
+        assertEquals(onlyUserId, doc.getUserId());
+        assertNull(doc.getChallengeId());
+        assertNull(doc.getCreatedAt());
+    }
+
+    @Test
+    void equals_NullAndDifferentType_test() {
+        FavoriteDocument doc = new FavoriteDocument(uuid, userId, challengeId, createdAt);
+        assertNotEquals(null, doc);
+        assertNotEquals("some string", doc);
+
+        FavoriteDocument other = new FavoriteDocument(uuid, userId, null, createdAt);
+        assertNotEquals(doc, other);
+        assertNotEquals(doc.hashCode(), other.hashCode());
+    }
+
+    @Test
+    void toString_WithNullFields_test() {
+        FavoriteDocument doc = new FavoriteDocument(null, userId, null, null);
+        String str = doc.toString();
+        assertTrue(str.contains("FavoriteDocument"));
+        assertTrue(str.contains("userId=" + userId));
+        assertTrue(str.contains("uuid=null"));
+        assertTrue(str.contains("challengeId=null"));
+        assertTrue(str.contains("createdAt=null"));
+    }
+
+    @Test
+    void builderThenSetters_EqualsDifference_test() {
+        FavoriteDocument doc1 = FavoriteDocument.builder()
+                .uuid(uuid)
+                .userId(userId)
+                .challengeId(challengeId)
+                .createdAt(createdAt)
+                .build();
+
+        FavoriteDocument doc2 = FavoriteDocument.builder()
+                .uuid(uuid)
+                .userId(userId)
+                .challengeId(challengeId)
+                .createdAt(createdAt)
+                .build();
+
+        assertEquals(doc1, doc2);
+
+        doc2.setCreatedAt(createdAt.plusHours(1));
+        assertNotEquals(doc1, doc2);
+    }
+
+
 
 
 }
