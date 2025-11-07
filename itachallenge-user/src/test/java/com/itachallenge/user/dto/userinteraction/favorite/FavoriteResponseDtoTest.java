@@ -384,7 +384,7 @@ class FavoriteResponseDtoTest {
         FavoriteResponseDto dto = new FavoriteResponseDto(null, null, null, null);
         int hashCode = dto.hashCode();
 
-        assertThat(hashCode).isNotNull();
+        assertThat(dto.hashCode()).isEqualTo(hashCode);
     }
 
     @Test
