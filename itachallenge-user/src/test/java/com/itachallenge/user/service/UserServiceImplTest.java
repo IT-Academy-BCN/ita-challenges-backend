@@ -19,7 +19,6 @@ import com.itachallenge.userinteraction.repository.favorite.FavoriteRepository;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
