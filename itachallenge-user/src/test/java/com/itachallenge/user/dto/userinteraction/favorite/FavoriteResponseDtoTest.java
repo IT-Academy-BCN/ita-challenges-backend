@@ -9,6 +9,7 @@ import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 class FavoriteResponseDtoTest {
     private UUID uuid;
@@ -104,10 +105,12 @@ class FavoriteResponseDtoTest {
 
     @Test
     void equals_test() {
-        assertThat(dto1).isEqualTo(dto2);
-        assertThat(dto1).isNotEqualTo(dto3);
-        assertThat(dto1).isNotEqualTo(null);
-        assertThat(dto1).isNotEqualTo("string");
+        assertAll(
+                () -> assertThat(dto1).isEqualTo(dto2),
+                () -> assertThat(dto1).isNotEqualTo(dto3),
+                () -> assertThat(dto1).isNotEqualTo(null),
+                () -> assertThat(dto1).isNotEqualTo("string")
+        );
     }
 
     @Test
@@ -178,9 +181,6 @@ class FavoriteResponseDtoTest {
 
     @Test
     void equals_NullAndDifferentType_test() {
-        assertThat(dto1).isNotEqualTo(null);
-        assertThat(dto1).isNotEqualTo("some string");
-
         FavoriteResponseDto other = FavoriteResponseDto.builder()
                 .uuid(uuid)
                 .userId(userId)
@@ -188,8 +188,13 @@ class FavoriteResponseDtoTest {
                 .createdAt(createdAt)
                 .build();
 
-        assertThat(dto1).isNotEqualTo(other);
-        assertThat(dto1.hashCode()).isNotEqualTo(other.hashCode());
+        assertAll(
+                () -> assertThat(dto1).isNotEqualTo(null),
+                () -> assertThat(dto1).isNotEqualTo("some string"),
+                () -> assertThat(dto1).isNotEqualTo(other),
+                () -> assertThat(dto1.hashCode()).isNotEqualTo(other.hashCode())
+        );
+
     }
 
     @Test
@@ -229,182 +234,90 @@ class FavoriteResponseDtoTest {
 
     @Test
     void equals_WithDifferentUuid_test() {
-        UUID userId = UUID.randomUUID();
-        UUID challengeId = UUID.randomUUID();
-        LocalDateTime createdAt = LocalDateTime.now();
-
-        FavoriteResponseDto dto1 = new FavoriteResponseDto(UUID.randomUUID(), userId, challengeId, createdAt);
-        FavoriteResponseDto dto2 = new FavoriteResponseDto(UUID.randomUUID(), userId, challengeId, createdAt);
-
         assertThat(dto1).isNotEqualTo(dto2);
     }
 
     @Test
     void equals_WithDifferentUserId_test() {
-        UUID uuid = UUID.randomUUID();
-        UUID challengeId = UUID.randomUUID();
-        LocalDateTime createdAt = LocalDateTime.now();
-
-        FavoriteResponseDto dto1 = new FavoriteResponseDto(uuid, UUID.randomUUID(), challengeId, createdAt);
-        FavoriteResponseDto dto2 = new FavoriteResponseDto(uuid, UUID.randomUUID(), challengeId, createdAt);
-
         assertThat(dto1).isNotEqualTo(dto2);
     }
 
     @Test
     void equals_WithDifferentChallengeId_test() {
-        UUID uuid = UUID.randomUUID();
-        UUID userId = UUID.randomUUID();
-        LocalDateTime createdAt = LocalDateTime.now();
-
-        FavoriteResponseDto dto1 = new FavoriteResponseDto(uuid, userId, UUID.randomUUID(), createdAt);
-        FavoriteResponseDto dto2 = new FavoriteResponseDto(uuid, userId, UUID.randomUUID(), createdAt);
-
         assertThat(dto1).isNotEqualTo(dto2);
     }
 
     @Test
     void equals_WithDifferentCreatedAt_test() {
-        UUID uuid = UUID.randomUUID();
-        UUID userId = UUID.randomUUID();
-        UUID challengeId = UUID.randomUUID();
-
-        FavoriteResponseDto dto1 = new FavoriteResponseDto(uuid, userId, challengeId, LocalDateTime.now());
-        FavoriteResponseDto dto2 = new FavoriteResponseDto(uuid, userId, challengeId, LocalDateTime.now().plusDays(1));
-
         assertThat(dto1).isNotEqualTo(dto2);
     }
 
     @Test
     void equals_WithNullUuidInBoth_test() {
-        UUID userId = UUID.randomUUID();
-        UUID challengeId = UUID.randomUUID();
-        LocalDateTime createdAt = LocalDateTime.now();
-
-        FavoriteResponseDto dto1 = new FavoriteResponseDto(null, userId, challengeId, createdAt);
-        FavoriteResponseDto dto2 = new FavoriteResponseDto(null, userId, challengeId, createdAt);
-
         assertThat(dto1).isEqualTo(dto2);
     }
 
     @Test
     void equals_WithNullUserIdInBoth_test() {
-        UUID uuid = UUID.randomUUID();
-        UUID challengeId = UUID.randomUUID();
-        LocalDateTime createdAt = LocalDateTime.now();
-
-        FavoriteResponseDto dto1 = new FavoriteResponseDto(uuid, null, challengeId, createdAt);
-        FavoriteResponseDto dto2 = new FavoriteResponseDto(uuid, null, challengeId, createdAt);
-
         assertThat(dto1).isEqualTo(dto2);
     }
 
     @Test
     void equals_WithNullChallengeIdInBoth_test() {
-        UUID uuid = UUID.randomUUID();
-        UUID userId = UUID.randomUUID();
-        LocalDateTime createdAt = LocalDateTime.now();
-
-        FavoriteResponseDto dto1 = new FavoriteResponseDto(uuid, userId, null, createdAt);
-        FavoriteResponseDto dto2 = new FavoriteResponseDto(uuid, userId, null, createdAt);
-
         assertThat(dto1).isEqualTo(dto2);
     }
 
     @Test
     void equals_WithNullCreatedAtInBoth_test() {
-        UUID uuid = UUID.randomUUID();
-        UUID userId = UUID.randomUUID();
-        UUID challengeId = UUID.randomUUID();
-
-        FavoriteResponseDto dto1 = new FavoriteResponseDto(uuid, userId, challengeId, null);
-        FavoriteResponseDto dto2 = new FavoriteResponseDto(uuid, userId, challengeId, null);
-
         assertThat(dto1).isEqualTo(dto2);
     }
 
     @Test
     void equals_WithNullUuidInOne_test() {
-        UUID userId = UUID.randomUUID();
-        UUID challengeId = UUID.randomUUID();
-        LocalDateTime createdAt = LocalDateTime.now();
-
-        FavoriteResponseDto dto1 = new FavoriteResponseDto(null, userId, challengeId, createdAt);
-        FavoriteResponseDto dto2 = new FavoriteResponseDto(UUID.randomUUID(), userId, challengeId, createdAt);
-
         assertThat(dto1).isNotEqualTo(dto2);
     }
 
     @Test
     void equals_WithNullUserIdInOne_test() {
-        UUID uuid = UUID.randomUUID();
-        UUID challengeId = UUID.randomUUID();
-        LocalDateTime createdAt = LocalDateTime.now();
-
-        FavoriteResponseDto dto1 = new FavoriteResponseDto(uuid, null, challengeId, createdAt);
-        FavoriteResponseDto dto2 = new FavoriteResponseDto(uuid, UUID.randomUUID(), challengeId, createdAt);
-
         assertThat(dto1).isNotEqualTo(dto2);
     }
 
     @Test
     void equals_WithNullChallengeIdInOne_test() {
-        UUID uuid = UUID.randomUUID();
-        UUID userId = UUID.randomUUID();
-        LocalDateTime createdAt = LocalDateTime.now();
-
-        FavoriteResponseDto dto1 = new FavoriteResponseDto(uuid, userId, null, createdAt);
-        FavoriteResponseDto dto2 = new FavoriteResponseDto(uuid, userId, UUID.randomUUID(), createdAt);
-
         assertThat(dto1).isNotEqualTo(dto2);
     }
 
     @Test
     void equals_WithNullCreatedAtInOne_test() {
-        UUID uuid = UUID.randomUUID();
-        UUID userId = UUID.randomUUID();
-        UUID challengeId = UUID.randomUUID();
-
-        FavoriteResponseDto dto1 = new FavoriteResponseDto(uuid, userId, challengeId, null);
-        FavoriteResponseDto dto2 = new FavoriteResponseDto(uuid, userId, challengeId, LocalDateTime.now());
-
         assertThat(dto1).isNotEqualTo(dto2);
     }
 
     @Test
     void equals_AllFieldsNull_test() {
-        FavoriteResponseDto dto1 = new FavoriteResponseDto(null, null, null, null);
-        FavoriteResponseDto dto2 = new FavoriteResponseDto(null, null, null, null);
+        FavoriteResponseDto dtoA = new FavoriteResponseDto(null, null, null, null);
+        FavoriteResponseDto dtoB = new FavoriteResponseDto(null, null, null, null);
 
-        assertThat(dto1).isEqualTo(dto2);
+        assertThat(dtoA).isEqualTo(dtoB);
     }
 
     @Test
     void hashCode_WithAllNulls_test() {
-        FavoriteResponseDto dto = new FavoriteResponseDto(null, null, null, null);
-        int hashCode = dto.hashCode();
+        FavoriteResponseDto dtoA = new FavoriteResponseDto(null, null, null, null);
+        int hashCode = dtoA.hashCode();
 
-        assertThat(hashCode).isNotNull();
+        assertThat(dtoA.hashCode()).isEqualTo(hashCode);
     }
 
     @Test
     void hashCode_EqualObjectsHaveEqualHashCodes_test() {
-        UUID uuid = UUID.randomUUID();
-        UUID userId = UUID.randomUUID();
-        UUID challengeId = UUID.randomUUID();
-        LocalDateTime createdAt = LocalDateTime.now();
+        FavoriteResponseDto dtoA = new FavoriteResponseDto(uuid, userId, challengeId, createdAt);
+        FavoriteResponseDto dtoB = new FavoriteResponseDto(uuid, userId, challengeId, createdAt);
 
-        FavoriteResponseDto dto1 = new FavoriteResponseDto(uuid, userId, challengeId, createdAt);
-        FavoriteResponseDto dto2 = new FavoriteResponseDto(uuid, userId, challengeId, createdAt);
-
-        assertThat(dto1.hashCode()).isEqualTo(dto2.hashCode());
+        assertThat(dtoA).isEqualTo(dtoB.hashCode());
     }
 
     @Test
     void canEqual_WithSameClass_test() {
-        FavoriteResponseDto dto1 = new FavoriteResponseDto();
-        FavoriteResponseDto dto2 = new FavoriteResponseDto();
-
         assertThat(dto1.canEqual(dto2)).isTrue();
     }
 
@@ -454,31 +367,19 @@ class FavoriteResponseDtoTest {
 
     @Test
     void setters_HandleNullValues_test() {
-        UUID uuid = UUID.randomUUID();
-        UUID userId = UUID.randomUUID();
-        UUID challengeId = UUID.randomUUID();
-        LocalDateTime createdAt = LocalDateTime.now();
+        dto1.setUuid(null);
+        dto1.setUserId(null);
+        dto1.setChallengeId(null);
+        dto1.setCreatedAt(null);
 
-        FavoriteResponseDto dto = new FavoriteResponseDto(uuid, userId, challengeId, createdAt);
-
-        dto.setUuid(null);
-        dto.setUserId(null);
-        dto.setChallengeId(null);
-        dto.setCreatedAt(null);
-
-        assertThat(dto.getUuid()).isNull();
-        assertThat(dto.getUserId()).isNull();
-        assertThat(dto.getChallengeId()).isNull();
-        assertThat(dto.getCreatedAt()).isNull();
+        assertThat(dto1.getUuid()).isNull();
+        assertThat(dto1.getUserId()).isNull();
+        assertThat(dto1.getChallengeId()).isNull();
+        assertThat(dto1.getCreatedAt()).isNull();
     }
 
     @Test
     void toString_ContainsAllFields_test() {
-        UUID uuid = UUID.randomUUID();
-        UUID userId = UUID.randomUUID();
-        UUID challengeId = UUID.randomUUID();
-        LocalDateTime createdAt = LocalDateTime.now();
-
         FavoriteResponseDto dto = new FavoriteResponseDto(uuid, userId, challengeId, createdAt);
         String toString = dto.toString();
 
@@ -507,9 +408,6 @@ class FavoriteResponseDtoTest {
     void jsonSerialization_WithPartialFields_test() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
-
-        UUID userId = UUID.randomUUID();
-        UUID challengeId = UUID.randomUUID();
 
         FavoriteResponseDto dto = FavoriteResponseDto.builder()
                 .userId(userId)
@@ -543,11 +441,6 @@ class FavoriteResponseDtoTest {
 
     @Test
     void builderThenSetters_Modification_test() {
-        UUID uuid = UUID.randomUUID();
-        UUID userId = UUID.randomUUID();
-        UUID challengeId = UUID.randomUUID();
-        LocalDateTime createdAt = LocalDateTime.now();
-
         FavoriteResponseDto dto = FavoriteResponseDto.builder()
                 .uuid(uuid)
                 .userId(userId)
@@ -564,37 +457,26 @@ class FavoriteResponseDtoTest {
 
     @Test
     void equals_Symmetric_test() {
-        UUID uuid = UUID.randomUUID();
-        UUID userId = UUID.randomUUID();
-        UUID challengeId = UUID.randomUUID();
-        LocalDateTime createdAt = LocalDateTime.now();
+        FavoriteResponseDto dtoA = new FavoriteResponseDto(uuid, userId, challengeId, createdAt);
+        FavoriteResponseDto dtoB = new FavoriteResponseDto(uuid, userId, challengeId, createdAt);
 
-        FavoriteResponseDto dto1 = new FavoriteResponseDto(uuid, userId, challengeId, createdAt);
-        FavoriteResponseDto dto2 = new FavoriteResponseDto(uuid, userId, challengeId, createdAt);
-
-        assertThat(dto1).isEqualTo(dto2);
-        assertThat(dto2).isEqualTo(dto1);
+        assertThat(dtoA).isEqualTo(dtoB);
+        assertThat(dtoB).isEqualTo(dtoA);
     }
 
     @Test
     void equals_Transitive_test() {
-        UUID uuid = UUID.randomUUID();
-        UUID userId = UUID.randomUUID();
-        UUID challengeId = UUID.randomUUID();
-        LocalDateTime createdAt = LocalDateTime.now();
+        FavoriteResponseDto dtoA = new FavoriteResponseDto(uuid, userId, challengeId, createdAt);
+        FavoriteResponseDto dtoB = new FavoriteResponseDto(uuid, userId, challengeId, createdAt);
+        FavoriteResponseDto dtoC= new FavoriteResponseDto(uuid, userId, challengeId, createdAt);
 
-        FavoriteResponseDto dto1 = new FavoriteResponseDto(uuid, userId, challengeId, createdAt);
-        FavoriteResponseDto dto2 = new FavoriteResponseDto(uuid, userId, challengeId, createdAt);
-        FavoriteResponseDto dto3 = new FavoriteResponseDto(uuid, userId, challengeId, createdAt);
-
-        assertThat(dto1).isEqualTo(dto2);
-        assertThat(dto2).isEqualTo(dto3);
-        assertThat(dto1).isEqualTo(dto3);
+        assertThat(dtoA).isEqualTo(dtoB);
+        assertThat(dtoB).isEqualTo(dtoC);
+        assertThat(dtoA).isEqualTo(dtoC);
     }
 
     @Test
     void hashCode_ConsistentAcrossMultipleCalls_test() {
-        UUID uuid = UUID.randomUUID();
         FavoriteResponseDto dto = new FavoriteResponseDto(uuid, UUID.randomUUID(), UUID.randomUUID(), LocalDateTime.now());
 
         int hash1 = dto.hashCode();
@@ -622,7 +504,5 @@ class FavoriteResponseDtoTest {
         assertThat(deserialized.getChallengeId()).isEqualTo(original.getChallengeId());
 
     }
-
-
 
 }
