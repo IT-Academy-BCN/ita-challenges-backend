@@ -15,6 +15,8 @@ class FavoriteDocumentTest {
     private UUID challengeId;
     private LocalDateTime createdAt;
     private FavoriteDocument favoriteDocument;
+    private FavoriteDocument favoriteDocument2;
+    private FavoriteDocument favoriteDocument3;
 
     @BeforeEach
     void setUp(){
@@ -28,6 +30,20 @@ class FavoriteDocumentTest {
                 .userId(userId)
                 .challengeId(challengeId)
                 .createdAt(createdAt)
+                .build();
+
+        favoriteDocument2 = FavoriteDocument.builder()
+                .uuid(uuid)
+                .userId(userId)
+                .challengeId(challengeId)
+                .createdAt(createdAt)
+                .build();
+
+        favoriteDocument3 = FavoriteDocument.builder()
+                .uuid(UUID.randomUUID())
+                .userId(UUID.randomUUID())
+                .challengeId(UUID.randomUUID())
+                .createdAt(createdAt.plusDays(1))
                 .build();
     }
 
@@ -105,6 +121,10 @@ class FavoriteDocumentTest {
         doc2.setChallengeId(UUID.randomUUID());
         assertNotEquals(doc1, doc2);
         assertNotEquals(doc1.hashCode(), doc2.hashCode());
+
+        assertNotEquals(null, doc1);
+
+        assertNotEquals("string", doc1);
     }
 
     @Test
@@ -145,5 +165,51 @@ class FavoriteDocumentTest {
         assertNull(favoriteDocument.getChallengeId());
         assertNull(favoriteDocument.getCreatedAt());
     }
+
+    @Test
+    void equals_Symmetric_test() {
+        assertEquals(favoriteDocument, favoriteDocument2);
+        assertEquals(favoriteDocument2, favoriteDocument);
+    }
+
+    @Test
+    void equals_Transitive_test() {
+        FavoriteDocument doc3 = new FavoriteDocument(uuid, userId, challengeId, createdAt);
+        assertEquals(favoriteDocument, favoriteDocument2);
+        assertEquals(favoriteDocument2, doc3);
+        assertEquals(favoriteDocument, doc3);
+    }
+
+    @Test
+    void equals_Consistent_test() {
+        boolean firstResult = favoriteDocument.equals(favoriteDocument2);
+        boolean secondResult = favoriteDocument.equals(favoriteDocument2);
+        assertEquals(firstResult, secondResult);
+    }
+
+    @Test
+    void hashCode_Consistent_test() {
+        int firstHashCode = favoriteDocument.hashCode();
+        int secondHashCode = favoriteDocument.hashCode();
+        assertEquals(firstHashCode, secondHashCode);
+    }
+
+    @Test
+    void hashCode_EqualObjectsHaveEqualHashCodes_test() {
+        assertEquals(favoriteDocument.hashCode(), favoriteDocument2.hashCode());
+    }
+
+    @Test
+    void toString_ContainsAllFields_test() {
+        String toString = favoriteDocument.toString();
+
+        assertNotNull(toString);
+        assertTrue(toString.contains("uuid=" + uuid));
+        assertTrue(toString.contains("userId=" + userId));
+        assertTrue(toString.contains("challengeId=" + challengeId));
+        assertTrue(toString.contains("createdAt=" + createdAt));
+    }
+
+
 
 }
