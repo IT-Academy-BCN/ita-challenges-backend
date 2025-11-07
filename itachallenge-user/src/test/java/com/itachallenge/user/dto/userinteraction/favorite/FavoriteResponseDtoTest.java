@@ -149,6 +149,78 @@ class FavoriteResponseDtoTest {
         assertThat(dto.getCreatedAt()).isEqualTo(createdAt);
     }
 
+    @Test
+    void builder_PartialFields_test() {
+        FavoriteResponseDto dto = FavoriteResponseDto.builder()
+                .userId(userId)
+                .challengeId(challengeId)
+                .build();
+
+        assertThat(dto.getUuid()).isNull();
+        assertThat(dto.getUserId()).isEqualTo(userId);
+        assertThat(dto.getChallengeId()).isEqualTo(challengeId);
+        assertThat(dto.getCreatedAt()).isNull();
+    }
+
+    @Test
+    void toString_WithNullFields_test() {
+        FavoriteResponseDto dto = new FavoriteResponseDto();
+        dto.setUserId(userId);
+
+        String str = dto.toString();
+        assertThat(str).isNotNull()
+                .isNotEmpty()
+                .contains("userId=" + userId)
+                .contains("uuid=")
+                .contains("challengeId=")
+                .contains("createdAt=");
+    }
+
+    @Test
+    void equals_NullAndDifferentType_test() {
+        assertThat(dto1).isNotEqualTo(null);
+        assertThat(dto1).isNotEqualTo("some string");
+
+        FavoriteResponseDto other = FavoriteResponseDto.builder()
+                .uuid(uuid)
+                .userId(userId)
+                .challengeId(null)
+                .createdAt(createdAt)
+                .build();
+
+        assertThat(dto1).isNotEqualTo(other);
+        assertThat(dto1.hashCode()).isNotEqualTo(other.hashCode());
+    }
+
+    @Test
+    void hashCode_Consistency_test() {
+        int hash1 = dto1.hashCode();
+        int hash2 = dto1.hashCode();
+        assertThat(hash1).isEqualTo(hash2);
+    }
+
+    @Test
+    void serialization_deserialization_with_nulls_test() throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+
+        FavoriteResponseDto dto = FavoriteResponseDto.builder()
+                .uuid(null)
+                .userId(null)
+                .challengeId(null)
+                .createdAt(null)
+                .build();
+
+        String json = mapper.writeValueAsString(dto);
+        assertThat(json).contains("uuid_favorite").contains("user_id").contains("challenge_id").contains("created_at");
+
+        FavoriteResponseDto deserialized = mapper.readValue(json, FavoriteResponseDto.class);
+        assertThat(deserialized.getUuid()).isNull();
+        assertThat(deserialized.getUserId()).isNull();
+        assertThat(deserialized.getChallengeId()).isNull();
+        assertThat(deserialized.getCreatedAt()).isNull();
+    }
+
 
 
 
