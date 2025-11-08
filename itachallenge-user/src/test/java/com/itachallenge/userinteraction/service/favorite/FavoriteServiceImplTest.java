@@ -1,6 +1,8 @@
 package com.itachallenge.userinteraction.service.favorite;
 
 import com.itachallenge.userinteraction.repository.favorite.FavoriteRepository;
+
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,7 +30,7 @@ import static org.mockito.Mockito.*;
 
             FavoriteServiceImpl service = new FavoriteServiceImpl(testRepository);
 
-            assert service != null;
+            Assertions.assertNotNull(service);
         }
 
 

@@ -315,7 +315,7 @@ class FavoriteDocumentTest {
     @Test
     void hashCode_WithAllNulls_test() {
         FavoriteDocument doc = new FavoriteDocument(null, null, null, null);
-        doc.hashCode();
+        assertDoesNotThrow(doc::hashCode);
     }
 
     @Test
