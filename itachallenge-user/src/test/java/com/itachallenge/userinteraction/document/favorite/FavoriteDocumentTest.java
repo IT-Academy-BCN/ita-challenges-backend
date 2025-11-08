@@ -320,8 +320,9 @@ class FavoriteDocumentTest {
 
     @Test
     void hashCode_WithMixedNulls_test() {
-        FavoriteDocument doc1 = new FavoriteDocument(uuid, null, null, LocalDateTime.now());
-        FavoriteDocument doc2 = new FavoriteDocument(uuid, null, null, LocalDateTime.now());
+        LocalDateTime fixedTime = LocalDateTime.of(2024, 1, 1, 12, 0);
+        FavoriteDocument doc1 = new FavoriteDocument(uuid, null, null, fixedTime);
+        FavoriteDocument doc2 = new FavoriteDocument(uuid, null, null, fixedTime);
 
         assertEquals(doc1.hashCode(), doc2.hashCode());
     }
