@@ -345,33 +345,6 @@ public class UserController {
                 });
     }
 
-    @Operation(
-            summary = "Gets challenges marked as favorites by a user",
-            description = "Returns a set of challenge IDs that the specified user has marked as favorites",
-            parameters = {
-                    @Parameter(
-                            name = "userId",
-                            description = "UUID of the user",
-                            required = true,
-                            in = ParameterIn.PATH
-                    )
-            },
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Set of favorite challengeIds by user"),
-                    @ApiResponse(responseCode = "404", description = "User not found"),
-                    @ApiResponse(responseCode = "400", description = "The provided IDs are not valid."),
-                    @ApiResponse(responseCode = "500", description = "Unexpected error")
-            }
-    )
-
-    @GetMapping("/users/{userId}/favorites")
-    public Mono<ResponseEntity<Set<UUID>>> getUserFavorites(@PathVariable String userId) {
-        return userService.getUserFavorites(userId)
-                .map(favorites -> {
-                    log.info("Retrieved {} favorite challenges for user {}", favorites.size(), userId);
-                    return ResponseEntity.ok().body(favorites);
-                });
-    }
 
     @Operation(
             summary = "Gets challenges marked as bookmarks by a user",
