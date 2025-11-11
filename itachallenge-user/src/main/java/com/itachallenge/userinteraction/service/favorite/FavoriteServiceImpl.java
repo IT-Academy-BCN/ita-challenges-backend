@@ -1,6 +1,7 @@
 package com.itachallenge.userinteraction.service.favorite;
 
 import com.itachallenge.user.exception.BadUUIDException;
+import com.itachallenge.user.exception.NotFoundException;
 import com.itachallenge.userinteraction.document.favorite.FavoriteDocument;
 import com.itachallenge.userinteraction.repository.favorite.FavoriteRepository;
 import org.springframework.stereotype.Service;
@@ -34,9 +35,10 @@ public class FavoriteServiceImpl implements FavoriteService {
     public Mono<Set<UUID>> getUserFavorites(String userId) {
         return parseAndValidateUUID(userId)
                 .flatMap(userUuid ->
-                        favoriteRepository.findByUserId(userUuid) // returns Flux<FavoriteDocument>
-                                .map(FavoriteDocument::getChallengeId) // get only challenge IDs
-                                .collect(Collectors.toSet())           // collect all into a Set<UUID>
+                        favoriteRepository.findByUserId(userUuid)
+                                .switchIfEmpty(Mono.error(new NotFoundException("User not found with id: " + userId)))
+                                .map(FavoriteDocument::getChallengeId)
+                                .collect(Collectors.toSet())
                 );
     }
 }
