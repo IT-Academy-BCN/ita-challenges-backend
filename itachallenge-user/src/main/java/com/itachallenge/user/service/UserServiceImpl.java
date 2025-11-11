@@ -96,7 +96,7 @@ public class UserServiceImpl implements UserService {
         return favoriteRepository.existsByUserIdAndChallengeId(userUuid, challengeUuid)
                 .flatMap(exists -> {
                     if (exists.booleanValue())
-                        return Mono.just(false); // Ya existe, no lo añade
+                        return Mono.just(false);
 
                     FavoriteDocument favorite = new FavoriteDocument();
                     favorite.setUuid(UUID.randomUUID());
