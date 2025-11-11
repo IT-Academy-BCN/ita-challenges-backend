@@ -183,4 +183,48 @@ class FavoriteControllerIntegrationTest {
 
     }
 
+    @Test
+    void getUserFavorites_WithInvalidUUID_Returns400() {
+        String invalidUserId = "invalid-uuid-format";
+
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/user/users/{userId}/favorites", invalidUserId)
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isBadRequest()
+                .expectBody(String.class)
+                .value(body -> {
+                    assertThat(body).contains("The provided IDs are not valid");
+                });
+    }
+
+    @Test
+    void getUserFavorites_WithMalformedUUID_Returns400() {
+        String invalidUserId = "++++++-123e4567";
+
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/user/users/{userId}/favorites", invalidUserId)
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isBadRequest()
+                .expectBody(String.class)
+                .value(body ->
+                    assertThat(body).contains("The provided IDs are not valid"));
+    }
+
+    @Test
+    void getUserFavorites_WhenUserDoesntExists_Returns404() {
+        String invalidUserId = "123e4567-e89b-12d3-a456-42661417400";
+
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/user/users/{userId}/favorites", invalidUserId)
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isNotFound()
+                .expectBody(String.class)
+                .value(body ->
+                        assertThat(body).contains("not found"));
+    }
+
+
 }
