@@ -192,6 +192,14 @@ class FavoriteControllerIntegrationTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isBadRequest()
+//                .expectBody()   //// TO UN-COMMENT WHEN NEW ERROR-CORE GLOBAL HANDLER IS USED + QUItTING 3 LAST LINES
+//                .jsonPath("$.status").isEqualTo(400)
+//                .jsonPath("$.error").value(error -> assertThat(error.toString())
+//                        .contains("BadUUIDException"))
+//                .jsonPath("$.message").value(message -> assertThat(message.toString())
+//                        .contains("The provided IDs are not valid"))
+//                .jsonPath("$.path").value(path -> assertThat(path.toString())
+//                        .contains("/users/" + invalidUserId + "/favorites"));
                 .expectBody(String.class)
                 .value(body -> {
                     assertThat(body).contains("The provided IDs are not valid");
@@ -207,6 +215,14 @@ class FavoriteControllerIntegrationTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isBadRequest()
+//                .expectBody() //// TO UN-COMMENT WHEN NEW ERROR-CORE GLOBAL HANDLER IS USED + QUITTING 3 LAST LINES
+//                .jsonPath("$.status").isEqualTo(400)
+//                .jsonPath("$.error").value(error -> assertThat(error.toString())
+//                        .contains("BadUUIDException"))
+//                .jsonPath("$.message").value(message -> assertThat(message.toString())
+//                        .contains("The provided IDs are not valid"))
+//                .jsonPath("$.path").value(path -> assertThat(path.toString())
+//                        .contains("/users/" + invalidUserId + "/favorites"));
                 .expectBody(String.class)
                 .value(body ->
                     assertThat(body).contains("The provided IDs are not valid"));
@@ -221,10 +237,17 @@ class FavoriteControllerIntegrationTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isNotFound()
+//                .expectBody()   //// TO UN-COMMENT WHEN NEW ERROR-CORE GLOBAL HANDLER IS USED + QUITTING 3 LAST LINES
+//                .jsonPath("$.status").isEqualTo(404)
+//                .jsonPath("$.error").value(error -> assertThat(error.toString())
+//                        .contains("NotFoundException")) // Nom de l'exception
+//                .jsonPath("$.message").value(message -> assertThat(message.toString())
+//                        .contains("not found")) // Message d'erreur
+//                .jsonPath("$.path").value(path -> assertThat(path.toString())
+//                        .contains("/users/" + invalidUserId + "/favorites"));
                 .expectBody(String.class)
                 .value(body ->
                         assertThat(body).contains("not found"));
     }
-
 
 }
