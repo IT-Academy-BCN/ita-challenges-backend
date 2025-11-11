@@ -5,6 +5,9 @@ import com.itachallenge.user.exception.BadUUIDException;
 import com.itachallenge.user.exception.NotFoundException;
 import com.itachallenge.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
+
+import com.itachallenge.userinteraction.document.favorite.FavoriteDocument;
+import com.itachallenge.userinteraction.repository.favorite.FavoriteRepository;
 import reactor.core.publisher.Mono;
 
 import java.util.HashSet;
@@ -16,9 +19,11 @@ import java.util.UUID;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final FavoriteRepository favoriteRepository;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, FavoriteRepository favoriteRepository) {
         this.userRepository = userRepository;
+        this.favoriteRepository = favoriteRepository;
     }
 
     @Override
@@ -27,6 +32,7 @@ public class UserServiceImpl implements UserService {
                 .switchIfEmpty(Mono.error(new NotFoundException("User not found")));
     }
 
+    //TODO : TO IMPLEMENT TO FAVORITE SERVICE IMPL
     @Override
     public Mono<Boolean> addChallengeToFavorites(String userId, String challengeId) {
 
@@ -37,7 +43,7 @@ public class UserServiceImpl implements UserService {
 
                     return userRepository.findById(userUuid)
                             .switchIfEmpty(Mono.error(new NotFoundException("User not found")))
-                            .flatMap(user -> addToFavorites(user, challengeUuid));
+                            .flatMap(user -> addToFavorites(userUuid, challengeUuid));
                 });
     }
 
@@ -54,6 +60,7 @@ public class UserServiceImpl implements UserService {
                 });
     }
 
+    //TODO : TO IMPLEMENT IN FAVORITE SERVICE IMPL
     @Override
     public Mono<Boolean> deleteChallengeFromFavorites(String userId, String challengeId) {
         return Mono.zip(parseAndValidateUUID(userId), parseAndValidateUUID(challengeId))
@@ -63,7 +70,7 @@ public class UserServiceImpl implements UserService {
 
                     return userRepository.findById(userUuid)
                             .switchIfEmpty(Mono.error(new NotFoundException("User not found")))
-                            .flatMap(user -> deleteFromFavorites(user, challengeUuid));
+                            .flatMap(user -> deleteFromFavorites(userUuid, challengeUuid));
                 });
     }
 
@@ -80,18 +87,22 @@ public class UserServiceImpl implements UserService {
                 });
     }
 
-    private Mono<Boolean> addToFavorites(UserDocument user, UUID challengeUuid) {
-        Set<UUID> favorites = Optional.ofNullable(user.getFavoriteChallenges())
-                .orElseGet(HashSet::new);
 
-        boolean added = favorites.add(challengeUuid);
+    //TODO : TO IMPLEMENT IN FAVORITE SERVICE IMPL
+    private Mono<Boolean> addToFavorites(UUID userUuid, UUID challengeUuid) {
+        return favoriteRepository.existsByUserIdAndChallengeId(userUuid, challengeUuid)
+                .flatMap(exists -> {
+                    if (exists.booleanValue())
+                        return Mono.just(false);
 
-        if (added) {
-            user.setFavoriteChallenges(favorites);
-            return userRepository.save(user).then(Mono.just(true));
-        }
+                    FavoriteDocument favorite = new FavoriteDocument();
+                    favorite.setUuid(UUID.randomUUID());
+                    favorite.setUserId(userUuid);
+                    favorite.setChallengeId(challengeUuid);
 
-        return Mono.just(false);
+                    return favoriteRepository.save(favorite)
+                            .thenReturn(true);
+                });
     }
 
     private Mono<Boolean> addToBookmarks(UserDocument user, UUID challengeUuid) {
@@ -108,18 +119,14 @@ public class UserServiceImpl implements UserService {
         return Mono.just(false);
     }
 
-    private Mono<Boolean> deleteFromFavorites(UserDocument user, UUID challengeUuid) {
-        Set<UUID> favorites = Optional.ofNullable(user.getFavoriteChallenges())
-                .orElseGet(HashSet::new);
-
-        boolean deleted = favorites.remove(challengeUuid);
-
-        if (deleted) {
-            user.setFavoriteChallenges(favorites);
-            return userRepository.save(user).then(Mono.just(true));
-        }
-
-        return Mono.just(false);
+    //TODO : TO IMPLEMENT IN FAVORITE SERVICE IMPL
+    private Mono<Boolean> deleteFromFavorites(UUID userId, UUID challengeUuid) {
+        return favoriteRepository.findByUserIdAndChallengeId(userId, challengeUuid)
+                .flatMap(favorite ->
+                    favoriteRepository.delete(favorite)
+                            .then(Mono.just(true))
+                )
+                .switchIfEmpty(Mono.just(false));
     }
 
     private Mono<Boolean> deleteFromBookmarks(UserDocument user, UUID challengeUuid) {

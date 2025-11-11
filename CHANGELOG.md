@@ -3,12 +3,30 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-[itachallenge-challenge-3.0.1-RELEASE] - 2025-11-11
+### [itachallenge-challenge-3.0.1-RELEASE] - 2025-11-11
 
 ### Changed
 - Added dependency to error-response module in challenge service / created message.properties files to store i18n messages. (Taiga [#734] & [#797], PR [#997])
   - introduced external validation messages;
   - does not break APIs, but may alter error texts.
+
+### [itachallenge-user-3.0.3-RELEASE] - 2025-11-07
+
+### Added
+- Foundation for managing user favorites in a dedicated collection.
+  - Favorite domain & persistence
+    - FavoriteDocument & FavoriteDocumentTest 
+    - FavoriteRepository (ReactiveMongoRepository<FavoriteDocument, UUID>) ; Favorites collection starts empty.
+    - FavoriteResponseDto & FavoriteResponseDtoTest
+ 
+
+### Changed
+- UserServiceImpl
+  - addChallengeToFavorites() and deleteChallengeFromFavorites() updated for persistence in FavoriteRepository.
+  - Temporary logic in UserServiceImpl will be migrated to FavoriteService in upcoming sprints.
+  - UserServiceImplTest updated to reflect these temporary changes.
+  - No changes to API endpoints or responses at this stage.
+
 
 ### [itachallenge-user-3.0.2-RELEASE] - 2025-11-05
 
