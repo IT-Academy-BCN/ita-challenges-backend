@@ -126,8 +126,8 @@ public class UserServiceImpl implements UserService {
     private Mono<Boolean> deleteFromFavorites(UUID userId, UUID challengeUuid) {
         return favoriteRepository.findByUserIdAndChallengeId(userId, challengeUuid)
                 .flatMap(favorite ->
-                    favoriteRepository.delete(favorite)
-                            .then(Mono.just(true))
+                        favoriteRepository.delete(favorite)
+                                .then(Mono.just(true))
                 )
                 .switchIfEmpty(Mono.just(false));
     }
