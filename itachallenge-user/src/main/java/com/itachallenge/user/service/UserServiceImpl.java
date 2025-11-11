@@ -146,6 +146,15 @@ public class UserServiceImpl implements UserService {
         return Mono.just(false);
     }
 
+    @Override
+    public Mono<Set<UUID>> getUserFavorites(String userId) {
+        return parseAndValidateUUID(userId)
+                .flatMap(userUuid ->
+                        userRepository.findById(userUuid)
+                                .switchIfEmpty(Mono.error(new NotFoundException(USER_NOT_FOUND + userId)))
+                                .map(user -> Optional.ofNullable(user.getFavoriteChallenges()).orElseGet(HashSet::new))
+                );
+    }
     private Mono<UUID> parseAndValidateUUID(String id) {
 
         if (id == null || id.isEmpty()) {
