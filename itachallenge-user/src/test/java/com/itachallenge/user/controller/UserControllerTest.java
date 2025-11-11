@@ -6,6 +6,7 @@ import com.itachallenge.user.dto.UserSolutionResponseDto;
 import com.itachallenge.user.exception.BadUUIDException;
 import com.itachallenge.user.exception.NotFoundException;
 import com.itachallenge.user.service.IUserSolutionService;
+import com.itachallenge.userinteraction.service.favorite.FavoriteService;
 import com.itachallenge.user.exception.UserGlobalExceptionHandler;
 import com.itachallenge.user.service.UserService;
 import org.junit.jupiter.api.*;
@@ -26,6 +27,9 @@ class UserControllerTest {
 
     @Mock
     private UserService userService;
+
+    @Mock
+    private FavoriteService favoriteService;
 
     @Mock
     private IUserSolutionService userSolutionService;
@@ -111,7 +115,7 @@ class UserControllerTest {
     void addToFavorites_WhenAdded_Returns201() {
         String userId = UUID.randomUUID().toString();
         String challengeId = UUID.randomUUID().toString();
-        when(userService.addChallengeToFavorites(userId, challengeId))
+        when(favoriteService.addChallengeToFavorites(userId, challengeId))
                 .thenReturn(Mono.just(true));
 
         webTestClient.post()
@@ -120,7 +124,7 @@ class UserControllerTest {
                 .expectStatus().isEqualTo(HttpStatus.CREATED)
                 .expectBody(Boolean.class).isEqualTo(true);
 
-        verify(userService, times(1)).addChallengeToFavorites(userId, challengeId);
+        verify(favoriteService, times(1)).addChallengeToFavorites(userId, challengeId);
     }
 
     @Test
@@ -143,7 +147,7 @@ class UserControllerTest {
     void addToFavorites_WhenAlreadyInFavorites_Returns200() {
         String userId = UUID.randomUUID().toString();
         String challengeId = UUID.randomUUID().toString();
-        when(userService.addChallengeToFavorites(userId, challengeId))
+        when(favoriteService.addChallengeToFavorites(userId, challengeId))
                 .thenReturn(Mono.just(false));
 
         webTestClient.post()
@@ -152,7 +156,7 @@ class UserControllerTest {
                 .expectStatus().isOk()
                 .expectBody(Boolean.class).isEqualTo(false);
 
-        verify(userService, times(1)).addChallengeToFavorites(userId, challengeId);
+        verify(favoriteService, times(1)).addChallengeToFavorites(userId, challengeId);
     }
 
     @Test
@@ -175,7 +179,7 @@ class UserControllerTest {
     void addToFavorites_WhenUserNotExists_Returns404() {
         String userId = UUID.randomUUID().toString();
         String challengeId = UUID.randomUUID().toString();
-        when(userService.addChallengeToFavorites(userId, challengeId))
+        when(favoriteService.addChallengeToFavorites(userId, challengeId))
                 .thenReturn(Mono.error(new NotFoundException("User not found")));
 
         webTestClient.post()
@@ -184,7 +188,7 @@ class UserControllerTest {
                 .expectStatus().isNotFound()
                 .expectBody(String.class).isEqualTo("User not found");
 
-        verify(userService, times(1)).addChallengeToFavorites(userId, challengeId);
+        verify(favoriteService, times(1)).addChallengeToFavorites(userId, challengeId);
     }
 
     @Test
@@ -207,7 +211,7 @@ class UserControllerTest {
     void addToFavorites_WhenBadFormattedId_Returns400() {
         String userId = "invalidUuid";
         String challengeId = "invalidUUid";
-        when(userService.addChallengeToFavorites(userId, challengeId))
+        when(favoriteService.addChallengeToFavorites(userId, challengeId))
                 .thenReturn(Mono.error(new BadUUIDException("Error message")));
 
         webTestClient.post()
@@ -216,7 +220,7 @@ class UserControllerTest {
                 .expectStatus().isBadRequest()
                 .expectBody(String.class).isEqualTo("The provided IDs are not valid.");
 
-        verify(userService, times(1)).addChallengeToFavorites(userId, challengeId);
+        verify(favoriteService, times(1)).addChallengeToFavorites(userId, challengeId);
     }
 
     @Test
@@ -239,7 +243,7 @@ class UserControllerTest {
     void addToFavorites_WhenUnexpectedError_Returns500() {
         String userId = UUID.randomUUID().toString();
         String challengeId = UUID.randomUUID().toString();
-        when(userService.addChallengeToFavorites(userId, challengeId))
+        when(favoriteService.addChallengeToFavorites(userId, challengeId))
                 .thenReturn(Mono.error(new Exception()));
 
         webTestClient.post()
@@ -248,7 +252,7 @@ class UserControllerTest {
                 .expectStatus().isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR)
                 .expectBody(String.class).isEqualTo("Unexpected error happened.");
 
-        verify(userService, times(1)).addChallengeToFavorites(userId, challengeId);
+        verify(favoriteService, times(1)).addChallengeToFavorites(userId, challengeId);
     }
 
     @Test
@@ -271,7 +275,7 @@ class UserControllerTest {
     void deleteFromFavorites_WhenDeleted_Returns200() {
         String userId = UUID.randomUUID().toString();
         String challengeId = UUID.randomUUID().toString();
-        when(userService.deleteChallengeFromFavorites(userId, challengeId))
+        when(favoriteService.deleteChallengeFromFavorites(userId, challengeId))
                 .thenReturn(Mono.just(true));
 
         webTestClient.delete()
@@ -280,7 +284,7 @@ class UserControllerTest {
                 .expectStatus().isEqualTo(HttpStatus.OK)
                 .expectBody(Boolean.class).isEqualTo(true);
 
-        verify(userService, times(1)).deleteChallengeFromFavorites(userId, challengeId);
+        verify(favoriteService, times(1)).deleteChallengeFromFavorites(userId, challengeId);
     }
 
     @Test
@@ -303,7 +307,7 @@ class UserControllerTest {
     void deleteFromFavorites_WhenNotInFavorites_Returns200() {
         String userId = UUID.randomUUID().toString();
         String challengeId = UUID.randomUUID().toString();
-        when(userService.deleteChallengeFromFavorites(userId, challengeId))
+        when(favoriteService.deleteChallengeFromFavorites(userId, challengeId))
                 .thenReturn(Mono.just(false));
 
         webTestClient.delete()
@@ -312,7 +316,7 @@ class UserControllerTest {
                 .expectStatus().isOk()
                 .expectBody(Boolean.class).isEqualTo(false);
 
-        verify(userService, times(1)).deleteChallengeFromFavorites(userId, challengeId);
+        verify(favoriteService, times(1)).deleteChallengeFromFavorites(userId, challengeId);
     }
 
     @Test
@@ -335,7 +339,7 @@ class UserControllerTest {
     void deleteFromFavorites_WhenUserNotExists_Returns404() {
         String userId = UUID.randomUUID().toString();
         String challengeId = UUID.randomUUID().toString();
-        when(userService.deleteChallengeFromFavorites(userId, challengeId))
+        when(favoriteService.deleteChallengeFromFavorites(userId, challengeId))
                 .thenReturn(Mono.error(new NotFoundException("User not found")));
 
         webTestClient.delete()
@@ -344,7 +348,7 @@ class UserControllerTest {
                 .expectStatus().isEqualTo(HttpStatus.NOT_FOUND)
                 .expectBody(String.class).isEqualTo("User not found");
 
-        verify(userService, times(1)).deleteChallengeFromFavorites(userId, challengeId);
+        verify(favoriteService, times(1)).deleteChallengeFromFavorites(userId, challengeId);
     }
 
     @Test
@@ -367,7 +371,7 @@ class UserControllerTest {
     void deleteFromFavorites_WhenBadFormattedId_Returns404() {
         String userId = "invalidUuid";
         String challengeId = "invalidUUid";
-        when(userService.deleteChallengeFromFavorites(userId, challengeId))
+        when(favoriteService.deleteChallengeFromFavorites(userId, challengeId))
                 .thenReturn(Mono.error(new BadUUIDException("Error message")));
 
         webTestClient.delete()
@@ -376,7 +380,7 @@ class UserControllerTest {
                 .expectStatus().isEqualTo(HttpStatus.BAD_REQUEST)
                 .expectBody(String.class).isEqualTo("The provided IDs are not valid.");
 
-        verify(userService, times(1)).deleteChallengeFromFavorites(userId, challengeId);
+        verify(favoriteService, times(1)).deleteChallengeFromFavorites(userId, challengeId);
     }
 
     @Test
@@ -399,7 +403,7 @@ class UserControllerTest {
     void deleteFromFavorites_WhenUnexpectedError_Returns500() {
         String userId = UUID.randomUUID().toString();
         String challengeId = UUID.randomUUID().toString();
-        when(userService.deleteChallengeFromFavorites(userId, challengeId))
+        when(favoriteService.deleteChallengeFromFavorites(userId, challengeId))
                 .thenReturn(Mono.error(new Exception()));
 
         webTestClient.delete()
@@ -408,7 +412,7 @@ class UserControllerTest {
                 .expectStatus().isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR)
                 .expectBody(String.class).isEqualTo("Unexpected error happened.");
 
-        verify(userService, times(1)).deleteChallengeFromFavorites(userId, challengeId);
+        verify(favoriteService, times(1)).deleteChallengeFromFavorites(userId, challengeId);
     }
 
     @Test
