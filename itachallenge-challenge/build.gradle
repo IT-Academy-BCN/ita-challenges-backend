@@ -60,6 +60,8 @@ dependencies {
 
     implementation project(":jwt-core")
 
+    implementation project (":error-response-core")
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test:3.0.6'
     testImplementation 'org.springframework:spring-test:5.3.13'
     testImplementation 'org.junit.jupiter:junit-jupiter'
