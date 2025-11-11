@@ -1,10 +1,14 @@
 package com.itachallenge.user.controller.userinteraction.favorite;
 
 
+import com.itachallenge.user.document.UserDocument;
+import com.itachallenge.user.document.enums.Role;
+import com.itachallenge.user.repository.UserRepository;
 import com.itachallenge.userinteraction.document.favorite.FavoriteDocument;
 import com.itachallenge.userinteraction.repository.favorite.FavoriteRepository;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -32,6 +36,8 @@ class FavoriteControllerIntegrationTest {
 
     @Autowired
     private FavoriteRepository favoriteRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @BeforeEach
     void setUp(){
@@ -47,23 +53,37 @@ class FavoriteControllerIntegrationTest {
     void getUserFavorites_WithExistingFavorites_ReturnsSetOfChallengeIds(){
         UUID userId = UUID.randomUUID();
 
+        UserDocument user = UserDocument.builder()
+                .uuid(userId)
+                .username("test_user")
+                .role(Role.USER)
+                .favoriteChallenges(new HashSet<>())
+                .bookmarkChallenges(new HashSet<>())
+                .points(0)
+                .build();
+
+        userRepository.save(user).block();
+
         UUID challengeId1 = UUID.randomUUID();
         UUID challengeId2 = UUID.randomUUID();
         UUID challengeId3 = UUID.randomUUID();
 
         FavoriteDocument favorite1 = FavoriteDocument.builder()
+                .uuid(UUID.randomUUID())
                 .userId(userId)
                 .challengeId(challengeId1)
                 .createdAt(LocalDateTime.now())
                 .build();
 
         FavoriteDocument favorite2 = FavoriteDocument.builder()
+                .uuid(UUID.randomUUID())
                 .userId(userId)
                 .challengeId(challengeId2)
                 .createdAt(LocalDateTime.now())
                 .build();
 
         FavoriteDocument favorite3 = FavoriteDocument.builder()
+                .uuid(UUID.randomUUID())
                 .userId(userId)
                 .challengeId(challengeId3)
                 .createdAt(LocalDateTime.now())
@@ -72,7 +92,7 @@ class FavoriteControllerIntegrationTest {
         favoriteRepository.saveAll(List.of(favorite1, favorite2, favorite3)).blockLast();
 
         webTestClient.get()
-                .uri("/users/{userId}/favorites", userId)
+                .uri("/itachallenge/api/v1/user/users/{userId}/favorites", userId)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
@@ -88,8 +108,19 @@ class FavoriteControllerIntegrationTest {
     void getUserFavorites_WithNoFavorites_ReturnsEmptySet(){
         UUID userId = UUID.randomUUID();
 
+        UserDocument user = UserDocument.builder()
+                .uuid(userId)
+                .username("test_user")
+                .role(Role.USER)
+                .favoriteChallenges(new HashSet<>())
+                .bookmarkChallenges(new HashSet<>())
+                .points(0)
+                .build();
+
+        userRepository.save(user).block();
+
         webTestClient.get()
-                .uri("/users/{userId}/favorites", userId)
+                .uri("/itachallenge/api/v1/user/users/{userId}/favorites", userId)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
@@ -97,7 +128,6 @@ class FavoriteControllerIntegrationTest {
                 .expectBody(new ParameterizedTypeReference<Set<String>>() {})
                 .value( favorites ->
                         assertThat(favorites).isEmpty());
-
     }
 
 }
