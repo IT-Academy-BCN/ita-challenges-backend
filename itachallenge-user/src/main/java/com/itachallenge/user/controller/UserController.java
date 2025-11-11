@@ -7,7 +7,6 @@ import com.itachallenge.user.dto.UserSolutionRequestDto;
 import com.itachallenge.user.dto.UserSolutionResponseDto;
 import com.itachallenge.user.service.IUserSolutionService;
 import com.itachallenge.user.service.UserService;
-import com.itachallenge.userinteraction.service.favorite.FavoriteService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -38,12 +37,10 @@ public class UserController {
 
     private final UserService userService;
     private final IUserSolutionService userSolutionService;
-    private final FavoriteService favoriteService;
 
-    public UserController(UserService userService, IUserSolutionService userSolutionService, FavoriteService favoriteService) {
+    public UserController(UserService userService, IUserSolutionService userSolutionService) {
         this.userService = userService;
         this.userSolutionService = userSolutionService;
-        this.favoriteService = favoriteService;
     }
 
     @GetMapping(value = "/test")
@@ -146,7 +143,7 @@ public class UserController {
 
     @PostMapping("/users/{userId}/favorites/{challengeId}")
     public Mono<ResponseEntity<Boolean>> addToFavorites(@PathVariable String userId, @PathVariable String challengeId) {
-        return favoriteService.addChallengeToFavorites(userId, challengeId)
+        return userService.addChallengeToFavorites(userId, challengeId)
                 .map(added -> {
                     if (Boolean.TRUE.equals(added)) {
                         log.info("Challenge '{}' added to user '{}' favorites", challengeId, userId);
@@ -282,7 +279,7 @@ public class UserController {
     )
     @DeleteMapping("/users/{userId}/favorites/{challengeId}")
     public Mono<ResponseEntity<Boolean>> deleteFromFavorites(@PathVariable String userId, @PathVariable String challengeId) {
-        return favoriteService.deleteChallengeFromFavorites(userId, challengeId)
+        return userService.deleteChallengeFromFavorites(userId, challengeId)
                 .map(deleted -> {
                     if (Boolean.TRUE.equals(deleted)) {
                         log.info("Challenge '{}' deleted from user '{}' favorites", challengeId, userId);
@@ -348,6 +345,33 @@ public class UserController {
                 });
     }
 
+    @Operation(
+            summary = "Gets challenges marked as favorites by a user",
+            description = "Returns a set of challenge IDs that the specified user has marked as favorites",
+            parameters = {
+                    @Parameter(
+                            name = "userId",
+                            description = "UUID of the user",
+                            required = true,
+                            in = ParameterIn.PATH
+                    )
+            },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Set of favorite challengeIds by user"),
+                    @ApiResponse(responseCode = "404", description = "User not found"),
+                    @ApiResponse(responseCode = "400", description = "The provided IDs are not valid."),
+                    @ApiResponse(responseCode = "500", description = "Unexpected error")
+            }
+    )
+
+    @GetMapping("/users/{userId}/favorites")
+    public Mono<ResponseEntity<Set<UUID>>> getUserFavorites(@PathVariable String userId) {
+        return userService.getUserFavorites(userId)
+                .map(favorites -> {
+                    log.info("Retrieved {} favorite challenges for user {}", favorites.size(), userId);
+                    return ResponseEntity.ok().body(favorites);
+                });
+    }
 
     @Operation(
             summary = "Gets challenges marked as bookmarks by a user",
@@ -376,7 +400,7 @@ public class UserController {
                     return ResponseEntity.ok().body(bookmarks);
                 });
     }
-    
+
     @Operation(
             summary = "Retrieve all solutions for a user.",
             parameters = {
