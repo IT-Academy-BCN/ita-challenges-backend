@@ -36,6 +36,7 @@ class UserServiceImplTest {
     @Mock
     private FavoriteRepository favoriteRepository;
 
+
     @InjectMocks
     private UserServiceImpl userService;
 
