@@ -8,13 +8,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
 import java.util.Set;
 import java.util.UUID;
 
+@RestController
+@RequestMapping("/itachallenge/api/v1/user")
 public class FavoriteController {
 
     private static final Logger log = LoggerFactory.getLogger(FavoriteController.class);
@@ -43,13 +44,12 @@ public class FavoriteController {
                     @ApiResponse(responseCode = "500", description = "Unexpected error")
             }
     )
-
     @GetMapping("/users/{userId}/favorites")
     public Mono<ResponseEntity<Set<UUID>>> getUserFavorites(@PathVariable String userId) {
         return favoriteService.getUserFavorites(userId)
                 .map(favorites -> {
                     log.info("Retrieved {} favorite challenges for user {}", favorites.size(), userId);
-                    return ResponseEntity.ok().body(favorites);
+                    return ResponseEntity.ok(favorites);
                 });
     }
 }
