@@ -25,7 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-public class FavoriteControllerIntegrationTest {
+class FavoriteControllerIntegrationTest {
 
     @Autowired
     private WebTestClient webTestClient;
@@ -82,6 +82,22 @@ public class FavoriteControllerIntegrationTest {
                     assertThat(favorites).hasSize(3);
                     assertThat(favorites).containsExactlyInAnyOrder(challengeId1.toString(), challengeId2.toString(), challengeId3.toString());
                 });
+    }
+
+    @Test
+    void getUserFavorites_WithNoFavorites_ReturnsEmptySet(){
+        UUID userId = UUID.randomUUID();
+
+        webTestClient.get()
+                .uri("/users/{userId}/favorites", userId)
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .expectBody(new ParameterizedTypeReference<Set<String>>() {})
+                .value( favorites ->
+                        assertThat(favorites).isEmpty());
+
     }
 
 }
