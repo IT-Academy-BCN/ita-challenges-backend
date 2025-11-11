@@ -21,6 +21,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - UserServiceImplTest updated to reflect these temporary changes.
   - No changes to API endpoints or responses at this stage.
 
+### [itachallenge-challenge-3.0.1-RELEASE] - 2025-11-11
+
+### Changed
+- Added dependency to error-response module in challenge service / created message.properties files to store i18n messages. (Taiga [#734] & [#797], PR [#997])
+  - introduced external validation messages;
+  - does not break APIs, but may alter error texts.
 
 ### [itachallenge-user-3.0.2-RELEASE] - 2025-11-05
 
