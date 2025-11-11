@@ -6,7 +6,6 @@ import com.itachallenge.user.dto.UserSolutionResponseDto;
 import com.itachallenge.user.exception.BadUUIDException;
 import com.itachallenge.user.exception.NotFoundException;
 import com.itachallenge.user.service.IUserSolutionService;
-import com.itachallenge.userinteraction.service.favorite.FavoriteService;
 import com.itachallenge.user.exception.UserGlobalExceptionHandler;
 import com.itachallenge.user.service.UserService;
 import org.junit.jupiter.api.*;
@@ -21,16 +20,12 @@ import reactor.core.publisher.Mono;
 import java.util.Set;
 import java.util.UUID;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 class UserControllerTest {
 
     @Mock
     private UserService userService;
-
-    @Mock
-    private FavoriteService favoriteService;
 
     @Mock
     private IUserSolutionService userSolutionService;
@@ -116,7 +111,7 @@ class UserControllerTest {
     void addToFavorites_WhenAdded_Returns201() {
         String userId = UUID.randomUUID().toString();
         String challengeId = UUID.randomUUID().toString();
-        when(favoriteService.addChallengeToFavorites(userId, challengeId))
+        when(userService.addChallengeToFavorites(userId, challengeId))
                 .thenReturn(Mono.just(true));
 
         webTestClient.post()
@@ -125,7 +120,7 @@ class UserControllerTest {
                 .expectStatus().isEqualTo(HttpStatus.CREATED)
                 .expectBody(Boolean.class).isEqualTo(true);
 
-        verify(favoriteService, times(1)).addChallengeToFavorites(userId, challengeId);
+        verify(userService, times(1)).addChallengeToFavorites(userId, challengeId);
     }
 
     @Test
@@ -148,7 +143,7 @@ class UserControllerTest {
     void addToFavorites_WhenAlreadyInFavorites_Returns200() {
         String userId = UUID.randomUUID().toString();
         String challengeId = UUID.randomUUID().toString();
-        when(favoriteService.addChallengeToFavorites(userId, challengeId))
+        when(userService.addChallengeToFavorites(userId, challengeId))
                 .thenReturn(Mono.just(false));
 
         webTestClient.post()
@@ -157,7 +152,7 @@ class UserControllerTest {
                 .expectStatus().isOk()
                 .expectBody(Boolean.class).isEqualTo(false);
 
-        verify(favoriteService, times(1)).addChallengeToFavorites(userId, challengeId);
+        verify(userService, times(1)).addChallengeToFavorites(userId, challengeId);
     }
 
     @Test
@@ -180,7 +175,7 @@ class UserControllerTest {
     void addToFavorites_WhenUserNotExists_Returns404() {
         String userId = UUID.randomUUID().toString();
         String challengeId = UUID.randomUUID().toString();
-        when(favoriteService.addChallengeToFavorites(userId, challengeId))
+        when(userService.addChallengeToFavorites(userId, challengeId))
                 .thenReturn(Mono.error(new NotFoundException("User not found")));
 
         webTestClient.post()
@@ -189,7 +184,7 @@ class UserControllerTest {
                 .expectStatus().isNotFound()
                 .expectBody(String.class).isEqualTo("User not found");
 
-        verify(favoriteService, times(1)).addChallengeToFavorites(userId, challengeId);
+        verify(userService, times(1)).addChallengeToFavorites(userId, challengeId);
     }
 
     @Test
@@ -212,7 +207,7 @@ class UserControllerTest {
     void addToFavorites_WhenBadFormattedId_Returns400() {
         String userId = "invalidUuid";
         String challengeId = "invalidUUid";
-        when(favoriteService.addChallengeToFavorites(userId, challengeId))
+        when(userService.addChallengeToFavorites(userId, challengeId))
                 .thenReturn(Mono.error(new BadUUIDException("Error message")));
 
         webTestClient.post()
@@ -221,7 +216,7 @@ class UserControllerTest {
                 .expectStatus().isBadRequest()
                 .expectBody(String.class).isEqualTo("The provided IDs are not valid.");
 
-        verify(favoriteService, times(1)).addChallengeToFavorites(userId, challengeId);
+        verify(userService, times(1)).addChallengeToFavorites(userId, challengeId);
     }
 
     @Test
@@ -244,7 +239,7 @@ class UserControllerTest {
     void addToFavorites_WhenUnexpectedError_Returns500() {
         String userId = UUID.randomUUID().toString();
         String challengeId = UUID.randomUUID().toString();
-        when(favoriteService.addChallengeToFavorites(userId, challengeId))
+        when(userService.addChallengeToFavorites(userId, challengeId))
                 .thenReturn(Mono.error(new Exception()));
 
         webTestClient.post()
@@ -253,7 +248,7 @@ class UserControllerTest {
                 .expectStatus().isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR)
                 .expectBody(String.class).isEqualTo("Unexpected error happened.");
 
-        verify(favoriteService, times(1)).addChallengeToFavorites(userId, challengeId);
+        verify(userService, times(1)).addChallengeToFavorites(userId, challengeId);
     }
 
     @Test
@@ -276,7 +271,7 @@ class UserControllerTest {
     void deleteFromFavorites_WhenDeleted_Returns200() {
         String userId = UUID.randomUUID().toString();
         String challengeId = UUID.randomUUID().toString();
-        when(favoriteService.deleteChallengeFromFavorites(userId, challengeId))
+        when(userService.deleteChallengeFromFavorites(userId, challengeId))
                 .thenReturn(Mono.just(true));
 
         webTestClient.delete()
@@ -285,7 +280,7 @@ class UserControllerTest {
                 .expectStatus().isEqualTo(HttpStatus.OK)
                 .expectBody(Boolean.class).isEqualTo(true);
 
-        verify(favoriteService, times(1)).deleteChallengeFromFavorites(userId, challengeId);
+        verify(userService, times(1)).deleteChallengeFromFavorites(userId, challengeId);
     }
 
     @Test
@@ -308,7 +303,7 @@ class UserControllerTest {
     void deleteFromFavorites_WhenNotInFavorites_Returns200() {
         String userId = UUID.randomUUID().toString();
         String challengeId = UUID.randomUUID().toString();
-        when(favoriteService.deleteChallengeFromFavorites(userId, challengeId))
+        when(userService.deleteChallengeFromFavorites(userId, challengeId))
                 .thenReturn(Mono.just(false));
 
         webTestClient.delete()
@@ -317,7 +312,7 @@ class UserControllerTest {
                 .expectStatus().isOk()
                 .expectBody(Boolean.class).isEqualTo(false);
 
-        verify(favoriteService, times(1)).deleteChallengeFromFavorites(userId, challengeId);
+        verify(userService, times(1)).deleteChallengeFromFavorites(userId, challengeId);
     }
 
     @Test
@@ -340,7 +335,7 @@ class UserControllerTest {
     void deleteFromFavorites_WhenUserNotExists_Returns404() {
         String userId = UUID.randomUUID().toString();
         String challengeId = UUID.randomUUID().toString();
-        when(favoriteService.deleteChallengeFromFavorites(userId, challengeId))
+        when(userService.deleteChallengeFromFavorites(userId, challengeId))
                 .thenReturn(Mono.error(new NotFoundException("User not found")));
 
         webTestClient.delete()
@@ -349,7 +344,7 @@ class UserControllerTest {
                 .expectStatus().isEqualTo(HttpStatus.NOT_FOUND)
                 .expectBody(String.class).isEqualTo("User not found");
 
-        verify(favoriteService, times(1)).deleteChallengeFromFavorites(userId, challengeId);
+        verify(userService, times(1)).deleteChallengeFromFavorites(userId, challengeId);
     }
 
     @Test
@@ -372,7 +367,7 @@ class UserControllerTest {
     void deleteFromFavorites_WhenBadFormattedId_Returns404() {
         String userId = "invalidUuid";
         String challengeId = "invalidUUid";
-        when(favoriteService.deleteChallengeFromFavorites(userId, challengeId))
+        when(userService.deleteChallengeFromFavorites(userId, challengeId))
                 .thenReturn(Mono.error(new BadUUIDException("Error message")));
 
         webTestClient.delete()
@@ -381,7 +376,7 @@ class UserControllerTest {
                 .expectStatus().isEqualTo(HttpStatus.BAD_REQUEST)
                 .expectBody(String.class).isEqualTo("The provided IDs are not valid.");
 
-        verify(favoriteService, times(1)).deleteChallengeFromFavorites(userId, challengeId);
+        verify(userService, times(1)).deleteChallengeFromFavorites(userId, challengeId);
     }
 
     @Test
@@ -404,7 +399,7 @@ class UserControllerTest {
     void deleteFromFavorites_WhenUnexpectedError_Returns500() {
         String userId = UUID.randomUUID().toString();
         String challengeId = UUID.randomUUID().toString();
-        when(favoriteService.deleteChallengeFromFavorites(userId, challengeId))
+        when(userService.deleteChallengeFromFavorites(userId, challengeId))
                 .thenReturn(Mono.error(new Exception()));
 
         webTestClient.delete()
@@ -413,7 +408,7 @@ class UserControllerTest {
                 .expectStatus().isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR)
                 .expectBody(String.class).isEqualTo("Unexpected error happened.");
 
-        verify(favoriteService, times(1)).deleteChallengeFromFavorites(userId, challengeId);
+        verify(userService, times(1)).deleteChallengeFromFavorites(userId, challengeId);
     }
 
     @Test
@@ -438,7 +433,7 @@ class UserControllerTest {
         UUID userId = UUID.randomUUID();
         Set<UUID> expectedFavorites = Set.of(UUID.randomUUID(), UUID.randomUUID());
 
-        when(favoriteService.getUserFavorites(userId.toString())).thenReturn(Mono.just(expectedFavorites));
+        when(userService.getUserFavorites(userId.toString())).thenReturn(Mono.just(expectedFavorites));
 
         webTestClient.get()
                 .uri("/itachallenge/api/v1/user/users/{userId}/favorites", userId)
@@ -448,7 +443,7 @@ class UserControllerTest {
                 .hasSize(expectedFavorites.size())
                 .contains(expectedFavorites.toArray(new UUID[0]));
 
-        verify(favoriteService, times(1)).getUserFavorites(userId.toString());
+        verify(userService, times(1)).getUserFavorites(userId.toString());
     }
 
     @Test
@@ -456,7 +451,7 @@ class UserControllerTest {
     void getUserFavorites_returns404IfUserNotFound() {
         UUID userId = UUID.randomUUID();
 
-        when(favoriteService.getUserFavorites(userId.toString()))
+        when(userService.getUserFavorites(userId.toString()))
                 .thenReturn(Mono.error(new NotFoundException("User not found")));
 
         webTestClient.get()
@@ -465,7 +460,7 @@ class UserControllerTest {
                 .expectStatus().isNotFound()
                 .expectBody(String.class).isEqualTo("User not found");
 
-        verify(favoriteService, times(1)).getUserFavorites(userId.toString());
+        verify(userService, times(1)).getUserFavorites(userId.toString());
     }
 
     @Test
@@ -473,7 +468,7 @@ class UserControllerTest {
     void getUserFavorites_returns400IfInvalidUUID() {
         String invalidUserId = "invalid-uuid";
 
-        when(favoriteService.getUserFavorites(invalidUserId))
+        when(userService.getUserFavorites(invalidUserId))
                 .thenReturn(Mono.error(new BadUUIDException("The provided IDs are not valid.")));
 
         webTestClient.get()
@@ -482,7 +477,7 @@ class UserControllerTest {
                 .expectStatus().isBadRequest()
                 .expectBody(String.class).isEqualTo("The provided IDs are not valid.");
 
-        verify(favoriteService, times(1)).getUserFavorites(invalidUserId);
+        verify(userService, times(1)).getUserFavorites(invalidUserId);
     }
 
     @Test
@@ -490,7 +485,7 @@ class UserControllerTest {
     void getUserFavorites_returns500IfUnexpectedError() {
         UUID userId = UUID.randomUUID();
 
-        when(favoriteService.getUserFavorites(userId.toString()))
+        when(userService.getUserFavorites(userId.toString()))
                 .thenReturn(Mono.error(new RuntimeException("Unexpected error")));
 
         webTestClient.get()
@@ -499,7 +494,7 @@ class UserControllerTest {
                 .expectStatus().isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR)
                 .expectBody(String.class).isEqualTo("Unexpected error happened.");
 
-        verify(favoriteService, times(1)).getUserFavorites(userId.toString());
+        verify(userService, times(1)).getUserFavorites(userId.toString());
     }
 
     @Test
@@ -571,29 +566,29 @@ class UserControllerTest {
 
         verify(userService, times(1)).getUserBookmarks(userId.toString());
     }
-    
+
     @Test
     @DisplayName("GET /users/{userId}/solutions returns solutions")
     void getAllSolutions_returnsSolutions() {
         String userId = UUID.randomUUID().toString();
-        
+
         UserSolutionResponseDto sol1 = UserSolutionResponseDto.builder()
                 .userId(userId)
                 .challengeId("d43a1a4d-ee8f-432d-8f9c-68eda2547dae")
                 .languageId("409c9fe8-74de-4db3-81a1-a55280cf92ef")
                 .solutionText("This is the submitted solution")
                 .build();
-        
+
         UserSolutionResponseDto sol2 = UserSolutionResponseDto.builder()
                 .userId(userId)
                 .challengeId("b5c06903-f27b-4057-8220-ad9d957cdce4")
                 .languageId("09fabe32-7362-4bfb-ac05-b7bf854c6e0f")
                 .solutionText("This is the submitted solution")
                 .build();
-        
+
         when(userSolutionService.getAllSolutionsByUser(userId))
                 .thenReturn(Flux.just(sol1, sol2));
-        
+
         webTestClient.get()
                 .uri("/itachallenge/api/v1/user/users/{userId}/solutions", userId)
                 .exchange()
@@ -601,73 +596,73 @@ class UserControllerTest {
                 .expectBodyList(UserSolutionResponseDto.class)
                 .hasSize(2)
                 .value(list -> {
-                    
+
                     Assertions.assertEquals(sol1.getUserId(), list.get(0).getUserId());
                     Assertions.assertEquals(sol1.getChallengeId(), list.get(0).getChallengeId());
                     Assertions.assertEquals(sol1.getLanguageId(), list.get(0).getLanguageId());
                     Assertions.assertEquals(sol1.getSolutionText(), list.get(0).getSolutionText());
-                    
+
                     Assertions.assertEquals(sol2.getUserId(), list.get(1).getUserId());
                     Assertions.assertEquals(sol2.getChallengeId(), list.get(1).getChallengeId());
                     Assertions.assertEquals(sol2.getLanguageId(), list.get(1).getLanguageId());
                     Assertions.assertEquals(sol2.getSolutionText(), list.get(1).getSolutionText());
                 });
-        
+
         verify(userSolutionService, times(1)).getAllSolutionsByUser(userId);
     }
-    
+
     @Test
     @DisplayName("GET /users/{userId}/solutions returns 404 if no solutions found")
     void getAllSolutions_returns404IfNotFound() {
         String userId = UUID.randomUUID().toString();
-        
+
         // Simulamos que el servicio lanza NotFoundException
         when(userSolutionService.getAllSolutionsByUser(userId))
                 .thenReturn(Flux.error(new NotFoundException("Solutions not found")));
-        
+
         webTestClient.get()
                 .uri("/itachallenge/api/v1/user/users/{userId}/solutions", userId)
                 .exchange()
                 .expectStatus().isNotFound()
                 .expectBody(String.class)
                 .isEqualTo("Solutions not found");
-        
+
         verify(userSolutionService, times(1)).getAllSolutionsByUser(userId);
     }
-    
+
     @Test
     @DisplayName("GET /users/{userId}/solutions returns 400 if UUID is invalid")
     void getAllSolutions_returns400IfInvalidUUID() {
         String badUserId = "not-a-uuid";
-        
+
         when(userSolutionService.getAllSolutionsByUser(badUserId))
                 .thenReturn(Flux.error(new BadUUIDException("Bad UUID")));
-        
+
         webTestClient.get()
                 .uri("/itachallenge/api/v1/user/users/{userId}/solutions", badUserId)
                 .exchange()
                 .expectStatus().isBadRequest()
                 .expectBody(String.class)
                 .isEqualTo("The provided IDs are not valid.");
-        
+
         verify(userSolutionService, times(1)).getAllSolutionsByUser(badUserId);
     }
-    
+
     @Test
     @DisplayName("GET /users/{userId}/solutions returns 500 on unexpected error")
     void getAllSolutions_returns500IfUnexpectedError() {
         String userId = UUID.randomUUID().toString();
-        
+
         when(userSolutionService.getAllSolutionsByUser(userId))
                 .thenReturn(Flux.error(new RuntimeException("Boom")));
-        
+
         webTestClient.get()
                 .uri("/itachallenge/api/v1/user/users/{userId}/solutions", userId)
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR)
                 .expectBody(String.class)
                 .isEqualTo("Unexpected error happened.");
-        
+
         verify(userSolutionService, times(1)).getAllSolutionsByUser(userId);
     }
 }
