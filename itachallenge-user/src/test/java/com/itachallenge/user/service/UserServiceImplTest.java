@@ -186,7 +186,7 @@ class UserServiceImplTest {
         verify(favoriteRepository, times(1)).existsByUserIdAndChallengeId(userId, challengeId);
         verify(favoriteRepository, never()).save(any());
     }
-    
+
     @Test
     void addChallengeToBookmarks_ShouldReturnFalse_WhenBookmarksAlreadyContainsChallenge() {
         UUID challengeId = UUID.randomUUID();
@@ -226,7 +226,7 @@ class UserServiceImplTest {
         verify(favoriteRepository, never()).save(any());
         verify(userRepository, never()).save(any());
     }
-    
+
     @Test
     void addChallengeToBookmarks_ShouldThrowNotFoundException_WhenUserNotFound() {
 
@@ -291,7 +291,7 @@ class UserServiceImplTest {
         verify(favoriteRepository, never()).save(any());
         verify(userRepository, never()).save(any());
     }
-    
+
     @Test
     void addChallengeToBookmarks_ShouldThrowBadRequestException_WhenChallengeUuidIsNull() {
         StepVerifier.create(userService.addChallengeToBookmarks(UUID.randomUUID().toString(), null))
@@ -322,7 +322,7 @@ class UserServiceImplTest {
         verify(favoriteRepository, never()).save(any());
         verify(userRepository, never()).save(any());
     }
-    
+
     @Test
     void addChallengeToBookmarks_ShouldThrowBadRequestException_WhenUserUuidIsNotValid() {
         StepVerifier.create(userService.addChallengeToBookmarks("invalidUuid", UUID.randomUUID().toString()))
@@ -353,7 +353,7 @@ class UserServiceImplTest {
         verify(favoriteRepository, never()).save(any());
         verify(userRepository, never()).save(any());
     }
-    
+
     @Test
     void addChallengeToBookmarks_ShouldThrowBadRequestException_WhenChallengeUuidIsNotValid() {
         StepVerifier.create(userService.addChallengeToBookmarks(UUID.randomUUID().toString(), "invalidUuid"))
@@ -385,7 +385,7 @@ class UserServiceImplTest {
         verify(favoriteRepository).findByUserIdAndChallengeId(any(UUID.class), any(UUID.class));
         verify(favoriteRepository, never()).delete(any());
     }
-    
+
     @Test
     void deleteChallengeFromBookmarks_ShouldReturnFalse_WhenBookmarksIsNull() {
         UUID challengeId = UUID.randomUUID();
@@ -443,7 +443,7 @@ class UserServiceImplTest {
         verify(userRepository, times(0)).save(user);
     }
 
-     @Test
+    @Test
     void deleteChallengeFromFavorites_ShouldReturnTrue_WhenFavoriteAlreadyExists() {
         // Arrange
         UUID userId = UUID.randomUUID();
@@ -466,7 +466,7 @@ class UserServiceImplTest {
         verify(favoriteRepository).findByUserIdAndChallengeId(userId, challengeId);
         verify(favoriteRepository).delete(favorite);
     }
-    
+
     @Test
     void deleteChallengeFromBookmarks_ShouldReturnTrue_WhenBookmarksAlreadyContainsChallenge() {
         UUID challengeId = UUID.randomUUID();
@@ -503,7 +503,7 @@ class UserServiceImplTest {
         verify(userRepository, times(1)).findById(any(UUID.class));
         verify(userRepository, times(0)).save(any());
     }
-    
+
     @Test
     void deleteChallengeFromBookmarks_ShouldThrowNotFoundException_WhenUserNotFound() {
 
@@ -532,7 +532,7 @@ class UserServiceImplTest {
         verify(userRepository, times(0)).findById(any(UUID.class));
         verify(userRepository, times(0)).save(any());
     }
-    
+
     @Test
     void deleteChallengeFromBookmarks_ShouldThrowBadRequestException_WhenUserUuidIsNull() {
         StepVerifier.create(userService.deleteChallengeFromBookmarks(null, UUID.randomUUID().toString()))
@@ -558,7 +558,7 @@ class UserServiceImplTest {
         verify(userRepository, times(0)).findById(any(UUID.class));
         verify(userRepository, times(0)).save(any());
     }
-    
+
     @Test
     void deleteChallengeFromBookmarks_ShouldThrowBadRequestException_WhenChallengeUuidIsNull() {
         StepVerifier.create(userService.deleteChallengeFromBookmarks(UUID.randomUUID().toString(), null))
@@ -610,7 +610,7 @@ class UserServiceImplTest {
         verify(userRepository, times(0)).findById(any(UUID.class));
         verify(userRepository, times(0)).save(any());
     }
-    
+
     @Test
     void deleteChallengeFromBookmarks_ShouldThrowBadRequestException_WhenChallengeUuidIsNotValid() {
         StepVerifier.create(userService.deleteChallengeFromBookmarks(UUID.randomUUID().toString(), "invalidUuid"))
