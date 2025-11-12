@@ -8,6 +8,7 @@ import com.itachallenge.user.exception.NotFoundException;
 import com.itachallenge.user.service.IUserSolutionService;
 import com.itachallenge.user.exception.UserGlobalExceptionHandler;
 import com.itachallenge.user.service.UserService;
+import com.itachallenge.userinteraction.service.favorite.FavoriteService;
 import org.junit.jupiter.api.*;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -29,6 +30,9 @@ class UserControllerTest {
 
     @Mock
     private IUserSolutionService userSolutionService;
+
+    @Mock
+    private FavoriteService favoriteService;
 
     @InjectMocks
     private UserController userController;
@@ -433,7 +437,7 @@ class UserControllerTest {
         UUID userId = UUID.randomUUID();
         Set<UUID> expectedFavorites = Set.of(UUID.randomUUID(), UUID.randomUUID());
 
-        when(userService.getUserFavorites(userId.toString())).thenReturn(Mono.just(expectedFavorites));
+        when(favoriteService.getUserFavorites(userId.toString())).thenReturn(Mono.just(expectedFavorites));
 
         webTestClient.get()
                 .uri("/itachallenge/api/v1/user/users/{userId}/favorites", userId)
@@ -443,7 +447,7 @@ class UserControllerTest {
                 .hasSize(expectedFavorites.size())
                 .contains(expectedFavorites.toArray(new UUID[0]));
 
-        verify(userService, times(1)).getUserFavorites(userId.toString());
+        verify(favoriteService, times(1)).getUserFavorites(userId.toString());
     }
 
     @Test
@@ -451,7 +455,7 @@ class UserControllerTest {
     void getUserFavorites_returns404IfUserNotFound() {
         UUID userId = UUID.randomUUID();
 
-        when(userService.getUserFavorites(userId.toString()))
+        when(favoriteService.getUserFavorites(userId.toString()))
                 .thenReturn(Mono.error(new NotFoundException("User not found")));
 
         webTestClient.get()
@@ -460,7 +464,7 @@ class UserControllerTest {
                 .expectStatus().isNotFound()
                 .expectBody(String.class).isEqualTo("User not found");
 
-        verify(userService, times(1)).getUserFavorites(userId.toString());
+        verify(favoriteService, times(1)).getUserFavorites(userId.toString());
     }
 
     @Test
@@ -468,7 +472,7 @@ class UserControllerTest {
     void getUserFavorites_returns400IfInvalidUUID() {
         String invalidUserId = "invalid-uuid";
 
-        when(userService.getUserFavorites(invalidUserId))
+        when(favoriteService.getUserFavorites(invalidUserId))
                 .thenReturn(Mono.error(new BadUUIDException("The provided IDs are not valid.")));
 
         webTestClient.get()
@@ -477,7 +481,7 @@ class UserControllerTest {
                 .expectStatus().isBadRequest()
                 .expectBody(String.class).isEqualTo("The provided IDs are not valid.");
 
-        verify(userService, times(1)).getUserFavorites(invalidUserId);
+        verify(favoriteService, times(1)).getUserFavorites(invalidUserId);
     }
 
     @Test
@@ -485,7 +489,7 @@ class UserControllerTest {
     void getUserFavorites_returns500IfUnexpectedError() {
         UUID userId = UUID.randomUUID();
 
-        when(userService.getUserFavorites(userId.toString()))
+        when(favoriteService.getUserFavorites(userId.toString()))
                 .thenReturn(Mono.error(new RuntimeException("Unexpected error")));
 
         webTestClient.get()
@@ -494,7 +498,7 @@ class UserControllerTest {
                 .expectStatus().isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR)
                 .expectBody(String.class).isEqualTo("Unexpected error happened.");
 
-        verify(userService, times(1)).getUserFavorites(userId.toString());
+        verify(favoriteService, times(1)).getUserFavorites(userId.toString());
     }
 
     @Test
