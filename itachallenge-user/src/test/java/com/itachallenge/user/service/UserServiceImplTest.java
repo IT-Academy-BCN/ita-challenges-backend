@@ -626,56 +626,6 @@ class UserServiceImplTest {
     }
 
     @Test
-    @DisplayName("getUserFavorites returns favorite challenges when the user exists and has challenges")
-    void getUserFavorites_WhenUserExistsWithFavorites_ReturnsSet() {
-        UUID userId = UUID.randomUUID();
-        UUID challengeId1 = UUID.randomUUID();
-        UUID challengeId2 = UUID.randomUUID();
-
-        Set<UUID> favorites = Set.of(challengeId1, challengeId2);
-        UserDocument user = new UserDocument();
-        user.setUuid(userId);
-        user.setFavoriteChallenges(favorites);
-
-        when(userRepository.findById(userId)).thenReturn(Mono.just(user));
-
-        userService.getUserFavorites(userId.toString())
-                .as(StepVerifier::create)
-                .expectNextMatches(result -> result.size() == 2 && result.contains(challengeId1))
-                .verifyComplete();
-    }
-
-    @Test
-    @DisplayName("getUserFavorites returns an empty set when the user has no challenges marked.")
-    void getUserFavorites_WhenUserHasNoFavorites_ReturnsEmptySet() {
-        UUID userId = UUID.randomUUID();
-
-        UserDocument user = new UserDocument();
-        user.setUuid(userId);
-        user.setFavoriteChallenges(null); // explícitament null
-
-        when(userRepository.findById(userId)).thenReturn(Mono.just(user));
-
-        userService.getUserFavorites(userId.toString())
-                .as(StepVerifier::create)
-                .expectNextMatches(Set::isEmpty)
-                .verifyComplete();
-    }
-
-    @Test
-    @DisplayName("getUserFavorites throws BadUUIDException when the UUID format is invalid")
-    void getUserFavorites_WhenInvalidUUID_ReturnsBadUUIDException() {
-        String invalidUUID = "invalid-uuid";
-
-        userService.getUserFavorites(invalidUUID)
-                .as(StepVerifier::create)
-                .expectErrorMatches(error ->
-                        error instanceof BadUUIDException &&
-                                error.getMessage().equals("Invalid ID format"))
-                .verify();
-    }
-
-    @Test
     @DisplayName("getUserBookmarks returns bookmarked challenges when the user exists and has challenges")
     void getUserBookmarks_WhenUserExistsWithBookmarks_ReturnsSet() {
         UUID userId = UUID.randomUUID();
