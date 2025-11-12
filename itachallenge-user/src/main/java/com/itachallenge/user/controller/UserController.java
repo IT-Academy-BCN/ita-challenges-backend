@@ -146,7 +146,7 @@ public class UserController {
 
     @PostMapping("/users/{userId}/favorites/{challengeId}")
     public Mono<ResponseEntity<Boolean>> addToFavorites(@PathVariable String userId, @PathVariable String challengeId) {
-        return favoriteService.addChallengeToFavorites(userId, challengeId)
+        return userService.addChallengeToFavorites(userId, challengeId)
                 .map(added -> {
                     if (Boolean.TRUE.equals(added)) {
                         log.info("Challenge '{}' added to user '{}' favorites", challengeId, userId);
@@ -281,7 +281,7 @@ public class UserController {
     )
     @DeleteMapping("/users/{userId}/favorites/{challengeId}")
     public Mono<ResponseEntity<Boolean>> deleteFromFavorites(@PathVariable String userId, @PathVariable String challengeId) {
-        return favoriteService.deleteChallengeFromFavorites(userId, challengeId)
+        return userService.deleteChallengeFromFavorites(userId, challengeId)
                 .map(deleted -> {
                     if (Boolean.TRUE.equals(deleted)) {
                         log.info("Challenge '{}' deleted from user '{}' favorites", challengeId, userId);
