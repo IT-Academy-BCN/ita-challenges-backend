@@ -4,6 +4,10 @@ spring:
     version: 1.0-SNAPSHOT
   jmx:
     enabled: true
+  data:
+     mongodb:
+       uri: mongodb://localhost:27017/itachallenge_test
+       uuid-representation: standard
 
 
 springdoc:
