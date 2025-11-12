@@ -126,8 +126,8 @@ public class UserServiceImpl implements UserService {
     private Mono<Boolean> deleteFromFavorites(UUID userId, UUID challengeUuid) {
         return favoriteRepository.findByUserIdAndChallengeId(userId, challengeUuid)
                 .flatMap(favorite ->
-                        favoriteRepository.delete(favorite)
-                                .then(Mono.just(true))
+                    favoriteRepository.delete(favorite)
+                            .then(Mono.just(true))
                 )
                 .switchIfEmpty(Mono.just(false));
     }
@@ -177,11 +177,11 @@ public class UserServiceImpl implements UserService {
                                 .map(user -> Optional.ofNullable(user.getBookmarkChallenges()).orElseGet(HashSet::new))
                 );
     }
-
+    
     @Override
     public Mono<UserDocument> getUserById(String userId) {
         return userRepository.findById(UUID.fromString(userId))
                 .switchIfEmpty(Mono.error(new NotFoundException(USER_NOT_FOUND)));
     }
-
+    
 }
