@@ -637,7 +637,7 @@ class UserControllerTest {
         
         when(userSolutionService.getAllSolutionsByUser(badUserId))
                 .thenReturn(Flux.error(new BadUUIDException("Bad UUID")));
-
+        
         webTestClient.get()
                 .uri("/itachallenge/api/v1/user/users/{userId}/solutions", badUserId)
                 .exchange()
