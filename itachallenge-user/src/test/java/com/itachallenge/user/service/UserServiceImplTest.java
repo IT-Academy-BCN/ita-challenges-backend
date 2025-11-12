@@ -58,7 +58,7 @@ class UserServiceImplTest {
     @Test
     void getUser_ShouldReturnUser_WhenUserExists() {
         String username = "existingUser";
-        UserDocument existingUser = new UserDocument(UUID.randomUUID(), username, Role.ADMIN, null, null, 0);
+        UserDocument existingUser = new UserDocument(UUID.randomUUID(), username, Role.ADMIN, null, 0);
         when(userRepository.findByUsername(username)).thenReturn(Mono.just(existingUser));
 
         StepVerifier.create(userService.getUser(username))
@@ -87,7 +87,7 @@ class UserServiceImplTest {
     void addChallengeToFavorites_ShouldReturnTrue_WhenFavoriteDoesNotExist() {
         UUID userId = UUID.randomUUID();
         UUID challengeId = UUID.randomUUID();
-        UserDocument user = new UserDocument(userId, "testUser", null, new HashSet<>(), null, 0);
+        UserDocument user = new UserDocument(userId, "testUser", null, null, 0);
 
         when(userRepository.findById(userId)).thenReturn(Mono.just(user));
         when(favoriteRepository.existsByUserIdAndChallengeId(userId, challengeId))
@@ -109,7 +109,7 @@ class UserServiceImplTest {
     void addChallengeToBookmarks_ShouldReturnTrue_WhenBookmarksIsNull() {
         UUID challengeId = UUID.randomUUID();
         UUID userId = UUID.randomUUID();
-        UserDocument user = new UserDocument(userId, "testUser", null, null, null, 0);
+        UserDocument user = new UserDocument(userId, "testUser", null, null, 0);
 
         when(userRepository.findById(userId)).thenReturn(Mono.just(user));
         when(userRepository.save(user)).thenReturn(Mono.just(user));
@@ -129,7 +129,7 @@ class UserServiceImplTest {
     void addChallengeToBookmarks_ShouldReturnTrue_WhenBookmarksIsEmpty() {
         UUID challengeId = UUID.randomUUID();
         UUID userId = UUID.randomUUID();
-        UserDocument user = new UserDocument(userId, "testUser", null, null, new HashSet<>(), 0);
+        UserDocument user = new UserDocument(userId, "testUser", null, new HashSet<>(), 0);
 
         when(userRepository.findById(userId)).thenReturn(Mono.just(user));
         when(userRepository.save(user)).thenReturn(Mono.just(user));
@@ -150,7 +150,7 @@ class UserServiceImplTest {
         UUID challengeId = UUID.randomUUID();
         UUID userId = UUID.randomUUID();
         Set<UUID> bookmarks = new HashSet<>(Set.of(UUID.randomUUID(), UUID.randomUUID()));
-        UserDocument user = new UserDocument(userId, "testUser", null, null, bookmarks, 0);
+        UserDocument user = new UserDocument(userId, "testUser", null, bookmarks, 0);
 
         when(userRepository.findById(userId)).thenReturn(Mono.just(user));
         when(userRepository.save(user)).thenReturn(Mono.just(user));
@@ -170,8 +170,7 @@ class UserServiceImplTest {
     void addChallengeToFavorites_ShouldReturnFalse_WhenFavoriteAlreadyExists() {
         UUID challengeId = UUID.randomUUID();
         UUID userId = UUID.randomUUID();
-        Set<UUID> favorites = new HashSet<>(Set.of(UUID.randomUUID(), UUID.randomUUID(), challengeId));
-        UserDocument user = new UserDocument(userId, "testUser", null, favorites, null, 0);
+        UserDocument user = new UserDocument(userId, "testUser", null,null, 0);
 
         when(userRepository.findById(userId)).thenReturn(Mono.just(user));
         when(favoriteRepository.existsByUserIdAndChallengeId(userId, challengeId))
@@ -180,9 +179,6 @@ class UserServiceImplTest {
         StepVerifier.create(userService.addChallengeToFavorites(userId.toString(), challengeId.toString()))
                 .expectNext(false)
                 .verifyComplete();
-
-        assertNotNull(user.getFavoriteChallenges());
-        assertTrue(user.getFavoriteChallenges().contains(challengeId));
 
         verify(userRepository, times(1)).findById(userId);
         verify(favoriteRepository, times(1)).existsByUserIdAndChallengeId(userId, challengeId);
@@ -194,7 +190,7 @@ class UserServiceImplTest {
         UUID challengeId = UUID.randomUUID();
         UUID userId = UUID.randomUUID();
         Set<UUID> bookmarks = new HashSet<>(Set.of(UUID.randomUUID(), UUID.randomUUID(), challengeId));
-        UserDocument user = new UserDocument(userId, "testUser", null, null, bookmarks, 0);
+        UserDocument user = new UserDocument(userId, "testUser", null, bookmarks, 0);
 
         when(userRepository.findById(userId)).thenReturn(Mono.just(user));
 
@@ -373,7 +369,7 @@ class UserServiceImplTest {
     void deleteChallengeFromFavorites_ShouldReturnFalse_WhenFavoriteDoesNotExist() {
         UUID userId = UUID.randomUUID();
         UUID challengeId = UUID.randomUUID();
-        UserDocument user = new UserDocument(userId, "testUser", null, null, null, 0);
+        UserDocument user = new UserDocument(userId, "testUser", null, null, 0);
 
         when(userRepository.findById(userId)).thenReturn(Mono.just(user));
         when(favoriteRepository.findByUserIdAndChallengeId(any(UUID.class), any(UUID.class)))
@@ -392,7 +388,7 @@ class UserServiceImplTest {
     void deleteChallengeFromBookmarks_ShouldReturnFalse_WhenBookmarksIsNull() {
         UUID challengeId = UUID.randomUUID();
         UUID userId = UUID.randomUUID();
-        UserDocument user = new UserDocument(userId, "testUser", null, null, null, 0);
+        UserDocument user = new UserDocument(userId, "testUser", null, null, 0);
 
         when(userRepository.findById(userId)).thenReturn(Mono.just(user));
 
@@ -410,7 +406,7 @@ class UserServiceImplTest {
     void deleteChallengeFromBookmarks_ShouldReturnFalse_WhenBookmarksIsEmpty() {
         UUID challengeId = UUID.randomUUID();
         UUID userId = UUID.randomUUID();
-        UserDocument user = new UserDocument(userId, "testUser", null, null, new HashSet<>(), 0);
+        UserDocument user = new UserDocument(userId, "testUser", null, new HashSet<>(), 0);
 
         when(userRepository.findById(userId)).thenReturn(Mono.just(user));
 
@@ -430,7 +426,7 @@ class UserServiceImplTest {
         UUID challengeId = UUID.randomUUID();
         UUID userId = UUID.randomUUID();
         Set<UUID> bookmarks = new HashSet<>(Set.of(UUID.randomUUID(), UUID.randomUUID()));
-        UserDocument user = new UserDocument(userId, "testUser", null, null, bookmarks, 0);
+        UserDocument user = new UserDocument(userId, "testUser", null, bookmarks, 0);
 
         when(userRepository.findById(userId)).thenReturn(Mono.just(user));
 
@@ -450,7 +446,7 @@ class UserServiceImplTest {
         // Arrange
         UUID userId = UUID.randomUUID();
         UUID challengeId = UUID.randomUUID();
-        UserDocument user = new UserDocument(userId, "testUser", null, null, null, 0);
+        UserDocument user = new UserDocument(userId, "testUser", null, null, 0);
         FavoriteDocument favorite = new FavoriteDocument(UUID.randomUUID(), userId, challengeId, LocalDateTime.now());
 
         when(userRepository.findById(userId)).thenReturn(Mono.just(user));
@@ -474,7 +470,7 @@ class UserServiceImplTest {
         UUID challengeId = UUID.randomUUID();
         UUID userId = UUID.randomUUID();
         Set<UUID> bookmarks = new HashSet<>(Set.of(UUID.randomUUID(), UUID.randomUUID(), challengeId));
-        UserDocument user = new UserDocument(userId, "testUser", null, null, bookmarks, 0);
+        UserDocument user = new UserDocument(userId, "testUser", null, bookmarks, 0);
 
         when(userRepository.findById(userId)).thenReturn(Mono.just(user));
         when(userRepository.save(user)).thenReturn(Mono.just(user));
@@ -653,7 +649,6 @@ class UserServiceImplTest {
 
         UserDocument user = new UserDocument();
         user.setUuid(userId);
-        user.setFavoriteChallenges(null); // explícitely null
 
         when(userRepository.findById(userId)).thenReturn(Mono.just(user));
 
@@ -696,7 +691,7 @@ class UserServiceImplTest {
     void getUserById_ShouldReturnUser_WhenUserExists() {
         String username = "existingUser";
         UUID userId=UUID.randomUUID();
-        UserDocument existingUser = new UserDocument(userId, username, Role.ADMIN, null, null, 0);
+        UserDocument existingUser = new UserDocument(userId, username, Role.ADMIN, null, 0);
         when(userRepository.findById(userId)).thenReturn(Mono.just(existingUser));
         
         StepVerifier.create(userService.getUserById(userId.toString()))
