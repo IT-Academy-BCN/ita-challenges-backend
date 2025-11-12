@@ -7,7 +7,6 @@ import com.itachallenge.user.dto.UserSolutionRequestDto;
 import com.itachallenge.user.dto.UserSolutionResponseDto;
 import com.itachallenge.user.service.IUserSolutionService;
 import com.itachallenge.user.service.UserService;
-import com.itachallenge.userinteraction.service.favorite.FavoriteService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -38,12 +37,10 @@ public class UserController {
 
     private final UserService userService;
     private final IUserSolutionService userSolutionService;
-    private final FavoriteService favoriteService;
 
-    public UserController(UserService userService, IUserSolutionService userSolutionService, FavoriteService favoriteService) {
+    public UserController(UserService userService, IUserSolutionService userSolutionService) {
         this.userService = userService;
         this.userSolutionService = userSolutionService;
-        this.favoriteService = favoriteService;
     }
 
     @GetMapping(value = "/test")
@@ -146,7 +143,7 @@ public class UserController {
 
     @PostMapping("/users/{userId}/favorites/{challengeId}")
     public Mono<ResponseEntity<Boolean>> addToFavorites(@PathVariable String userId, @PathVariable String challengeId) {
-        return favoriteService.addChallengeToFavorites(userId, challengeId)
+        return userService.addChallengeToFavorites(userId, challengeId)
                 .map(added -> {
                     if (Boolean.TRUE.equals(added)) {
                         log.info("Challenge '{}' added to user '{}' favorites", challengeId, userId);
@@ -282,7 +279,7 @@ public class UserController {
     )
     @DeleteMapping("/users/{userId}/favorites/{challengeId}")
     public Mono<ResponseEntity<Boolean>> deleteFromFavorites(@PathVariable String userId, @PathVariable String challengeId) {
-        return favoriteService.deleteChallengeFromFavorites(userId, challengeId)
+        return userService.deleteChallengeFromFavorites(userId, challengeId)
                 .map(deleted -> {
                     if (Boolean.TRUE.equals(deleted)) {
                         log.info("Challenge '{}' deleted from user '{}' favorites", challengeId, userId);
