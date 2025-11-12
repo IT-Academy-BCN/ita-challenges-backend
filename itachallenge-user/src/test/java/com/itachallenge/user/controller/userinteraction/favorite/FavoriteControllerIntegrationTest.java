@@ -17,7 +17,6 @@ import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWeb
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,9 +24,10 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+        properties = "spring.profiles.active=test")
 @AutoConfigureWebTestClient
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class FavoriteControllerIntegrationTest {
 
     @Autowired
@@ -41,11 +41,13 @@ class FavoriteControllerIntegrationTest {
     @BeforeEach
     void setUp(){
         favoriteRepository.deleteAll().block();
+        userRepository.deleteAll().block();
     }
 
     @AfterEach
     void tearDown(){
         favoriteRepository.deleteAll().block();
+        userRepository.deleteAll().block();
     }
 
     @Test
