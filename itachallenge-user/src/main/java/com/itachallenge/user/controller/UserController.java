@@ -400,7 +400,7 @@ public class UserController {
                     return ResponseEntity.ok().body(bookmarks);
                 });
     }
-
+    
     @Operation(
             summary = "Retrieve all solutions for a user.",
             parameters = {
