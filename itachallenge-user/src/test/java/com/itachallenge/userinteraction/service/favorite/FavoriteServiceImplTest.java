@@ -34,6 +34,8 @@ class FavoriteServiceImplTest {
 
     private AutoCloseable mocks;
 
+    private static final String USER_NOT_FOUND_WITH_ID = "User not found with id: ";
+
     @BeforeEach
     void setUp() {
         mocks = MockitoAnnotations.openMocks(this);
@@ -100,7 +102,7 @@ class FavoriteServiceImplTest {
         StepVerifier.create(favoriteService.getUserFavorites(userId.toString()))
                 .expectErrorMatches(error ->
                         error instanceof NotFoundException &&
-                                error.getMessage().equals("User not found with id: " + userId))
+                                error.getMessage().equals(USER_NOT_FOUND_WITH_ID + userId))
                 .verify();
 
         verify(userRepository, times(1)).existsById(userId);

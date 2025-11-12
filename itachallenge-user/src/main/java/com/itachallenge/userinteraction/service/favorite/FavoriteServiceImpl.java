@@ -17,6 +17,8 @@ public class FavoriteServiceImpl implements FavoriteService {
     private final FavoriteRepository favoriteRepository;
     private final UserRepository userRepository;
 
+    private static final String USER_NOT_FOUND_WITH_ID = "User not found with id: ";
+
     public FavoriteServiceImpl(FavoriteRepository favoriteRepository, UserRepository userRepository) {
         this.favoriteRepository = favoriteRepository;
         this.userRepository = userRepository;
@@ -41,7 +43,7 @@ public class FavoriteServiceImpl implements FavoriteService {
                         userRepository.existsById(userUuid)
                                 .flatMap(exists -> {
                                     if (!exists) {
-                                        return Mono.error(new NotFoundException("User not found with id: " + userId));
+                                        return Mono.error(new NotFoundException(USER_NOT_FOUND_WITH_ID + userId));
                                     }
                                     return favoriteRepository.findByUserId(userUuid)
                                             .map(FavoriteDocument::getChallengeId)
@@ -50,7 +52,4 @@ public class FavoriteServiceImpl implements FavoriteService {
                                 })
                 );
     }
-
-
-
 }
