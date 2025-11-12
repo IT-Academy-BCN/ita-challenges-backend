@@ -20,6 +20,6 @@ public interface UserService {
     Mono<Boolean> deleteChallengeFromBookmarks(String userId, String challengeId);
 
     Mono<Set<UUID>> getUserBookmarks(String userId);
-
+    
     Mono<UserDocument> getUserById(String userId);
 }
