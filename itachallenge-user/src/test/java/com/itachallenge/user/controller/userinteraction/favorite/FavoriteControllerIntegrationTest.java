@@ -8,6 +8,7 @@ import com.itachallenge.userinteraction.document.favorite.FavoriteDocument;
 import com.itachallenge.userinteraction.repository.favorite.FavoriteRepository;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -17,6 +18,7 @@ import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWeb
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,8 +27,8 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(
-        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-        properties = "spring.profiles.active=test")
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("test")
 @AutoConfigureWebTestClient
 class FavoriteControllerIntegrationTest {
 
@@ -44,10 +46,14 @@ class FavoriteControllerIntegrationTest {
         userRepository.deleteAll().block();
     }
 
-    @AfterEach
-    void tearDown(){
-        favoriteRepository.deleteAll().block();
-        userRepository.deleteAll().block();
+    @Test
+    void activeProfileIsTest() {
+        webTestClient.get()
+                .uri("/actuator/env")
+                .exchange()
+                .returnResult(String.class)
+                .getResponseBody()
+                .blockFirst();
     }
 
     @Test
