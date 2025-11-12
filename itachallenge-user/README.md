@@ -198,20 +198,23 @@ itachallenge-user/
    │  └─ java/com/itachallenge
    │     ├─ user
    │     │  ├─ controller/userinteraction
-   │     │  │  ├─ favorite/.gitkeep
+   │     │  │  ├─ favorite/FavoriteController
    │     │  │  └─ bookmark/.gitkeep
    │     │  └─ dto/userinteraction
-   │     │     ├─ favorite/.gitkeep
+   │     │     ├─ favorite/FavoriteResponseDto
    │     │     └─ bookmark/.gitkeep
    │     └─ userinteraction                 # core (without HTTP)
    │        ├─ document
-   │        │  ├─ favorite/.gitkeep
+   │        │  ├─ favorite/FavoriteDocument
    │        │  └─ bookmark/.gitkeep
    │        ├─ repository
-   │        │  ├─ favorite/.gitkeep
+   │        │  ├─ favorite/FavoriteRepository
    │        │  └─ bookmark/.gitkeep
    │        ├─ service
-   │        │  ├─ favorite/.gitkeep
+   │        │  ├─ favorite
+   │        │  │  ├─ FavoriteService
+   │        │  │  └─ FavoriteServiceImpl
+   │        │  │ 
    │        │  └─ bookmark/.gitkeep
    │        ├─ exception/.gitkeep
    │        └─ event
@@ -221,14 +224,16 @@ itachallenge-user/
       └─ java/com/itachallenge
          ├─ user
          │  ├─ controller/userinteraction
-         │  │  ├─ favorite/.gitkeep
+         │  │  ├─ favorite/FavoriteControllerTest
          │  │  └─ bookmark/.gitkeep
          │  └─ dto/userinteraction
-         │     ├─ favorite/.gitkeep
+         │     ├─ favorite/FavoriteResponseDtoTest
          │     └─ bookmark/.gitkeep
          └─ userinteraction
             ├─ service
-            │  ├─ favorite/.gitkeep
+   │        │  ├─ favorite
+   │        │  │  ├─ FavoriteServiceTest
+   │        │  │  └─ FavoriteServiceImplTest
             │  └─ bookmark/.gitkeep
             ├─ repository
             │  ├─ favorite/.gitkeep
@@ -238,7 +243,7 @@ itachallenge-user/
             │  └─ publisher/.gitkeep
             ├─ exception/.gitkeep
             └─ document
-               ├─ favorite/.gitkeep
+               ├─ favorite/FavoriteDocumentTest
                └─ bookmark/.gitkeep
 
 ```
@@ -250,9 +255,9 @@ itachallenge-user/
 - Maintain current API behavior (AS-IS) while allowing scalable future development.
 - Improve maintainability and ensure clear domain ownership.
 
-### 🧱 Current State
+### 🧱 Current State 12/11/2025
 
-- Classes are placeholders (// TODO) — no business logic implemented yet.
+- Bookmark classes are placeholders (// TODO) — no business logic implemented yet while Favorite classes have been implemented (GET methods only)
 - Includes minimal placeholder tests to maintain SonarQube coverage.
 - No new endpoints or DB interactions have been introduced.
 - The README was updated to reflect the new module and structure.
