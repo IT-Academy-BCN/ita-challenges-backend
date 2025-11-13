@@ -108,5 +108,5 @@
 * Adria Vargas - https://github.com/AdriaVH
 * Pablo Federico Gómez San Joaquín - https://github.com/Pablo2203
 * Eduardo Zavarce Forsythe - https://github.com/eduzavarce
-* Flavio Augusto D'Avirro - https://github.com/FlavioKde
+* Alvaro Mendoza Cuello - https://github.com/AlvaroLMC
 
