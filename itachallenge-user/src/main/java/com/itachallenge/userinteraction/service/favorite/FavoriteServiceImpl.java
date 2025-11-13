@@ -47,8 +47,7 @@ public class FavoriteServiceImpl implements FavoriteService {
                                     }
                                     return favoriteRepository.findByUserId(userUuid)
                                             .map(FavoriteDocument::getChallengeId)
-                                            .collect(Collectors.toSet())
-                                            .defaultIfEmpty(Set.of()); // user exists but no favorites
+                                            .collect(Collectors.toSet());
                                 })
                 );
     }

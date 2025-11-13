@@ -18,9 +18,6 @@ import java.util.UUID;
 @Service
 public class UserServiceImpl implements UserService {
 
-    private static final String USER_NOT_FOUND = "User not found";
-    private static final String USER_NOT_FOUND_WITH_ID = "User not found with id: ";
-
     private final UserRepository userRepository;
     private final FavoriteRepository favoriteRepository;
 
@@ -32,7 +29,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Mono<UserDocument> getUser(String githubUsername) {
         return userRepository.findByUsername(githubUsername)
-                .switchIfEmpty(Mono.error(new NotFoundException(USER_NOT_FOUND)));
+                .switchIfEmpty(Mono.error(new NotFoundException("User not found")));
     }
 
     //TODO : TO IMPLEMENT TO FAVORITE SERVICE IMPL
@@ -45,7 +42,7 @@ public class UserServiceImpl implements UserService {
                     UUID challengeUuid = uuidTuple.getT2();
 
                     return userRepository.findById(userUuid)
-                            .switchIfEmpty(Mono.error(new NotFoundException(USER_NOT_FOUND)))
+                            .switchIfEmpty(Mono.error(new NotFoundException("User not found")))
                             .flatMap(user -> addToFavorites(userUuid, challengeUuid));
                 });
     }
@@ -58,7 +55,7 @@ public class UserServiceImpl implements UserService {
                     UUID challengeUuid = uuidTuple.getT2();
 
                     return userRepository.findById(userUuid)
-                            .switchIfEmpty(Mono.error(new NotFoundException(USER_NOT_FOUND)))
+                            .switchIfEmpty(Mono.error(new NotFoundException("User not found")))
                             .flatMap(user -> addToBookmarks(user, challengeUuid));
                 });
     }
@@ -72,7 +69,7 @@ public class UserServiceImpl implements UserService {
                     UUID challengeUuid = uuidTuple.getT2();
 
                     return userRepository.findById(userUuid)
-                            .switchIfEmpty(Mono.error(new NotFoundException(USER_NOT_FOUND)))
+                            .switchIfEmpty(Mono.error(new NotFoundException("User not found")))
                             .flatMap(user -> deleteFromFavorites(userUuid, challengeUuid));
                 });
     }
@@ -85,7 +82,7 @@ public class UserServiceImpl implements UserService {
                     UUID challengeUuid = uuidTuple.getT2();
 
                     return userRepository.findById(userUuid)
-                            .switchIfEmpty(Mono.error(new NotFoundException(USER_NOT_FOUND)))
+                            .switchIfEmpty(Mono.error(new NotFoundException("User not found")))
                             .flatMap(user -> deleteFromBookmarks(user, challengeUuid));
                 });
     }
@@ -146,7 +143,6 @@ public class UserServiceImpl implements UserService {
         return Mono.just(false);
     }
 
-
     private Mono<UUID> parseAndValidateUUID(String id) {
 
         if (id == null || id.isEmpty()) {
@@ -165,7 +161,7 @@ public class UserServiceImpl implements UserService {
         return parseAndValidateUUID(userId)
                 .flatMap(userUuid ->
                         userRepository.findById(userUuid)
-                                .switchIfEmpty(Mono.error(new NotFoundException(USER_NOT_FOUND_WITH_ID + userId)))
+                                .switchIfEmpty(Mono.error(new NotFoundException("User not found with id: " + userId)))
                                 .map(user -> Optional.ofNullable(user.getBookmarkChallenges()).orElseGet(HashSet::new))
                 );
     }
@@ -173,7 +169,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Mono<UserDocument> getUserById(String userId) {
         return userRepository.findById(UUID.fromString(userId))
-                .switchIfEmpty(Mono.error(new NotFoundException(USER_NOT_FOUND)));
+                .switchIfEmpty(Mono.error(new NotFoundException("User not found")));
     }
     
 }
