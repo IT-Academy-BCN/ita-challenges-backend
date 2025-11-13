@@ -3,6 +3,12 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+### [itachallenge-user-3.0.6-RELEASE] - 2025-11-13
+### Removed
+- Deleted favorites field from UserDocument. (PR [##1024])
+- Removed all related mentions in other documents or tests
+
+
 ### [itachallenge-user-3.0.5-RELEASE] - 2025-11-13
 
 ### Added
@@ -12,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Refactor: Moved the GET favorite-related logic out of UserController into FavoriteController.
 - Improves separation of concerns, modularity, and testability.
 - No API or schema changes at this stage.
+- 
 ### [itachallenge-challenge-3.0.2-RELEASE] - 2025-11-17
 
 ### Added
@@ -29,7 +36,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Internal refactor of the `itachallenge-challenge` package structure to isolate the
   **submission** domain.  
   No new endpoints, no database changes, and no runtime behavior changes.
-
 
 ### [itachallenge-user-3.0.4-RELEASE] - 2025-11-12
 ### Added
