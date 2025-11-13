@@ -17,10 +17,6 @@ public interface UserService {
 
     Mono<Boolean> deleteChallengeFromBookmarks(String userId, String challengeId);
 
-    Mono<Boolean> addToFavorites(UUID userUuid, UUID challengeUuid);
-
-    Mono<Boolean> deleteFromFavorites(UUID userId, UUID challengeUuid);
-
     Mono<Set<UUID>> getUserBookmarks(String userId);
     
     Mono<UserDocument> getUserById(String userId);
