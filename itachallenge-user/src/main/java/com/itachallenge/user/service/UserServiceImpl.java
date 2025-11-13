@@ -89,7 +89,7 @@ public class UserServiceImpl implements UserService {
 
 
     //TODO : TO IMPLEMENT IN FAVORITE SERVICE IMPL
-    public Mono<Boolean> addToFavorites(UUID userUuid, UUID challengeUuid) {
+    private Mono<Boolean> addToFavorites(UUID userUuid, UUID challengeUuid) {
         return favoriteRepository.existsByUserIdAndChallengeId(userUuid, challengeUuid)
                 .flatMap(exists -> {
                     if (exists.booleanValue())
@@ -120,7 +120,7 @@ public class UserServiceImpl implements UserService {
     }
 
     //TODO : TO IMPLEMENT IN FAVORITE SERVICE IMPL
-    public Mono<Boolean> deleteFromFavorites(UUID userId, UUID challengeUuid) {
+    private Mono<Boolean> deleteFromFavorites(UUID userId, UUID challengeUuid) {
         return favoriteRepository.findByUserIdAndChallengeId(userId, challengeUuid)
                 .flatMap(favorite ->
                         favoriteRepository.delete(favorite)
