@@ -16,7 +16,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -33,10 +32,8 @@ class UserServiceImplTest {
 
     @Mock
     private UserRepository userRepository;
-
     @Mock
     private FavoriteRepository favoriteRepository;
-
 
     @InjectMocks
     private UserServiceImpl userService;
