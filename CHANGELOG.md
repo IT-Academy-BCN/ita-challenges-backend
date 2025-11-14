@@ -3,6 +3,16 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+### [itachallenge-user-3.0.4-RELEASE] - 2025-11-13
+
+### Added
+- Created FavoriteController. (PR [##1019])
+
+### Changed
+- Refactor: Moved the GET favorite-related logic out of UserController into FavoriteController.
+- Improves separation of concerns, modularity, and testability.
+- No API or schema changes at this stage.
+
 ### [itachallenge-user-3.0.4-RELEASE] - 2025-11-12
 ### Added
 - Created FavoriteService interface and FavoriteServiceImpl implementation. (PR [##1021])
