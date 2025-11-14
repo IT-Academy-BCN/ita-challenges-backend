@@ -1,14 +1,11 @@
 package com.itachallenge.user.controller.userinteraction.favorite;
 
 
-import com.itachallenge.user.document.UserDocument;
-import com.itachallenge.user.document.enums.Role;
+import com.itachallenge.user.dto.AdminCreateUserRequestDto;
+import com.itachallenge.user.dto.AdminCreateUserResponseDto;
 import com.itachallenge.user.repository.UserRepository;
-import com.itachallenge.userinteraction.document.favorite.FavoriteDocument;
 import com.itachallenge.userinteraction.repository.favorite.FavoriteRepository;
 
-import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -30,8 +27,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(
-        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(  webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @AutoConfigureWebTestClient
 @Testcontainers
@@ -60,55 +56,18 @@ class FavoriteControllerIntegrationTest {
         userRepository.deleteAll().block();
     }
 
-    @Test
-    void activeProfileIsTest() {
-        webTestClient.get()
-                .uri("/actuator/env")
-                .exchange()
-                .returnResult(String.class)
-                .getResponseBody()
-                .blockFirst();
-    }
 
     @Test
     void getUserFavorites_WithExistingFavorites_ReturnsSetOfChallengeIds(){
-        UUID userId = UUID.randomUUID();
+        String userId = createUser("user");
 
-        UserDocument user = UserDocument.builder()
-                .uuid(userId)
-                .username("test_user")
-                .role(Role.USER)
-                .points(0)
-                .build();
+        String challengeId1 = UUID.randomUUID().toString();
+        String challengeId2 = UUID.randomUUID().toString();
+        String challengeId3 = UUID.randomUUID().toString();
 
-        userRepository.save(user).block();
-
-        UUID challengeId1 = UUID.randomUUID();
-        UUID challengeId2 = UUID.randomUUID();
-        UUID challengeId3 = UUID.randomUUID();
-
-        FavoriteDocument favorite1 = FavoriteDocument.builder()
-                .uuid(UUID.randomUUID())
-                .userId(userId)
-                .challengeId(challengeId1)
-                .createdAt(LocalDateTime.now())
-                .build();
-
-        FavoriteDocument favorite2 = FavoriteDocument.builder()
-                .uuid(UUID.randomUUID())
-                .userId(userId)
-                .challengeId(challengeId2)
-                .createdAt(LocalDateTime.now())
-                .build();
-
-        FavoriteDocument favorite3 = FavoriteDocument.builder()
-                .uuid(UUID.randomUUID())
-                .userId(userId)
-                .challengeId(challengeId3)
-                .createdAt(LocalDateTime.now())
-                .build();
-
-        favoriteRepository.saveAll(List.of(favorite1, favorite2, favorite3)).blockLast();
+        addFavorite(userId, challengeId1);
+        addFavorite(userId, challengeId2);
+        addFavorite(userId, challengeId3);
 
         webTestClient.get()
                 .uri("/itachallenge/api/v1/user/users/{userId}/favorites", userId)
@@ -116,25 +75,18 @@ class FavoriteControllerIntegrationTest {
                 .exchange()
                 .expectStatus().isOk()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON)
-                .expectBody(new ParameterizedTypeReference<Set<String>>() {})
-                .value(favorites ->{
-                    assertThat(favorites).hasSize(3);
-                    assertThat(favorites).containsExactlyInAnyOrder(challengeId1.toString(), challengeId2.toString(), challengeId3.toString());
-                });
+                .expectBody(new ParameterizedTypeReference<Set<String>>(){})
+                .value(
+                        favorites -> {
+                            assertThat(favorites).hasSize(3);
+                            assertThat(favorites).containsExactlyInAnyOrder(challengeId1, challengeId2, challengeId3);
+                        }
+                );
     }
 
     @Test
     void getUserFavorites_WithNoFavorites_ReturnsEmptySet(){
-        UUID userId = UUID.randomUUID();
-
-        UserDocument user = UserDocument.builder()
-                .uuid(userId)
-                .username("test_user")
-                .role(Role.USER)
-                .points(0)
-                .build();
-
-        userRepository.save(user).block();
+        String userId = createUser("user");
 
         webTestClient.get()
                 .uri("/itachallenge/api/v1/user/users/{userId}/favorites", userId)
@@ -142,79 +94,50 @@ class FavoriteControllerIntegrationTest {
                 .exchange()
                 .expectStatus().isOk()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON)
-                .expectBody(new ParameterizedTypeReference<Set<String>>() {})
-                .value( favorites ->
-                        assertThat(favorites).isEmpty());
+                .expectBody(new ParameterizedTypeReference<Set<String>>(){})
+                .value(
+                        favorites -> assertThat(favorites).isEmpty()
+                );
     }
 
     @Test
     void getUserFavorites_WithMultipleFavoritesFromDifferentUsers_ReturnsOnlyUserFavorites(){
-        UserDocument user1 = UserDocument.builder()
-                .uuid(UUID.randomUUID())
-                .username("name 1")
-                .role(Role.USER)
-                .build();
+        String user1 = createUser("user1");
+        String user2 = createUser("user2");
 
-        UserDocument user2 = UserDocument.builder()
-                .uuid(UUID.randomUUID())
-                .username("name 2")
-                .role(Role.USER)
-                .build();
+        String challengeId1 = UUID.randomUUID().toString();
+        String challengeId2 = UUID.randomUUID().toString();
+        String challengeId3 = UUID.randomUUID().toString();
 
-        userRepository.saveAll(List.of(user1, user2)).blockLast();
-
-        UUID challengeId1 = UUID.randomUUID();
-        UUID challengeId2 = UUID.randomUUID();
-        UUID challengeId3 = UUID.randomUUID();
-
-        FavoriteDocument favorite1 = FavoriteDocument.builder()
-                .uuid(UUID.randomUUID())
-                .userId(user1.getUuid())
-                .challengeId(challengeId1)
-                .createdAt(LocalDateTime.now())
-                .build();
-
-        FavoriteDocument favorite2 = FavoriteDocument.builder()
-                .uuid(UUID.randomUUID())
-                .userId(user1.getUuid())
-                .challengeId(challengeId2)
-                .createdAt(LocalDateTime.now())
-                .build();
-
-        FavoriteDocument favorite3 = FavoriteDocument.builder()
-                .uuid(UUID.randomUUID())
-                .userId(user2.getUuid())
-                .challengeId(challengeId3)
-                .createdAt(LocalDateTime.now())
-                .build();
-
-        favoriteRepository.saveAll(List.of(favorite1, favorite2, favorite3)).blockLast();
+        addFavorite(user1, challengeId1);
+        addFavorite(user1, challengeId2);
+        addFavorite(user2, challengeId3);
 
         webTestClient.get()
-                .uri("/itachallenge/api/v1/user/users/{userId}/favorites", user1.getUuid())
+                .uri("/itachallenge/api/v1/user/users/{userId}/favorites", user1)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON)
                 .expectBody(new ParameterizedTypeReference<Set<String>>() {})
-                .value(favorites ->{
-                    assertThat(favorites).hasSize(2);
-                    assertThat(favorites).containsExactlyInAnyOrder(challengeId1.toString(), challengeId2.toString());
-                    assertThat(favorites).doesNotContain(challengeId3.toString());
-                });
-
+                .value(favorites -> {
+                            assertThat(favorites).hasSize(2);
+                            assertThat(favorites).containsExactlyInAnyOrder(challengeId1, challengeId2);
+                            assertThat(favorites).doesNotContain(challengeId3);
+                        }
+                );
     }
 
     @Test
-    void getUserFavorites_WithInvalidUUID_Returns400() {
-        String invalidUserId = "invalid-uuid-format";
-
+    void getUserFavorites_WithInvalidUUID_Returns400(){
         webTestClient.get()
-                .uri("/itachallenge/api/v1/user/users/{userId}/favorites", invalidUserId)
+                .uri("/itachallenge/api/v1/user/users/{userId}/favorites", 321)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isBadRequest()
-//                .expectBody()   //// TO UN-COMMENT WHEN NEW ERROR-CORE GLOBAL HANDLER IS USED + QUItTING 3 LAST LINES
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                //TODO UN-COMMENT WHEN NEW ERROR-CORE GLOBAL HANDLER IS USED + QUITTING 3 LAST LINES
+//              .expectBody()
 //                .jsonPath("$.status").isEqualTo(400)
 //                .jsonPath("$.error").value(error -> assertThat(error.toString())
 //                        .contains("BadUUIDException"))
@@ -223,43 +146,22 @@ class FavoriteControllerIntegrationTest {
 //                .jsonPath("$.path").value(path -> assertThat(path.toString())
 //                        .contains("/users/" + invalidUserId + "/favorites"));
                 .expectBody(String.class)
-                .value(body -> {
-                    assertThat(body).contains("The provided IDs are not valid");
-                });
+                .value( body ->
+                        assertThat(body).contains("The provided IDs are not valid"));
     }
 
     @Test
-    void getUserFavorites_WithMalformedUUID_Returns400() {
-        String invalidUserId = "++++++-123e4567";
+    void getUserFavorites_WhenUserDoesntExist_Returns404(){
+        String nonExistentUserId = UUID.randomUUID().toString();
 
         webTestClient.get()
-                .uri("/itachallenge/api/v1/user/users/{userId}/favorites", invalidUserId)
-                .accept(MediaType.APPLICATION_JSON)
-                .exchange()
-                .expectStatus().isBadRequest()
-//                .expectBody() //// TO UN-COMMENT WHEN NEW ERROR-CORE GLOBAL HANDLER IS USED + QUITTING 3 LAST LINES
-//                .jsonPath("$.status").isEqualTo(400)
-//                .jsonPath("$.error").value(error -> assertThat(error.toString())
-//                        .contains("BadUUIDException"))
-//                .jsonPath("$.message").value(message -> assertThat(message.toString())
-//                        .contains("The provided IDs are not valid"))
-//                .jsonPath("$.path").value(path -> assertThat(path.toString())
-//                        .contains("/users/" + invalidUserId + "/favorites"));
-                .expectBody(String.class)
-                .value(body ->
-                    assertThat(body).contains("The provided IDs are not valid"));
-    }
-
-    @Test
-    void getUserFavorites_WhenUserDoesntExists_Returns404() {
-        String invalidUserId = "123e4567-e89b-12d3-a456-42661417400";
-
-        webTestClient.get()
-                .uri("/itachallenge/api/v1/user/users/{userId}/favorites", invalidUserId)
+                .uri("/itachallenge/api/v1/user/users/{userId}/favorites", nonExistentUserId)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isNotFound()
-//                .expectBody()   //// TO UN-COMMENT WHEN NEW ERROR-CORE GLOBAL HANDLER IS USED + QUITTING 3 LAST LINES
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                //TODO UN-COMMENT WHEN NEW ERROR-CORE GLOBAL HANDLER IS USED + QUITTING 3 LAST LINES
+//              .expectBody()
 //                .jsonPath("$.status").isEqualTo(404)
 //                .jsonPath("$.error").value(error -> assertThat(error.toString())
 //                        .contains("NotFoundException")) // Nom de l'exception
@@ -268,8 +170,35 @@ class FavoriteControllerIntegrationTest {
 //                .jsonPath("$.path").value(path -> assertThat(path.toString())
 //                        .contains("/users/" + invalidUserId + "/favorites"));
                 .expectBody(String.class)
-                .value(body ->
+                .value( body ->
                         assertThat(body).contains("not found"));
     }
 
+
+
+    private String createUser(String user){
+        AdminCreateUserRequestDto userRequestDto = new AdminCreateUserRequestDto();
+        userRequestDto.setUsername(user);
+
+        AdminCreateUserResponseDto userResponseDto =
+                webTestClient.post()
+                        .uri("/itachallenge/api/v1/admin/users/create")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .bodyValue(userRequestDto)
+                        .exchange()
+                        .expectStatus().isCreated()
+                        .expectBody(AdminCreateUserResponseDto.class)
+                        .returnResult().getResponseBody();
+
+        assertThat(userResponseDto).isNotNull();
+        assertThat(userResponseDto.getUserId()).isNotNull();
+        return userResponseDto.getUserId();
+    }
+
+    private void addFavorite(String userId, String challengeId){
+        webTestClient.post()
+                .uri("/itachallenge/api/v1/user/users/{userId}/favorites/{challengeId}", userId, challengeId)
+                .exchange()
+                .expectStatus().isCreated();
+    }
 }
