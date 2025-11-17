@@ -12,6 +12,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Refactor: Moved the GET favorite-related logic out of UserController into FavoriteController.
 - Improves separation of concerns, modularity, and testability.
 - No API or schema changes at this stage.
+### [itachallenge-challenge-3.0.2-RELEASE] - 2025-11-17
+
+### Added
+- Internal package skeleton for challenge submissions (Taiga [#804], PR [#1034]):
+  - Core (non-HTTP): `com.itachallenge.submission.{document,repository,service,event,exception}`.
+  - HTTP layer: `com.itachallenge.challenge.controller.submission` and
+    `com.itachallenge.challenge.dto.submission`.
+  - Mirror test packages under `src/test/java/com/itachallenge/challenge/controller/submission` (using `.gitkeep`), no test sources yet.
+  - Mirror test packages under `src/test/java/com/itachallenge/challenge/dto/submission` (using `.gitkeep`), no test sources yet.
+  - Mirror test packages under `src/test/java/com/itachallenge/submission` (using `.gitkeep`), no test sources yet.
+- Docs: README updated to explain that `submission` is an internal domain package
+  (not a new module/artifact) and the rationale for a future extraction to a dedicated library or microservice.
+
+### Changed
+- Internal refactor of the `itachallenge-challenge` package structure to isolate the
+  **submission** domain.  
+  No new endpoints, no database changes, and no runtime behavior changes.
+
 
 ### [itachallenge-user-3.0.4-RELEASE] - 2025-11-12
 ### Added
