@@ -110,3 +110,4 @@
 * Eduardo Zavarce Forsythe - https://github.com/eduzavarce
 * Flavio Augusto D'Avirro - https://github.com/FlavioKde
 * Alex Pérez Braveso - https://github.com/aperez1haad
+* Diego Balaguer Gálvez - https://github.com/DiegoBalaguer
