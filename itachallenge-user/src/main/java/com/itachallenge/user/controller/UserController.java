@@ -7,6 +7,7 @@ import com.itachallenge.user.dto.UserSolutionRequestDto;
 import com.itachallenge.user.dto.UserSolutionResponseDto;
 import com.itachallenge.user.service.IUserSolutionService;
 import com.itachallenge.user.service.UserService;
+import com.itachallenge.userinteraction.service.favorite.FavoriteService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -37,10 +38,12 @@ public class UserController {
 
     private final UserService userService;
     private final IUserSolutionService userSolutionService;
+    private final FavoriteService favoriteService;
 
-    public UserController(UserService userService, IUserSolutionService userSolutionService) {
+    public UserController(UserService userService, IUserSolutionService userSolutionService, FavoriteService favoriteService) {
         this.userService = userService;
         this.userSolutionService = userSolutionService;
+        this.favoriteService = favoriteService;
     }
 
     @GetMapping(value = "/test")
@@ -366,7 +369,7 @@ public class UserController {
 
     @GetMapping("/users/{userId}/favorites")
     public Mono<ResponseEntity<Set<UUID>>> getUserFavorites(@PathVariable String userId) {
-        return userService.getUserFavorites(userId)
+        return favoriteService.getUserFavorites(userId)
                 .map(favorites -> {
                     log.info("Retrieved {} favorite challenges for user {}", favorites.size(), userId);
                     return ResponseEntity.ok().body(favorites);
