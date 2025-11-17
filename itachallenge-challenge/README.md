@@ -24,3 +24,18 @@
 - http://localhost:8762/actuator/mappings
 - http://localhost:8762/actuator/scheduledtasks
 - http://localhost:8762/actuator/threaddump
+
+## Submissions Module Overview
+
+The `itachallenge-challenge` service includes a new internal package: `submission`.
+
+### Official Solutions (Mentor Solutions)
+- Represent the official solution for each challenge.
+- Part of the challenge content domain (title, description, difficulty, languages, etc.).
+- Remain in the existing `challenge` packages.
+- Not related to user progress, scoring, or the submission workflow.
+
+### User Submissions
+- Represent the code submitted by users when solving a challenge.
+- Core domain logic is now isolated under: com.itachallenge.challenge.submission
+- Designed for future extraction into a dedicated microservice or shared library.
