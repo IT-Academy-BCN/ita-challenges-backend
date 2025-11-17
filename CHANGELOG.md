@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### [itachallenge-challenge-3.0.2-RELEASE] - 2025-11-11
 
 ### Added
-- Internal package skeleton for **challenge submissions**:
+- Internal package skeleton for challenge submissions (Taiga [#804], PR [#1034]):
   - Core (non-HTTP): `com.itachallenge.submission.{document,repository,service,event,exception}`.
   - HTTP layer: `com.itachallenge.challenge.controller.submission` and
     `com.itachallenge.challenge.dto.submission`.
