@@ -3,7 +3,7 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-### [itachallenge-challenge-3.0.2-RELEASE] - 2025-11-11
+### [itachallenge-challenge-3.0.2-RELEASE] - 2025-11-17
 
 ### Added
 - Internal package skeleton for challenge submissions (Taiga [#804], PR [#1034]):
