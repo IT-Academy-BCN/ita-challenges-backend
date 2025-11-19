@@ -32,7 +32,6 @@ public class UserSolutionRequestDto {
     @JsonProperty(value ="solution_text")
     @NotBlank(message = "Solution text is required")
     private String solutionText;
-
 }
 
 
