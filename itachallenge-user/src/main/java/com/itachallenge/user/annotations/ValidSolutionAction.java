@@ -14,7 +14,7 @@ import javax.validation.Constraint;
 @Target({ElementType.FIELD, ElementType.PARAMETER, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ValidSolutionAction {
-    String message() default "Action must be one of: SAVE, GIVE_UP, SUBMIT";
+    String message() default "Invalid action";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 
