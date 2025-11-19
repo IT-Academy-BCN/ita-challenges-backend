@@ -17,7 +17,16 @@ public class SolutionActionValidator implements ConstraintValidator<ValidSolutio
 
     @Override
     public boolean isValid(String action, ConstraintValidatorContext context){
-        return action != null && VALID_ACTIONS.contains(action.toUpperCase());
+        if (action == null || !VALID_ACTIONS.contains(action.toUpperCase())) {
+            String message = "Action must be one of: " + String.join(", ", VALID_ACTIONS);
 
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate(message)
+                    .addConstraintViolation();
+
+            return false;
+        }
+
+        return true;
     }
 }
