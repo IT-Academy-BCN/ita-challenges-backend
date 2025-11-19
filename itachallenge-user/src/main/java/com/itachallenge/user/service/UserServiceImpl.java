@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import com.itachallenge.userinteraction.document.favorite.FavoriteDocument;
 import com.itachallenge.userinteraction.repository.favorite.FavoriteRepository;
+import com.itachallenge.userinteraction.document.bookmark.BookmarkDocument;
+import com.itachallenge.userinteraction.repository.bookmark.BookmarkRepository;
 import reactor.core.publisher.Mono;
 
 import java.util.HashSet;
@@ -20,10 +22,12 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final FavoriteRepository favoriteRepository;
+    private final BookmarkRepository bookmarkRepository;
 
-    public UserServiceImpl(UserRepository userRepository, FavoriteRepository favoriteRepository) {
+    public UserServiceImpl(UserRepository userRepository, FavoriteRepository favoriteRepository, BookmarkRepository bookmarkRepository) {
         this.userRepository = userRepository;
         this.favoriteRepository = favoriteRepository;
+        this.bookmarkRepository = bookmarkRepository;
     }
 
     @Override
