@@ -324,3 +324,4 @@ Supported actions: SAVE, GIVE_UP, SUBMIT. (Taiga [#871], PR [#1043])
 
 ### [docker-compose-1.0] - 2023-11-30
 * First version
+
