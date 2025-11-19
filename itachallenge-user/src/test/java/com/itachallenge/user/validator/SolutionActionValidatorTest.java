@@ -3,6 +3,8 @@ package com.itachallenge.user.validator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -15,37 +17,49 @@ class SolutionActionValidatorTest {
         validator = new SolutionActionValidator();
     }
 
-    @Test
+    @ParameterizedTest
     @DisplayName("Should return true for valid actions (upper and lower case)")
-    void shouldReturnTrueForValidActions() {
-        assertTrue(validator.isValid("SAVE", null));
-        assertTrue(validator.isValid("save", null));
-        assertTrue(validator.isValid("SUBMIT", null));
-        assertTrue(validator.isValid("GIVE_UP", null));
+    @ValueSource(strings = {
+            "SAVE", "GIVE_UP", "SUBMIT", "save", "give_Up", "SUbMIT"
+            })
+    void shouldReturnTrueForValidActions(String action) {
+        assertTrue(validator.isValid(action, null));
     }
 
-    @Test
+    @ParameterizedTest
     @DisplayName("Should return false for invalid actions")
-    void shouldReturnFalseForInvalidActions() {
-        assertFalse(validator.isValid("INVALID", null));
-        assertFalse(validator.isValid("submittt", null));
-        assertFalse(validator.isValid("save_me", null));
-        assertFalse(validator.isValid("submit!", null));
+    @ValueSource(strings = {
+            "INVALID", "submittt", "save_me", "give_up!", "@€!^*%"
+    })
+    void shouldReturnFalseForInvalidActions(String action) {
+        assertFalse(validator.isValid(action, null));
     }
 
-    @Test
-    @DisplayName("Should return false for null, empty, or blank inputs")
-    void shouldReturnFalseForNullOrBlank() {
-        assertFalse(validator.isValid(null, null));   // null case
-        assertFalse(validator.isValid("", null));     // empty string
-        assertFalse(validator.isValid("   ", null));  // blank spaces
+    @ParameterizedTest
+    @DisplayName("Should return false for empty or blank inputs")
+    @ValueSource(strings = {
+            "   ", "\t", "\n", "  \t  \n  "
+    })
+    void shouldReturnFalseForEmptyOrBlank(String action) {
+        assertFalse(validator.isValid(action, null));
     }
 
-    @Test
+    @ParameterizedTest
     @DisplayName("Should return false when value contains valid action but padded with spaces")
-    void shouldReturnFalseForSpacedValues() {
-        assertFalse(validator.isValid(" SAVE ", null));
-        assertFalse(validator.isValid("  SUBMIT", null));
-        assertFalse(validator.isValid("GIVE_UP  ", null));
+    @ValueSource(strings = {
+            " SAVE", "SUBMIT  ", "  GIVE_UP  ", "\tSAVE", "SAVE\n"
+    })
+    void shouldReturnFalseForSpacedValues(String action) {
+        assertFalse(validator.isValid(action, null));
     }
+
+    @Test
+    @DisplayName("Should return false for null input")
+    void shouldReturnFalseForNull() {
+        assertFalse(validator.isValid(null, null));
+    }
+
+
+
+
 }
