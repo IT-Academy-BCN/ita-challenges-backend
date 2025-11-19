@@ -592,6 +592,7 @@ void addChallengeToSolved_WhenChallengeTimesSolvedIsZero_IncreasesTimesSolvedAnd
                 .convertDocumentToDto(any(ChallengeDocument.class), eq(ChallengeDto.class));
     }
 
+    /*
     @Test
     void deleteChallengeById_NotFound() {
         // Arrange
@@ -609,6 +610,34 @@ void addChallengeToSolved_WhenChallengeTimesSolvedIsZero_IncreasesTimesSolvedAnd
                 .expectError(ChallengeNotFoundException.class)  // Se espera que se lance una excepción
                 .verify();
     }
+
+
+     */
+
+
+    @Test
+    void deleteChallengeById_NotFound() {
+        // Arrange
+        String id = "2f948de0-6f0c-4089-90b9-7f70a0812322";
+        UUID uuid = UUID.fromString(id);
+
+        // Mock: challenge no existe → Mono.empty()
+        when(challengeRepository.findByUuid(uuid)).thenReturn(Mono.empty());
+
+        // No hace falta mockear deleteByUuid porque nunca debería ejecutarse
+        // Pero si quieres evitar warnings por "unnecessary stubbing", NO lo pongas.
+
+        // Act
+        Mono<DeleteResponseDto> result = challengeService.deleteChallengeById(id);
+
+        // Assert
+        StepVerifier.create(result)
+                .expectError(ChallengeNotFoundException.class)
+                .verify();
+    }
+
+
+
 
     @Test
     void getChallengesByTopic_WhenChallengesExist_ReturnsResult() {
