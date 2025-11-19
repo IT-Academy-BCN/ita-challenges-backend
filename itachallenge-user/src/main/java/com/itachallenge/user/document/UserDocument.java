@@ -28,9 +28,6 @@ public class UserDocument {
     @Field("role")
     private Role role;
 
-    @Field("favorite_challenges")
-    private Set<UUID> favoriteChallenges;
-
     @Field("bookmark_challenges")
     private Set<UUID> bookmarkChallenges;
 
@@ -50,12 +47,6 @@ public class UserDocument {
         }
         if (role != null) {
             joiner.add("role='" + role + "'");
-        }
-        if (favoriteChallenges != null && !favoriteChallenges.isEmpty()) {
-            joiner.add("favoriteChallenges='");
-            joiner.add(favoriteChallenges.stream()
-                    .map(String::valueOf)
-                    .collect(Collectors.joining(", ")));
         }
         if (bookmarkChallenges != null && !bookmarkChallenges.isEmpty()) {
             joiner.add("bookmarkChallenges='");
