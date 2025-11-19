@@ -1,55 +1,51 @@
 package com.itachallenge.user.validator;
 
-import javax.validation.ConstraintValidatorContext;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.mock;
+import static org.junit.jupiter.api.Assertions.*;
 
 class SolutionActionValidatorTest {
-    private SolutionActionValidator validator;
-    private ConstraintValidatorContext context;
 
+    private SolutionActionValidator validator;
 
     @BeforeEach
     void setUp() {
         validator = new SolutionActionValidator();
-        context = mock(ConstraintValidatorContext.class);
     }
 
     @Test
-    @DisplayName("Should return true for valid cases, in upper or lower case")
+    @DisplayName("Should return true for valid actions (upper and lower case)")
     void shouldReturnTrueForValidActions() {
-        assertTrue(validator.isValid("SAVE", context));
-        assertTrue(validator.isValid("save", context));
-        assertTrue(validator.isValid("SUBMIT", context));
-        assertTrue(validator.isValid("GIVE_UP", context));
+        assertTrue(validator.isValid("SAVE", null));
+        assertTrue(validator.isValid("save", null));
+        assertTrue(validator.isValid("SUBMIT", null));
+        assertTrue(validator.isValid("GIVE_UP", null));
     }
 
-
     @Test
-    @DisplayName("Should return false for invalid cases")
+    @DisplayName("Should return false for invalid actions")
     void shouldReturnFalseForInvalidActions() {
-        assertFalse(validator.isValid("INVALID", context));
-        assertFalse(validator.isValid("submittt", context));
-        assertFalse(validator.isValid("give_up_button", context));
-        assertFalse(validator.isValid("submit!", context));
+        assertFalse(validator.isValid("INVALID", null));
+        assertFalse(validator.isValid("submittt", null));
+        assertFalse(validator.isValid("save_me", null));
+        assertFalse(validator.isValid("submit!", null));
     }
 
     @Test
-    @DisplayName("Should return false for case null or empty spaces")
-    void shouldReturnFalseWhenNullOrEmpty() {
-        assertFalse(validator.isValid(null, context));
-        assertFalse(validator.isValid("", context));
-        assertFalse(validator.isValid("   ", context));
+    @DisplayName("Should return false for null, empty, or blank inputs")
+    void shouldReturnFalseForNullOrBlank() {
+        assertFalse(validator.isValid(null, null));   // null case
+        assertFalse(validator.isValid("", null));     // empty string
+        assertFalse(validator.isValid("   ", null));  // blank spaces
     }
 
-
+    @Test
+    @DisplayName("Should return false when value contains valid action but padded with spaces")
+    void shouldReturnFalseForSpacedValues() {
+        assertFalse(validator.isValid(" SAVE ", null));
+        assertFalse(validator.isValid("  SUBMIT", null));
+        assertFalse(validator.isValid("GIVE_UP  ", null));
+    }
 }
-
-
-

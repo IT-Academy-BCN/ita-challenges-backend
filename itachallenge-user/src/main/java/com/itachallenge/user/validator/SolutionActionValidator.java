@@ -18,11 +18,13 @@ public class SolutionActionValidator implements ConstraintValidator<ValidSolutio
     @Override
     public boolean isValid(String action, ConstraintValidatorContext context){
         if (action == null || !VALID_ACTIONS.contains(action.toUpperCase())) {
-            String message = "Action must be one of: " + String.join(", ", VALID_ACTIONS);
 
-            context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate(message)
-                    .addConstraintViolation();
+            if (context != null) {
+                String message = "Action must be one of: " + String.join(", ", VALID_ACTIONS);
+                context.disableDefaultConstraintViolation();
+                context.buildConstraintViolationWithTemplate(message)
+                        .addConstraintViolation();
+            }
 
             return false;
         }
