@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Builder
 @Getter
 @Setter
-public class SubmissionRequestDto {
+public class UserSubmissionRequestDto {
     @JsonProperty(value ="uuid_user")
     @GenericUUIDValid(message = "Invalid UUID")
     private String userId;
