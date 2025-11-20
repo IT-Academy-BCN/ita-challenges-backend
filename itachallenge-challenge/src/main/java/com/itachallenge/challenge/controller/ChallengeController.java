@@ -181,7 +181,6 @@ public class ChallengeController {
                 });
     }
 
-
     @GetMapping("/solution/challenge/{idChallenge}/language/{idLanguage}")
     @Operation(
             operationId = "Get the solutions from a chosen challenge and language.",
@@ -292,9 +291,6 @@ public class ChallengeController {
                 .map(ResponseEntity::ok);
     }
 
-
-
-
     @PostMapping("/challenges/{challengeId}/bookmarks")
     @Operation(
             operationId = "Add a challenge to User's bookmarks.",
@@ -340,7 +336,6 @@ public class ChallengeController {
                .map(ResponseEntity::ok)
                .doOnError(error -> log.error("Error updating challenge: {}", error.getMessage()));
    }
-
 
     @DeleteMapping("/challenges/{challengeId}/bookmarks")
     @Operation(
