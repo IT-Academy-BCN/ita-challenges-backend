@@ -2,6 +2,7 @@ package com.itachallenge.user.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.itachallenge.user.annotations.GenericUUIDValid;
+import com.itachallenge.user.annotations.ValidSolutionAction;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
@@ -27,6 +28,7 @@ public class UserSolutionRequestDto {
     private String languageId;
 
     @JsonProperty(value ="action")
+    @ValidSolutionAction
     private String action;
 
     @JsonProperty(value ="solution_text")
