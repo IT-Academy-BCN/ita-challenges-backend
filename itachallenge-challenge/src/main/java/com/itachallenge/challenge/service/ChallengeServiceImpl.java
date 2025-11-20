@@ -338,30 +338,20 @@ public class ChallengeServiceImpl implements IChallengeService {
 
     public Mono<DeleteResponseDto> deleteChallengeById(String id) {
 
-        // 1️⃣ Validación UUID
-        boolean validUUID = !StringUtils.isEmpty(id) && UUID_FORM.matcher(id).matches();
-        if (!validUUID) {
-            return Mono.error(new BadRequestException("Invalid ID format. Please indicate the correct format."));
-        }
-
-        // Convertimos el String → UUID
-        UUID uuid = UUID.fromString(id);
-
-        return challengeRepository.findByUuid(uuid)
-                .switchIfEmpty(Mono.error(new ChallengeNotFoundException(
-                        String.format(CHALLENGE_NOT_FOUND_ERROR, id))))
-                .flatMap(challengeDocument ->
-                        challengeRepository.deleteByUuid(uuid)
-                                .thenReturn(new DeleteResponseDto(
-                                        "Challenge deleted successfully",
-                                        id
-                                ))
+        return validateUUID(id)
+                .flatMap(uuid -> challengeRepository.findByUuid(uuid)
+                        .switchIfEmpty(Mono.error(new ChallengeNotFoundException(
+                                String.format(CHALLENGE_NOT_FOUND_ERROR, id)
+                        )))
+                        .then(challengeRepository.deleteByUuid(uuid))
+                        .thenReturn(new DeleteResponseDto(
+                                id,
+                                "Challenge deleted successfully"
+                        ))
                 )
                 .doOnSuccess(response -> log.info("Challenge deleted with ID: {}", response.getId()))
-                .doOnError(error -> log.error("Error occurred while deleting challenge: {}", error.getMessage()));
+                .doOnError(error -> log.error("Error while deleting challenge: {}", error.getMessage()));
     }
-
-
 
     @Override
     public Mono<ChallengeListDto> getChallengesByTopic(Topic topic, int page, int size) {
