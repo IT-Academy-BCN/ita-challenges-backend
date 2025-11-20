@@ -27,5 +27,4 @@ public enum ChallengeStatus {
         return output;
     }
 
-
 }
