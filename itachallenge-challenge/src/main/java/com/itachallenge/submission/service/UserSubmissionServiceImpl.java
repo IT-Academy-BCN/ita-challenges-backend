@@ -2,18 +2,16 @@ package com.itachallenge.submission.service;
 
 import com.itachallenge.submission.dto.UserSubmissionResponseDto;
 import com.itachallenge.submission.repository.IUserSubmissionRepository;
-import com.itachallenge.user.dto.UserSolutionResponseDto;
-import com.itachallenge.user.exception.BadRequestException;
-import com.itachallenge.user.repository.IUserSolutionRepository;
-import com.itachallenge.user.service.IChallengeService;
-import com.itachallenge.user.service.UserSolutionServiceImpl;
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
 import java.util.UUID;
+
+import com.itachallenge.user.dto.UserSolutionResponseDto;
+import com.itachallenge.user.exception.BadRequestException;
+import com.itachallenge.user.service.IChallengeService;
+import org.slf4j.Logger;
 
 
 @Service
