@@ -13,7 +13,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @Document(collection="submissions")
-public class SubmissionDocument {
+public class UserSubmissionDocument {
 
     @Id
     @Field("_id")
