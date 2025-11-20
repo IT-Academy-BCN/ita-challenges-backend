@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Builder
 @Getter
 @Setter
-public class SubmissionResponseDto {
+public class UserSubmissionResponseDto {
         @JsonProperty(value ="uuid_user")
         private String userId;
 
