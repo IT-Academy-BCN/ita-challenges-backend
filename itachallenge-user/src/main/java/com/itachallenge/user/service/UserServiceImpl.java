@@ -4,14 +4,13 @@ import com.itachallenge.user.document.UserDocument;
 import com.itachallenge.user.exception.BadUUIDException;
 import com.itachallenge.user.exception.NotFoundException;
 import com.itachallenge.user.repository.UserRepository;
-import com.itachallenge.userinteraction.document.bookmark.BookmarkDocument;
-import com.itachallenge.userinteraction.repository.bookmark.BookmarkRepository;
 import org.springframework.stereotype.Service;
 
 import com.itachallenge.userinteraction.document.favorite.FavoriteDocument;
 import com.itachallenge.userinteraction.repository.favorite.FavoriteRepository;
 import reactor.core.publisher.Mono;
 
+import java.util.HashSet;
 import java.util.UUID;
 
 @Service
@@ -19,12 +18,10 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final FavoriteRepository favoriteRepository;
-    private final BookmarkRepository bookmarkRepository;
 
-    public UserServiceImpl(UserRepository userRepository, FavoriteRepository favoriteRepository, BookmarkRepository bookmarkRepository) {
+    public UserServiceImpl(UserRepository userRepository, FavoriteRepository favoriteRepository) {
         this.userRepository = userRepository;
         this.favoriteRepository = favoriteRepository;
-        this.bookmarkRepository = bookmarkRepository;
     }
 
     @Override
@@ -110,12 +107,16 @@ public class UserServiceImpl implements UserService {
 
     //TODO : TO IMPLEMENT TO BOOKMARK SERVICE IMPL
     private Mono<Boolean> addToBookmarks(UserDocument user, UUID challengeUuid) {
-        BookmarkDocument bookmark = BookmarkDocument.builder()
-                .userId(user.getUuid())
-                .challengeId(challengeUuid)
-                .build();
-        
-        return bookmarkRepository.save(bookmark)
+        if (user.getBookmarkChallenges() == null) {
+            user.setBookmarkChallenges(new HashSet<>());
+        }
+
+        if (user.getBookmarkChallenges().contains(challengeUuid)) {
+            return Mono.just(false);
+        }
+
+        user.getBookmarkChallenges().add(challengeUuid);
+        return userRepository.save(user)
                 .thenReturn(true)
                 .onErrorReturn(false);
     }
@@ -132,7 +133,12 @@ public class UserServiceImpl implements UserService {
 
     //TODO : TO IMPLEMENT TO BOOKMARK SERVICE IMPL
     private Mono<Boolean> deleteFromBookmarks(UserDocument user, UUID challengeUuid) {
-        return bookmarkRepository.deleteByUserIdAndChallengeId(user.getUuid(), challengeUuid)
+        if (user.getBookmarkChallenges() == null || !user.getBookmarkChallenges().contains(challengeUuid)) {
+            return Mono.just(false);
+        }
+
+        user.getBookmarkChallenges().remove(challengeUuid);
+        return userRepository.save(user)
                 .thenReturn(true)
                 .onErrorReturn(false);
     }
@@ -149,7 +155,6 @@ public class UserServiceImpl implements UserService {
             return Mono.error(new BadUUIDException("Invalid ID format"));
         }
     }
-
 
     @Override
     public Mono<UserDocument> getUserById(String userId) {

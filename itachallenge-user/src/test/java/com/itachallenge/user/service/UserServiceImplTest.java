@@ -6,8 +6,8 @@ import com.itachallenge.user.exception.BadUUIDException;
 import com.itachallenge.user.exception.NotFoundException;
 import com.itachallenge.user.repository.UserRepository;
 import com.itachallenge.userinteraction.document.favorite.FavoriteDocument;
+import com.itachallenge.userinteraction.repository.bookmark.BookmarkRepository;
 import com.itachallenge.userinteraction.repository.favorite.FavoriteRepository;
-import com.itachallenge.userinteraction.service.bookmark.BookmarkService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -35,12 +35,11 @@ class UserServiceImplTest {
     private UserRepository userRepository;
     @Mock
     private FavoriteRepository favoriteRepository;
+    @Mock
+    private BookmarkRepository bookmarkRepository;
 
     @InjectMocks
     private UserServiceImpl userService;
-
-    @InjectMocks
-    private BookmarkService bookmarkService;
 
     private AutoCloseable mocks;
 
