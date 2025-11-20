@@ -26,8 +26,8 @@ public class UserSolutionRequestDto {
     @GenericUUIDValid(message = "Invalid UUID")
     private String languageId;
 
-    @JsonProperty(value ="status")
-    private String status;
+    @JsonProperty(value ="action")
+    private String action;
 
     @JsonProperty(value ="solution_text")
     @NotBlank(message = "Solution text is required")
