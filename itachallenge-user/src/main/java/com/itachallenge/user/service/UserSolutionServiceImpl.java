@@ -12,6 +12,8 @@ import com.itachallenge.user.repository.IUserSolutionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
+import jakarta.validation.Valid;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -30,16 +32,12 @@ public class UserSolutionServiceImpl implements IUserSolutionService {
     }
 
     @Override
-    public Mono<SubmitSolutionResponseDto> addSolution(UserSolutionRequestDto userSolutionDto) {
+    public Mono<SubmitSolutionResponseDto> addSolution(@Valid UserSolutionRequestDto userSolutionDto) {
         UUID challengeUuid = UUID.fromString(userSolutionDto.getChallengeId());
         UUID languageUuid = UUID.fromString(userSolutionDto.getLanguageId());
         UUID userUuid = UUID.fromString(userSolutionDto.getUserId());
 
-        ChallengeStatus challengeStatus = ChallengeStatus.challengeStatusFromString(userSolutionDto.getStatus());
-        if (challengeStatus == null) {
-            log.error("PUT operation failed due to invalid challenge status parameter");
-            return Mono.error(new IllegalArgumentException("Status null or not allowed"));
-        }
+        ChallengeStatus challengeStatus = determineStatus(userSolutionDto.getAction());
 
         SolutionAttemptDocument solutionAttempt = SolutionAttemptDocument.builder()
                 .uuid(UUID.randomUUID())
@@ -50,6 +48,15 @@ public class UserSolutionServiceImpl implements IUserSolutionService {
                 .flatMap(this::buildSubmitSolutionResponse)
                 .doOnSuccess(response -> log.info("PUT request successfully processed for challenge {} and user {}.", challengeUuid, userUuid))
                 .doOnError(error -> log.error("PUT operation failed: {} for challenge {} and user {}.", error.getMessage(), challengeUuid, userUuid));
+    }
+
+    private ChallengeStatus determineStatus(String action){
+        return switch (action.toUpperCase()){
+            case "SUBMIT" -> ChallengeStatus.SUBMITTED_COMPLETE;
+            case "GIVE_UP" -> ChallengeStatus.SUBMITTED_INCOMPLETE;
+            case "SAVE" -> ChallengeStatus.IN_PROGRESS;
+            default -> throw new IllegalArgumentException("Invalid action: " + action);
+        };
     }
 
     private Mono<UserSolutionDocument> saveValidSolution(UUID userUuid, UUID challengeUuid, UUID languageUuid, ChallengeStatus challengeStatus, SolutionAttemptDocument solutionAttempt) {
