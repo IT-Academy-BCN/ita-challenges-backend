@@ -335,19 +335,6 @@ public class ChallengeServiceImpl implements IChallengeService {
 
         return Mono.just(UUID.fromString(id));
     }
-/*
-    public Mono<DeleteResponseDto> deleteChallengeById(String id) {
-        return validateUUID(id)
-                .flatMap(challengeId -> challengeRepository.deleteByUuid(challengeId)
-                        .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, id))))
-                        .thenReturn(new DeleteResponseDto(id, "Challenge deleted successfully."))
-                )
-                .doOnSuccess(response -> log.info("Challenge deleted with ID: {}", response.getId()))
-                .doOnError(error -> log.error("Error occurred while deleting challenge: {}", error.getMessage()));
-    }
-
-
- */
 
     public Mono<DeleteResponseDto> deleteChallengeById(String id) {
 

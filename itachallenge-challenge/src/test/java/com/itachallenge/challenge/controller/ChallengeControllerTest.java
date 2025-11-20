@@ -963,7 +963,6 @@ class ChallengeControllerTest {
     void deleteChallenge_shouldReturn200Ok() {
         String challengeId = "12345678-1234-1234-1234-123456789012";
 
-        // Constructor correcto: (String id, String message)
         DeleteResponseDto deleteResponse = new DeleteResponseDto(challengeId, "Challenge deleted successfully");
 
         when(challengeService.deleteChallengeById(challengeId)).thenReturn(Mono.just(deleteResponse));
