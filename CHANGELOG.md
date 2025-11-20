@@ -30,6 +30,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   **submission** domain.  
   No new endpoints, no database changes, and no runtime behavior changes.
 
+### Fixed
+- DELETE /challenges/{challengeId} now returns correct HTTP status codes:
+  - 200 OK when deletion succeeds
+  - 404 Not Found when the challenge does not exist
+  - 400 Bad Request for invalid UUID format  
+    (Taiga [#891], PR [#866])
 
 ### [itachallenge-user-3.0.4-RELEASE] - 2025-11-12
 ### Added
