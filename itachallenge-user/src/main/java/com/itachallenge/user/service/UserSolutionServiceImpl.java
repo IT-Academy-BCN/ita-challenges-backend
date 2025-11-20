@@ -3,12 +3,10 @@ package com.itachallenge.user.service;
 import com.itachallenge.user.document.SolutionAttemptDocument;
 import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.document.enums.ChallengeStatus;
-import com.itachallenge.user.document.enums.SolutionAction;
 import com.itachallenge.user.dto.SubmitSolutionResponseDto;
 import com.itachallenge.user.dto.UserSolutionRequestDto;
 import com.itachallenge.user.dto.UserSolutionResponseDto;
 import com.itachallenge.user.exception.BadRequestException;
-import com.itachallenge.user.exception.InvalidActionException;
 import com.itachallenge.user.exception.UnmodificableSolutionException;
 import com.itachallenge.user.repository.IUserSolutionRepository;
 import org.slf4j.Logger;
@@ -39,37 +37,26 @@ public class UserSolutionServiceImpl implements IUserSolutionService {
         UUID languageUuid = UUID.fromString(userSolutionDto.getLanguageId());
         UUID userUuid = UUID.fromString(userSolutionDto.getUserId());
 
-        return determineStatus(userSolutionDto.getAction())
-                .flatMap(challengeStatus -> {
-                        SolutionAttemptDocument solutionAttempt = SolutionAttemptDocument.builder()
-                            .uuid(UUID.randomUUID())
-                            .solutionText(userSolutionDto.getSolutionText())
-                            .build();
+        ChallengeStatus challengeStatus = determineStatus(userSolutionDto.getAction());
 
-                        return saveValidSolution(userUuid, challengeUuid, languageUuid, challengeStatus, solutionAttempt)
-                            .flatMap(this::buildSubmitSolutionResponse);
-                    })
-                            .doOnSuccess(response -> log.info("PUT request successfully processed for challenge {} and user {}.", challengeUuid, userUuid))
-                            .doOnError(error -> log.error("PUT operation failed: {} for challenge {} and user {}.", error.getMessage(), challengeUuid, userUuid));
+        SolutionAttemptDocument solutionAttempt = SolutionAttemptDocument.builder()
+                .uuid(UUID.randomUUID())
+                .solutionText(userSolutionDto.getSolutionText())
+                .build();
+
+        return saveValidSolution(userUuid, challengeUuid, languageUuid, challengeStatus, solutionAttempt)
+                .flatMap(this::buildSubmitSolutionResponse)
+                .doOnSuccess(response -> log.info("PUT request successfully processed for challenge {} and user {}.", challengeUuid, userUuid))
+                .doOnError(error -> log.error("PUT operation failed: {} for challenge {} and user {}.", error.getMessage(), challengeUuid, userUuid));
     }
 
-
-    private Mono<ChallengeStatus> determineStatus(String action) {
-        return Mono.fromCallable(() -> {
-                    if (action == null || action.isBlank()) {
-                        throw new IllegalArgumentException("Action cannot be null or empty");
-                    }
-
-                    SolutionAction solutionAction = SolutionAction.valueOf(action.toUpperCase());
-                    return switch (solutionAction) {
-                        case SUBMIT -> ChallengeStatus.SUBMITTED_COMPLETE;
-                        case GIVE_UP -> ChallengeStatus.SUBMITTED_INCOMPLETE;
-                        case SAVE -> ChallengeStatus.IN_PROGRESS;
-                    };
-                })
-                .onErrorMap(IllegalArgumentException.class, ex ->
-                        new InvalidActionException("Invalid action: '" + action + "'. Allowed values: SAVE, GIVE_UP, SUBMIT")
-                );
+    private ChallengeStatus determineStatus(String action){
+        return switch (action.toUpperCase()){
+            case "SUBMIT" -> ChallengeStatus.SUBMITTED_COMPLETE;
+            case "GIVE_UP" -> ChallengeStatus.SUBMITTED_INCOMPLETE;
+            case "SAVE" -> ChallengeStatus.IN_PROGRESS;
+            default -> throw new IllegalArgumentException("Invalid action: " + action);
+        };
     }
 
     private Mono<UserSolutionDocument> saveValidSolution(UUID userUuid, UUID challengeUuid, UUID languageUuid, ChallengeStatus challengeStatus, SolutionAttemptDocument solutionAttempt) {
