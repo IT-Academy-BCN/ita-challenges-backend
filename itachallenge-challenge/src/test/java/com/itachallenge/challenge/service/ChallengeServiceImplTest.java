@@ -600,6 +600,8 @@ void addChallengeToSolved_WhenChallengeTimesSolvedIsZero_IncreasesTimesSolvedAnd
 
         when(challengeRepository.findByUuid(uuid)).thenReturn(Mono.empty());
 
+        when(challengeRepository.deleteByUuid(uuid)).thenReturn(Mono.empty());
+
         Mono<DeleteResponseDto> result = challengeService.deleteChallengeById(id);
 
         StepVerifier.create(result)
