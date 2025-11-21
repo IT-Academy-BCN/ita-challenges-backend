@@ -208,7 +208,7 @@ class UserSolutionServiceImplTest {
                 .build();
 
         StepVerifier.create(userSolutionService.addSolution(request))
-                .expectErrorMessage("Status null or not allowed")
+                .expectErrorMessage("Action null or not allowed")
                 .verify();
     }
 
