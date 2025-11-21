@@ -3,6 +3,7 @@ package com.itachallenge.user.service;
 import com.itachallenge.user.document.SolutionAttemptDocument;
 import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.document.enums.ChallengeStatus;
+import com.itachallenge.user.document.enums.SolutionAction;
 import com.itachallenge.user.dto.SubmitSolutionResponseDto;
 import com.itachallenge.user.dto.UserSolutionRequestDto;
 import com.itachallenge.user.exception.BadRequestException;
@@ -60,13 +61,13 @@ class UserSolutionServiceImplTest {
     }
 
     @Test
-    @DisplayName("addSolution updates existing IN_PROGRESS solution successfully")
+    @DisplayName("addSolution SAVE action updates existing IN_PROGRESS solution successfully")
     void addSolutionUpdatesExistingSolution() {
         UserSolutionRequestDto request = UserSolutionRequestDto.builder()
                 .userId(userUuid.toString())
                 .challengeId(challengeUuid.toString())
                 .languageId(languageUuid.toString())
-                .status("IN_PROGRESS")
+                .action(String.valueOf(SolutionAction.SAVE))
                 .solutionText(solutionText)
                 .build();
 
@@ -110,14 +111,14 @@ class UserSolutionServiceImplTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"SUBMITTED_COMPLETE", "SUBMITTED_INCOMPLETE"})
-    @DisplayName("addSolution throws UnmodificableSolutionException if existing solution status is submitted")
-    void addSolutionThrowsExceptionIfSubmitted(String status) {
+    @ValueSource(strings = {"GIVE_UP", "SUBMIT"})
+    @DisplayName("addSolution throws UnmodificableSolutionException if existing solution status is already submitted")
+    void addSolutionThrowsExceptionIfSubmitted(String action) {
         UserSolutionRequestDto request = UserSolutionRequestDto.builder()
                 .userId(userUuid.toString())
                 .challengeId(challengeUuid.toString())
                 .languageId(languageUuid.toString())
-                .status("IN_PROGRESS")
+                .action(action)
                 .solutionText(solutionText)
                 .build();
 
@@ -126,7 +127,42 @@ class UserSolutionServiceImplTest {
                 .userId(userUuid)
                 .challengeId(challengeUuid)
                 .languageId(languageUuid)
-                .status(ChallengeStatus.valueOf(status))
+                .status(ChallengeStatus.SUBMITTED_COMPLETE)
+                .solutionAttemptDocument(SolutionAttemptDocument.builder().solutionText("Old solution").build())
+                .build();
+
+        when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid))
+                .thenReturn(Mono.just(existingSolution));
+
+        StepVerifier.create(userSolutionService.addSolution(request))
+                .expectErrorMatches(throwable ->
+                        throwable instanceof UnmodificableSolutionException &&
+                                throwable.getMessage().contains("Existing solution is already submitted and cannot be modified."))
+                .verify();
+
+        verify(userSolutionRepository).findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid);
+        verifyNoMoreInteractions(userSolutionRepository);
+        verifyNoInteractions(challengeService);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"GIVE_UP", "SUBMIT"})
+    @DisplayName("addSolution throws UnmodificableSolutionException if existing solution status is already submitted")
+    void addSolutionThrowsExceptionIfGivenUp(String action) {
+        UserSolutionRequestDto request = UserSolutionRequestDto.builder()
+                .userId(userUuid.toString())
+                .challengeId(challengeUuid.toString())
+                .languageId(languageUuid.toString())
+                .action(action)
+                .solutionText(solutionText)
+                .build();
+
+        UserSolutionDocument existingSolution = UserSolutionDocument.builder()
+                .uuid(UUID.randomUUID())
+                .userId(userUuid)
+                .challengeId(challengeUuid)
+                .languageId(languageUuid)
+                .status(ChallengeStatus.SUBMITTED_INCOMPLETE)
                 .solutionAttemptDocument(SolutionAttemptDocument.builder().solutionText("Old solution").build())
                 .build();
 
@@ -145,19 +181,34 @@ class UserSolutionServiceImplTest {
     }
 
     @Test
-    @DisplayName("addSolution throws exception for invalid status")
-    void addSolutionInvalidStatus() {
+    @DisplayName("addSolution throws exception for invalid action")
+    void addSolutionInvalidAction() {
         UserSolutionRequestDto request = UserSolutionRequestDto.builder()
                 .userId(userUuid.toString())
                 .challengeId(challengeUuid.toString())
                 .languageId(languageUuid.toString())
-                .status("INVALID")
+                .action("INVALID")
                 .solutionText(solutionText)
                 .build();
 
         StepVerifier.create(userSolutionService.addSolution(request))
-                .expectErrorMatches(err -> err instanceof IllegalArgumentException &&
-                        err.getMessage().equals("Status null or not allowed"))
+                .expectErrorMessage("Status null or not allowed")
+                .verify();
+    }
+
+    @Test
+    @DisplayName("addSolution throws exception for an action null")
+    void addSolutionNullAction() {
+        UserSolutionRequestDto request = UserSolutionRequestDto.builder()
+                .userId(userUuid.toString())
+                .challengeId(challengeUuid.toString())
+                .languageId(languageUuid.toString())
+                .action(null)
+                .solutionText(solutionText)
+                .build();
+
+        StepVerifier.create(userSolutionService.addSolution(request))
+                .expectErrorMessage("Status null or not allowed")
                 .verify();
     }
 
@@ -233,7 +284,7 @@ class UserSolutionServiceImplTest {
                 .userId(userUuid.toString())
                 .challengeId(challengeUuid.toString())
                 .languageId(languageUuid.toString())
-                .status("SUBMITTED_COMPLETE")
+                .action(String.valueOf(SolutionAction.SUBMIT))
                 .solutionText(solutionText)
                 .build();
 
@@ -263,13 +314,13 @@ class UserSolutionServiceImplTest {
     }
 
     @Test
-    @DisplayName("addSolution creates new SUBMITTED_INCOMPLETE solution and returns response")
+    @DisplayName("addSolution GIVE_UP action creates new SUBMITTED_INCOMPLETE solution and returns response")
     void addSolutionNewSubmittedIncompleteSolution() {
         UserSolutionRequestDto request = UserSolutionRequestDto.builder()
                 .userId(userUuid.toString())
                 .challengeId(challengeUuid.toString())
                 .languageId(languageUuid.toString())
-                .status("SUBMITTED_INCOMPLETE")
+                .action(String.valueOf(SolutionAction.GIVE_UP))
                 .solutionText(solutionText)
                 .build();
 
@@ -295,13 +346,13 @@ class UserSolutionServiceImplTest {
     }
 
     @Test
-    @DisplayName("addSolution creates new IN_PROGRESS solution and returns response")
+    @DisplayName("addSolution SAVE action creates new IN_PROGRESS solution and returns response")
     void addSolutionNewInProgressSolution() {
         UserSolutionRequestDto request = UserSolutionRequestDto.builder()
                 .userId(userUuid.toString())
                 .challengeId(challengeUuid.toString())
                 .languageId(languageUuid.toString())
-                .status("IN_PROGRESS")
+                .action(String.valueOf(SolutionAction.SAVE))
                 .solutionText(solutionText)
                 .build();
 
