@@ -192,7 +192,7 @@ class UserSolutionServiceImplTest {
                 .build();
 
         StepVerifier.create(userSolutionService.addSolution(request))
-                .expectErrorMessage("Action null or not allowed")
+                .expectErrorMessage("Invalid action: 'INVALID'. Allowed values: SAVE, GIVE_UP, SUBMIT")
                 .verify();
     }
 
@@ -208,7 +208,7 @@ class UserSolutionServiceImplTest {
                 .build();
 
         StepVerifier.create(userSolutionService.addSolution(request))
-                .expectErrorMessage("Status null or not allowed")
+                .expectErrorMessage("Invalid action: 'null'. Allowed values: SAVE, GIVE_UP, SUBMIT")
                 .verify();
     }
 
