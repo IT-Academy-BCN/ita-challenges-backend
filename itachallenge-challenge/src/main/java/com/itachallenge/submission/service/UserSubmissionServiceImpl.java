@@ -1,16 +1,15 @@
 package com.itachallenge.submission.service;
 
+import com.itachallenge.challenge.exception.BadRequestException;
 import com.itachallenge.submission.dto.UserSubmissionResponseDto;
 import com.itachallenge.submission.repository.IUserSubmissionRepository;
+import com.itachallenge.challenge.service.IChallengeService;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import java.util.UUID;
 
-import com.itachallenge.user.dto.UserSolutionResponseDto;
-import com.itachallenge.user.exception.BadRequestException;
-import com.itachallenge.user.service.IChallengeService;
 import org.slf4j.Logger;
 
 
@@ -18,14 +17,14 @@ import org.slf4j.Logger;
 public class UserSubmissionServiceImpl implements IUserSubmissionService {
     private static final Logger log = LoggerFactory.getLogger(UserSubmissionServiceImpl.class);
     private final IUserSubmissionRepository userSubmissionRepository;
-    private final IChallengeService challengeService;
+    //private final IChallengeService challengeService; NO NECESARIO PARA LA TASKA 883 REFACTOR GET
 
-    public UserSubmissionServiceImpl(IUserSubmissionRepository userSolutionRepository, IChallengeService challengeService) {
+    public UserSubmissionServiceImpl(IUserSubmissionRepository userSubmissionRepository, IChallengeService challengeService) {
         this.userSubmissionRepository = userSubmissionRepository;
-        this.challengeService = challengeService;
+        //this.challengeService = challengeService; NO NECESARIO PARA LA TASKA 883 REFACTOR GET
     }
     @Override
-    public Flux<UserSubmissionResponseDto> getAllSolutionsByUser(String userId) {
+    public Flux<UserSubmissionResponseDto> getAllSubmissionsByUser(String userId) {
         return validateAndParseUuid(userId)
                 .flatMapMany(uuid ->
                         userSubmissionRepository.findAllByUserId(uuid)
@@ -33,7 +32,7 @@ public class UserSubmissionServiceImpl implements IUserSubmissionService {
                                         .userId(doc.getUserId().toString())
                                         .challengeId(doc.getChallengeId().toString())
                                         .languageId(doc.getLanguageId().toString())
-                                        .solutionText(doc.getSubmissionAttemptDocument().getSolutionText())
+                                        .solutionText(doc.getSubmissionAttemptDocument().getSubmissionText())
                                         .status(doc.getStatus().name())
                                         .build())
                 );
