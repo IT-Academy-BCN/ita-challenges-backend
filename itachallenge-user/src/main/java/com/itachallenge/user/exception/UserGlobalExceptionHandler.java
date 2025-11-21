@@ -108,4 +108,9 @@ public class UserGlobalExceptionHandler {
         );
     }
 
+    @ExceptionHandler(InvalidActionException.class)
+    public ResponseEntity<String> handleInvalidAction(InvalidActionException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    }
+
 }
