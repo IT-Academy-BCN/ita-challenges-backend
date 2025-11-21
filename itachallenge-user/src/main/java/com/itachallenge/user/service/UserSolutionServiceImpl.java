@@ -3,6 +3,7 @@ package com.itachallenge.user.service;
 import com.itachallenge.user.document.SolutionAttemptDocument;
 import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.document.enums.ChallengeStatus;
+import com.itachallenge.user.document.enums.SolutionAction;
 import com.itachallenge.user.dto.SubmitSolutionResponseDto;
 import com.itachallenge.user.dto.UserSolutionRequestDto;
 import com.itachallenge.user.dto.UserSolutionResponseDto;
@@ -37,26 +38,37 @@ public class UserSolutionServiceImpl implements IUserSolutionService {
         UUID languageUuid = UUID.fromString(userSolutionDto.getLanguageId());
         UUID userUuid = UUID.fromString(userSolutionDto.getUserId());
 
-        ChallengeStatus challengeStatus = determineStatus(userSolutionDto.getAction());
+        return Mono.fromCallable(() -> determineStatus(userSolutionDto.getAction()))
+                .flatMap(challengeStatus -> {
 
-        SolutionAttemptDocument solutionAttempt = SolutionAttemptDocument.builder()
-                .uuid(UUID.randomUUID())
-                .solutionText(userSolutionDto.getSolutionText())
-                .build();
+                        SolutionAttemptDocument solutionAttempt = SolutionAttemptDocument.builder()
+                            .uuid(UUID.randomUUID())
+                            .solutionText(userSolutionDto.getSolutionText())
+                            .build();
 
-        return saveValidSolution(userUuid, challengeUuid, languageUuid, challengeStatus, solutionAttempt)
-                .flatMap(this::buildSubmitSolutionResponse)
-                .doOnSuccess(response -> log.info("PUT request successfully processed for challenge {} and user {}.", challengeUuid, userUuid))
-                .doOnError(error -> log.error("PUT operation failed: {} for challenge {} and user {}.", error.getMessage(), challengeUuid, userUuid));
+                        return saveValidSolution(userUuid, challengeUuid, languageUuid, challengeStatus, solutionAttempt)
+                            .flatMap(this::buildSubmitSolutionResponse);
+                    })
+                            .doOnSuccess(response -> log.info("PUT request successfully processed for challenge {} and user {}.", challengeUuid, userUuid))
+                            .doOnError(error -> log.error("PUT operation failed: {} for challenge {} and user {}.", error.getMessage(), challengeUuid, userUuid));
     }
 
-    private ChallengeStatus determineStatus(String action){
-        return switch (action.toUpperCase()){
-            case "SUBMIT" -> ChallengeStatus.SUBMITTED_COMPLETE;
-            case "GIVE_UP" -> ChallengeStatus.SUBMITTED_INCOMPLETE;
-            case "SAVE" -> ChallengeStatus.IN_PROGRESS;
-            default -> throw new IllegalArgumentException("Invalid action: " + action);
-        };
+
+    private ChallengeStatus determineStatus(String action) {
+        if (action == null || action.isBlank()) {
+            throw new IllegalArgumentException("Action null or not allowed");
+        }
+
+        try {
+            SolutionAction solutionAction = SolutionAction.valueOf(action.toUpperCase());
+            return switch (solutionAction) {
+                case SUBMIT -> ChallengeStatus.SUBMITTED_COMPLETE;
+                case GIVE_UP -> ChallengeStatus.SUBMITTED_INCOMPLETE;
+                case SAVE -> ChallengeStatus.IN_PROGRESS;
+            };
+        } catch (IllegalArgumentException ex) {
+            throw new IllegalArgumentException("Action null or not allowed");
+        }
     }
 
     private Mono<UserSolutionDocument> saveValidSolution(UUID userUuid, UUID challengeUuid, UUID languageUuid, ChallengeStatus challengeStatus, SolutionAttemptDocument solutionAttempt) {
