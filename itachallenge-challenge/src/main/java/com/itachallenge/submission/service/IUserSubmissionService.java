@@ -5,6 +5,6 @@ import reactor.core.publisher.Flux;
 
 public interface IUserSubmissionService {
 
-    Flux<UserSubmissionResponseDto> getAllSolutionsByUser(String userId);
+    Flux<UserSubmissionResponseDto> getAllSubmissionsByUser(String userId);
 }
 
