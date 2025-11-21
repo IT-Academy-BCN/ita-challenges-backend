@@ -3,6 +3,20 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+### [itachallenge-user-3.0.6-RELEASE] - 2025-11-21
+
+### Changed
+- Breaking Change – API Contract: Replaced the `status` field with action in UserSolutionRequestDto.
+Supported actions: SAVE, GIVE_UP, SUBMIT. (Taiga [#871], PR [#1043])
+- Action-based submission workflow: Implemented business logic to map user actions to internal solution statuses:
+    - SAVE → IN_PROGRESS
+    - GIVE_UP → SUBMITTED_UNCOMPLETED
+    - SUBMIT → SUBMITTED_COMPLETED
+- Updated OpenAPI documentation and internal API docs to reflect the new action-based contract and ensure backward compatibility during the transition phase.
+
+### Added
+- Added new InvalidActionException for handling unsupported or malformed actions.
+
 ## [Unreleased]
 ### Chore/Internal
 - Introduced `SolutionAction` enum (internal change)
@@ -18,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Refactor: Moved the GET favorite-related logic out of UserController into FavoriteController.
 - Improves separation of concerns, modularity, and testability.
 - No API or schema changes at this stage.
+
 ### [itachallenge-challenge-3.0.2-RELEASE] - 2025-11-17
 
 ### Added
