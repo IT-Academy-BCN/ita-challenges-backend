@@ -39,9 +39,8 @@ public class UserSolutionServiceImpl implements IUserSolutionService {
         UUID languageUuid = UUID.fromString(userSolutionDto.getLanguageId());
         UUID userUuid = UUID.fromString(userSolutionDto.getUserId());
 
-        return Mono.fromCallable(() -> determineStatus(userSolutionDto.getAction()))
+        return determineStatus(userSolutionDto.getAction())
                 .flatMap(challengeStatus -> {
-
                         SolutionAttemptDocument solutionAttempt = SolutionAttemptDocument.builder()
                             .uuid(UUID.randomUUID())
                             .solutionText(userSolutionDto.getSolutionText())
@@ -55,21 +54,22 @@ public class UserSolutionServiceImpl implements IUserSolutionService {
     }
 
 
-    private ChallengeStatus determineStatus(String action) {
-        if (action == null || action.isBlank()) {
-            throw new InvalidActionException("Action null or not allowed");
-        }
+    private Mono<ChallengeStatus> determineStatus(String action) {
+        return Mono.fromCallable(() -> {
+                    if (action == null || action.isBlank()) {
+                        throw new IllegalArgumentException("Action cannot be null or empty");
+                    }
 
-        try {
-            SolutionAction solutionAction = SolutionAction.valueOf(action.toUpperCase());
-            return switch (solutionAction) {
-                case SUBMIT -> ChallengeStatus.SUBMITTED_COMPLETE;
-                case GIVE_UP -> ChallengeStatus.SUBMITTED_INCOMPLETE;
-                case SAVE -> ChallengeStatus.IN_PROGRESS;
-            };
-        } catch (IllegalArgumentException ex) {
-            throw new InvalidActionException("Invalid action: '" + action + "'. Allowed values: SAVE, GIVE_UP, SUBMIT");
-        }
+                    SolutionAction solutionAction = SolutionAction.valueOf(action.toUpperCase());
+                    return switch (solutionAction) {
+                        case SUBMIT -> ChallengeStatus.SUBMITTED_COMPLETE;
+                        case GIVE_UP -> ChallengeStatus.SUBMITTED_INCOMPLETE;
+                        case SAVE -> ChallengeStatus.IN_PROGRESS;
+                    };
+                })
+                .onErrorMap(IllegalArgumentException.class, ex ->
+                        new InvalidActionException("Invalid action: '" + action + "'. Allowed values: SAVE, GIVE_UP, SUBMIT")
+                );
     }
 
     private Mono<UserSolutionDocument> saveValidSolution(UUID userUuid, UUID challengeUuid, UUID languageUuid, ChallengeStatus challengeStatus, SolutionAttemptDocument solutionAttempt) {
