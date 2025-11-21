@@ -33,7 +33,7 @@ public class UserSubmissionServiceImpl implements IUserSubmissionService {
                                         .userId(doc.getUserId().toString())
                                         .challengeId(doc.getChallengeId().toString())
                                         .languageId(doc.getLanguageId().toString())
-                                        .solutionText(doc.getSolutionAttemptDocument().getSolutionText())
+                                        .solutionText(doc.getSubmissionAttemptDocument().getSolutionText())
                                         .status(doc.getStatus().name())
                                         .build())
                 );
