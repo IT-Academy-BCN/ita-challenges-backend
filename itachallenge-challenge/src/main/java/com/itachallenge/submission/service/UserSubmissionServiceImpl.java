@@ -29,7 +29,7 @@ public class UserSubmissionServiceImpl implements IUserSubmissionService {
         return validateAndParseUuid(userId)
                 .flatMapMany(uuid ->
                         userSubmissionRepository.findAllByUserId(uuid)
-                                .map(doc -> UserSolutionResponseDto.builder()
+                                .map(doc -> UserSubmissionResponseDto.builder()
                                         .userId(doc.getUserId().toString())
                                         .challengeId(doc.getChallengeId().toString())
                                         .languageId(doc.getLanguageId().toString())
