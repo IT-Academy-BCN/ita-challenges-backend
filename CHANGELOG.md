@@ -32,6 +32,7 @@ Supported actions: SAVE, GIVE_UP, SUBMIT. (Taiga [#871], PR [#1043])
 - Refactor: Moved the GET favorite-related logic out of UserController into FavoriteController.
 - Improves separation of concerns, modularity, and testability.
 - No API or schema changes at this stage.
+
 ### [itachallenge-challenge-3.0.2-RELEASE] - 2025-11-17
 
 ### Added
