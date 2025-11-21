@@ -33,15 +33,12 @@ public class UserSubmissionController {
     private final IUserSubmissionService userSubmissionService;
 
 
-
-
     @GetMapping("/users/{userId}/solutions")
     //si cambio el userSolutionResponseDTO cambio el flujo, ahi viene el mapper?
     //public Mono<ResponseEntity<Flux<UserSolutionResponseDto>>> getAllSolutionsByUser(
     public Mono<ResponseEntity<Flux<UserSubmissionResponseDto>>> getAllSolutionsByUser(
-            @PathVariable String userId
-    ) {
-        return userSubmissionService.getAllSolutionsByUser(userId)
+            @PathVariable String userId) {
+        return userSubmissionService.getAllSubmissionsByUser(userId)
                 .collectList()
                 .map(list -> {
                     log.info("Retrieved {} submissions for user {}", list.size(), userId);
