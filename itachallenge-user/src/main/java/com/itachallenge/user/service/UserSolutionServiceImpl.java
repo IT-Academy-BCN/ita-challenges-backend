@@ -8,6 +8,7 @@ import com.itachallenge.user.dto.SubmitSolutionResponseDto;
 import com.itachallenge.user.dto.UserSolutionRequestDto;
 import com.itachallenge.user.dto.UserSolutionResponseDto;
 import com.itachallenge.user.exception.BadRequestException;
+import com.itachallenge.user.exception.InvalidActionException;
 import com.itachallenge.user.exception.UnmodificableSolutionException;
 import com.itachallenge.user.repository.IUserSolutionRepository;
 import org.slf4j.Logger;
@@ -56,7 +57,7 @@ public class UserSolutionServiceImpl implements IUserSolutionService {
 
     private ChallengeStatus determineStatus(String action) {
         if (action == null || action.isBlank()) {
-            throw new IllegalArgumentException("Action null or not allowed");
+            throw new InvalidActionException("Action null or not allowed");
         }
 
         try {
@@ -67,7 +68,7 @@ public class UserSolutionServiceImpl implements IUserSolutionService {
                 case SAVE -> ChallengeStatus.IN_PROGRESS;
             };
         } catch (IllegalArgumentException ex) {
-            throw new IllegalArgumentException("Action null or not allowed");
+            throw new InvalidActionException("Invalid action: '" + action + "'. Allowed values: SAVE, GIVE_UP, SUBMIT");
         }
     }
 
