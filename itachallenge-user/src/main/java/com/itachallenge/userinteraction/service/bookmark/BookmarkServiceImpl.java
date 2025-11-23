@@ -3,19 +3,25 @@ package com.itachallenge.userinteraction.service.bookmark;
 import com.itachallenge.user.exception.BadUUIDException;
 import com.itachallenge.user.exception.NotFoundException;
 import com.itachallenge.user.repository.UserRepository;
+import com.itachallenge.userinteraction.document.bookmark.BookmarkDocument;
+import com.itachallenge.userinteraction.repository.bookmark.BookmarkRepository;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
-import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
+
 
 @Service
 public class BookmarkServiceImpl implements BookmarkService {
 
     private final UserRepository userRepository;
+    private final BookmarkRepository bookmarkRepository;
 
-    public BookmarkServiceImpl(UserRepository userRepository) {
+    private static final String USER_NOT_FOUND_WITH_ID = "User not found with id: ";
+
+    public BookmarkServiceImpl(UserRepository userRepository, BookmarkRepository bookmarkRepository) {
+        this.bookmarkRepository = bookmarkRepository;
         this.userRepository = userRepository;
     }
 
@@ -23,9 +29,15 @@ public class BookmarkServiceImpl implements BookmarkService {
     public Mono<Set<UUID>> getUserBookmarks(String userId) {
         return parseAndValidateUUID(userId)
                 .flatMap(userUuid ->
-                        userRepository.findById(userUuid)
-                                .switchIfEmpty(Mono.error(new NotFoundException("User not found with id: " + userId)))
-                                .map(user -> Optional.ofNullable(user.getBookmarkChallenges()).orElseGet(HashSet::new))
+                        userRepository.existsById(userUuid)
+                                .flatMap(exists -> {
+                                    if (!exists) {
+                                        return Mono.error(new NotFoundException(USER_NOT_FOUND_WITH_ID + userId));
+                                    }
+                                    return bookmarkRepository.findByUserId(userUuid)
+                                            .map(BookmarkDocument::getChallengeId)
+                                            .collect(Collectors.toSet());
+                                })
                 );
     }
 

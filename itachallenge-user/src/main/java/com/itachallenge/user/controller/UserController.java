@@ -38,7 +38,7 @@ public class UserController {
 
     private final UserService userService;
     private final IUserSolutionService userSolutionService;
-    private final BookmarkService bookmarkService;  // Add this line
+    private final BookmarkService bookmarkService;
 
     public UserController(UserService userService, IUserSolutionService userSolutionService, BookmarkService bookmarkService) {
         this.userService = userService;
