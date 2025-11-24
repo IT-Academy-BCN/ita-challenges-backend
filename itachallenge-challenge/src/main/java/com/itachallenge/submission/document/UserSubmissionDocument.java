@@ -10,7 +10,8 @@ import java.util.UUID;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
 @Builder
 @Document(collection = "submissions")
 public class UserSubmissionDocument {
