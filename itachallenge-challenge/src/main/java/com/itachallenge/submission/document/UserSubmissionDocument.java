@@ -27,7 +27,7 @@ public class UserSubmissionDocument {
     private UUID challengeId;
 
     @Field("language_id")
-    private UUID languageId;
+    private UUID languageIdTest;
 
     @Field("action")
     private UserSubmissionAction action;
