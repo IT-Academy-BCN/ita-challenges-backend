@@ -1,6 +1,7 @@
 package com.itachallenge.user.document.enums;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 
 import org.junit.jupiter.api.Test;
 
@@ -37,7 +38,7 @@ class SolutionActionTest {
     void shouldThrowExceptionForInvalidValue() {
         String json = "\"INVALID_VALUE\"";
 
-        Exception ex = assertThrows(Exception.class, () ->
+        Exception ex = assertThrows(InvalidFormatException.class, () ->
                 mapper.readValue(json, SolutionAction.class)
         );
 
@@ -46,7 +47,7 @@ class SolutionActionTest {
     }
 
     @Test
-    void shouldThrowExceptionWhenNull() throws Exception{
+    void shouldReturnNullWhenJsonNull() throws Exception{
         String json = "null";
         SolutionAction result = mapper.readValue(json, SolutionAction.class);
 
