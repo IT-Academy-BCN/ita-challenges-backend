@@ -1,7 +1,7 @@
 package com.itachallenge.submission.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.itachallenge.user.annotations.GenericUUIDValid;
+import com.itachallenge.challenge.annotations.GenericUUIDValid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.springframework.stereotype.Component;
