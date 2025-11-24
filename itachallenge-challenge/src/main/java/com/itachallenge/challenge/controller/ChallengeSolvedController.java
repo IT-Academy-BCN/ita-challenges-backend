@@ -27,7 +27,7 @@ public class ChallengeSolvedController {
 
     private final IChallengeService challengeService;
 
-    @PostMapping("/ended/{challengeId}")
+    @PostMapping("/{challengeId}")
     @Operation(
             operationId = "Add a challenge to User's solved challenges.",
             summary = "Add a challenge to solved challenges.",
