@@ -7,11 +7,11 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.UUID;
-@AllArgsConstructor
-@Getter
-@Setter
-@Builder
+
 @NoArgsConstructor
+@AllArgsConstructor
+@Data
+@Builder
 @Document(collection="submissions")
 public class UserSubmissionDocument {
 
