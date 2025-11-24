@@ -12,6 +12,9 @@ public enum SolutionAction {
 
     @JsonCreator
     public static SolutionAction fromString(String action) {
+        if (action == null || action.isBlank()) {
+            throw new IllegalArgumentException("Action cannot be null");
+        }
         return Arrays.stream(SolutionAction.values())
                 .filter(e -> e.name().equalsIgnoreCase(action.trim()))
                 .findFirst()
