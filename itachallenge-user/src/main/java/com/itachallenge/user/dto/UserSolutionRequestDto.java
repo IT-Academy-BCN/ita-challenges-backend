@@ -3,6 +3,7 @@ package com.itachallenge.user.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.itachallenge.user.annotations.GenericUUIDValid;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import org.springframework.stereotype.Component;
