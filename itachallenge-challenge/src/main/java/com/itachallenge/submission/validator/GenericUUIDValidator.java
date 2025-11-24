@@ -1,6 +1,6 @@
-package com.itachallenge.challenge.validator;
+package com.itachallenge.submission.validator;
 
-import com.itachallenge.challenge.annotations.GenericUUIDValid;
+import com.itachallenge.submission.annotations.GenericUUIDValid;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.beans.factory.annotation.Value;
