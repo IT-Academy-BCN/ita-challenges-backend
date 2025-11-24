@@ -39,7 +39,7 @@ class UserSubmissionDocumentTest {
     @Test
     void shouldCreateDocumentWithAllArgsConstructor() {
 
-        assertEquals(UUID.fromString(uuidText), userSubmissionDocumentAllArgs.getUuid());
+        assertEquals(UUID.fromString(uuidText), userSubmissionDocumentAllArgs.getSubmissionId());
         assertEquals(UUID.fromString(userUuidText), userSubmissionDocumentAllArgs.getUserId());
         assertEquals(UserSubmissionAction.SUBMIT, userSubmissionDocumentAllArgs.getAction());
     }
@@ -48,7 +48,7 @@ class UserSubmissionDocumentTest {
     void shouldBuildDocumentCorrectly() {
 
         UserSubmissionDocument doc = UserSubmissionDocument.builder()
-                .uuid(uuid)
+                .submissionId(uuid)
                 .userId(userUuid)
                 .challengeId(challengeUuid)
                 .languageId(languageUuid)
@@ -56,7 +56,7 @@ class UserSubmissionDocumentTest {
                 .submissionAttemptDocument(submissionAttemptDocumentNoArgs)
                 .build();
 
-        assertEquals(UUID.fromString(uuidText), doc.getUuid());
+        assertEquals(UUID.fromString(uuidText), doc.getSubmissionId());
         assertEquals(UUID.fromString(userUuidText), doc.getUserId());
         assertEquals(UUID.fromString(challengeUuidText), doc.getChallengeId());
         assertEquals(UUID.fromString(languageUuidText), doc.getLanguageId());
@@ -66,14 +66,14 @@ class UserSubmissionDocumentTest {
     @Test
     void shouldSetAndGetFieldsCorrectly() {
 
-        userSubmissionDocumentAllArgs.setUuid(userUuid);
+        userSubmissionDocumentAllArgs.setSubmissionId(userUuid);
 
-        assertEquals(UUID.fromString(userUuidText), userSubmissionDocumentAllArgs.getUuid());
+        assertEquals(UUID.fromString(userUuidText), userSubmissionDocumentAllArgs.getSubmissionId());
     }
 
     @Test
     void shouldReturnUuidCorrectly() {
-        assertEquals(UUID.fromString(uuidText), userSubmissionDocumentAllArgs.getUuid());
+        assertEquals(UUID.fromString(uuidText), userSubmissionDocumentAllArgs.getSubmissionId());
     }
 
     @Test
