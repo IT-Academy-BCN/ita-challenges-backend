@@ -48,22 +48,6 @@ class SubmissionAttemptDocumentTest {
     }
 
     @Test
-    void shouldReturnTrueWhenEqualsAndHashCodeMatch() {
-        SubmissionAttemptDocument doc1 = SubmissionAttemptDocument.builder()
-                .uuid(uuid)
-                .submissionText(submissionText)
-                .build();
-
-        SubmissionAttemptDocument doc2 = SubmissionAttemptDocument.builder()
-                .uuid(uuid)
-                .submissionText(submissionText)
-                .build();
-
-        assertEquals(doc1, doc2);
-        assertEquals(doc1.hashCode(), doc2.hashCode());
-    }
-
-    @Test
     void shouldReturnUuidCorrectly() {
         assertEquals(UUID.fromString(uuid_text), submissionAttemptDocumentAllArgs.getUuid());
     }

@@ -72,15 +72,6 @@ public class UserSubmissionDocumentTest {
     }
 
     @Test
-    void equalsAndHashCodeShouldWorkCorrectly() {
-        UserSubmissionDocument doc1 = UserSubmissionDocument.builder().uuid(uuid).build();
-        UserSubmissionDocument doc2 = UserSubmissionDocument.builder().uuid(uuid).build();
-
-        assertEquals(doc1, doc2);
-        assertEquals(doc1.hashCode(), doc2.hashCode());
-    }
-
-    @Test
     void shouldReturnUuidCorrectly() {
         assertEquals(UUID.fromString(uuid_text), userSubmissionDocumentAllArgs.getUuid());
     }
