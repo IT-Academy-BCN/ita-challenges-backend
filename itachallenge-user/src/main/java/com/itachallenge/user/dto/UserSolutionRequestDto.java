@@ -26,6 +26,7 @@ public class UserSolutionRequestDto {
     @GenericUUIDValid(message = "Invalid UUID")
     private String languageId;
 
+    @NotNull(message = "Action cannot be null")
     @JsonProperty(value ="action")
     private String action;
 
