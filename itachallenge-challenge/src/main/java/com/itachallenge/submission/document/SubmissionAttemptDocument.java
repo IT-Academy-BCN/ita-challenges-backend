@@ -8,7 +8,8 @@ import java.util.UUID;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
 @Builder
 public class SubmissionAttemptDocument {
 
