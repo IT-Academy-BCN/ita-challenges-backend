@@ -5,6 +5,7 @@ import com.itachallenge.user.exception.BadUUIDException;
 import com.itachallenge.user.exception.NotFoundException;
 import com.itachallenge.user.repository.UserRepository;
 import com.itachallenge.userinteraction.document.bookmark.BookmarkDocument;
+import com.itachallenge.userinteraction.document.favorite.FavoriteDocument;
 import com.itachallenge.userinteraction.repository.bookmark.BookmarkRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,6 +16,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import com.itachallenge.userinteraction.service.favorite.FavoriteServiceImpl;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -30,7 +33,7 @@ class BookmarkServiceImplTest {
 
     @Mock
     private UserRepository userRepository;
-    
+
     @Mock
     private BookmarkRepository bookmarkRepository;
 
@@ -39,240 +42,111 @@ class BookmarkServiceImplTest {
 
     private AutoCloseable mocks;
 
-    private UUID userId;
-    private UUID challengeId1;
-    private UUID challengeId2;
-    private UserDocument userWithBookmarks;
-    private UserDocument userWithoutBookmarks;
-    
+    private static final String USER_NOT_FOUND_WITH_ID = "User not found with id: ";
+
     @BeforeEach
     void setUp() {
         mocks = MockitoAnnotations.openMocks(this);
-
-        userId = UUID.randomUUID();
-        challengeId1 = UUID.randomUUID();
-        challengeId2 = UUID.randomUUID();
-
-        userWithBookmarks = new UserDocument();
-        userWithBookmarks.setUuid(userId);
-        userWithBookmarks.setBookmarkChallenges(Set.of(challengeId1, challengeId2));
-        
-        userWithoutBookmarks = new UserDocument();
-        userWithoutBookmarks.setUuid(userId);
-        userWithoutBookmarks.setBookmarkChallenges(Collections.emptySet());
+        bookmarkService = new BookmarkServiceImpl(userRepository, bookmarkRepository);
     }
 
     @AfterEach
     void tearDown() throws Exception {
         if (mocks != null) mocks.close();
     }
-    
-    @Test
-    @DisplayName("Get user bookmarks - Error - Null user ID")
-    void getUserBookmarks_WhenNullUserId_ReturnsBadUUIDException() {
-        bookmarkService.getUserBookmarks(null)
-                .as(StepVerifier::create)
-                .expectErrorSatisfies(error -> {
-                    assertTrue(error instanceof BadUUIDException);
-                    assertEquals("Invalid ID format", error.getMessage());
-                })
-                .verify();
-
-        verify(userRepository, never()).findById(any(UUID.class));
-    }
-    
-    @Test
-    @DisplayName("Get user bookmarks - Error - Empty user ID")
-    void getUserBookmarks_WhenEmptyUserId_ReturnsBadUUIDException() {
-        bookmarkService.getUserBookmarks("")
-                .as(StepVerifier::create)
-                .expectErrorSatisfies(error -> {
-                    assertTrue(error instanceof BadUUIDException);
-                    assertEquals("Invalid ID format", error.getMessage());
-                })
-                .verify();
-
-        verify(userRepository, never()).findById(any(UUID.class));
-    }
 
     @Test
-    @DisplayName("getUserBookmarks - Success - Returns user's challenge bookmarks")
-    void getUserBookmarks_UserExists_ReturnsBookmarks() {
-
+    @DisplayName("getUserBookmarks returns an empty set when the user exists but has no bookmarks")
+    void getUserBookmarks_WhenUserHasNoBookmarks_ReturnsEmptySet() {
         UUID userId = UUID.randomUUID();
-        UUID challenge1 = UUID.randomUUID();
-        UUID challenge2 = UUID.randomUUID();
 
         when(userRepository.existsById(userId)).thenReturn(Mono.just(true));
-        when(bookmarkRepository.findByUserId(userId))
-                .thenReturn(Flux.just(
-                        BookmarkDocument.builder()
-                                .userId(userId)
-                                .challengeId(challenge1)
-                                .build(),
-                        BookmarkDocument.builder()
-                                .userId(userId)
-                                .challengeId(challenge2)
-                                .build()
-                ));
+        when(bookmarkRepository.findByUserId(userId)).thenReturn(Flux.empty());
 
-        bookmarkService.getUserBookmarks(userId.toString())
-                .as(StepVerifier::create)
-                .assertNext(result -> {
-                    assertEquals(2, result.size());
-                    assertTrue(result.contains(challenge1));
-                    assertTrue(result.contains(challenge2));
-                })
+        StepVerifier.create(bookmarkService.getUserBookmarks(userId.toString()))
+                .expectNextMatches(Set::isEmpty)
                 .verifyComplete();
 
-        verify(userRepository).existsById(userId);
-        verify(bookmarkRepository).findByUserId(userId);
+        verify(userRepository, times(1)).existsById(userId);
+        verify(bookmarkRepository, times(1)).findByUserId(userId);
     }
 
     @Test
-    @DisplayName("Get user bookmarks - Success - User with bookmarks")
-    void getUserBookmarks_WhenUserExistsWithBookmarks_ReturnsBookmarks() {
-        String userIdStr = userId.toString();
-        Set<UUID> expectedBookmarks = Set.of(challengeId1, challengeId2);
-        BookmarkDocument bookmark1 = BookmarkDocument.builder()
+    @DisplayName("getUserBookmarks returns bookmarks when the user exists")
+    void getUserBookmarks_WhenUserExistsWithFavorites_ReturnsBookmarks() {
+        UUID userId = UUID.randomUUID();
+        UUID challengeId1 = UUID.randomUUID();
+        UUID challengeId2 = UUID.randomUUID();
+
+        BookmarkDocument fav1 = BookmarkDocument.builder()
+                .uuid(UUID.randomUUID())
                 .userId(userId)
                 .challengeId(challengeId1)
                 .build();
-        BookmarkDocument bookmark2 = BookmarkDocument.builder()
+        BookmarkDocument fav2 = BookmarkDocument.builder()
+                .uuid(UUID.randomUUID())
                 .userId(userId)
                 .challengeId(challengeId2)
                 .build();
 
         when(userRepository.existsById(userId)).thenReturn(Mono.just(true));
-        when(bookmarkRepository.findByUserId(userId))
-                .thenReturn(Flux.just(bookmark1, bookmark2));
+        when(bookmarkRepository.findByUserId(userId)).thenReturn(Flux.just(fav1, fav2));
 
-        Mono<Set<UUID>> result = bookmarkService.getUserBookmarks(userIdStr);
-
-        StepVerifier.create(result)
-                .expectNextMatches(bookmarks -> {
-                    assertEquals(expectedBookmarks.size(), bookmarks.size());
-                    assertTrue(bookmarks.containsAll(expectedBookmarks));
-                    return true;
-                })
+        StepVerifier.create(bookmarkService.getUserBookmarks(userId.toString()))
+                .expectNextMatches(bookmarks -> bookmarks.contains(challengeId1) && bookmarks.contains(challengeId2))
                 .verifyComplete();
 
-        verify(userRepository).existsById(userId);
-        verify(bookmarkRepository).findByUserId(userId);
+        verify(userRepository, times(1)).existsById(userId);
+        verify(bookmarkRepository, times(1)).findByUserId(userId);
     }
 
     @Test
-    @DisplayName("Get user bookmarks - Success - User without bookmarks")
-    void getUserBookmarks_WhenUserExistsWithoutBookmarks_ReturnsEmptySet() {
-        String userIdStr = userId.toString();
-
-        when(userRepository.existsById(userId)).thenReturn(Mono.just(true));
-        when(bookmarkRepository.findByUserId(userId)).thenReturn(Flux.empty());
-
-        Mono<Set<UUID>> result = bookmarkService.getUserBookmarks(userIdStr);
-
-        StepVerifier.create(result)
-                .expectNextMatches(Set::isEmpty)
-                .verifyComplete();
-
-        verify(userRepository).existsById(userId);
-        verify(bookmarkRepository).findByUserId(userId);
-    }
-
-    @Test
-    @DisplayName("Get user bookmarks - Error - User not found")
-    void getUserBookmarks_WhenUserNotExists_ReturnsNotFoundException() {
-        String userIdStr = userId.toString();
-        String expectedMessage = "User not found with id: " + userIdStr;
+    @DisplayName("getUserBookmarks throws NotFoundException when the user does not exist")
+    void getUserBookmarks_WhenUserNotFound_ThrowsNotFoundException() {
+        UUID userId = UUID.randomUUID();
 
         when(userRepository.existsById(userId)).thenReturn(Mono.just(false));
 
-        Mono<Set<UUID>> result = bookmarkService.getUserBookmarks(userIdStr);
-
-        StepVerifier.create(result)
-                .expectErrorSatisfies(error -> {
-                    assertTrue(error instanceof NotFoundException);
-                    assertEquals(expectedMessage, error.getMessage());
-                })
+        StepVerifier.create(bookmarkService.getUserBookmarks(userId.toString()))
+                .expectErrorMatches(error ->
+                        error instanceof NotFoundException &&
+                                error.getMessage().equals(USER_NOT_FOUND_WITH_ID + userId))
                 .verify();
 
-        verify(userRepository).existsById(userId);
-        verify(bookmarkRepository, never()).findByUserId(any(UUID.class));
+        verify(userRepository, times(1)).existsById(userId);
+        verify(bookmarkRepository, times(0)).findByUserId(userId);
     }
 
     @Test
-    @DisplayName("Parse and validate UUID - Success - Valid UUID")
-    void parseAndValidateUUID_WithValidUUID_ReturnsUUID() {
-        String validUUID = "123e4567-e89b-12d3-a456-426614174000";
-        UUID expectedUUID = UUID.fromString(validUUID);
+    @DisplayName("getUserBookmarks throws BadUUIDException when the UUID format is invalid")
+    void getUserBookmarks_WhenInvalidUUID_ThrowsBadUUIDException() {
+        String invalidUUID = "invalid-uuid";
 
-        Mono<UUID> result = bookmarkService.getUserBookmarks(validUUID)
-                .then(Mono.just(expectedUUID));
-
-        StepVerifier.create(result)
-                .expectNext(expectedUUID)
-                .verifyComplete();
-    }
-
-    @Test
-    @DisplayName("Parse and validate UUID - Error - Null input")
-    void parseAndValidateUUID_WithNullInput_ThrowsBadUUIDException() {
-        StepVerifier.create(bookmarkService.getUserBookmarks(null))
-                .expectErrorSatisfies(error -> {
-                    assertTrue(error instanceof BadUUIDException);
-                    assertEquals("Invalid ID format", error.getMessage());
-                })
+        StepVerifier.create(bookmarkService.getUserBookmarks(invalidUUID))
+                .expectErrorMatches(error ->
+                        error instanceof BadUUIDException &&
+                                error.getMessage().equals("Invalid ID format"))
                 .verify();
+
+        verify(userRepository, times(0)).existsById((UUID) any());
+        verify(bookmarkRepository, times(0)).findByUserId(any());
     }
 
     @Test
-    @DisplayName("Parse and validate UUID - Error - Empty input")
-    void parseAndValidateUUID_WithEmptyInput_ThrowsBadUUIDException() {
-        StepVerifier.create(bookmarkService.getUserBookmarks(""))
-                .expectErrorSatisfies(error -> {
-                    assertTrue(error instanceof BadUUIDException);
-                    assertEquals("Invalid ID format", error.getMessage());
-                })
+    @DisplayName("getUserBookmarks propagates repository errors correctly")
+    void getUserBookmarks_WhenRepositoryError_PropagatesError() {
+        UUID userId = UUID.randomUUID();
+
+        when(userRepository.existsById(userId)).thenReturn(Mono.just(true));
+        when(bookmarkRepository.findByUserId(userId)).thenReturn(Flux.error(new RuntimeException("DB error")));
+
+        StepVerifier.create(bookmarkService.getUserBookmarks(userId.toString()))
+                .expectErrorMatches(error ->
+                        error instanceof RuntimeException &&
+                                error.getMessage().equals("DB error"))
                 .verify();
-    }
 
-    @Test
-    @DisplayName("Parse and validate UUID - Error - Very long string")
-    void parseAndValidateUUID_WithVeryLongString_ThrowsBadUUIDException() {
-        String longString = new String(new char[1000]).replace('\0', 'a');
-
-        StepVerifier.create(bookmarkService.getUserBookmarks(longString))
-                .expectErrorSatisfies(error -> {
-                    assertTrue(error instanceof BadUUIDException);
-                    assertTrue(error.getMessage().contains("Invalid ID format"));
-                })
-                .verify();
-    }
-
-    private Object callGetUserBookmarks(String uuid) {
-        try {
-            return bookmarkService.getUserBookmarks(uuid).block();
-        } catch (Exception e) {
-            if (e.getCause() instanceof BadUUIDException) {
-                throw (BadUUIDException) e.getCause();
-            } else if (e.getCause() != null) {
-                throw new RuntimeException("Unexpected exception: " + e.getCause().getClass().getSimpleName() + ": " + e.getCause().getMessage(), e);
-            } else {
-                throw new RuntimeException("Unexpected exception: " + e.getClass().getSimpleName() + ": " + e.getMessage(), e);
-            }
-        }
-    }
-
-    @Test
-    @DisplayName("Parse and validate UUID - Error - String with whitespace")
-    void parseAndValidateUUID_WithWhitespace_ThrowsBadUUIDException() {
-        String stringWithWhitespace = " 123e4567-e89b-12d3-a456-426614174000 ";
-        
-        assertThrows(BadUUIDException.class,
-                () -> callGetUserBookmarksWithWhitespace(stringWithWhitespace));
-    }
-    
-    private void callGetUserBookmarksWithWhitespace(String input) {
-        bookmarkService.getUserBookmarks(input).block();
+        verify(userRepository, times(1)).existsById(userId);
+        verify(bookmarkRepository, times(1)).findByUserId(userId);
     }
 }

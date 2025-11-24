@@ -118,7 +118,7 @@ class UserServiceImplTest {
         when(bookmarkRepository.save(any(BookmarkDocument.class)))
                 .thenReturn(Mono.just(new BookmarkDocument()));
 
-        StepVerifier.create(userService.addChallengeToFavorites(userId.toString(), challengeId.toString()))
+        StepVerifier.create(userService.addChallengeToBookmarks(userId.toString(), challengeId.toString()))
                 .expectNext(true)
                 .verifyComplete();
 
@@ -132,41 +132,42 @@ class UserServiceImplTest {
     void addChallengeToBookmarks_ShouldReturnTrue_WhenBookmarksIsEmpty() {
         UUID challengeId = UUID.randomUUID();
         UUID userId = UUID.randomUUID();
-        UserDocument user = new UserDocument(userId, "testUser", null, new HashSet<>(), 0);
+        UserDocument user = new UserDocument(userId, "testUser", null, null, 0);
 
         when(userRepository.findById(userId)).thenReturn(Mono.just(user));
-        when(userRepository.save(user)).thenReturn(Mono.just(user));
+        when(bookmarkRepository.existsByUserIdAndChallengeId(userId, challengeId))
+                .thenReturn(Mono.just(false));
+        when(bookmarkRepository.save(any(BookmarkDocument.class)))
+                .thenReturn(Mono.just(new BookmarkDocument()));
 
         StepVerifier.create(userService.addChallengeToBookmarks(userId.toString(), challengeId.toString()))
                 .expectNext(true)
                 .verifyComplete();
 
-        assertNotNull(user.getBookmarkChallenges());
-        assertTrue(user.getBookmarkChallenges().contains(challengeId));
-
         verify(userRepository, times(1)).findById(userId);
-        verify(userRepository, times(1)).save(user);
+        verify(bookmarkRepository, times(1)).existsByUserIdAndChallengeId(userId, challengeId);
+        verify(bookmarkRepository, times(1)).save(any(BookmarkDocument.class));
     }
 
     @Test
     void addChallengeToBookmarks_ShouldReturnTrue_WhenBookmarksHasValues() {
         UUID challengeId = UUID.randomUUID();
         UUID userId = UUID.randomUUID();
-        Set<UUID> bookmarks = new HashSet<>(Set.of(UUID.randomUUID(), UUID.randomUUID()));
-        UserDocument user = new UserDocument(userId, "testUser", null, bookmarks, 0);
+        UserDocument user = new UserDocument(userId, "testUser", null, null, 0);
 
         when(userRepository.findById(userId)).thenReturn(Mono.just(user));
-        when(userRepository.save(user)).thenReturn(Mono.just(user));
+        when(bookmarkRepository.existsByUserIdAndChallengeId(userId, challengeId))
+                .thenReturn(Mono.just(false));
+        when(bookmarkRepository.save(any(BookmarkDocument.class)))
+                .thenReturn(Mono.just(new BookmarkDocument()));
 
         StepVerifier.create(userService.addChallengeToBookmarks(userId.toString(), challengeId.toString()))
                 .expectNext(true)
                 .verifyComplete();
 
-        assertNotNull(user.getBookmarkChallenges());
-        assertTrue(user.getBookmarkChallenges().contains(challengeId));
-
         verify(userRepository, times(1)).findById(userId);
-        verify(userRepository, times(1)).save(user);
+        verify(bookmarkRepository, times(1)).existsByUserIdAndChallengeId(userId, challengeId);
+        verify(bookmarkRepository, times(1)).save(any());
     }
 
     @Test
@@ -402,15 +403,16 @@ class UserServiceImplTest {
         UserDocument user = new UserDocument(userId, "testUser", null, null, 0);
 
         when(userRepository.findById(userId)).thenReturn(Mono.just(user));
+        when(bookmarkRepository.findByUserIdAndChallengeId(any(UUID.class), any(UUID.class)))
+                .thenReturn(Mono.empty());
 
         StepVerifier.create(userService.deleteChallengeFromBookmarks(userId.toString(), challengeId.toString()))
                 .expectNext(false)
                 .verifyComplete();
 
-        assertNull(user.getBookmarkChallenges());
-
         verify(userRepository, times(1)).findById(userId);
-        verify(userRepository, times(0)).save(user);
+        verify(bookmarkRepository).findByUserIdAndChallengeId(any(UUID.class), any(UUID.class));
+        verify(bookmarkRepository, never()).delete(any());
     }
 
     @Test
@@ -420,36 +422,38 @@ class UserServiceImplTest {
         UserDocument user = new UserDocument(userId, "testUser", null, new HashSet<>(), 0);
 
         when(userRepository.findById(userId)).thenReturn(Mono.just(user));
+        when(bookmarkRepository.findByUserIdAndChallengeId(any(UUID.class), any(UUID.class)))
+                .thenReturn(Mono.empty());
+
 
         StepVerifier.create(userService.deleteChallengeFromBookmarks(userId.toString(), challengeId.toString()))
                 .expectNext(false)
                 .verifyComplete();
 
-        assertNotNull(user.getBookmarkChallenges());
-        assertFalse(user.getBookmarkChallenges().contains(challengeId));
-
         verify(userRepository, times(1)).findById(userId);
-        verify(userRepository, times(0)).save(user);
+        verify(bookmarkRepository).findByUserIdAndChallengeId(any(UUID.class), any(UUID.class));
+        verify(bookmarkRepository, never()).delete(any());
     }
 
     @Test
     void deleteChallengeFromBookmarks_ShouldReturnFalse_WhenChallengeNotInBookmarks() {
         UUID challengeId = UUID.randomUUID();
         UUID userId = UUID.randomUUID();
-        Set<UUID> bookmarks = new HashSet<>(Set.of(UUID.randomUUID(), UUID.randomUUID()));
-        UserDocument user = new UserDocument(userId, "testUser", null, bookmarks, 0);
+        UserDocument user = new UserDocument(userId, "testUser", null, null, 0);
 
         when(userRepository.findById(userId)).thenReturn(Mono.just(user));
+        when(bookmarkRepository.findByUserIdAndChallengeId(any(UUID.class), any(UUID.class)))
+                .thenReturn(Mono.empty());
+
+
 
         StepVerifier.create(userService.deleteChallengeFromBookmarks(userId.toString(), challengeId.toString()))
                 .expectNext(false)
                 .verifyComplete();
 
-        assertNotNull(user.getBookmarkChallenges());
-        assertFalse(user.getBookmarkChallenges().contains(challengeId));
-
         verify(userRepository, times(1)).findById(userId);
-        verify(userRepository, times(0)).save(user);
+        verify(bookmarkRepository).findByUserIdAndChallengeId(any(UUID.class), any(UUID.class));
+        verify(bookmarkRepository, never()).delete(any());
     }
 
     @Test
@@ -480,21 +484,23 @@ class UserServiceImplTest {
     void deleteChallengeFromBookmarks_ShouldReturnTrue_WhenBookmarksAlreadyContainsChallenge() {
         UUID challengeId = UUID.randomUUID();
         UUID userId = UUID.randomUUID();
-        Set<UUID> bookmarks = new HashSet<>(Set.of(UUID.randomUUID(), UUID.randomUUID(), challengeId));
-        UserDocument user = new UserDocument(userId, "testUser", null, bookmarks, 0);
+        UserDocument user = new UserDocument(userId, "testUser", null, null, 0);
+        BookmarkDocument bookmark = new BookmarkDocument(UUID.randomUUID(), userId, challengeId, LocalDateTime.now());
+
 
         when(userRepository.findById(userId)).thenReturn(Mono.just(user));
-        when(userRepository.save(user)).thenReturn(Mono.just(user));
+        when(bookmarkRepository.findByUserIdAndChallengeId(userId, challengeId))
+                .thenReturn(Mono.just(bookmark));
+        when(bookmarkRepository.delete(any(BookmarkDocument.class))).thenReturn(Mono.empty());
 
         StepVerifier.create(userService.deleteChallengeFromBookmarks(userId.toString(), challengeId.toString()))
                 .expectNext(true)
                 .verifyComplete();
 
-        assertNotNull(user.getBookmarkChallenges());
-        assertFalse(user.getBookmarkChallenges().contains(challengeId));
 
-        verify(userRepository, times(1)).findById(userId);
-        verify(userRepository, times(1)).save(any());
+        verify(userRepository).findById(userId);
+        verify(bookmarkRepository).findByUserIdAndChallengeId(userId, challengeId);
+        verify(bookmarkRepository).delete(bookmark);
     }
 
     @Test
