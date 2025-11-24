@@ -5,6 +5,7 @@ import com.itachallenge.user.document.enums.Role;
 import com.itachallenge.user.exception.BadUUIDException;
 import com.itachallenge.user.exception.NotFoundException;
 import com.itachallenge.user.repository.UserRepository;
+import com.itachallenge.userinteraction.document.bookmark.BookmarkDocument;
 import com.itachallenge.userinteraction.document.favorite.FavoriteDocument;
 import com.itachallenge.userinteraction.repository.bookmark.BookmarkRepository;
 import com.itachallenge.userinteraction.repository.favorite.FavoriteRepository;
@@ -107,22 +108,24 @@ class UserServiceImplTest {
 
     @Test
     void addChallengeToBookmarks_ShouldReturnTrue_WhenBookmarksIsNull() {
-        UUID challengeId = UUID.randomUUID();
         UUID userId = UUID.randomUUID();
+        UUID challengeId = UUID.randomUUID();
         UserDocument user = new UserDocument(userId, "testUser", null, null, 0);
 
         when(userRepository.findById(userId)).thenReturn(Mono.just(user));
-        when(userRepository.save(user)).thenReturn(Mono.just(user));
+        when(bookmarkRepository.existsByUserIdAndChallengeId(userId, challengeId))
+                .thenReturn(Mono.just(false));
+        when(bookmarkRepository.save(any(BookmarkDocument.class)))
+                .thenReturn(Mono.just(new BookmarkDocument()));
 
-        StepVerifier.create(userService.addChallengeToBookmarks(userId.toString(), challengeId.toString()))
+        StepVerifier.create(userService.addChallengeToFavorites(userId.toString(), challengeId.toString()))
                 .expectNext(true)
                 .verifyComplete();
 
-        assertNotNull(user.getBookmarkChallenges());
-        assertTrue(user.getBookmarkChallenges().contains(challengeId));
-
         verify(userRepository, times(1)).findById(userId);
-        verify(userRepository, times(1)).save(user);
+        verify(bookmarkRepository, times(1)).existsByUserIdAndChallengeId(userId, challengeId);
+        verify(bookmarkRepository, times(1)).save(any(BookmarkDocument.class));
+        verify(userRepository, never()).save(any());
     }
 
     @Test
@@ -226,18 +229,22 @@ class UserServiceImplTest {
 
     @Test
     void addChallengeToBookmarks_ShouldThrowNotFoundException_WhenUserNotFound() {
+        UUID userId = UUID.randomUUID();
+        UUID challengeId = UUID.randomUUID();
 
         when(userRepository.findById(any(UUID.class))).thenReturn(Mono.empty());
 
-        StepVerifier.create(userService.addChallengeToBookmarks(UUID.randomUUID().toString(), UUID.randomUUID().toString()))
+        StepVerifier.create(userService.addChallengeToFavorites(userId.toString(), challengeId.toString()))
                 .expectErrorSatisfies(throwable -> {
                     assertInstanceOf(NotFoundException.class, throwable);
                     assertEquals("User not found", throwable.getMessage());
                 })
                 .verify();
 
-        verify(userRepository, times(1)).findById(any(UUID.class));
-        verify(userRepository, times(0)).save(any());
+        verify(userRepository, times(1)).findById(userId);
+        verify(bookmarkRepository, never()).existsByUserIdAndChallengeId(any(), any());
+        verify(bookmarkRepository, never()).save(any());
+        verify(userRepository, never()).save(any());
     }
 
     @Test
@@ -260,15 +267,20 @@ class UserServiceImplTest {
 
     @Test
     void addChallengeToBookmarks_ShouldThrowBadRequestException_WhenUserUuidIsNull() {
-        StepVerifier.create(userService.addChallengeToBookmarks(null, UUID.randomUUID().toString()))
+        String invalidUserId = null;
+        String validChallengeId = UUID.randomUUID().toString();
+
+        StepVerifier.create(userService.addChallengeToFavorites(invalidUserId, validChallengeId))
                 .expectErrorSatisfies(throwable -> {
                     assertInstanceOf(BadUUIDException.class, throwable);
                     assertEquals("Invalid ID format", throwable.getMessage());
                 })
                 .verify();
 
-        verify(userRepository, times(0)).findById(any(UUID.class));
-        verify(userRepository, times(0)).save(any());
+        verify(userRepository, never()).findById(Mockito.<UUID>any());
+        verify(bookmarkRepository, never()).existsByUserIdAndChallengeId(any(), any());
+        verify(bookmarkRepository, never()).save(any());
+        verify(userRepository, never()).save(any());
     }
 
     @Test
