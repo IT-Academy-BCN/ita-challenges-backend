@@ -30,14 +30,12 @@ public class BookmarkServiceImpl implements BookmarkService {
         return parseAndValidateUUID(userId)
                 .flatMap(userUuid ->
                         userRepository.existsById(userUuid)
-                                .flatMap(exists -> {
-                                    if (!exists) {
-                                        return Mono.error(new NotFoundException(USER_NOT_FOUND_WITH_ID + userId));
-                                    }
-                                    return bookmarkRepository.findByUserId(userUuid)
-                                            .map(BookmarkDocument::getChallengeId)
-                                            .collect(Collectors.toSet());
-                                })
+                                .flatMap(exists -> exists
+                                        ? bookmarkRepository.findByUserId(userUuid)
+                                        .map(BookmarkDocument::getChallengeId)
+                                        .collect(Collectors.toSet())
+                                        : Mono.error(new NotFoundException(USER_NOT_FOUND_WITH_ID + userId))
+                                )
                 );
     }
 
