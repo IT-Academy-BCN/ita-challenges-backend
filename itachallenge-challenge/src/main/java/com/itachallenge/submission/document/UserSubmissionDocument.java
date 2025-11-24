@@ -18,7 +18,7 @@ public class UserSubmissionDocument {
 
     @Id
     @Field("_id")
-    private UUID uuid;
+    private UUID submissionId;
 
     @Field("user_id")
     private UUID userId;
