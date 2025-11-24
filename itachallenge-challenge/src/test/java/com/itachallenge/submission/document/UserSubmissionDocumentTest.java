@@ -51,7 +51,7 @@ class UserSubmissionDocumentTest {
                 .uuid(uuid)
                 .userId(userUuid)
                 .challengeId(challengeUuid)
-                .languageId(languageUuid)
+                .languageIdTest(languageUuid)
                 .action(userSubmissionAction)
                 .submissionAttemptDocument(submissionAttemptDocumentNoArgs)
                 .build();
@@ -59,7 +59,7 @@ class UserSubmissionDocumentTest {
         assertEquals(UUID.fromString(uuidText), doc.getUuid());
         assertEquals(UUID.fromString(userUuidText), doc.getUserId());
         assertEquals(UUID.fromString(challengeUuidText), doc.getChallengeId());
-        assertEquals(UUID.fromString(languageUuidText), doc.getLanguageId());
+        assertEquals(UUID.fromString(languageUuidText), doc.getLanguageIdTest());
         assertEquals(UserSubmissionAction.SUBMIT, doc.getAction());
     }
 
@@ -88,7 +88,7 @@ class UserSubmissionDocumentTest {
 
     @Test
     void shouldReturnLanguageUuidCorrectly() {
-        assertEquals(UUID.fromString(languageUuidText), userSubmissionDocumentAllArgs.getLanguageId());
+        assertEquals(UUID.fromString(languageUuidText), userSubmissionDocumentAllArgs.getLanguageIdTest());
     }
 
     @Test
