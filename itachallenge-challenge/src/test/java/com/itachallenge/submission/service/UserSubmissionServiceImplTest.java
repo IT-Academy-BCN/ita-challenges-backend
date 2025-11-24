@@ -1,6 +1,6 @@
 package com.itachallenge.submission.service;
 
-/*import com.itachallenge.challenge.exception.BadRequestException;
+import com.itachallenge.challenge.exception.BadRequestException;
 import com.itachallenge.submission.document.SubmissionAttemptDocument;
 import com.itachallenge.submission.document.UserSubmissionDocument;
 import com.itachallenge.submission.dto.UserSubmissionResponseDto;
@@ -96,5 +96,5 @@ class UserSubmissionServiceImplTest {
                                 ex.getMessage().contains("must be a valid UUID"))
                 .verify();
     }
-}*/
+}
 
