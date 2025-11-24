@@ -35,12 +35,12 @@ public class ChallengeServiceImpl implements IChallengeService {
 
     @Override
     public Mono<SolvedDto> addChallengeToSolved(String challengeId) {
-        return callEndpoint(challengeId, ChallengeStatus.SUBMITTED_COMPLETE, X_SOLVED_MESSAGE, HttpMethod.POST);
+        return callEndpoint(challengeId, X_SOLVED_MESSAGE, HttpMethod.POST);
     }
 
-    private Mono<SolvedDto> callEndpoint(String challengeId, ChallengeStatus type, String errorHeader, HttpMethod method) {
-        String url = buildUrl(challengeId, type.toString().toLowerCase());
-        log.debug("Calling {} endpoint with method={} and URL={}", type.name().toLowerCase(), method, url);
+    private Mono<SolvedDto> callEndpoint(String challengeId, String errorHeader, HttpMethod method) {
+        String url = buildUrl(challengeId);
+        log.debug("Calling endpoint with method={} and URL={}", method, url);
 
         return webClientBuilder.build()
                 .method(method)
@@ -65,10 +65,10 @@ public class ChallengeServiceImpl implements IChallengeService {
                 .bodyToMono(SolvedDto.class);
     }
 
-    private String buildUrl(String challengeId, String type){
+    private String buildUrl(String challengeId){
         return UriComponentsBuilder.fromHttpUrl(challengeServiceUrl)
-                .path("/itachallenge/api/v1/challenge/solved/{type}/{challengeId}")
-                .buildAndExpand(type, challengeId)
+                .path("/itachallenge/api/v1/challenge/solved/{challengeId}")
+                .buildAndExpand(challengeId)
                 .toUriString();
     }
 
