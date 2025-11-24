@@ -13,7 +13,7 @@ public enum SolutionAction {
     @JsonCreator
     public static SolutionAction fromString(String action) {
         if (action == null || action.isBlank()) {
-            throw new IllegalArgumentException("Action cannot be null");
+            throw new IllegalArgumentException("Action cannot be null or blank");
         }
         return Arrays.stream(SolutionAction.values())
                 .filter(e -> e.name().equalsIgnoreCase(action.trim()))
