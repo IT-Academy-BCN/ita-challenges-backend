@@ -3,18 +3,24 @@ package com.itachallenge.submission.validator;
 import com.itachallenge.submission.annotations.GenericUUIDValid;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.util.regex.Pattern;
+import java.util.Objects;
 
 public class GenericUUIDValidator implements ConstraintValidator<GenericUUIDValid, String> {
-    @Value("${validation.mongodb_pattern}")
-    private String uuidPattern;
-    Pattern UUID_PATTERN;
+
+    private static final String DEFAULT_UUID_PATTERN =
+            "^[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[1-5][0-9a-fA-F]{3}\\-[89abAB][0-9a-fA-F]{3}\\-[0-9a-fA-F]{12}$";
+
+    private Pattern uuidPattern;
 
     @Override
     public void initialize(GenericUUIDValid constraintAnnotation) {
-        this.UUID_PATTERN = Pattern.compile(uuidPattern);
+        String patternFromAnnotation = constraintAnnotation.pattern();
+        String patternToUse = (patternFromAnnotation != null && !patternFromAnnotation.trim().isEmpty())
+                ? patternFromAnnotation
+                : DEFAULT_UUID_PATTERN;
+        this.uuidPattern = Pattern.compile(patternToUse);
     }
 
     @Override
@@ -28,7 +34,7 @@ public class GenericUUIDValidator implements ConstraintValidator<GenericUUIDVali
             return false;
         }
 
-        if (!UUID_PATTERN.matcher(value).matches()) {
+        if (!uuidPattern.matcher(value).matches()) {
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate(customMessage + ": " + value)
                     .addConstraintViolation();
