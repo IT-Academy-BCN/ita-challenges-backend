@@ -189,20 +189,19 @@ class UserServiceImplTest {
     void addChallengeToBookmarks_ShouldReturnFalse_WhenBookmarksAlreadyContainsChallenge() {
         UUID challengeId = UUID.randomUUID();
         UUID userId = UUID.randomUUID();
-        Set<UUID> bookmarks = new HashSet<>(Set.of(UUID.randomUUID(), UUID.randomUUID(), challengeId));
-        UserDocument user = new UserDocument(userId, "testUser", null, bookmarks, 0);
+        UserDocument user = new UserDocument(userId, "testUser", null, null, 0);
 
         when(userRepository.findById(userId)).thenReturn(Mono.just(user));
+        when(bookmarkRepository.existsByUserIdAndChallengeId(userId, challengeId))
+                .thenReturn(Mono.just(true));
 
         StepVerifier.create(userService.addChallengeToBookmarks(userId.toString(), challengeId.toString()))
                 .expectNext(false)
                 .verifyComplete();
 
-        assertNotNull(user.getBookmarkChallenges());
-        assertTrue(user.getBookmarkChallenges().contains(challengeId));
-
         verify(userRepository, times(1)).findById(userId);
-        verify(userRepository, times(0)).save(any());
+        verify(bookmarkRepository, times(1)).existsByUserIdAndChallengeId(userId, challengeId);
+        verify(bookmarkRepository, never()).save(any());
     }
 
     @Test

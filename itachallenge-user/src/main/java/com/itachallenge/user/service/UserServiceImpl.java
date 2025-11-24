@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService {
 
                     return userRepository.findById(userUuid)
                             .switchIfEmpty(Mono.error(new NotFoundException("User not found")))
-                            .flatMap(user -> addToBookmarks(user.getUuid(), challengeUuid));
+                            .flatMap(user -> addToBookmarks(userUuid, challengeUuid));
                 });
     }
 
@@ -86,7 +86,7 @@ public class UserServiceImpl implements UserService {
 
                     return userRepository.findById(userUuid)
                             .switchIfEmpty(Mono.error(new NotFoundException("User not found")))
-                            .flatMap(user -> deleteFromBookmarks(user.getUuid(), challengeUuid));
+                            .flatMap(user -> deleteFromBookmarks(userUuid, challengeUuid));
                 });
     }
 
