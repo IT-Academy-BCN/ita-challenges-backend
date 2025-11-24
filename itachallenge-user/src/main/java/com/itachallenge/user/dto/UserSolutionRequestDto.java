@@ -2,7 +2,6 @@ package com.itachallenge.user.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.itachallenge.user.annotations.GenericUUIDValid;
-import com.itachallenge.user.annotations.ValidSolutionAction;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -30,7 +29,6 @@ public class UserSolutionRequestDto {
 
     @NotNull(message = "Action cannot be null")
     @JsonProperty(value ="action")
-    @ValidSolutionAction
     private String action;
 
     @JsonProperty(value ="solution_text")
