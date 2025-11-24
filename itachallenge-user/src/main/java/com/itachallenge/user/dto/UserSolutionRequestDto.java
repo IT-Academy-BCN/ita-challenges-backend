@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.itachallenge.user.annotations.GenericUUIDValid;
 import com.itachallenge.user.annotations.ValidSolutionAction;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import org.springframework.stereotype.Component;
