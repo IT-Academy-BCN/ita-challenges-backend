@@ -3,19 +3,16 @@ package com.itachallenge.submission.service;
 import com.itachallenge.challenge.exception.BadRequestException;
 import com.itachallenge.submission.dto.UserSubmissionResponseDto;
 import com.itachallenge.submission.repository.IUserSubmissionRepository;
-import com.itachallenge.challenge.service.IChallengeService;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import java.util.UUID;
 
-
-
 @Service
 public class UserSubmissionServiceImpl implements IUserSubmissionService {
     private final IUserSubmissionRepository userSubmissionRepository;
 
-    public UserSubmissionServiceImpl(IUserSubmissionRepository userSubmissionRepository, IChallengeService challengeService) {
+    public UserSubmissionServiceImpl(IUserSubmissionRepository userSubmissionRepository) {
         this.userSubmissionRepository = userSubmissionRepository;
     }
     @Override

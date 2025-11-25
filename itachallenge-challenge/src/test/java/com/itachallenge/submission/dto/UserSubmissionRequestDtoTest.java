@@ -129,7 +129,7 @@ class UserSubmissionRequestDtoTest {
     }
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         userSubmissionRequestDto = UserSubmissionRequestDto.builder()
                 .userId("validUserId")
                 .challengeId("validChallengeId")
