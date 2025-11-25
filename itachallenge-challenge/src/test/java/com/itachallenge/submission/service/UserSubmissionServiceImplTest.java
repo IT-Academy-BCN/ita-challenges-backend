@@ -4,7 +4,7 @@ import com.itachallenge.challenge.exception.BadRequestException;
 import com.itachallenge.submission.document.SubmissionAttemptDocument;
 import com.itachallenge.submission.document.UserSubmissionDocument;
 import com.itachallenge.submission.dto.UserSubmissionResponseDto;
-import com.itachallenge.submission.enums.ChallengeStatus;
+import com.itachallenge.submission.enums.UserSubmissionAction;
 import com.itachallenge.submission.repository.IUserSubmissionRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,11 +41,11 @@ class UserSubmissionServiceImplTest {
                 .submissionText("my submission text")
                 .build();
         UserSubmissionDocument document = UserSubmissionDocument.builder()
-                .uuid(UUID.randomUUID())
+                .submissionId(UUID.randomUUID())
                 .userId(userUuid)
                 .challengeId(challengeUuid)
                 .languageId(languageUuid)
-                .status(ChallengeStatus.SUBMITTED_INCOMPLETE)
+                .action(UserSubmissionAction.GIVE_UP)
                 .submissionAttemptDocument(attempt)
                 .build();
         when(userSubmissionRepository.findAllByUserId(userUuid))
@@ -58,7 +58,7 @@ class UserSubmissionServiceImplTest {
                     org.junit.jupiter.api.Assertions.assertEquals(challengeUuid.toString(), dto.getChallengeId());
                     org.junit.jupiter.api.Assertions.assertEquals(languageUuid.toString(), dto.getLanguageId());
                     org.junit.jupiter.api.Assertions.assertEquals("my submission text", dto.getSubmissionText());
-                    org.junit.jupiter.api.Assertions.assertEquals("SUBMITTED_INCOMPLETE", dto.getStatus());
+                    org.junit.jupiter.api.Assertions.assertEquals("GIVE_UP", dto.getAction());
                 })
                 .verifyComplete();
     }

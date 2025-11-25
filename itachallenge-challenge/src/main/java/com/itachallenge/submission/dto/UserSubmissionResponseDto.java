@@ -22,7 +22,7 @@ public class UserSubmissionResponseDto {
         @JsonProperty(value ="submission_text")
         private String submissionText;
 
-        @JsonProperty("status")
-        private String status;
+        @JsonProperty("action")
+        private String action;
     }
 

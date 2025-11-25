@@ -24,8 +24,8 @@ public class UserSubmissionRequestDto {
     @GenericUUIDValid(message = "Invalid UUID")
     private String languageId;
 
-    @JsonProperty(value ="status")
-    private String status;
+    @JsonProperty(value ="action")
+    private String action;
 
     @JsonProperty(value ="submission_text")
     @NotBlank(message = "Submission text is required")
