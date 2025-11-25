@@ -5,6 +5,7 @@ package com.itachallenge.submission.controller;
 import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.SolutionDto;
 import com.itachallenge.submission.dto.UserSubmissionResponseDto;
+import com.itachallenge.submission.exception.BadUUIDException;
 import com.itachallenge.submission.service.IUserSubmissionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -22,28 +23,30 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.UUID;
+
 @RestController
 @Validated
 @RequiredArgsConstructor
-//cambiamos el request final?, en lugar de user hacemos submission? o esto cambia el PATH?
 @RequestMapping("/itachallenge/api/v1/challenge")
 public class UserSubmissionController {
 
     private static final Logger log = LoggerFactory.getLogger(UserSubmissionController.class);
     private final IUserSubmissionService userSubmissionService;
 
-
-    @GetMapping("/challenges/{userId}/solutions")
-    //si cambio el userSolutionResponseDTO cambio el flujo, ahi viene el mapper?
-    //public Mono<ResponseEntity<Flux<UserSolutionResponseDto>>> getAllSolutionsByUser(
-    public Mono<ResponseEntity<Flux<UserSubmissionResponseDto>>> getAllSolutionsByUser(
+    @GetMapping("/challenges/{userId}/submissions")
+    public Mono<ResponseEntity<Flux<UserSubmissionResponseDto>>> getAllSubmissionsByUser(
             @PathVariable String userId) {
-        return userSubmissionService.getAllSubmissionsByUser(userId)
-                .collectList()
-                .map(list -> {
-                    log.info("Retrieved {} submissions for user {}", list.size(), userId);
-                    return ResponseEntity.ok().body(Flux.fromIterable(list));
-                });
+
+        try {
+            UUID.fromString(userId);
+        } catch (IllegalArgumentException e) {
+            throw new BadUUIDException("Invalid UUID format");
+        }
+
+        return Mono.just(ResponseEntity.ok()
+                .body(userSubmissionService.getAllSubmissionsByUser(userId))
+        );
     }
 }
 
