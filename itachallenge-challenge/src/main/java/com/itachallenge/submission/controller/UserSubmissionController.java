@@ -26,14 +26,14 @@ import reactor.core.publisher.Mono;
 @Validated
 @RequiredArgsConstructor
 //cambiamos el request final?, en lugar de user hacemos submission? o esto cambia el PATH?
-@RequestMapping("/itachallenge/api/v1/user")
+@RequestMapping("/itachallenge/api/v1/challenge")
 public class UserSubmissionController {
 
     private static final Logger log = LoggerFactory.getLogger(UserSubmissionController.class);
     private final IUserSubmissionService userSubmissionService;
 
 
-    @GetMapping("/users/{userId}/solutions")
+    @GetMapping("/challenges/{userId}/solutions")
     //si cambio el userSolutionResponseDTO cambio el flujo, ahi viene el mapper?
     //public Mono<ResponseEntity<Flux<UserSolutionResponseDto>>> getAllSolutionsByUser(
     public Mono<ResponseEntity<Flux<UserSubmissionResponseDto>>> getAllSolutionsByUser(
