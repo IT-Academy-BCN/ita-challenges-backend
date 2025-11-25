@@ -68,7 +68,7 @@ class UserControllerTest {
     @Test
     void getUser_WhenUserExists_Returns200() {
         String githubUsername = "existingUser";
-        UserDocument expectedUser = new UserDocument(UUID.randomUUID(), githubUsername, Role.ADMIN, null, 0);
+        UserDocument expectedUser = new UserDocument(UUID.randomUUID(), githubUsername, Role.ADMIN, 0);
         when(userService.getUser(githubUsername)).thenReturn(Mono.just(expectedUser));
 
         webTestClient.get()
@@ -531,10 +531,10 @@ class UserControllerTest {
                 .hasSize(2)
                 .value(list -> {
 
-                    Assertions.assertEquals(sol1.getUserId(), list.get(0).getUserId());
-                    Assertions.assertEquals(sol1.getChallengeId(), list.get(0).getChallengeId());
-                    Assertions.assertEquals(sol1.getLanguageId(), list.get(0).getLanguageId());
-                    Assertions.assertEquals(sol1.getSolutionText(), list.get(0).getSolutionText());
+                    Assertions.assertEquals(sol1.getUserId(), list.getFirst().getUserId());
+                    Assertions.assertEquals(sol1.getChallengeId(), list.getFirst().getChallengeId());
+                    Assertions.assertEquals(sol1.getLanguageId(), list.getFirst().getLanguageId());
+                    Assertions.assertEquals(sol1.getSolutionText(), list.getFirst().getSolutionText());
 
                     Assertions.assertEquals(sol2.getUserId(), list.get(1).getUserId());
                     Assertions.assertEquals(sol2.getChallengeId(), list.get(1).getChallengeId());
