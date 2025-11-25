@@ -27,9 +27,9 @@ public class UserSubmissionRequestDto {
     @JsonProperty(value ="status")
     private String status;
 
-    @JsonProperty(value ="solution_text")
-    @NotBlank(message = "Solution text is required")
-    private String solutionText;
+    @JsonProperty(value ="submission_text")
+    @NotBlank(message = "Submission text is required")
+    private String submissionText;
 
 }
 

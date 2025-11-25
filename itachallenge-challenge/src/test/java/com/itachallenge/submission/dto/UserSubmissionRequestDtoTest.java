@@ -28,8 +28,8 @@ class UserSubmissionRequestDtoTest {
                 .userId(UUID.randomUUID().toString())
                 .challengeId(UUID.randomUUID().toString())
                 .languageId(UUID.randomUUID().toString())
-                .status("SUCCESS")
-                .solutionText("my solution text")
+                .status("SUBMITTED_COMPLETE")
+                .submissionText("my submission text")
                 .build();
 
         Set<ConstraintViolation<UserSubmissionRequestDto>> violations =
@@ -45,7 +45,7 @@ class UserSubmissionRequestDtoTest {
                 .challengeId(UUID.randomUUID().toString())
                 .languageId(UUID.randomUUID().toString())
                 .status("ANY")
-                .solutionText("text")
+                .submissionText("text")
                 .build();
 
         Set<ConstraintViolation<UserSubmissionRequestDto>> violations =
@@ -65,7 +65,7 @@ class UserSubmissionRequestDtoTest {
                 .challengeId("1234")
                 .languageId(UUID.randomUUID().toString())
                 .status("ANY")
-                .solutionText("text")
+                .submissionText("text")
                 .build();
 
         Set<ConstraintViolation<UserSubmissionRequestDto>> violations =
@@ -85,7 +85,7 @@ class UserSubmissionRequestDtoTest {
                 .challengeId(UUID.randomUUID().toString())
                 .languageId("xxx")
                 .status("ANY")
-                .solutionText("text")
+                .submissionText("text")
                 .build();
 
         Set<ConstraintViolation<UserSubmissionRequestDto>> violations =
@@ -105,7 +105,7 @@ class UserSubmissionRequestDtoTest {
                 .challengeId(UUID.randomUUID().toString())
                 .languageId(UUID.randomUUID().toString())
                 .status("ANY")
-                .solutionText("   ")
+                .submissionText("   ")
                 .build();
 
         Set<ConstraintViolation<UserSubmissionRequestDto>> violations =
@@ -113,7 +113,7 @@ class UserSubmissionRequestDtoTest {
 
         assertFalse(violations.isEmpty());
         assertTrue(
-                violations.stream().anyMatch(v -> v.getMessage().contains("Solution text is required")),
+                violations.stream().anyMatch(v -> v.getMessage().contains("Submission text is required")),
                 "Expected NotBlank validation error"
         );
     }
