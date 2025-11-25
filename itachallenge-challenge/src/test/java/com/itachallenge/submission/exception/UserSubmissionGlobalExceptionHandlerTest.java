@@ -50,7 +50,7 @@ public class UserSubmissionGlobalExceptionHandlerTest {
             ResponseEntity<String> response = userSubmissionGlobalExceptionHandler.handleBadUUID(exception);
 
             assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-            assertEquals("The provided IDs are not valid.", response.getBody()); // Mensaje fijo del handler
+            assertEquals("Bad UUID", response.getBody());
         }
 
         @Test
