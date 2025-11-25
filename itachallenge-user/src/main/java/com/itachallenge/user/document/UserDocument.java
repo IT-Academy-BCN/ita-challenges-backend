@@ -28,9 +28,6 @@ public class UserDocument {
     @Field("role")
     private Role role;
 
-    @Field("bookmark_challenges")
-    private Set<UUID> bookmarkChallenges;
-
     @Builder.Default
     @Field
     private Integer points = 0;
@@ -48,13 +45,6 @@ public class UserDocument {
         if (role != null) {
             joiner.add("role='" + role + "'");
         }
-        if (bookmarkChallenges != null && !bookmarkChallenges.isEmpty()) {
-            joiner.add("bookmarkChallenges='");
-            joiner.add(bookmarkChallenges.stream()
-                    .map(String::valueOf)
-                    .collect(Collectors.joining(", ")));
-        }
-
         return joiner.toString();
     }
 
