@@ -4,24 +4,19 @@ import com.itachallenge.challenge.exception.BadRequestException;
 import com.itachallenge.submission.dto.UserSubmissionResponseDto;
 import com.itachallenge.submission.repository.IUserSubmissionRepository;
 import com.itachallenge.challenge.service.IChallengeService;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import java.util.UUID;
 
-import org.slf4j.Logger;
 
 
 @Service
 public class UserSubmissionServiceImpl implements IUserSubmissionService {
-    private static final Logger log = LoggerFactory.getLogger(UserSubmissionServiceImpl.class);
     private final IUserSubmissionRepository userSubmissionRepository;
-    //private final IChallengeService challengeService; NO NECESARIO PARA LA TASKA 883 REFACTOR GET
 
     public UserSubmissionServiceImpl(IUserSubmissionRepository userSubmissionRepository, IChallengeService challengeService) {
         this.userSubmissionRepository = userSubmissionRepository;
-        //this.challengeService = challengeService; NO NECESARIO PARA LA TASKA 883 REFACTOR GET
     }
     @Override
     public Flux<UserSubmissionResponseDto> getAllSubmissionsByUser(String userId) {

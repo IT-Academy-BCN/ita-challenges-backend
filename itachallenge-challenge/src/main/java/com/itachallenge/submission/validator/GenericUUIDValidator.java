@@ -5,7 +5,6 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
 import java.util.regex.Pattern;
-import java.util.Objects;
 
 public class GenericUUIDValidator implements ConstraintValidator<GenericUUIDValid, String> {
 
