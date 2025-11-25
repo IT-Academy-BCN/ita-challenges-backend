@@ -19,8 +19,8 @@ public class UserSubmissionResponseDto {
         @JsonProperty(value ="uuid_language")
         private String languageId;
 
-        @JsonProperty(value ="solution_text")
-        private String solutionText;
+        @JsonProperty(value ="submission_text")
+        private String submissionText;
 
         @JsonProperty("status")
         private String status;

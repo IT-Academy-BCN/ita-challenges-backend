@@ -57,8 +57,8 @@ class UserSubmissionServiceImplTest {
                     org.junit.jupiter.api.Assertions.assertEquals(userId, dto.getUserId());
                     org.junit.jupiter.api.Assertions.assertEquals(challengeUuid.toString(), dto.getChallengeId());
                     org.junit.jupiter.api.Assertions.assertEquals(languageUuid.toString(), dto.getLanguageId());
-                    org.junit.jupiter.api.Assertions.assertEquals("my submission text", dto.getSolutionText());
-                    org.junit.jupiter.api.Assertions.assertEquals("SUCCESS", dto.getStatus());
+                    org.junit.jupiter.api.Assertions.assertEquals("my submission text", dto.getSubmissionText());
+                    org.junit.jupiter.api.Assertions.assertEquals("SUBMITTED_INCOMPLETE", dto.getStatus());
                 })
                 .verifyComplete();
     }
