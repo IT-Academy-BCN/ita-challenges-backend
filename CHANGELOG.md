@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Foundation for managing user bookmarks in a dedicated collection.
   - Bookmarks domain & persistence
-    - BookmarkDocument & FavoriteDocumentTest
+    - BookmarkDocument & BookmarkDocumentTest
     - BookmarkRepository (ReactiveMongoRepository<BookmarkDocument, UUID>) ; Bookmarks collection starts empty.
     - BookmarkResponseDto & BookmarkResponseDtoTest
 
