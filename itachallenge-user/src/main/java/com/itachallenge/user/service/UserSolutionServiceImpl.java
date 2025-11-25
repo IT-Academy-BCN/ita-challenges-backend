@@ -8,7 +8,6 @@ import com.itachallenge.user.dto.SubmitSolutionResponseDto;
 import com.itachallenge.user.dto.UserSolutionRequestDto;
 import com.itachallenge.user.dto.UserSolutionResponseDto;
 import com.itachallenge.user.exception.BadRequestException;
-import com.itachallenge.user.exception.InvalidActionException;
 import com.itachallenge.user.exception.UnmodificableSolutionException;
 import com.itachallenge.user.repository.IUserSolutionRepository;
 import org.slf4j.Logger;
@@ -34,7 +33,7 @@ public class UserSolutionServiceImpl implements IUserSolutionService {
     }
 
     @Override
-    public Mono<SubmitSolutionResponseDto> addSolution(@Valid UserSolutionRequestDto userSolutionDto) {
+    public Mono<SubmitSolutionResponseDto> addSolution(UserSolutionRequestDto userSolutionDto) {
         UUID challengeUuid = UUID.fromString(userSolutionDto.getChallengeId());
         UUID languageUuid = UUID.fromString(userSolutionDto.getLanguageId());
         UUID userUuid = UUID.fromString(userSolutionDto.getUserId());
@@ -55,20 +54,10 @@ public class UserSolutionServiceImpl implements IUserSolutionService {
 
 
     private Mono<ChallengeStatus> determineStatus(String action) {
-        return Mono.fromCallable(() -> {
-                    if (action == null || action.isBlank()) {
-                        throw new IllegalArgumentException("Action cannot be null or empty");
-                    }
-
-                    SolutionAction solutionAction = SolutionAction.valueOf(action.toUpperCase());
-                    return switch (solutionAction) {
-                        case SUBMIT -> ChallengeStatus.SUBMITTED_COMPLETE;
-                        case GIVE_UP -> ChallengeStatus.SUBMITTED_INCOMPLETE;
-                        case SAVE -> ChallengeStatus.IN_PROGRESS;
-                    };
-                })
+            return Mono.fromCallable( () ->
+                    SolutionAction.fromString(action).toChallengeStatus()  )
                 .onErrorMap(IllegalArgumentException.class, ex ->
-                        new InvalidActionException("Invalid action: '" + action + "'. Allowed values: SAVE, GIVE_UP, SUBMIT")
+                        new IllegalArgumentException("Invalid action: '" + action + "'. Allowed values: SAVE, GIVE_UP, SUBMIT")
                 );
     }
 

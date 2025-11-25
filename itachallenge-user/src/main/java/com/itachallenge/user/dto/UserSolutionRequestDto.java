@@ -28,6 +28,7 @@ public class UserSolutionRequestDto {
     private String languageId;
 
     @NotNull(message = "Action cannot be null")
+    @NotBlank(message = "Action cannot be blank")
     @JsonProperty(value ="action")
     private String action;
 

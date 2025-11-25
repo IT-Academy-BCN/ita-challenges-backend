@@ -107,10 +107,4 @@ public class UserGlobalExceptionHandler {
                 new APIErrorResponse("External Service Error", securedMessage, Instant.now())
         );
     }
-
-    @ExceptionHandler(InvalidActionException.class)
-    public ResponseEntity<String> handleInvalidAction(InvalidActionException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-    }
-
 }
