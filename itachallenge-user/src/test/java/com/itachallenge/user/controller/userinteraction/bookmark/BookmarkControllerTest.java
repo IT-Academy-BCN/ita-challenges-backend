@@ -32,11 +32,12 @@ class BookmarkControllerTest {
     @TestConfiguration
     static class TestConfig {
 
-        @Bean(name = "bookmarkWebClientBuilder")
+        @Bean (name="bookmarkWebClientBuilder")
         public WebClient.Builder webClientBuilder() {
             return WebClient.builder();
         }
     }
+
 
 
     @Test
@@ -92,7 +93,6 @@ class BookmarkControllerTest {
 
         verify(bookmarkService, times(1)).getUserBookmarks(invalidUserId);
     }
-
     @Test
     @DisplayName("GET /users/{userId}/bookmarks returns 500 if there is an internal error")
     void getUserBookmarks_returns500IfUnexpectedError() {
@@ -109,5 +109,6 @@ class BookmarkControllerTest {
 
         verify(bookmarkService, times(1)).getUserBookmarks(userId.toString());
     }
+
 
 }
