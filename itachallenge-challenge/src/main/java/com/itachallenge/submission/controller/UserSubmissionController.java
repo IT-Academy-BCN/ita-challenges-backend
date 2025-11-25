@@ -1,9 +1,5 @@
 package com.itachallenge.submission.controller;
 
-
-
-import com.itachallenge.challenge.dto.GenericResultDto;
-import com.itachallenge.challenge.dto.SolutionDto;
 import com.itachallenge.submission.dto.UserSubmissionResponseDto;
 import com.itachallenge.submission.exception.BadUUIDException;
 import com.itachallenge.submission.service.IUserSubmissionService;
@@ -35,6 +31,17 @@ public class UserSubmissionController {
     private final IUserSubmissionService userSubmissionService;
 
     @GetMapping("/challenges/{userId}/submissions")
+    @Operation(
+            operationId = "getSubmissionsByUserId",
+            summary = "Get submissions by userId",
+            description = "Retrieve submissions for a given user from the database.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successful retrieval",
+                            content = @Content(schema = @Schema(implementation = UserSubmissionResponseDto.class), mediaType = "application/json")),
+                    @ApiResponse(responseCode = "404", description = "No submissions found for the given userId"),
+                    @ApiResponse(responseCode = "400", description = "Malformed UUID or invalid parameters")
+
+            })
     public Mono<ResponseEntity<Flux<UserSubmissionResponseDto>>> getAllSubmissionsByUser(
             @PathVariable String userId) {
 
