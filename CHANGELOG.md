@@ -7,9 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Foundation for managing user bookmarks in a dedicated collection.
   - Bookmarks domain & persistence
-    - BookmarkDocument & FavoriteDocumentTest
+    - BookmarkDocument & BookmarkDocumentTest
     - BookmarkRepository (ReactiveMongoRepository<BookmarkDocument, UUID>) ; Bookmarks collection starts empty.
     - BookmarkResponseDto & BookmarkResponseDtoTest
+## [Unreleased]
+### Chore/Internal
+- Introduced `SolutionAction` enum (internal change)
+  - Values: SAVE, GIVE_UP, SUBMIT
+  - Prepared for action-based status handling (Taiga User Story [#871], PR [#1036])
 
 ### [itachallenge-user-3.0.5-RELEASE] - 2025-11-13
 
