@@ -38,12 +38,10 @@ public class UserController {
 
     private final UserService userService;
     private final IUserSolutionService userSolutionService;
-    private final BookmarkService bookmarkService;
 
-    public UserController(UserService userService, IUserSolutionService userSolutionService, BookmarkService bookmarkService) {
+    public UserController(UserService userService, IUserSolutionService userSolutionService) {
         this.userService = userService;
         this.userSolutionService = userSolutionService;
-        this.bookmarkService = bookmarkService;
     }
 
     @GetMapping(value = "/test")
