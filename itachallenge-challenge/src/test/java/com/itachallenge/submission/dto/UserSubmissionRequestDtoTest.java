@@ -28,7 +28,7 @@ class UserSubmissionRequestDtoTest {
                 .userId(UUID.randomUUID().toString())
                 .challengeId(UUID.randomUUID().toString())
                 .languageId(UUID.randomUUID().toString())
-                .status("SUBMITTED_COMPLETE")
+                .action("GIVE_UP")
                 .submissionText("my submission text")
                 .build();
 
@@ -44,7 +44,7 @@ class UserSubmissionRequestDtoTest {
                 .userId("not-a-uuid")
                 .challengeId(UUID.randomUUID().toString())
                 .languageId(UUID.randomUUID().toString())
-                .status("ANY")
+                .action("ANY")
                 .submissionText("text")
                 .build();
 
@@ -64,7 +64,7 @@ class UserSubmissionRequestDtoTest {
                 .userId(UUID.randomUUID().toString())
                 .challengeId("1234")
                 .languageId(UUID.randomUUID().toString())
-                .status("ANY")
+                .action("ANY")
                 .submissionText("text")
                 .build();
 
@@ -84,7 +84,7 @@ class UserSubmissionRequestDtoTest {
                 .userId(UUID.randomUUID().toString())
                 .challengeId(UUID.randomUUID().toString())
                 .languageId("xxx")
-                .status("ANY")
+                .action("ANY")
                 .submissionText("text")
                 .build();
 
@@ -104,7 +104,7 @@ class UserSubmissionRequestDtoTest {
                 .userId(UUID.randomUUID().toString())
                 .challengeId(UUID.randomUUID().toString())
                 .languageId(UUID.randomUUID().toString())
-                .status("ANY")
+                .action("ANY")
                 .submissionText("   ")
                 .build();
 

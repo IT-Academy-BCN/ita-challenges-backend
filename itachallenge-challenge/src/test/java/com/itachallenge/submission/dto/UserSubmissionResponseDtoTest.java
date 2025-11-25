@@ -17,14 +17,14 @@ class UserSubmissionResponseDtoTest {
                 .challengeId("456")
                 .languageId("789")
                 .submissionText("my submission text")
-                .status("SUBMITTED_COMPLETE")
+                .action("GIVE_UP")
                 .build();
 
         assertEquals("123", dto.getUserId());
         assertEquals("456", dto.getChallengeId());
         assertEquals("789", dto.getLanguageId());
         assertEquals("my submission text", dto.getSubmissionText());
-        assertEquals("SUBMITTED_COMPLETE", dto.getStatus());
+        assertEquals("GIVE_UP", dto.getAction());
     }
 
     @Test
@@ -34,7 +34,7 @@ class UserSubmissionResponseDtoTest {
                 .challengeId("222")
                 .languageId("333")
                 .submissionText("text here")
-                .status("SUBMITTED_COMPLETE")
+                .action("GIVE_UP")
                 .build();
 
         String json = objectMapper.writeValueAsString(dto);
@@ -43,6 +43,6 @@ class UserSubmissionResponseDtoTest {
         assertTrue(json.contains("\"uuid_challenge\":\"222\""));
         assertTrue(json.contains("\"uuid_language\":\"333\""));
         assertTrue(json.contains("\"submission_text\":\"text here\""));
-        assertTrue(json.contains("\"status\":\"SUBMITTED_COMPLETE\""));
+        assertTrue(json.contains("\"action\":\"GIVE_UP\""));
     }
 }
