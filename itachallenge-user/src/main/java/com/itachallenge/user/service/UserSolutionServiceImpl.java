@@ -31,6 +31,7 @@ public class UserSolutionServiceImpl implements IUserSolutionService {
         this.challengeService = challengeService;
     }
 
+    //TODO : to be moved to the challenge micro when we do the entire solutions refactor
     @Override
     public Mono<SubmitSolutionResponseDto> addSolution(UserSolutionRequestDto userSolutionDto) {
         UUID challengeUuid = UUID.fromString(userSolutionDto.getChallengeId());
@@ -55,7 +56,7 @@ public class UserSolutionServiceImpl implements IUserSolutionService {
                             .doOnError(error -> log.error("PUT operation failed: {} for challenge {} and user {}.", error.getMessage(), challengeUuid, userUuid));
     }
 
-
+    //TODO : to be moved to the challenge micro when we do the entire solutions refactor
     private ChallengeStatus determineStatus(SolutionAction action) {
         return switch (action) {
             case SAVE -> ChallengeStatus.IN_PROGRESS;
@@ -64,6 +65,7 @@ public class UserSolutionServiceImpl implements IUserSolutionService {
         };
     }
 
+    //TODO : to be moved to the challenge micro when we do the entire solutions refactor
     private Mono<UserSolutionDocument> saveValidSolution(UUID userUuid, UUID challengeUuid, UUID languageUuid, ChallengeStatus challengeStatus, SolutionAttemptDocument solutionAttempt) {
         return userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid)
                 .flatMap(existingSolution -> {
@@ -89,6 +91,7 @@ public class UserSolutionServiceImpl implements IUserSolutionService {
                 }));
     }
 
+    //TODO : to be moved to the challenge micro when we do the entire solutions refactor
     private Mono<SubmitSolutionResponseDto> buildSubmitSolutionResponse(UserSolutionDocument savedDocument) {
         String solutionText = savedDocument.getSolutionAttemptDocument().getSolutionText();
         ChallengeStatus status = savedDocument.getStatus();
