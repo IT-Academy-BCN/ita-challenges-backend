@@ -13,7 +13,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class BookmarkResponseDto {
 
-    @JsonProperty(value = "uuid_favorite")
+    @JsonProperty(value = "uuid_bookmark")
     private UUID uuid;
 
     @JsonProperty(value = "user_id")
