@@ -1,6 +1,8 @@
 package com.itachallenge.user.dto;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.itachallenge.user.document.enums.SolutionAction;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -14,17 +16,17 @@ class UserSolutionRequestDtoTest {
     String userID = UUID.randomUUID().toString();
     String challengeId = UUID.randomUUID().toString();
     String languageId = UUID.randomUUID().toString();
-    String action = "action";
+    SolutionAction action = SolutionAction.SAVE;
     String solutionText = "This is my solution";
     UserSolutionRequestDto solutionDto = new UserSolutionRequestDto();
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         userSolutionRequestDto = UserSolutionRequestDto.builder()
                 .userId("validUserId")
                 .challengeId("validChallengeId")
                 .languageId("validLanguageId")
-                .action("validSolutionAction")
+                .action(SolutionAction.SAVE)
                 .solutionText("Valid solution text")
                 .build();
     }
@@ -45,7 +47,7 @@ class UserSolutionRequestDtoTest {
         assertEquals("validChallengeId", userSolutionRequestDto.getChallengeId());
         assertEquals("validLanguageId", userSolutionRequestDto.getLanguageId());
         assertEquals("Valid solution text", userSolutionRequestDto.getSolutionText());
-        assertEquals("validSolutionAction", userSolutionRequestDto.getAction());
+        assertEquals(SolutionAction.SAVE, userSolutionRequestDto.getAction());
     }
 
     @Test
@@ -53,7 +55,7 @@ class UserSolutionRequestDtoTest {
         solutionDto.setUserId(userID);
         solutionDto.setChallengeId(challengeId);
         solutionDto.setLanguageId(languageId);
-        solutionDto.setAction(action);
+        solutionDto.setAction(SolutionAction.SAVE);
         solutionDto.setSolutionText(solutionText);
 
         assertThat(solutionDto.getUserId()).isEqualTo(userID);
@@ -71,12 +73,12 @@ class UserSolutionRequestDtoTest {
         assertTrue(json.contains("\"uuid_language\":\"validLanguageId\""));
         assertTrue(json.contains("\"uuid_challenge\":\"validChallengeId\""));
         assertTrue(json.contains("\"solution_text\":\"Valid solution text\""));
-        assertTrue(json.contains("\"action\":\"validSolutionAction\""));
+        assertTrue(json.contains("\"action\":\"SAVE\""));
     }
     @Test
     void requiredArgsConstructor_userSolutionScoreDto_test(){
         UserSolutionRequestDto userSolutionRequestDto1 = new UserSolutionRequestDto(
-                userID, challengeId, languageId, action, solutionText);
+                userID, challengeId, languageId, SolutionAction.SAVE, solutionText);
         assertThat(userSolutionRequestDto1.getUserId()).isEqualTo(userID);
         assertThat(userSolutionRequestDto1.getChallengeId()).isEqualTo(challengeId);
         assertThat(userSolutionRequestDto1.getLanguageId()).isEqualTo(languageId);

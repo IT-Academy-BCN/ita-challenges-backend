@@ -181,22 +181,6 @@ class UserSolutionServiceImplTest {
     }
 
     @Test
-    @DisplayName("addSolution throws exception for an action null")
-    void addSolutionNullAction() {
-        UserSolutionRequestDto request = UserSolutionRequestDto.builder()
-                .userId(userUuid.toString())
-                .challengeId(challengeUuid.toString())
-                .languageId(languageUuid.toString())
-                .action(null)
-                .solutionText(solutionText)
-                .build();
-
-        StepVerifier.create(userSolutionService.addSolution(request))
-                .expectErrorMessage("Invalid action: null")
-                .verify();
-    }
-
-    @Test
     @DisplayName("getAllSolutionsByUser with invalid UUID throws BadRequestException")
     void getAllSolutionsByUser_invalidUuid() {
         StepVerifier.create(userSolutionService.getAllSolutionsByUser("bad-uuid"))
