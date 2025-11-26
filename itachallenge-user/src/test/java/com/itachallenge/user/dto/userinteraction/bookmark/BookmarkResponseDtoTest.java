@@ -209,7 +209,7 @@ class BookmarkResponseDtoTest {
         try {
             java.lang.reflect.Field uuidField = BookmarkResponseDto.class.getDeclaredField("uuid");
             com.fasterxml.jackson.annotation.JsonProperty uuidAnnotation = uuidField.getAnnotation(com.fasterxml.jackson.annotation.JsonProperty.class);
-            assertEquals("uuid_favorite", uuidAnnotation.value());
+            assertEquals("uuid_bookmark", uuidAnnotation.value());
             
             java.lang.reflect.Field userIdField = BookmarkResponseDto.class.getDeclaredField("userId");
             com.fasterxml.jackson.annotation.JsonProperty userIdAnnotation = userIdField.getAnnotation(com.fasterxml.jackson.annotation.JsonProperty.class);
