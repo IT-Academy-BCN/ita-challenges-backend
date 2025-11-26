@@ -30,6 +30,7 @@ class BookmarkDocumentTest {
                 .challengeId(challengeId)
                 .createdAt(createdAt)
                 .build();
+    }
 
     @Test
     void bookmarkDocumentCreation_test() {
