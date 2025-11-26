@@ -975,4 +975,19 @@ class ChallengeControllerTest {
                 .exchange()
                 .expectStatus().isBadRequest();
     }
+
+
+    @Test
+    void deleteChallenge_shouldReturn200Ok() {
+        String challengeId = "12345678-1234-1234-1234-123456789012";
+
+        DeleteResponseDto deleteResponse = new DeleteResponseDto(challengeId, "Challenge deleted successfully");
+
+        when(challengeService.deleteChallengeById(challengeId)).thenReturn(Mono.just(deleteResponse));
+
+        webTestClient.delete()
+                .uri("/itachallenge/api/v1/challenge/challenges/" + challengeId)
+                .exchange()
+                .expectStatus().isOk();  // ← 200 OK, no 204
+    }
 }

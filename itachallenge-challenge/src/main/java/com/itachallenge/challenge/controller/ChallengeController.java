@@ -181,7 +181,6 @@ public class ChallengeController {
                 });
     }
 
-
     @GetMapping("/solution/challenge/{idChallenge}/language/{idLanguage}")
     @Operation(
             operationId = "Get the solutions from a chosen challenge and language.",
@@ -266,19 +265,30 @@ public class ChallengeController {
 
     @DeleteMapping(path = "/challenges/{challengeId}")
     @Operation(
-            operationId = "Delete a chosen challenge.",
-            summary = "Deleting a challenge.",
-            description = "Sending the ID Challenge through the URI to delete it from the database.",
+            operationId = "deleteChallenge",
+            summary = "Delete a challenge",
+            description = "Deletes the challenge identified by the provided UUID.",
             responses = {
-                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeDto.class), mediaType = "application/json")}),
-                    @ApiResponse(responseCode = "400", description = "Malformed or invalid parameter(s)"),
-                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found.")
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Challenge deleted successfully",
+                            content = @Content(schema = @Schema(implementation = DeleteResponseDto.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Malformed or invalid parameter(s)"
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "The challenge with the given ID was not found."
+                    )
             }
     )
-    public Mono<ResponseEntity<DeleteResponseDto>> deleteOneChallenge(@PathVariable("challengeId") String id) {
+    public Mono<ResponseEntity<DeleteResponseDto>> deleteChallenge(
+            @PathVariable String challengeId) {
 
-        return challengeService.deleteChallengeById(id)
-                .map(dto -> ResponseEntity.ok().body(dto));
+        return challengeService.deleteChallengeById(challengeId)
+                .map(ResponseEntity::ok);
     }
 
     @PostMapping("/challenges/{challengeId}/bookmarks")
@@ -326,7 +336,6 @@ public class ChallengeController {
                .map(ResponseEntity::ok)
                .doOnError(error -> log.error("Error updating challenge: {}", error.getMessage()));
    }
-
 
     @DeleteMapping("/challenges/{challengeId}/bookmarks")
     @Operation(
