@@ -6,19 +6,9 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 public enum SolutionAction {
-    SAVE(ChallengeStatus.IN_PROGRESS),
-    GIVE_UP(ChallengeStatus.SUBMITTED_INCOMPLETE),
-    SUBMIT(ChallengeStatus.SUBMITTED_COMPLETE);
-
-    private final ChallengeStatus mappedStatus;
-
-    SolutionAction(ChallengeStatus mappedStatus) {
-        this.mappedStatus = mappedStatus;
-    }
-
-    public ChallengeStatus toChallengeStatus() {
-        return mappedStatus;
-    }
+    SAVE,
+    GIVE_UP,
+    SUBMIT;
 
     @JsonCreator
     public static SolutionAction fromString(String action) {
