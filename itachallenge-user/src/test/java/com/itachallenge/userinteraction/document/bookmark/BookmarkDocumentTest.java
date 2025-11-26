@@ -16,7 +16,6 @@ class BookmarkDocumentTest {
     private UUID challengeId;
     private LocalDateTime createdAt;
     private BookmarkDocument bookmarkDocument;
-    private BookmarkDocument bookmarkDocument2
 
     @BeforeEach
     void setUp() {
@@ -31,14 +30,6 @@ class BookmarkDocumentTest {
                 .challengeId(challengeId)
                 .createdAt(createdAt)
                 .build();
-
-        bookmarkDocument2 = BookmarkDocument.builder()
-                .uuid(uuid)
-                .userId(userId)
-                .challengeId(challengeId)
-                .createdAt(createdAt)
-                .build();
-    }
 
     @Test
     void bookmarkDocumentCreation_test() {
