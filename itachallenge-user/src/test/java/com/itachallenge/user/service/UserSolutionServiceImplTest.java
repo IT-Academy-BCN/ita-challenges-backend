@@ -67,7 +67,7 @@ class UserSolutionServiceImplTest {
                 .userId(userUuid.toString())
                 .challengeId(challengeUuid.toString())
                 .languageId(languageUuid.toString())
-                .action(String.valueOf(SolutionAction.SAVE))
+                .action(SolutionAction.SAVE)
                 .solutionText(solutionText)
                 .build();
 
@@ -113,7 +113,7 @@ class UserSolutionServiceImplTest {
     @ParameterizedTest
     @ValueSource(strings = {"GIVE_UP", "SUBMIT"})
     @DisplayName("addSolution throws UnmodificableSolutionException if existing solution status is already submitted")
-    void addSolutionThrowsExceptionIfSubmitted(String action) {
+    void addSolutionThrowsExceptionIfSubmitted(SolutionAction action) {
         UserSolutionRequestDto request = UserSolutionRequestDto.builder()
                 .userId(userUuid.toString())
                 .challengeId(challengeUuid.toString())
@@ -148,7 +148,7 @@ class UserSolutionServiceImplTest {
     @ParameterizedTest
     @ValueSource(strings = {"GIVE_UP", "SUBMIT"})
     @DisplayName("addSolution throws UnmodificableSolutionException if existing solution status is already submitted")
-    void addSolutionThrowsExceptionIfGivenUp(String action) {
+    void addSolutionThrowsExceptionIfGivenUp(SolutionAction action) {
         UserSolutionRequestDto request = UserSolutionRequestDto.builder()
                 .userId(userUuid.toString())
                 .challengeId(challengeUuid.toString())
@@ -178,22 +178,6 @@ class UserSolutionServiceImplTest {
         verify(userSolutionRepository).findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid);
         verifyNoMoreInteractions(userSolutionRepository);
         verifyNoInteractions(challengeService);
-    }
-
-    @Test
-    @DisplayName("addSolution throws exception for invalid action")
-    void addSolutionInvalidAction() {
-        UserSolutionRequestDto request = UserSolutionRequestDto.builder()
-                .userId(userUuid.toString())
-                .challengeId(challengeUuid.toString())
-                .languageId(languageUuid.toString())
-                .action("INVALID")
-                .solutionText(solutionText)
-                .build();
-
-        StepVerifier.create(userSolutionService.addSolution(request))
-                .expectErrorMessage("Invalid action: INVALID")
-                .verify();
     }
 
     @Test
@@ -284,7 +268,7 @@ class UserSolutionServiceImplTest {
                 .userId(userUuid.toString())
                 .challengeId(challengeUuid.toString())
                 .languageId(languageUuid.toString())
-                .action(String.valueOf(SolutionAction.SUBMIT))
+                .action(SolutionAction.SUBMIT)
                 .solutionText(solutionText)
                 .build();
 
@@ -320,7 +304,7 @@ class UserSolutionServiceImplTest {
                 .userId(userUuid.toString())
                 .challengeId(challengeUuid.toString())
                 .languageId(languageUuid.toString())
-                .action(String.valueOf(SolutionAction.GIVE_UP))
+                .action(SolutionAction.GIVE_UP)
                 .solutionText(solutionText)
                 .build();
 
@@ -352,7 +336,7 @@ class UserSolutionServiceImplTest {
                 .userId(userUuid.toString())
                 .challengeId(challengeUuid.toString())
                 .languageId(languageUuid.toString())
-                .action(String.valueOf(SolutionAction.SAVE))
+                .action(SolutionAction.SAVE)
                 .solutionText(solutionText)
                 .build();
 
