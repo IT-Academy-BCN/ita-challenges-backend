@@ -11,7 +11,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @Document(collection="users")
