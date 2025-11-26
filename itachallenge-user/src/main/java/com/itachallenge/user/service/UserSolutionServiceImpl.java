@@ -38,13 +38,7 @@ public class UserSolutionServiceImpl implements IUserSolutionService {
         UUID languageUuid = UUID.fromString(userSolutionDto.getLanguageId());
         UUID userUuid = UUID.fromString(userSolutionDto.getUserId());
 
-        SolutionAction action;
-        try {
-            action = SolutionAction.fromString(userSolutionDto.getAction());
-        } catch (IllegalArgumentException ex) {
-            return Mono.error(new BadRequestException("Invalid action: " + userSolutionDto.getAction()));
-        }
-        ChallengeStatus challengeStatus = determineStatus(action);
+        ChallengeStatus challengeStatus = determineStatus(userSolutionDto.getAction());
         SolutionAttemptDocument solutionAttempt = SolutionAttemptDocument.builder()
                 .uuid(UUID.randomUUID())
                 .solutionText(userSolutionDto.getSolutionText())
