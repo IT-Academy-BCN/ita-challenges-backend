@@ -1,7 +1,6 @@
 package com.itachallenge.userinteraction.document.bookmark;
 
 import com.itachallenge.userinteraction.document.InteractionDocument;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
