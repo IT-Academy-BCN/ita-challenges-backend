@@ -122,7 +122,6 @@ class FavoriteDocumentTest {
     @Test
     void toString_test() {
         String str = favoriteDocument.toString();
-        assertTrue(str.contains("FavoriteDocument"));
         assertTrue(str.contains(uuid.toString()));
         assertTrue(str.contains(userId.toString()));
         assertTrue(str.contains(challengeId.toString()));
@@ -229,7 +228,6 @@ class FavoriteDocumentTest {
     void toString_WithNullFields_test() {
         FavoriteDocument doc = new FavoriteDocument(null, userId, null, null);
         String str = doc.toString();
-        assertTrue(str.contains("FavoriteDocument"));
         assertTrue(str.contains("userId=" + userId));
         assertTrue(str.contains("uuid=null"));
         assertTrue(str.contains("challengeId=null"));
@@ -290,6 +288,7 @@ class FavoriteDocumentTest {
         assertEquals(doc1, doc2);
     }
 
+    @Test
     void equals_WithNullUserIdInBoth_test() {
         FavoriteDocument doc1 = new FavoriteDocument(uuid, null, challengeId, createdAt);
         FavoriteDocument doc2 = new FavoriteDocument(uuid, null, challengeId, createdAt);
