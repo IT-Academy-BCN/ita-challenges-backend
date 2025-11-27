@@ -1,17 +1,12 @@
 package com.itachallenge.challenge.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.itachallenge.challenge.annotations.ValidGenericPattern;
 import com.itachallenge.challenge.annotations.ValidUUID;
-import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Unwrapped;
 
 import java.util.UUID;
 
@@ -27,15 +22,15 @@ public class SolutionDto {
     private UUID uuid;
 
     //@ValidGenericPattern(pattern = STRING_PATTERN, message = "Solution text cannot be empty")
-    @NotEmpty(message = "cannot be empty")
+    @NotEmpty(message = "{solution.text.notEmpty}")
     @JsonProperty(value = "solution_text", index = 1)
     private String solutionText;
 
-    @ValidUUID(message = "Invalid UUID")
+    @ValidUUID(message = "{solution.languageId.invalid}")
     @JsonProperty(value = "uuid_language", index = 2)
     private UUID idLanguage;
 
-    @ValidUUID(message = "Invalid UUID")
+    @ValidUUID(message = "{solution.challengeId.invalid}")
     @JsonProperty(value = "uuid_challenge", index = 3)
     private UUID idChallenge;
 

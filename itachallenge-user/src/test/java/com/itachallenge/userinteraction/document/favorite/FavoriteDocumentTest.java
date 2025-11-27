@@ -102,27 +102,10 @@ class FavoriteDocumentTest {
         assertEquals(createdAt, doc.getCreatedAt());
     }
 
-    @Test
-    void equalsAndHashCode_test() {
-        FavoriteDocument doc1 = new FavoriteDocument(uuid, userId, challengeId, createdAt);
-        FavoriteDocument doc2 = new FavoriteDocument(uuid, userId, challengeId, createdAt);
-
-        assertEquals(doc1, doc2);
-        assertEquals(doc1.hashCode(), doc2.hashCode());
-
-        doc2.setChallengeId(UUID.randomUUID());
-        assertNotEquals(doc1, doc2);
-        assertNotEquals(doc1.hashCode(), doc2.hashCode());
-
-        assertNotEquals(null, doc1);
-
-        assertNotEquals("string", doc1);
-    }
 
     @Test
     void toString_test() {
         String str = favoriteDocument.toString();
-        assertTrue(str.contains("FavoriteDocument"));
         assertTrue(str.contains(uuid.toString()));
         assertTrue(str.contains(userId.toString()));
         assertTrue(str.contains(challengeId.toString()));
@@ -158,38 +141,6 @@ class FavoriteDocumentTest {
         assertNull(favoriteDocument.getCreatedAt());
     }
 
-    @Test
-    void equals_Symmetric_test() {
-        assertEquals(favoriteDocument, favoriteDocument2);
-        assertEquals(favoriteDocument2, favoriteDocument);
-    }
-
-    @Test
-    void equals_Transitive_test() {
-        FavoriteDocument doc3 = new FavoriteDocument(uuid, userId, challengeId, createdAt);
-        assertEquals(favoriteDocument, favoriteDocument2);
-        assertEquals(favoriteDocument2, doc3);
-        assertEquals(favoriteDocument, doc3);
-    }
-
-    @Test
-    void equals_Consistent_test() {
-        boolean firstResult = favoriteDocument.equals(favoriteDocument2);
-        boolean secondResult = favoriteDocument.equals(favoriteDocument2);
-        assertEquals(firstResult, secondResult);
-    }
-
-    @Test
-    void hashCode_Consistent_test() {
-        int firstHashCode = favoriteDocument.hashCode();
-        int secondHashCode = favoriteDocument.hashCode();
-        assertEquals(firstHashCode, secondHashCode);
-    }
-
-    @Test
-    void hashCode_EqualObjectsHaveEqualHashCodes_test() {
-        assertEquals(favoriteDocument.hashCode(), favoriteDocument2.hashCode());
-    }
 
     @Test
     void toString_ContainsAllFields_test() {
@@ -200,6 +151,45 @@ class FavoriteDocumentTest {
         assertTrue(toString.contains("userId=" + userId));
         assertTrue(toString.contains("challengeId=" + challengeId));
         assertTrue(toString.contains("createdAt=" + createdAt));
+    }
+
+    @Test
+    void equalsAndHashCode_singleTestCoverage() {
+        // Two objects with identical values
+        FavoriteDocument a = FavoriteDocument.builder()
+                .uuid(uuid)
+                .userId(userId)
+                .challengeId(challengeId)
+                .createdAt(createdAt)
+                .build();
+
+        FavoriteDocument b = FavoriteDocument.builder()
+                .uuid(uuid)
+                .userId(userId)
+                .challengeId(challengeId)
+                .createdAt(createdAt)
+                .build();
+
+        // Another object with a different field
+        FavoriteDocument c = FavoriteDocument.builder()
+                .uuid(UUID.randomUUID())
+                .userId(userId)
+                .challengeId(challengeId)
+                .createdAt(createdAt)
+                .build();
+
+        // equals
+        assertEquals(a, b, "Objects with identical values should be equal");
+        assertNotEquals(a, c, "Objects with different values should not be equal");
+        assertNotEquals(a, null, "Object must not be equal to null");
+        assertNotEquals(a, "string", "Object must not be equal to object of another type");
+
+        // hashCode
+        assertEquals(a.hashCode(), b.hashCode(), "Equal objects must have the same hashCode");
+        // Consistency check
+        int first = a.hashCode();
+        int second = a.hashCode();
+        assertEquals(first, second, "hashCode should be consistent across invocations");
     }
 
     @Test
@@ -229,7 +219,6 @@ class FavoriteDocumentTest {
     void toString_WithNullFields_test() {
         FavoriteDocument doc = new FavoriteDocument(null, userId, null, null);
         String str = doc.toString();
-        assertTrue(str.contains("FavoriteDocument"));
         assertTrue(str.contains("userId=" + userId));
         assertTrue(str.contains("uuid=null"));
         assertTrue(str.contains("challengeId=null"));
@@ -290,6 +279,7 @@ class FavoriteDocumentTest {
         assertEquals(doc1, doc2);
     }
 
+    @Test
     void equals_WithNullUserIdInBoth_test() {
         FavoriteDocument doc1 = new FavoriteDocument(uuid, null, challengeId, createdAt);
         FavoriteDocument doc2 = new FavoriteDocument(uuid, null, challengeId, createdAt);

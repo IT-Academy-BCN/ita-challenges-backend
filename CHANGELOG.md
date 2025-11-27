@@ -3,6 +3,45 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+### [itachallenge-user-3.1.1-RELEASE] - 2025-11-27
+### Added
+- Created UserInteractionDocument : Extracted common fields into a new Document, now extended by both BookmarkDocument and FavoriteDocument.
+- Created BookmarkService interface and BookmarkServiceImpl implementation. (PR [##877])
+
+### Changed
+- Refactor: Moved the GET bookmark-related logic out of UserServiceImpl into BookmarkServiceImpl.
+- Improves separation of concerns, modularity, and testability.
+- No API changes at this stage.
+
+### [itachallenge-user-3.1.0-RELEASE] - 2025-11-25
+
+### Breaking Change
+- API Contract: Replaced the `status` field with action in UserSolutionRequestDto.
+Supported actions: SAVE, GIVE_UP, SUBMIT. (Taiga [#871], PR [#1043])
+- New SolutionAction enum : Action-based submission workflow: Implemented business logic to map user actions to internal solution statuses:
+    - SAVE → IN_PROGRESS
+    - GIVE_UP → SUBMITTED_UNCOMPLETED
+    - SUBMIT → SUBMITTED_COMPLETED
+- Updated OpenAPI documentation.
+
+## [Unreleased]
+
+### Chore/Internal
+- Introduced `SolutionAction` enum (internal change)
+  - Values: SAVE, GIVE_UP, SUBMIT
+  - Prepared for action-based status handling (Taiga User Story [#871], PR [#1036])
+
+### [itachallenge-challenge-3.0.3-RELEASE] - 2025-11-18
+
+### Fixed
+- DELETE /challenges/{challengeId} now returns correct HTTP status codes:
+  - 200 OK when deletion succeeds
+  - 404 Not Found when the challenge does not exist
+  - 400 Bad Request for invalid UUID format  
+    (Taiga [#891], PR [#866])
+
+
+
 ### [itachallenge-user-3.0.5-RELEASE] - 2025-11-13
 
 ### Added

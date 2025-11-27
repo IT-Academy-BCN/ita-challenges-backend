@@ -3,6 +3,7 @@ package com.itachallenge.user.service;
 import com.itachallenge.user.document.SolutionAttemptDocument;
 import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.document.enums.ChallengeStatus;
+import com.itachallenge.user.document.enums.SolutionAction;
 import com.itachallenge.user.dto.SubmitSolutionResponseDto;
 import com.itachallenge.user.dto.UserSolutionRequestDto;
 import com.itachallenge.user.dto.UserSolutionResponseDto;
@@ -12,6 +13,7 @@ import com.itachallenge.user.repository.IUserSolutionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -29,29 +31,35 @@ public class UserSolutionServiceImpl implements IUserSolutionService {
         this.challengeService = challengeService;
     }
 
+    //TODO : to be moved to the challenge micro when we do the entire solutions refactor
     @Override
     public Mono<SubmitSolutionResponseDto> addSolution(UserSolutionRequestDto userSolutionDto) {
         UUID challengeUuid = UUID.fromString(userSolutionDto.getChallengeId());
         UUID languageUuid = UUID.fromString(userSolutionDto.getLanguageId());
         UUID userUuid = UUID.fromString(userSolutionDto.getUserId());
 
-        ChallengeStatus challengeStatus = ChallengeStatus.challengeStatusFromString(userSolutionDto.getStatus());
-        if (challengeStatus == null) {
-            log.error("PUT operation failed due to invalid challenge status parameter");
-            return Mono.error(new IllegalArgumentException("Status null or not allowed"));
-        }
-
+        ChallengeStatus challengeStatus = determineStatus(userSolutionDto.getAction());
         SolutionAttemptDocument solutionAttempt = SolutionAttemptDocument.builder()
                 .uuid(UUID.randomUUID())
                 .solutionText(userSolutionDto.getSolutionText())
                 .build();
 
         return saveValidSolution(userUuid, challengeUuid, languageUuid, challengeStatus, solutionAttempt)
-                .flatMap(this::buildSubmitSolutionResponse)
-                .doOnSuccess(response -> log.info("PUT request successfully processed for challenge {} and user {}.", challengeUuid, userUuid))
-                .doOnError(error -> log.error("PUT operation failed: {} for challenge {} and user {}.", error.getMessage(), challengeUuid, userUuid));
+                            .flatMap(this::buildSubmitSolutionResponse)
+                            .doOnSuccess(response -> log.info("PUT request successfully processed for challenge {} and user {}.", challengeUuid, userUuid))
+                            .doOnError(error -> log.error("PUT operation failed: {} for challenge {} and user {}.", error.getMessage(), challengeUuid, userUuid));
     }
 
+    //TODO : to be moved to the challenge micro when we do the entire solutions refactor
+    private ChallengeStatus determineStatus(SolutionAction action) {
+        return switch (action) {
+            case SAVE -> ChallengeStatus.IN_PROGRESS;
+            case GIVE_UP -> ChallengeStatus.SUBMITTED_INCOMPLETE;
+            case SUBMIT -> ChallengeStatus.SUBMITTED_COMPLETE;
+        };
+    }
+
+    //TODO : to be moved to the challenge micro when we do the entire solutions refactor
     private Mono<UserSolutionDocument> saveValidSolution(UUID userUuid, UUID challengeUuid, UUID languageUuid, ChallengeStatus challengeStatus, SolutionAttemptDocument solutionAttempt) {
         return userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid)
                 .flatMap(existingSolution -> {
@@ -77,6 +85,7 @@ public class UserSolutionServiceImpl implements IUserSolutionService {
                 }));
     }
 
+    //TODO : to be moved to the challenge micro when we do the entire solutions refactor
     private Mono<SubmitSolutionResponseDto> buildSubmitSolutionResponse(UserSolutionDocument savedDocument) {
         String solutionText = savedDocument.getSolutionAttemptDocument().getSolutionText();
         ChallengeStatus status = savedDocument.getStatus();
