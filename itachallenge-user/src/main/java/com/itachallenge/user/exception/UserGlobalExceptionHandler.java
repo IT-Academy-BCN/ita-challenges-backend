@@ -107,5 +107,4 @@ public class UserGlobalExceptionHandler {
                 new APIErrorResponse("External Service Error", securedMessage, Instant.now())
         );
     }
-
 }

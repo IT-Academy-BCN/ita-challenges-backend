@@ -2,7 +2,9 @@ package com.itachallenge.user.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.itachallenge.user.annotations.GenericUUIDValid;
+import com.itachallenge.user.document.enums.SolutionAction;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import org.springframework.stereotype.Component;
@@ -26,8 +28,9 @@ public class UserSolutionRequestDto {
     @GenericUUIDValid(message = "Invalid UUID")
     private String languageId;
 
-    @JsonProperty(value ="status")
-    private String status;
+    @NotNull(message = "Action cannot be null")
+    @JsonProperty(value ="action")
+    private SolutionAction action;
 
     @JsonProperty(value ="solution_text")
     @NotBlank(message = "Solution text is required")
