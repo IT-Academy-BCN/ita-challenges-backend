@@ -94,4 +94,42 @@ class BookmarkDocumentTest {
         assertNull(doc.getCreatedAt());
     }
 
+    @Test
+    void equalsHashCodeAndToString_singleTestCoverage() {
+        // Two objects with identical values
+        BookmarkDocument a = BookmarkDocument.builder()
+                .uuid(uuid)
+                .userId(userId)
+                .challengeId(challengeId)
+                .createdAt(createdAt)
+                .build();
+
+        BookmarkDocument b = BookmarkDocument.builder()
+                .uuid(uuid)
+                .userId(userId)
+                .challengeId(challengeId)
+                .createdAt(createdAt)
+                .build();
+
+        // Another object with a different field (uuid)
+        BookmarkDocument c = BookmarkDocument.builder()
+                .uuid(UUID.randomUUID())
+                .userId(userId)
+                .challengeId(challengeId)
+                .createdAt(createdAt)
+                .build();
+
+        // equals
+        assertEquals(a, b, "Objects with identical values should be equal");
+        assertNotEquals(a, c, "Objects with different values should not be equal");
+
+        // hashCode
+        assertEquals(a.hashCode(), b.hashCode(), "Equal objects must have the same hashCode");
+
+        // toString (basic sanity check)
+        String str = a.toString();
+        assertNotNull(str);
+        assertFalse(str.isEmpty());
+    }
+
 }
