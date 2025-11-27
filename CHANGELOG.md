@@ -3,6 +3,16 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+### [itachallenge-user-3.1.1-RELEASE] - 2025-11-27
+### Added
+- Created UserInteractionDocument : Extracted common fields into a new Document, now extended by both BookmarkDocument and FavoriteDocument.
+- Created BookmarkService interface and BookmarkServiceImpl implementation. (PR [##877])
+
+### Changed
+- Refactor: Moved the GET bookmark-related logic out of UserServiceImpl into BookmarkServiceImpl.
+- Improves separation of concerns, modularity, and testability.
+- No API changes at this stage.
+
 ### [itachallenge-user-3.0.5-RELEASE] - 2025-11-13
 
 ### Added
