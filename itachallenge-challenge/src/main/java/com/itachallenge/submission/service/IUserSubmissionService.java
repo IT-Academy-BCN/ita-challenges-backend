@@ -1,6 +1,6 @@
 package com.itachallenge.submission.service;
 
-import com.itachallenge.submission.dto.UserSubmissionResponseDto;
+import com.itachallenge.challenge.dto.submission.UserSubmissionResponseDto;
 import reactor.core.publisher.Flux;
 
 public interface IUserSubmissionService {
