@@ -594,21 +594,23 @@ void addChallengeToSolved_WhenChallengeTimesSolvedIsZero_IncreasesTimesSolvedAnd
 
     @Test
     void deleteChallengeById_NotFound() {
-        // Arrange
-        String id = "2f948de0-6f0c-4089-90b9-7f70a0812322";  // ID no existente
-        UUID uuid = UUID.fromString(id);  // Convertir a UUID
 
-        // Mockear el repositorio para que no se encuentre el desafío
-        when(challengeRepository.deleteByUuid(uuid)).thenReturn(Mono.error(new ChallengeNotFoundException("Challenge with id: " + id + " not found")));
+        String id = "2f948de0-6f0c-4089-90b9-7f70a0812322";
+        UUID uuid = UUID.fromString(id);
 
-        // Act
+        when(challengeRepository.findByUuid(uuid)).thenReturn(Mono.empty());
+
+        when(challengeRepository.deleteByUuid(uuid)).thenReturn(Mono.empty());
+
         Mono<DeleteResponseDto> result = challengeService.deleteChallengeById(id);
 
-        // Assert
         StepVerifier.create(result)
-                .expectError(ChallengeNotFoundException.class)  // Se espera que se lance una excepción
+                .expectError(ChallengeNotFoundException.class)
                 .verify();
     }
+
+
+
 
     @Test
     void getChallengesByTopic_WhenChallengesExist_ReturnsResult() {

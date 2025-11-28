@@ -3,11 +3,32 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+### [itachallenge-user-3.1.0-RELEASE] - 2025-11-25
+
+### Breaking Change
+- API Contract: Replaced the `status` field with action in UserSolutionRequestDto.
+Supported actions: SAVE, GIVE_UP, SUBMIT. (Taiga [#871], PR [#1043])
+- New SolutionAction enum : Action-based submission workflow: Implemented business logic to map user actions to internal solution statuses:
+    - SAVE → IN_PROGRESS
+    - GIVE_UP → SUBMITTED_UNCOMPLETED
+    - SUBMIT → SUBMITTED_COMPLETED
+- Updated OpenAPI documentation.
+
 ## [Unreleased]
+
 ### Chore/Internal
 - Introduced `SolutionAction` enum (internal change)
   - Values: SAVE, GIVE_UP, SUBMIT
   - Prepared for action-based status handling (Taiga User Story [#871], PR [#1036])
+
+### [itachallenge-challenge-3.0.3-RELEASE] - 2025-11-18
+
+### Fixed
+- DELETE /challenges/{challengeId} now returns correct HTTP status codes:
+  - 200 OK when deletion succeeds
+  - 404 Not Found when the challenge does not exist
+  - 400 Bad Request for invalid UUID format  
+    (Taiga [#891], PR [#866])
 
 ### [itachallenge-user-3.0.5-RELEASE] - 2025-11-13
 
@@ -18,6 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Refactor: Moved the GET favorite-related logic out of UserController into FavoriteController.
 - Improves separation of concerns, modularity, and testability.
 - No API or schema changes at this stage.
+
 ### [itachallenge-challenge-3.0.2-RELEASE] - 2025-11-17
 
 ### Added
@@ -35,7 +57,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Internal refactor of the `itachallenge-challenge` package structure to isolate the
   **submission** domain.  
   No new endpoints, no database changes, and no runtime behavior changes.
-
 
 ### [itachallenge-user-3.0.4-RELEASE] - 2025-11-12
 ### Added
