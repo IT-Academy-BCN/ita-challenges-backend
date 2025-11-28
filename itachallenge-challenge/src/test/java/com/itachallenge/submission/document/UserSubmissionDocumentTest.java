@@ -1,6 +1,6 @@
 package com.itachallenge.submission.document;
 
-import com.itachallenge.submission.enums.ChallengeStatus;
+import com.itachallenge.submission.enums.UserChallengeStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -26,7 +26,7 @@ class UserSubmissionDocumentTest {
 
     private final String languageUuidText = "c4feec44-ac54-4e99-852b-9ba56c47eec4";
     private final UUID languageUuid = UUID.fromString(languageUuidText);
-    private final ChallengeStatus userChallengeStatus = ChallengeStatus.IN_PROGRESS;
+    private final UserChallengeStatus userChallengeStatus = UserChallengeStatus.IN_PROGRESS;
 
     @BeforeEach
     void setUp() {
@@ -40,7 +40,7 @@ class UserSubmissionDocumentTest {
 
         assertEquals(UUID.fromString(uuidText), userSubmissionDocumentAllArgs.getSubmissionId());
         assertEquals(UUID.fromString(userUuidText), userSubmissionDocumentAllArgs.getUserId());
-        assertEquals(ChallengeStatus.IN_PROGRESS, userSubmissionDocumentAllArgs.getStatus());
+        assertEquals(UserChallengeStatus.IN_PROGRESS, userSubmissionDocumentAllArgs.getStatus());
     }
 
     @Test
@@ -59,7 +59,7 @@ class UserSubmissionDocumentTest {
         assertEquals(UUID.fromString(userUuidText), doc.getUserId());
         assertEquals(UUID.fromString(challengeUuidText), doc.getChallengeId());
         assertEquals(UUID.fromString(languageUuidText), doc.getLanguageId());
-        assertEquals(ChallengeStatus.IN_PROGRESS, doc.getStatus());
+        assertEquals(UserChallengeStatus.IN_PROGRESS, doc.getStatus());
     }
 
     @Test
@@ -92,7 +92,7 @@ class UserSubmissionDocumentTest {
 
     @Test
     void shouldReturnStatusCorrectly() {
-        assertEquals(ChallengeStatus.IN_PROGRESS, userSubmissionDocumentAllArgs.getStatus());
+        assertEquals(UserChallengeStatus.IN_PROGRESS, userSubmissionDocumentAllArgs.getStatus());
     }
 
     @Test
