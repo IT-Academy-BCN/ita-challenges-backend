@@ -1,7 +1,7 @@
-package com.itachallenge.submission.controller;
+package com.itachallenge.challenge.controller.submission;
 
-import com.itachallenge.submission.dto.UserSubmissionResponseDto;
-import com.itachallenge.submission.exception.BadUUIDException;
+import com.itachallenge.challenge.dto.submission.UserSubmissionResponseDto;
+import com.itachallenge.challenge.exception.BadUUIDException;
 import com.itachallenge.submission.service.IUserSubmissionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -36,13 +36,11 @@ public class UserSubmissionController {
             summary = "Get submissions by userId",
             description = "Retrieve submissions for a given user from the database.",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Successful retrieval",
+                    @ApiResponse(responseCode = "200", description = "Successful retrieval - may return empty array if no submissions found",
                             content = @Content(schema = @Schema(implementation = UserSubmissionResponseDto.class), mediaType = "application/json")),
-                    @ApiResponse(responseCode = "404", description = "No submissions found for the given userId"),
-                    @ApiResponse(responseCode = "400", description = "Malformed UUID or invalid parameters")
-
+                    @ApiResponse(responseCode = "400", description = "Malformed UUID or invalid parameters"),
             })
-    public Mono<ResponseEntity<Flux<UserSubmissionResponseDto>>> getAllSubmissionsByUser(
+    public Flux<UserSubmissionResponseDto> getAllSubmissionsByUser(
             @PathVariable String userId) {
 
         try {
@@ -51,9 +49,8 @@ public class UserSubmissionController {
             throw new BadUUIDException("Invalid UUID format");
         }
 
-        return Mono.just(ResponseEntity.ok()
-                .body(userSubmissionService.getAllSubmissionsByUser(userId))
-        );
+        return userSubmissionService.getAllSubmissionsByUser(userId);
+
     }
 }
 

@@ -1,9 +1,9 @@
-package com.itachallenge.submission.controller;
+package com.itachallenge.challenge.controller.submission;
 
-import com.itachallenge.submission.exception.NotFoundException;
-import com.itachallenge.submission.exception.UserSubmissionGlobalExceptionHandler;
+import com.itachallenge.challenge.exception.GlobalExceptionHandler;
+import com.itachallenge.challenge.exception.NotFoundException;
 import com.itachallenge.submission.service.IUserSubmissionService;
-import com.itachallenge.submission.dto.UserSubmissionResponseDto;
+import com.itachallenge.challenge.dto.submission.UserSubmissionResponseDto;
 import org.junit.jupiter.api.*;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -36,7 +36,7 @@ class UserSubmissionControllerTest {
     void setUp() {
         mocks = MockitoAnnotations.openMocks(this);
         webTestClient = WebTestClient.bindToController(userSubmissionController)
-                .controllerAdvice(new UserSubmissionGlobalExceptionHandler())
+                .controllerAdvice(new GlobalExceptionHandler())
                 .build();
     }
 
@@ -85,20 +85,21 @@ class UserSubmissionControllerTest {
     }
 
     @Test
-    void getAllSubmissions_returns404IfNotFound() {
-        String userId = UUID.randomUUID().toString();
+    void getAllSubmissions_returns200WithEmptyArrayWhenNoSubmissions() {
+        String validUserId = "123e4567-e89b-12d3-a456-426614174000";
 
-        when(userSubmissionService.getAllSubmissionsByUser(userId))
-                .thenReturn(Flux.error(new NotFoundException("Submissions not found")));
+        when(userSubmissionService.getAllSubmissionsByUser(validUserId))
+                .thenReturn(Flux.empty());
 
         webTestClient.get()
-                .uri("/itachallenge/api/v1/challenge/challenges/{userId}/submissions", userId)
+                .uri("/itachallenge/api/v1/challenge/challenges/{userId}/submissions", validUserId)
                 .exchange()
-                .expectStatus().isNotFound()
-                .expectBody(String.class)
-                .isEqualTo("Submissions not found");
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$").isArray()
+                .jsonPath("$").isEmpty();
 
-        verify(userSubmissionService, times(1)).getAllSubmissionsByUser(userId);
+        verify(userSubmissionService).getAllSubmissionsByUser(validUserId);
     }
 
     @Test
@@ -109,10 +110,11 @@ class UserSubmissionControllerTest {
                 .uri("/itachallenge/api/v1/challenge/challenges/{userId}/submissions", badUserId)
                 .exchange()
                 .expectStatus().isBadRequest()
-                .expectBody(String.class)
-                .isEqualTo("Invalid UUID format");
+                .expectBody()
+                .jsonPath("$.message").isEqualTo("Invalid UUID format");
 
-        verify(userSubmissionService, never()).getAllSubmissionsByUser(badUserId); // never, no times(1)
+
+        verify(userSubmissionService, never()).getAllSubmissionsByUser(badUserId);
     }
 
     @Test
@@ -126,8 +128,8 @@ class UserSubmissionControllerTest {
                 .uri("/itachallenge/api/v1/challenge/challenges/{userId}/submissions", userId)
                 .exchange()
                 .expectStatus().is5xxServerError()
-                .expectBody(String.class)
-                .isEqualTo("Unexpected error happened.");
+                .expectBody()
+                .json("");
 
         verify(userSubmissionService, times(1)).getAllSubmissionsByUser(userId);
     }
