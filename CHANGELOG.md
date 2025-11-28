@@ -13,7 +13,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
         - Created BookmarkService interface and BookmarkServiceImpl implementation.
 - Created UserInteractionDocument : Extracted common fields into a new Document, now extended by both BookmarkDocument and FavoriteDocument.
 
-
 ### Changed
 - Refactor: Moved the GET bookmark-related logic out of UserServiceImpl into BookmarkServiceImpl.
 - Improves separation of concerns, modularity, and testability.
