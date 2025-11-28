@@ -14,8 +14,8 @@ import java.util.UUID;
 public class SubmissionAttemptDocument {
 
     @Id
-    @Field(name="id_submission")
-    private UUID uuid;
+    @Field(name="_id")
+    private UUID submissionAttemptDocumentId;
 
     @Field(name="submission_text")
     private String submissionText;
