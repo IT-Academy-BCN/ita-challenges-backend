@@ -17,5 +17,5 @@ public @interface ValidGenericPattern {
     String message() default "The value is invalid.";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
-    String pattern() default ""; // Optional
+    String pattern() default "";
 }
