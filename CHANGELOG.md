@@ -3,6 +3,16 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+### [itachallenge-user-3.1.1-RELEASE] - 2025-11-27
+### Added
+- Created UserInteractionDocument : Extracted common fields into a new Document, now extended by both BookmarkDocument and FavoriteDocument.
+- Created BookmarkService interface and BookmarkServiceImpl implementation. (PR [##877])
+
+### Changed
+- Refactor: Moved the GET bookmark-related logic out of UserServiceImpl into BookmarkServiceImpl.
+- Improves separation of concerns, modularity, and testability.
+- No API changes at this stage.
+
 ### [itachallenge-user-3.1.0-RELEASE] - 2025-11-25
 
 ### Breaking Change
@@ -30,6 +40,8 @@ Supported actions: SAVE, GIVE_UP, SUBMIT. (Taiga [#871], PR [#1043])
   - 400 Bad Request for invalid UUID format  
     (Taiga [#891], PR [#866])
 
+
+
 ### [itachallenge-user-3.0.5-RELEASE] - 2025-11-13
 
 ### Added
@@ -39,7 +51,6 @@ Supported actions: SAVE, GIVE_UP, SUBMIT. (Taiga [#871], PR [#1043])
 - Refactor: Moved the GET favorite-related logic out of UserController into FavoriteController.
 - Improves separation of concerns, modularity, and testability.
 - No API or schema changes at this stage.
-
 ### [itachallenge-challenge-3.0.2-RELEASE] - 2025-11-17
 
 ### Added
@@ -57,6 +68,7 @@ Supported actions: SAVE, GIVE_UP, SUBMIT. (Taiga [#871], PR [#1043])
 - Internal refactor of the `itachallenge-challenge` package structure to isolate the
   **submission** domain.  
   No new endpoints, no database changes, and no runtime behavior changes.
+
 
 ### [itachallenge-user-3.0.4-RELEASE] - 2025-11-12
 ### Added
