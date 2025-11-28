@@ -1,7 +1,6 @@
 package com.itachallenge.challenge.controller.submission;
 
 import com.itachallenge.challenge.exception.GlobalExceptionHandler;
-import com.itachallenge.challenge.exception.NotFoundException;
 import com.itachallenge.submission.service.IUserSubmissionService;
 import com.itachallenge.challenge.dto.submission.UserSubmissionResponseDto;
 import org.junit.jupiter.api.*;
