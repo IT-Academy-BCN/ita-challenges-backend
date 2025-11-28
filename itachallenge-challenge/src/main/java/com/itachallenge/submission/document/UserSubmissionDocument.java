@@ -1,6 +1,6 @@
 package com.itachallenge.submission.document;
 
-import com.itachallenge.submission.enums.ChallengeStatus;
+import com.itachallenge.submission.enums.UserChallengeStatus;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -30,7 +30,7 @@ public class UserSubmissionDocument {
     private UUID languageId;
 
     @Field("status")
-    private ChallengeStatus status;
+    private UserChallengeStatus status;
 
     @Field("submission")
     private SubmissionAttemptDocument submissionAttemptDocument;
