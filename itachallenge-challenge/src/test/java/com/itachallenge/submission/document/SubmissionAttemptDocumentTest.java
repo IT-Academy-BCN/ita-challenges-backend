@@ -23,33 +23,33 @@ class SubmissionAttemptDocumentTest {
 
     @Test
     void shouldCreateDocumentUsingAllArgsConstructor() {
-        assertEquals(UUID.fromString(uuidText), submissionAttemptDocumentAllArgs.getUuid());
+        assertEquals(UUID.fromString(uuidText), submissionAttemptDocumentAllArgs.getSubmissionAttemptDocumentId());
         assertEquals("Hello World!!", submissionAttemptDocumentAllArgs.getSubmissionText());
     }
 
     @Test
     void shouldBuildDocumentUsingBuilder() {
         SubmissionAttemptDocument doc = SubmissionAttemptDocument.builder()
-                .uuid(uuid)
+                .submissionAttemptDocumentId(uuid)
                 .submissionText(submissionText)
                 .build();
 
-        assertEquals(UUID.fromString(uuidText), doc.getUuid());
+        assertEquals(UUID.fromString(uuidText), doc.getSubmissionAttemptDocumentId());
         assertEquals("Hello World!!", doc.getSubmissionText());
     }
 
     @Test
     void shouldSetAndGetFieldsCorrectly() {
-        submissionAttemptDocumentNoArgs.setUuid(uuid);
+        submissionAttemptDocumentNoArgs.setSubmissionAttemptDocumentId(uuid);
         submissionAttemptDocumentNoArgs.setSubmissionText(submissionText);
 
-        assertEquals(UUID.fromString(uuidText), submissionAttemptDocumentNoArgs.getUuid());
+        assertEquals(UUID.fromString(uuidText), submissionAttemptDocumentNoArgs.getSubmissionAttemptDocumentId());
         assertEquals("Hello World!!", submissionAttemptDocumentNoArgs.getSubmissionText());
     }
 
     @Test
     void shouldReturnUuidCorrectly() {
-        assertEquals(UUID.fromString(uuidText), submissionAttemptDocumentAllArgs.getUuid());
+        assertEquals(UUID.fromString(uuidText), submissionAttemptDocumentAllArgs.getSubmissionAttemptDocumentId());
     }
 
     @Test
