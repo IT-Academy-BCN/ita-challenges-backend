@@ -337,13 +337,20 @@ public class ChallengeServiceImpl implements IChallengeService {
     }
 
     public Mono<DeleteResponseDto> deleteChallengeById(String id) {
+
         return validateUUID(id)
-                .flatMap(challengeId -> challengeRepository.deleteByUuid(challengeId)
-                        .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, id))))
-                        .thenReturn(new DeleteResponseDto(id, "Challenge deleted successfully."))
+                .flatMap(uuid -> challengeRepository.findByUuid(uuid)
+                        .switchIfEmpty(Mono.error(new ChallengeNotFoundException(
+                                String.format(CHALLENGE_NOT_FOUND_ERROR, id)
+                        )))
+                        .then(challengeRepository.deleteByUuid(uuid))
+                        .thenReturn(new DeleteResponseDto(
+                                id,
+                                "Challenge deleted successfully"
+                        ))
                 )
                 .doOnSuccess(response -> log.info("Challenge deleted with ID: {}", response.getId()))
-                .doOnError(error -> log.error("Error occurred while deleting challenge: {}", error.getMessage()));
+                .doOnError(error -> log.error("Error while deleting challenge: {}", error.getMessage()));
     }
 
     @Override

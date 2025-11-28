@@ -1,5 +1,6 @@
 package com.itachallenge.user.controller;
 
+import com.itachallenge.user.document.enums.SolutionAction;
 import com.itachallenge.user.dto.SubmitSolutionResponseDto;
 import com.itachallenge.user.dto.UserSolutionRequestDto;
 import com.itachallenge.user.service.ExternalGithubService;
@@ -52,7 +53,7 @@ class UserControllerSpringTest {
                 .userId(userId)
                 .challengeId(challengeId)
                 .languageId(languageId)
-                .status("SUBMITTED_COMPLETE")
+                .action(SolutionAction.SUBMIT)
                 .solutionText(solution)
                 .build();
 

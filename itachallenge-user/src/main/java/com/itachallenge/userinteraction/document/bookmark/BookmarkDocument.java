@@ -1,36 +1,26 @@
 package com.itachallenge.userinteraction.document.bookmark;
 
-import lombok.*;
-
+import com.itachallenge.userinteraction.document.InteractionDocument;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import lombok.experimental.SuperBuilder;
+import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
-
-@AllArgsConstructor
-@Data
-@Builder
+@Getter
+@Setter
+@SuperBuilder
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 @Document(collection="bookmarks")
-public class BookmarkDocument {
+public class BookmarkDocument extends InteractionDocument {
 
-    @Id
-    @Field("_id")
-    private UUID uuid;
-
-    @Field("userId")
-    @Indexed
-    private UUID userId;
-
-    @Field("challengeId")
-    @Indexed
-    private UUID challengeId;
-
-    @CreatedDate
-    @Field(name = "createdAt")
-    private LocalDateTime createdAt;
+    public BookmarkDocument(UUID uuid, UUID userId, UUID challengeId, LocalDateTime createdAt) {
+        super(uuid, userId, challengeId, createdAt);
+    }
 }

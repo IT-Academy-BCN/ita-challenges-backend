@@ -30,7 +30,7 @@ public class BookmarkServiceImpl implements BookmarkService {
         return parseAndValidateUUID(userId)
                 .flatMap(userUuid ->
                         userRepository.existsById(userUuid)
-                                .flatMap(exists -> exists
+                                .flatMap(exists -> exists == Boolean.TRUE
                                         ? bookmarkRepository.findByUserId(userUuid)
                                         .map(BookmarkDocument::getChallengeId)
                                         .collect(Collectors.toSet())

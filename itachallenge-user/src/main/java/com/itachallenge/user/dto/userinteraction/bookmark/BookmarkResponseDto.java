@@ -6,14 +6,15 @@ import lombok.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Data
+
 @Builder
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class BookmarkResponseDto {
 
-    @JsonProperty(value = "uuid_favorite")
+    @JsonProperty(value = "uuid_bookmark")
     private UUID uuid;
 
     @JsonProperty(value = "user_id")

@@ -37,6 +37,8 @@ class FavoriteControllerTest {
         }
     }
 
+
+
     @Test
     @DisplayName("GET /users/{userId}/favorites returns favorite challenges")
     void getUserFavorites_returnsFavorites() {

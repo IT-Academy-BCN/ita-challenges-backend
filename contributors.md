@@ -112,6 +112,8 @@
 * Alex Pérez Braveso - https://github.com/aperez1haad
 * Diego Balaguer Gálvez - https://github.com/DiegoBalaguer
 * Jose L Diaz I - https://github.com/jose-Diaz1002
+* Ana Beuzón Rodríguez - https://github.com/anaberod
+
 
 
 

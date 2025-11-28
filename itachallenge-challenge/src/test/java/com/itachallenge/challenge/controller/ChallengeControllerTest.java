@@ -8,7 +8,6 @@ import com.itachallenge.challenge.enums.Topic;
 import com.itachallenge.challenge.exception.*;
 import com.itachallenge.challenge.repository.ChallengeRepository;
 import com.itachallenge.challenge.service.*;
-import com.itachallenge.challenge.service.IChallengeJwtFacade;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -21,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
 import org.springframework.http.HttpStatus;
@@ -36,7 +36,8 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -85,6 +86,8 @@ class ChallengeControllerTest {
     private String challengeId;
     private ChallengeCreateDto formData;
     private ChallengeDto createdChallenge;
+    private ResourceBundleMessageSource messageSource;
+
 
     @BeforeEach
     void setup(){
@@ -97,6 +100,9 @@ class ChallengeControllerTest {
         when(challengeService.getRelatedChallenges(argThat(id -> !isValidUUID(id))))
                 .thenReturn(Mono.error(new BadUUIDException("Invalid ID format. Please indicate the correct format.")));
 
+        messageSource = new ResourceBundleMessageSource();
+        messageSource.setBasename("messages");
+        messageSource.setDefaultEncoding("UTF-8");
 
     }
 
@@ -357,6 +363,9 @@ class ChallengeControllerTest {
         solutionDto.setIdChallenge(UUID.randomUUID()); // Set challenge ID to a valid UUID
         solutionDto.setIdLanguage(UUID.randomUUID()); // Set language ID to a valid UUID
 
+        String expectedMessage = messageSource.getMessage(
+                "solution.text.notEmpty", null, Locale.getDefault()
+        );
         // Act & Assert
         webTestClient.post()
                 .uri("/itachallenge/api/v1/challenge/solution")
@@ -365,7 +374,7 @@ class ChallengeControllerTest {
                 .exchange()
                 .expectStatus().isBadRequest()
                 .expectBody()
-                .jsonPath("$.message").isEqualTo("solutionText: 'cannot be empty'");
+                .jsonPath("$.message").isEqualTo("solutionText: '" + expectedMessage + "'");
     }
 
     @Test
@@ -376,6 +385,9 @@ class ChallengeControllerTest {
         solutionDto.setIdChallenge(UUID.randomUUID()); // Set challenge ID to a valid UUID
         solutionDto.setIdLanguage(UUID.randomUUID()); // Set language ID to a valid UUID
 
+        String expectedMessage = messageSource.getMessage(
+                "solution.text.notEmpty", null, Locale.getDefault()
+        );
         // Act & Assert
         webTestClient.post()
                 .uri("/itachallenge/api/v1/challenge/solution")
@@ -384,7 +396,7 @@ class ChallengeControllerTest {
                 .exchange()
                 .expectStatus().isBadRequest()
                 .expectBody()
-                .jsonPath("$.message").isEqualTo("solutionText: 'cannot be empty'");
+                .jsonPath("$.message").isEqualTo("solutionText: '" + expectedMessage + "'");
     }
 
     @Test
@@ -395,6 +407,9 @@ class ChallengeControllerTest {
         solutionDto.setIdChallenge(null); // Set challenge ID to null
         solutionDto.setIdLanguage(UUID.randomUUID()); // Set language ID to a valid UUID
 
+        String expectedMessage = messageSource.getMessage(
+                "solution.challengeId.invalid", null, Locale.getDefault()
+        );
         // Act & Assert
         webTestClient.post()
                 .uri("/itachallenge/api/v1/challenge/solution")
@@ -403,7 +418,7 @@ class ChallengeControllerTest {
                 .exchange()
                 .expectStatus().isBadRequest()
                 .expectBody()
-                .jsonPath("$.message").isEqualTo("idChallenge: 'Invalid UUID'");
+                .jsonPath("$.message").isEqualTo("idChallenge: '" + expectedMessage + "'");
     }
 
     @Test
@@ -414,6 +429,9 @@ class ChallengeControllerTest {
         solutionDto.setIdChallenge(UUID.randomUUID()); // Set challenge ID to a valid UUID
         solutionDto.setIdLanguage(null); // Set challenge ID to null
 
+        String expectedMessage = messageSource.getMessage(
+                "solution.languageId.invalid", null, Locale.getDefault()
+        );
         // Act & Assert
         webTestClient.post()
                 .uri("/itachallenge/api/v1/challenge/solution")
@@ -422,7 +440,7 @@ class ChallengeControllerTest {
                 .exchange()
                 .expectStatus().isBadRequest()
                 .expectBody()
-                .jsonPath("$.message").isEqualTo("idLanguage: 'Invalid UUID'");
+                .jsonPath("$.message").isEqualTo("idLanguage: '" + expectedMessage + "'");
     }
 
     @Test
@@ -956,5 +974,20 @@ class ChallengeControllerTest {
                 .bodyValue(challengeWithEmptyTags)
                 .exchange()
                 .expectStatus().isBadRequest();
+    }
+
+
+    @Test
+    void deleteChallenge_shouldReturn200Ok() {
+        String challengeId = "12345678-1234-1234-1234-123456789012";
+
+        DeleteResponseDto deleteResponse = new DeleteResponseDto(challengeId, "Challenge deleted successfully");
+
+        when(challengeService.deleteChallengeById(challengeId)).thenReturn(Mono.just(deleteResponse));
+
+        webTestClient.delete()
+                .uri("/itachallenge/api/v1/challenge/challenges/" + challengeId)
+                .exchange()
+                .expectStatus().isOk();  // ← 200 OK, no 204
     }
 }

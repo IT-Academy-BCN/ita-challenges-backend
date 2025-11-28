@@ -7,7 +7,6 @@ import com.itachallenge.user.dto.UserSolutionRequestDto;
 import com.itachallenge.user.dto.UserSolutionResponseDto;
 import com.itachallenge.user.service.IUserSolutionService;
 import com.itachallenge.user.service.UserService;
-import com.itachallenge.userinteraction.service.bookmark.BookmarkService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -20,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -38,12 +38,10 @@ public class UserController {
 
     private final UserService userService;
     private final IUserSolutionService userSolutionService;
-    private final BookmarkService bookmarkService;
 
-    public UserController(UserService userService, IUserSolutionService userSolutionService, BookmarkService bookmarkService) {
+    public UserController(UserService userService, IUserSolutionService userSolutionService) {
         this.userService = userService;
         this.userSolutionService = userSolutionService;
-        this.bookmarkService = bookmarkService;
     }
 
     @GetMapping(value = "/test")
@@ -160,14 +158,19 @@ public class UserController {
 
     @PutMapping(path = "/solution")
     @Operation(
-            summary = "perform a solution, adding challenge,language,user, status and the corresponding solution text.",
+            summary = "Submit a solution using action-based workflow",
+            description = "Perform solution submission using actions (SAVE, GIVE_UP, SUBMIT) instead of direct status updates",
             responses = {
-                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = UserSolutionRequestDto.class),
+                    @ApiResponse(responseCode = "200", description = "Solution successfully processed",
+                            content = {@Content(schema = @Schema(implementation = UserSolutionRequestDto.class),
                             mediaType = "application/json")}),
-                    @ApiResponse(responseCode = "400", description = "Bad request",
+                    @ApiResponse(responseCode = "400", description = "Invalid action or bad request",
                             content = {@Content(schema = @Schema())}),
-                    @ApiResponse(responseCode = "500", description = "Challenge status: ended",
-                            content = {@Content(schema = @Schema())})
+                    @ApiResponse(
+                            responseCode = "409", description = "Solution already submitted and cannot be modified",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class), mediaType = "application/json")),
+                    @ApiResponse(responseCode = "500", description = "Internal server error",
+                            content = @Content(schema = @Schema(implementation = ErrorResponse.class), mediaType = "application/json"))
             }
     )
     public Mono<ResponseEntity<SubmitSolutionResponseDto>> addSolution(
@@ -238,6 +241,8 @@ public class UserController {
                     }
                 });
     }
+
+
 
     @Operation(
             summary = "Delete Challenge from User Favorite Challenges",
@@ -344,34 +349,6 @@ public class UserController {
                         log.info("No change, User's '{}' bookmarks doesn't contain Challenge '{}'", userId, challengeId);
                         return ResponseEntity.ok().body(false);
                     }
-                });
-    }
-
-    @Operation(
-            summary = "Gets challenges marked as bookmarks by a user",
-            description = "Returns a set of challenge IDs that the specified user has marked as bookmarked",
-            parameters = {
-                    @Parameter(
-                            name = "userId",
-                            description = "UUID of the user",
-                            required = true,
-                            in = ParameterIn.PATH
-                    )
-            },
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Set of bookmarked challengeIds by user"),
-                    @ApiResponse(responseCode = "404", description = "User not found"),
-                    @ApiResponse(responseCode = "400", description = "The provided IDs are not valid."),
-                    @ApiResponse(responseCode = "500", description = "Unexpected error")
-            }
-    )
-
-    @GetMapping("/users/{userId}/bookmarks")
-    public Mono<ResponseEntity<Set<UUID>>> getUserBookmarks(@PathVariable String userId) {
-        return bookmarkService.getUserBookmarks(userId)
-                .map(bookmarks -> {
-                    log.info("Retrieved {} bookmarked challenges for user {}", bookmarks.size(), userId);
-                    return ResponseEntity.ok().body(bookmarks);
                 });
     }
 

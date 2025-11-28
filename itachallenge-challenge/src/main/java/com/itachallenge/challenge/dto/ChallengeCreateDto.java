@@ -1,14 +1,15 @@
 package com.itachallenge.challenge.dto;
 
-import com.itachallenge.challenge.document.TagDocument;
 import com.itachallenge.challenge.enums.DifficultyLevel;
 import com.itachallenge.challenge.enums.Topic;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -17,23 +18,23 @@ import java.util.UUID;
 @Setter
 public class ChallengeCreateDto {
 
-    @NotEmpty(message = "cannot be empty")
+    @NotEmpty(message = "{challenge.title.notEmpty}")
     private String challengeTitle;
 
-    @NotEmpty(message = "cannot be empty")
+    @NotEmpty(message = "{challenge.description.notEmpty}")
     private String description;
 
     private DifficultyLevel level;
 
-    @NotEmpty(message = "cannot be empty")
+    @NotEmpty(message = "{challenge.language.notEmpty}")
     private String language;
 
-    @NotEmpty(message = "cannot be empty")
+    @NotEmpty(message = "{challenge.solution.notEmpty}")
     private String solution;
 
-    @NotNull(message = "cannot be empty")
+    @NotNull(message = "{challenge.topic.notNull}")
     private Topic topic;
 
-    @NotEmpty(message = "The tags list cannot be empty")
+    @NotEmpty(message = "{challenge.tags.notEmpty}")
     private List<UUID> tags;
 }
