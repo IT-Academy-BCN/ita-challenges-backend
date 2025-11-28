@@ -64,6 +64,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageDto(ex.getMessage()));
     }
 
+    @ExceptionHandler(InvalidUUIDException.class)
+    public ResponseEntity<MessageDto> handleInvalidUUIDException(InvalidUUIDException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageDto(ex.getMessage()));
+    }
+
     @ExceptionHandler(LanguageNotFoundException.class)
     public ResponseEntity<MessageDto> handleLanguageNotFoundException(LanguageNotFoundException ex) {
         return ResponseEntity.badRequest().body(new MessageDto(ex.getMessage()));

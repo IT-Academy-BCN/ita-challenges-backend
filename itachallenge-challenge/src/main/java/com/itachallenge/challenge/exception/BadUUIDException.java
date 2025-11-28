@@ -1,6 +1,6 @@
 package com.itachallenge.challenge.exception;
 
-public class BadUUIDException extends Exception {
+public class BadUUIDException extends RuntimeException {
     public BadUUIDException(String msg){
         super(msg);
     }
