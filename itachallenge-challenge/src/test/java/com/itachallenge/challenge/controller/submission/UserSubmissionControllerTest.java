@@ -55,7 +55,7 @@ class UserSubmissionControllerTest {
                 .challengeId("d43a1a4d-ee8f-432d-8f9c-68eda2547dae")
                 .languageId("409c9fe8-74de-4db3-81a1-a55280cf92ef")
                 .submissionText("This is the submitted solution")
-                .action("GIVE_UP")
+                .status("IN_PROGRESS")
                 .build();
 
         UserSubmissionResponseDto sol2 = UserSubmissionResponseDto.builder()
@@ -63,7 +63,7 @@ class UserSubmissionControllerTest {
                 .challengeId("b5c06903-f27b-4057-8220-ad9d957cdce4")
                 .languageId("09fabe32-7362-4bfb-ac05-b7bf854c6e0f")
                 .submissionText("This is the submitted solution")
-                .action("GIVE_UP")
+                .status("IN_PROGRESS")
                 .build();
 
         when(userSubmissionService.getAllSubmissionsByUser(userId))
