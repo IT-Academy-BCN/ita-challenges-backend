@@ -1,6 +1,5 @@
 package com.itachallenge.challenge.controller.submission;
 
-import com.itachallenge.challenge.exception.BadUUIDException;
 import com.itachallenge.challenge.exception.GlobalExceptionHandler;
 import com.itachallenge.submission.service.IUserSubmissionService;
 import com.itachallenge.challenge.dto.submission.UserSubmissionResponseDto;
@@ -8,12 +7,8 @@ import org.junit.jupiter.api.*;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
-
-import static org.mockito.Mockito.never;
 
 import java.util.UUID;
 
