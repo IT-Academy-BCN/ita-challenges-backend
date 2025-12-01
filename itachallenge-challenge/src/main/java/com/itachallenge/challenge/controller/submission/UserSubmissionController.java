@@ -26,7 +26,7 @@ public class UserSubmissionController {
     private static final Logger log = LoggerFactory.getLogger(UserSubmissionController.class);
     private final IUserSubmissionService userSubmissionService;
 
-    @GetMapping("/submission/{userId}/submissions")
+    @GetMapping("/challenges/{userId}/submissions")
     @Operation(
             operationId = "getSubmissionsByUserId",
             summary = "Get submissions by userId",
