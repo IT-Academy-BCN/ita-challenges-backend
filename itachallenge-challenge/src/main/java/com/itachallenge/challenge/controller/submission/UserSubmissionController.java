@@ -1,7 +1,6 @@
 package com.itachallenge.challenge.controller.submission;
 
 import com.itachallenge.challenge.dto.submission.UserSubmissionResponseDto;
-import com.itachallenge.challenge.exception.BadUUIDException;
 import com.itachallenge.submission.service.IUserSubmissionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 
-import java.util.UUID;
 
 @RestController
 @Validated
@@ -40,12 +38,6 @@ public class UserSubmissionController {
             })
     public Flux<UserSubmissionResponseDto> getAllSubmissionsByUser(
             @PathVariable String userId) {
-
-        try {
-            UUID.fromString(userId);
-        } catch (IllegalArgumentException e) {
-            throw new BadUUIDException("Invalid UUID format");
-        }
 
         return userSubmissionService.getAllSubmissionsByUser(userId);
 
