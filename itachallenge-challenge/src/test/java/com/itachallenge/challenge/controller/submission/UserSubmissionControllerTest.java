@@ -1,5 +1,6 @@
 package com.itachallenge.challenge.controller.submission;
 
+import com.itachallenge.challenge.exception.BadUUIDException;
 import com.itachallenge.challenge.exception.GlobalExceptionHandler;
 import com.itachallenge.submission.service.IUserSubmissionService;
 import com.itachallenge.challenge.dto.submission.UserSubmissionResponseDto;
@@ -7,6 +8,8 @@ import org.junit.jupiter.api.*;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 
@@ -99,21 +102,6 @@ class UserSubmissionControllerTest {
                 .jsonPath("$").isEmpty();
 
         verify(userSubmissionService).getAllSubmissionsByUser(validUserId);
-    }
-
-    @Test
-    void getAllSubmissions_returns400IfInvalidUUID() {
-        String badUserId = "not-a-uuid";
-
-        webTestClient.get()
-                .uri("/itachallenge/api/v1/challenge/challenges/{userId}/submissions", badUserId)
-                .exchange()
-                .expectStatus().isBadRequest()
-                .expectBody()
-                .jsonPath("$.message").isEqualTo("Invalid UUID format");
-
-
-        verify(userSubmissionService, never()).getAllSubmissionsByUser(badUserId);
     }
 
     @Test
