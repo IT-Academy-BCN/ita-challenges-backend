@@ -68,7 +68,7 @@ class UserSubmissionControllerTest {
                 .thenReturn(Flux.just(sol1, sol2));
 
         webTestClient.get()
-                .uri("/itachallenge/api/v1/challenge/submission/{userId}/submissions", userId)
+                .uri("/itachallenge/api/v1/challenge/challenges/{userId}/submissions", userId)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBodyList(UserSubmissionResponseDto.class)
@@ -89,7 +89,7 @@ class UserSubmissionControllerTest {
                 .thenReturn(Flux.empty());
 
         webTestClient.get()
-                .uri("/itachallenge/api/v1/challenge/submission/{userId}/submissions", validUserId)
+                .uri("/itachallenge/api/v1/challenge/challenges/{userId}/submissions", validUserId)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
@@ -107,7 +107,7 @@ class UserSubmissionControllerTest {
                 .thenReturn(Flux.error(new RuntimeException("Boom")));
 
         webTestClient.get()
-                .uri("/itachallenge/api/v1/challenge/submission/{userId}/submissions", userId)
+                .uri("/itachallenge/api/v1/challenge/challenges/{userId}/submissions", userId)
                 .exchange()
                 .expectStatus().is5xxServerError()
                 .expectBody()
