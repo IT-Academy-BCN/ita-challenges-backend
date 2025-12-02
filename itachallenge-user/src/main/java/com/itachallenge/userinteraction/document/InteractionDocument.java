@@ -1,12 +1,8 @@
 package com.itachallenge.userinteraction.document;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
-import lombok.ToString;
+
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -21,21 +17,22 @@ import java.util.UUID;
 @SuperBuilder
 @EqualsAndHashCode
 @ToString
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class InteractionDocument {
 
     @Id
     @Field("_id")
-    protected UUID uuid;
+    private UUID uuid;
 
     @Field("userId")
     @Indexed
-    protected UUID userId;
+    private UUID userId;
 
     @Field("challengeId")
     @Indexed
-    protected UUID challengeId;
+    private UUID challengeId;
 
     @CreatedDate
     @Field(name = "createdAt")
-    protected LocalDateTime createdAt;
+    private LocalDateTime createdAt;
 }
