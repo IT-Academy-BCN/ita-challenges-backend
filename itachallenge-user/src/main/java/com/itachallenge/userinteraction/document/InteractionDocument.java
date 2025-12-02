@@ -22,7 +22,7 @@ import java.util.UUID;
 @SuperBuilder
 @EqualsAndHashCode
 @ToString
-public class InteractionDocument {
+public abstract class InteractionDocument {
 
     @Id
     @Field("_id")
