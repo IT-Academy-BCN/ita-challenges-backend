@@ -8,6 +8,7 @@ import com.itachallenge.user.dto.UserSolutionResponseDto;
 import com.itachallenge.user.service.IUserSolutionService;
 import com.itachallenge.user.service.UserService;
 import com.itachallenge.userinteraction.service.bookmark.BookmarkService;
+import com.itachallenge.userinteraction.service.favorite.FavoriteService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -38,11 +39,13 @@ public class UserController {
     public static final String X_GITHUB_USERNAME ="X-Github-Username";
 
     private final UserService userService;
+    private final FavoriteService favoriteService;
     private final IUserSolutionService userSolutionService;
     private final BookmarkService bookmarkService;
 
-    public UserController(UserService userService, IUserSolutionService userSolutionService, BookmarkService bookmarkService) {
+    public UserController(UserService userService, IUserSolutionService userSolutionService, FavoriteService favoriteService, BookmarkService bookmarkService) {
         this.userService = userService;
+        this.favoriteService = favoriteService;
         this.userSolutionService = userSolutionService;
         this.bookmarkService = bookmarkService;
     }
@@ -147,7 +150,7 @@ public class UserController {
 
     @PostMapping("/users/{userId}/favorites/{challengeId}")
     public Mono<ResponseEntity<Boolean>> addToFavorites(@PathVariable String userId, @PathVariable String challengeId) {
-        return userService.addChallengeToFavorites(userId, challengeId)
+        return favoriteService.addChallengeToFavorites(userId, challengeId)
                 .map(added -> {
                     if (Boolean.TRUE.equals(added)) {
                         log.info("Challenge '{}' added to user '{}' favorites", challengeId, userId);
