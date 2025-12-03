@@ -70,7 +70,7 @@ class FavoriteControllerIntegrationTest {
         addFavorite(userId, challengeId3);
 
         webTestClient.get()
-                .uri("/itachallenge/api/v1/user/users/{userId}/favorites", userId)
+                .uri("/itachallenge/api/v1/userinteraction/favorites/{userId}", userId)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
@@ -89,7 +89,7 @@ class FavoriteControllerIntegrationTest {
         String userId = createUser("user");
 
         webTestClient.get()
-                .uri("/itachallenge/api/v1/user/users/{userId}/favorites", userId)
+                .uri("/itachallenge/api/v1/userinteraction/favorites/{userId}", userId)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
@@ -114,7 +114,7 @@ class FavoriteControllerIntegrationTest {
         addFavorite(user2, challengeId3);
 
         webTestClient.get()
-                .uri("/itachallenge/api/v1/user/users/{userId}/favorites", user1)
+                .uri("/itachallenge/api/v1/userinteraction/favorites/{userId}", user1)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
@@ -131,7 +131,7 @@ class FavoriteControllerIntegrationTest {
     @Test
     void getUserFavorites_WithInvalidUUID_Returns400(){
         webTestClient.get()
-                .uri("/itachallenge/api/v1/user/users/{userId}/favorites", 321)
+                .uri("/itachallenge/api/v1/userinteraction/favorites/{userId}", 321)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isBadRequest()
@@ -155,7 +155,7 @@ class FavoriteControllerIntegrationTest {
         String nonExistentUserId = UUID.randomUUID().toString();
 
         webTestClient.get()
-                .uri("/itachallenge/api/v1/user/users/{userId}/favorites", nonExistentUserId)
+                .uri("/itachallenge/api/v1/userinteraction/favorites/{userId}", nonExistentUserId)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isNotFound()

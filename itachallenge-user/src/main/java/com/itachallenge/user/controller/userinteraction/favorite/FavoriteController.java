@@ -15,7 +15,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/itachallenge/api/v1/user")
+@RequestMapping("/itachallenge/api/v1/userinteraction/favorites")
 public class FavoriteController {
 
     private static final Logger log = LoggerFactory.getLogger(FavoriteController.class);
@@ -44,7 +44,7 @@ public class FavoriteController {
                     @ApiResponse(responseCode = "500", description = "Unexpected error")
             }
     )
-    @GetMapping("/users/{userId}/favorites")
+    @GetMapping("/{userId}")
     public Mono<ResponseEntity<Set<UUID>>> getUserFavorites(@PathVariable String userId) {
         return favoriteService.getUserFavorites(userId)
                 .map(favorites -> {
