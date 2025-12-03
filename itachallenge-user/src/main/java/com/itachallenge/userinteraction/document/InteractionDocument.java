@@ -15,13 +15,14 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @SuperBuilder
-@EqualsAndHashCode
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class InteractionDocument {
 
     @Id
     @Field("_id")
+    @EqualsAndHashCode.Include
     private UUID uuid;
 
     @Field("userId")
