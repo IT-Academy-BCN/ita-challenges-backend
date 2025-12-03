@@ -17,7 +17,7 @@ import java.util.UUID;
 @SuperBuilder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public abstract class InteractionDocument {
 
     @Id

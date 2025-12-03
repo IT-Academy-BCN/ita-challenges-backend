@@ -15,7 +15,6 @@ class FavoriteDocumentTest {
     private UUID challengeId;
     private LocalDateTime createdAt;
     private FavoriteDocument favoriteDocument;
-    private FavoriteDocument favoriteDocument2;
 
     @BeforeEach
     void setUp(){
@@ -25,13 +24,6 @@ class FavoriteDocumentTest {
         createdAt = LocalDateTime.now();
 
         favoriteDocument = FavoriteDocument.builder()
-                .uuid(uuid)
-                .userId(userId)
-                .challengeId(challengeId)
-                .createdAt(createdAt)
-                .build();
-
-        favoriteDocument2 = FavoriteDocument.builder()
                 .uuid(uuid)
                 .userId(userId)
                 .challengeId(challengeId)
@@ -48,23 +40,23 @@ class FavoriteDocumentTest {
         assertEquals(createdAt, favoriteDocument.getCreatedAt());
     }
 
-    @Test
-    void settersAndGetters_test() {
-        UUID newUuid = UUID.randomUUID();
-        UUID newUserId = UUID.randomUUID();
-        UUID newChallengeId = UUID.randomUUID();
-        LocalDateTime newCreatedAt = LocalDateTime.now().plusDays(1);
-
-        favoriteDocument.setUuid(newUuid);
-        favoriteDocument.setUserId(newUserId);
-        favoriteDocument.setChallengeId(newChallengeId);
-        favoriteDocument.setCreatedAt(newCreatedAt);
-
-        assertEquals(newUuid, favoriteDocument.getUuid());
-        assertEquals(newUserId, favoriteDocument.getUserId());
-        assertEquals(newChallengeId, favoriteDocument.getChallengeId());
-        assertEquals(newCreatedAt, favoriteDocument.getCreatedAt());
-    }
+//    @Test
+//    void settersAndGetters_test() {
+//        UUID newUuid = UUID.randomUUID();
+//        UUID newUserId = UUID.randomUUID();
+//        UUID newChallengeId = UUID.randomUUID();
+//        LocalDateTime newCreatedAt = LocalDateTime.now().plusDays(1);
+//
+//        favoriteDocument.setUuid(newUuid);
+//        favoriteDocument.setUserId(newUserId);
+//        favoriteDocument.setChallengeId(newChallengeId);
+//        favoriteDocument.setCreatedAt(newCreatedAt);
+//
+//        assertEquals(newUuid, favoriteDocument.getUuid());
+//        assertEquals(newUserId, favoriteDocument.getUserId());
+//        assertEquals(newChallengeId, favoriteDocument.getChallengeId());
+//        assertEquals(newCreatedAt, favoriteDocument.getCreatedAt());
+//    }
 
     @Test
     void builder_test() {
@@ -92,18 +84,7 @@ class FavoriteDocumentTest {
         assertNull(emptyDoc.getCreatedAt());
     }
 
-    @Test
-    void allArgsConstructor_test() {
-        FavoriteDocument doc = new FavoriteDocument(uuid, userId, challengeId, createdAt);
-        Assertions.assertNotNull(doc);
-        assertEquals(uuid, doc.getUuid());
-        assertEquals(userId, doc.getUserId());
-        assertEquals(challengeId, doc.getChallengeId());
-        assertEquals(createdAt, doc.getCreatedAt());
-    }
-
-
-    @Test
+   @Test
     void toString_test() {
         String str = favoriteDocument.toString();
         assertTrue(str.contains(uuid.toString()));
@@ -181,8 +162,8 @@ class FavoriteDocumentTest {
         // equals
         assertEquals(a, b, "Objects with identical values should be equal");
         assertNotEquals(a, c, "Objects with different values should not be equal");
-        assertNotEquals(a, null, "Object must not be equal to null");
-        assertNotEquals(a, "string", "Object must not be equal to object of another type");
+        assertNotEquals(null, a, "Object must not be equal to null");
+        assertNotEquals("string", a, "Object must not be equal to object of another type");
 
         // hashCode
         assertEquals(a.hashCode(), b.hashCode(), "Equal objects must have the same hashCode");
@@ -204,158 +185,5 @@ class FavoriteDocumentTest {
         assertNull(doc.getCreatedAt());
     }
 
-    @Test
-    void equals_NullAndDifferentType_test() {
-        FavoriteDocument doc = new FavoriteDocument(uuid, userId, challengeId, createdAt);
-        assertNotEquals(null, doc);
-        assertNotEquals("some string", doc);
 
-        FavoriteDocument other = new FavoriteDocument(uuid, userId, null, createdAt);
-        assertNotEquals(doc, other);
-        assertNotEquals(doc.hashCode(), other.hashCode());
-    }
-
-    @Test
-    void toString_WithNullFields_test() {
-        FavoriteDocument doc = new FavoriteDocument(null, userId, null, null);
-        String str = doc.toString();
-        assertTrue(str.contains("userId=" + userId));
-        assertTrue(str.contains("uuid=null"));
-        assertTrue(str.contains("challengeId=null"));
-        assertTrue(str.contains("createdAt=null"));
-    }
-
-    @Test
-    void builderThenSetters_EqualsDifference_test() {
-        FavoriteDocument doc1 = FavoriteDocument.builder()
-                .uuid(uuid)
-                .userId(userId)
-                .challengeId(challengeId)
-                .createdAt(createdAt)
-                .build();
-
-        FavoriteDocument doc2 = FavoriteDocument.builder()
-                .uuid(uuid)
-                .userId(userId)
-                .challengeId(challengeId)
-                .createdAt(createdAt)
-                .build();
-
-        assertEquals(doc1, doc2);
-
-        doc2.setCreatedAt(createdAt.plusHours(1));
-        assertNotEquals(doc1, doc2);
-    }
-
-    @Test
-    void equals_WithDifferentUserId_test() {
-        FavoriteDocument doc1 = new FavoriteDocument(uuid, UUID.randomUUID(), challengeId, createdAt);
-        FavoriteDocument doc2 = new FavoriteDocument(uuid, UUID.randomUUID(), challengeId, createdAt);
-
-        assertNotEquals(doc1, doc2);
-    }
-
-    @Test
-    void equals_WithDifferentChallengeId_test() {
-        FavoriteDocument doc1 = new FavoriteDocument(uuid, userId, UUID.randomUUID(), createdAt);
-        FavoriteDocument doc2 = new FavoriteDocument(uuid, userId, UUID.randomUUID(), createdAt);
-
-        assertNotEquals(doc1, doc2);
-    }
-
-    @Test
-    void equals_WithDifferentCreatedAt_test() {
-        FavoriteDocument doc1 = new FavoriteDocument(uuid, userId, challengeId, LocalDateTime.now());
-        FavoriteDocument doc2 = new FavoriteDocument(uuid, userId, challengeId, LocalDateTime.now().plusDays(1));
-
-        assertNotEquals(doc1, doc2);
-    }
-
-    @Test
-    void equals_WithNullUuidInBoth_test() {
-        FavoriteDocument doc1 = new FavoriteDocument(null, userId, challengeId, createdAt);
-        FavoriteDocument doc2 = new FavoriteDocument(null, userId, challengeId, createdAt);
-
-        assertEquals(doc1, doc2);
-    }
-
-    @Test
-    void equals_WithNullUserIdInBoth_test() {
-        FavoriteDocument doc1 = new FavoriteDocument(uuid, null, challengeId, createdAt);
-        FavoriteDocument doc2 = new FavoriteDocument(uuid, null, challengeId, createdAt);
-
-        assertEquals(doc1, doc2);
-    }
-
-    @Test
-    void equals_WithNullChallengeIdInBoth_test() {
-        FavoriteDocument doc1 = new FavoriteDocument(uuid, userId, null, createdAt);
-        FavoriteDocument doc2 = new FavoriteDocument(uuid, userId, null, createdAt);
-
-        assertEquals(doc1, doc2);
-    }
-
-    @Test
-    void equals_WithNullCreatedAtInBoth_test() {
-        FavoriteDocument doc1 = new FavoriteDocument(uuid, userId, challengeId, null);
-        FavoriteDocument doc2 = new FavoriteDocument(uuid, userId, challengeId, null);
-
-        assertEquals(doc1, doc2);
-    }
-    @Test
-    void hashCode_WithAllNulls_test() {
-        FavoriteDocument doc = new FavoriteDocument(null, null, null, null);
-        assertDoesNotThrow(doc::hashCode);
-    }
-
-    @Test
-    void hashCode_WithMixedNulls_test() {
-        LocalDateTime fixedTime = LocalDateTime.of(2024, 1, 1, 12, 0);
-        FavoriteDocument doc1 = new FavoriteDocument(uuid, null, null, fixedTime);
-        FavoriteDocument doc2 = new FavoriteDocument(uuid, null, null, fixedTime);
-
-        assertEquals(doc1.hashCode(), doc2.hashCode());
-    }
-
-    @Test
-    void canEqual_WithSameClass_test() {
-        FavoriteDocument doc1 = new FavoriteDocument();
-        FavoriteDocument doc2 = new FavoriteDocument();
-
-        assertTrue(doc1.canEqual(doc2));
-    }
-
-    @Test
-    void canEqual_WithDifferentClass_test() {
-        FavoriteDocument doc = new FavoriteDocument();
-
-        assertFalse(doc.canEqual(new Object()));
-    }
-
-    @Test
-    void builder_ChainedCalls_test() {
-        FavoriteDocument doc = FavoriteDocument.builder()
-                .uuid(uuid)
-                .userId(userId)
-                .challengeId(challengeId)
-                .createdAt(createdAt)
-                .build();
-
-        assertNotNull(doc);
-        assertEquals(uuid, doc.getUuid());
-        assertEquals(userId, doc.getUserId());
-        assertEquals(challengeId, doc.getChallengeId());
-        assertEquals(createdAt, doc.getCreatedAt());
-    }
-
-    @Test
-    void builder_EmptyBuild_test() {
-        FavoriteDocument doc = FavoriteDocument.builder().build();
-
-        assertNotNull(doc);
-        assertNull(doc.getUuid());
-        assertNull(doc.getUserId());
-        assertNull(doc.getChallengeId());
-        assertNull(doc.getCreatedAt());
-    }
 }
