@@ -462,7 +462,11 @@ class UserServiceImplTest {
         UUID userId = UUID.randomUUID();
         UUID challengeId = UUID.randomUUID();
         UserDocument user = new UserDocument(userId, "testUser", null, null, 0);
-        FavoriteDocument favorite = new FavoriteDocument(UUID.randomUUID(), userId, challengeId, LocalDateTime.now());
+        FavoriteDocument favorite = FavoriteDocument.builder()
+                .uuid(UUID.randomUUID())
+                .userId(userId)
+                .challengeId(challengeId)
+                .build();
 
         when(userRepository.findById(userId)).thenReturn(Mono.just(user));
         when(favoriteRepository.findByUserIdAndChallengeId(userId, challengeId))

@@ -18,9 +18,4 @@ import java.util.UUID;
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @Document(collection="bookmarks")
-public class BookmarkDocument extends InteractionDocument {
-
-    public BookmarkDocument(UUID uuid, UUID userId, UUID challengeId, LocalDateTime createdAt) {
-        super(uuid, userId, challengeId, createdAt);
-    }
-}
+public class BookmarkDocument extends InteractionDocument {}
