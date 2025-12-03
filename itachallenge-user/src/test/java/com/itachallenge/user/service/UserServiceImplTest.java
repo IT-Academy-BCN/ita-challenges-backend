@@ -489,7 +489,11 @@ class UserServiceImplTest {
         UUID challengeId = UUID.randomUUID();
         UUID userId = UUID.randomUUID();
         UserDocument user = new UserDocument(userId, "testUser", null, null, 0);
-        BookmarkDocument bookmark = new BookmarkDocument(UUID.randomUUID(), userId, challengeId, LocalDateTime.now());
+        BookmarkDocument bookmark = BookmarkDocument.builder()
+                .uuid(UUID.randomUUID())
+                .userId(userId)
+                .challengeId(challengeId)
+                .build();
 
 
         when(userRepository.findById(userId)).thenReturn(Mono.just(user));
