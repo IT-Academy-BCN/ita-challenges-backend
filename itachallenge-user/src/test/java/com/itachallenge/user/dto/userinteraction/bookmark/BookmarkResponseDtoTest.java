@@ -1,87 +1,74 @@
 package com.itachallenge.user.dto.userinteraction.bookmark;
 
-import org.junit.jupiter.api.BeforeEach;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class BookmarkResponseDtoTest {
-    private final UUID testUuid = UUID.fromString("123e4567-e89b-12d3-a456-426614174000");
-    private final UUID testUserId = UUID.fromString("123e4567-e89b-12d3-a456-426614174001");
-    private final UUID testChallengeId = UUID.fromString("123e4567-e89b-12d3-a456-426614174002");
-    private final LocalDateTime testDateTime = LocalDateTime.of(2023, 1, 1, 12, 0);
 
+    private static final ObjectMapper MAPPER = new ObjectMapper()
+            .registerModule(new JavaTimeModule())
+            .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS); // ISO-8601
 
     @Test
-    void testGettersAndSetters() {
-        BookmarkResponseDto bookmarkResponseDto = BookmarkResponseDto.builder()
-                .uuid(testUuid)
-                .userId(testUserId)
-                .challengeId(testChallengeId)
-                .createdAt(testDateTime)
-                .build();
-
-        UUID newUuid = UUID.randomUUID();
-        UUID newUserId = UUID.randomUUID();
-        UUID newChallengeId = UUID.randomUUID();
-        LocalDateTime newDateTime = LocalDateTime.now();
-
-        bookmarkResponseDto.setUuid(newUuid);
-        bookmarkResponseDto.setUserId(newUserId);
-        bookmarkResponseDto.setChallengeId(newChallengeId);
-        bookmarkResponseDto.setCreatedAt(newDateTime);
-
-        assertEquals(newUuid, bookmarkResponseDto.getUuid());
-        assertEquals(newUserId, bookmarkResponseDto.getUserId());
-        assertEquals(newChallengeId, bookmarkResponseDto.getChallengeId());
-        assertEquals(newDateTime, bookmarkResponseDto.getCreatedAt());
-    }
-
-   
-    @Test
-    void fullCoverageTest() {
+    void builder_creaDtoConValoresCorrectos() {
         UUID uuid = UUID.fromString("123e4567-e89b-12d3-a456-426614174000");
         UUID userId = UUID.fromString("123e4567-e89b-12d3-a456-426614174001");
         UUID challengeId = UUID.fromString("123e4567-e89b-12d3-a456-426614174002");
         LocalDateTime createdAt = LocalDateTime.of(2023, 1, 1, 12, 0);
 
-        // no-args const + setters
-        BookmarkResponseDto dto = new BookmarkResponseDto();
-        dto.setUuid(uuid);
-        dto.setUserId(userId);
-        dto.setChallengeId(challengeId);
-        dto.setCreatedAt(createdAt);
+        BookmarkResponseDto.BookmarkResponseDtoBuilder builder = BookmarkResponseDto.builder()
+                .uuid(uuid)
+                .userId(userId)
+                .challengeId(challengeId)
+                .createdAt(createdAt);
+
+        assertNotNull(builder.toString());
+
+        BookmarkResponseDto dto = builder.build();
 
         assertEquals(uuid, dto.getUuid());
         assertEquals(userId, dto.getUserId());
         assertEquals(challengeId, dto.getChallengeId());
         assertEquals(createdAt, dto.getCreatedAt());
+    }
 
-        // all-args const
-        BookmarkResponseDto dtoAllArgs = new BookmarkResponseDto(uuid, userId, challengeId, createdAt);
-        assertEquals(uuid, dtoAllArgs.getUuid());
-        assertEquals(userId, dtoAllArgs.getUserId());
-        assertEquals(challengeId, dtoAllArgs.getChallengeId());
-        assertEquals(createdAt, dtoAllArgs.getCreatedAt());
+    @Test
+    void jsonContract_serializaYDeserializa() throws Exception {
+        UUID uuid = UUID.fromString("123e4567-e89b-12d3-a456-426614174000");
+        UUID userId = UUID.fromString("123e4567-e89b-12d3-a456-426614174001");
+        UUID challengeId = UUID.fromString("123e4567-e89b-12d3-a456-426614174002");
+        LocalDateTime createdAt = LocalDateTime.of(2023, 1, 1, 12, 0);
 
-        // @JsonProperty
-        try {
-            assertEquals("uuid_bookmark", BookmarkResponseDto.class.getDeclaredField("uuid")
-                    .getAnnotation(com.fasterxml.jackson.annotation.JsonProperty.class).value());
-            assertEquals("user_id", BookmarkResponseDto.class.getDeclaredField("userId")
-                    .getAnnotation(com.fasterxml.jackson.annotation.JsonProperty.class).value());
-            assertEquals("challenge_id", BookmarkResponseDto.class.getDeclaredField("challengeId")
-                    .getAnnotation(com.fasterxml.jackson.annotation.JsonProperty.class).value());
-            assertEquals("created_at", BookmarkResponseDto.class.getDeclaredField("createdAt")
-                    .getAnnotation(com.fasterxml.jackson.annotation.JsonProperty.class).value());
-        } catch (NoSuchFieldException e) {
-            fail("Field not found: " + e.getMessage());
-        }
+        BookmarkResponseDto dto = BookmarkResponseDto.builder()
+                .uuid(uuid)
+                .userId(userId)
+                .challengeId(challengeId)
+                .createdAt(createdAt)
+                .build();
 
-        assertNotNull(dto.toString());
-        assertNotNull(dtoAllArgs.toString());
+        String json = MAPPER.writeValueAsString(dto);
+        JsonNode root = MAPPER.readTree(json);
+
+        assertEquals(uuid.toString(),        root.get("uuid_bookmark").asText());
+        assertEquals(userId.toString(),      root.get("user_id").asText());
+        assertEquals(challengeId.toString(), root.get("challenge_id").asText());
+        // comparar como LocalDateTime para evitar problemas de formato (segundos)
+        assertEquals(createdAt, LocalDateTime.parse(root.get("created_at").asText()));
+
+        // ida y vuelta
+        BookmarkResponseDto back = MAPPER.readValue(json, BookmarkResponseDto.class);
+        assertEquals(uuid, back.getUuid());
+        assertEquals(userId, back.getUserId());
+        assertEquals(challengeId, back.getChallengeId());
+        assertEquals(createdAt, back.getCreatedAt());
     }
 }
