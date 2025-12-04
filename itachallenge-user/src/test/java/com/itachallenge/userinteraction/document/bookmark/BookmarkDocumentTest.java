@@ -1,14 +1,14 @@
-package com.itachallenge.userinteraction.document.favorite;
+package com.itachallenge.userinteraction.document.bookmark;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import com.itachallenge.userinteraction.document.bookmark.BookmarkDocument;
+import com.itachallenge.userinteraction.document.favorite.FavoriteDocument;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class FavoriteDocumentTest {
+class BookmarkDocumentTest {
 
     @Test
     void constructor_shouldSetBaseInteractionFields() {
@@ -17,7 +17,7 @@ class FavoriteDocumentTest {
         UUID challengeId = UUID.randomUUID();
         LocalDateTime createdAt = LocalDateTime.now();
 
-        FavoriteDocument document = FavoriteDocument.builder()
+        BookmarkDocument document = BookmarkDocument.builder()
                 .uuid(uuid)
                 .userId(userId)
                 .challengeId(challengeId)
@@ -37,21 +37,21 @@ class FavoriteDocumentTest {
         UUID challengeId = UUID.randomUUID();
         LocalDateTime createdAt = LocalDateTime.now();
 
-        FavoriteDocument a = FavoriteDocument.builder()
+        BookmarkDocument a = BookmarkDocument.builder()
                 .uuid(uuid)
                 .userId(userId)
                 .challengeId(challengeId)
                 .createdAt(createdAt)
                 .build();
 
-        FavoriteDocument b = FavoriteDocument.builder()
+        BookmarkDocument b = BookmarkDocument.builder()
                 .uuid(uuid)
                 .userId(userId)
                 .challengeId(challengeId)
                 .createdAt(createdAt)
                 .build();
 
-        FavoriteDocument different = FavoriteDocument.builder()
+        BookmarkDocument different = BookmarkDocument.builder()
                 .uuid(UUID.randomUUID())
                 .userId(userId)
                 .challengeId(challengeId)
@@ -67,4 +67,5 @@ class FavoriteDocumentTest {
 
         assertNotNull(a.toString());
     }
+
 }
