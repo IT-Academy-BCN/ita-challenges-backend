@@ -51,8 +51,19 @@ class FavoriteDocumentTest {
                 .createdAt(createdAt)
                 .build();
 
+        FavoriteDocument different = FavoriteDocument.builder()
+                .uuid(UUID.randomUUID())
+                .userId(userId)
+                .challengeId(challengeId)
+                .createdAt(createdAt)
+                .build();
+
         assertEquals(a, b);
         assertEquals(a.hashCode(), b.hashCode());
+
+        assertNotEquals(a, different);
+        assertNotEquals(a, null);
+        assertNotEquals(a, "some string");
 
         assertNotNull(a.toString());
     }
