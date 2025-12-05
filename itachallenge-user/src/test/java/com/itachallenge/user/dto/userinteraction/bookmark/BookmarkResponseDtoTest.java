@@ -19,7 +19,7 @@ class BookmarkResponseDtoTest {
             .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS); // ISO-8601
 
     @Test
-    void builder_creaDtoConValoresCorrectos() {
+    void builder_shouldCreateDtoWithProvidedValues() {
         UUID uuid = UUID.fromString("123e4567-e89b-12d3-a456-426614174000");
         UUID userId = UUID.fromString("123e4567-e89b-12d3-a456-426614174001");
         UUID challengeId = UUID.fromString("123e4567-e89b-12d3-a456-426614174002");
@@ -42,7 +42,7 @@ class BookmarkResponseDtoTest {
     }
 
     @Test
-    void jsonContract_serializaYDeserializa() throws Exception {
+    void jsonContract_shouldSerializeAndDeserializeCorrectly() throws Exception {
         UUID uuid = UUID.fromString("123e4567-e89b-12d3-a456-426614174000");
         UUID userId = UUID.fromString("123e4567-e89b-12d3-a456-426614174001");
         UUID challengeId = UUID.fromString("123e4567-e89b-12d3-a456-426614174002");
@@ -58,13 +58,12 @@ class BookmarkResponseDtoTest {
         String json = MAPPER.writeValueAsString(dto);
         JsonNode root = MAPPER.readTree(json);
 
-        assertEquals(uuid.toString(),        root.get("uuid_bookmark").asText());
-        assertEquals(userId.toString(),      root.get("user_id").asText());
-        assertEquals(challengeId.toString(), root.get("challenge_id").asText());
-        // comparar como LocalDateTime para evitar problemas de formato (segundos)
+        assertEquals(uuid.toString(),root.get("uuid_bookmark").asText());
+        assertEquals(userId.toString(),root.get("user_id").asText());
+        assertEquals(challengeId.toString(),root.get("challenge_id").asText());
+
         assertEquals(createdAt, LocalDateTime.parse(root.get("created_at").asText()));
 
-        // ida y vuelta
         BookmarkResponseDto back = MAPPER.readValue(json, BookmarkResponseDto.class);
         assertEquals(uuid, back.getUuid());
         assertEquals(userId, back.getUserId());
