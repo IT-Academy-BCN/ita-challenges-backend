@@ -18,9 +18,4 @@ import java.util.UUID;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Document(collection="favorites")
-public class FavoriteDocument extends InteractionDocument {
-
-    public FavoriteDocument(UUID uuid, UUID userId, UUID challengeId, LocalDateTime createdAt) {
-        super(uuid, userId, challengeId, createdAt);
-    }
-}
+public class FavoriteDocument extends InteractionDocument {}
