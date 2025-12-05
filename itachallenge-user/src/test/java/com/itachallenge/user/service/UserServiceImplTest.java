@@ -59,7 +59,7 @@ class UserServiceImplTest {
     @Test
     void getUser_ShouldReturnUser_WhenUserExists() {
         String username = "existingUser";
-        UserDocument existingUser = new UserDocument(UUID.randomUUID(), username, Role.ADMIN, null, 0);
+        UserDocument existingUser = new UserDocument(UUID.randomUUID(), username, Role.ADMIN, 0);
         when(userRepository.findByUsername(username)).thenReturn(Mono.just(existingUser));
 
         StepVerifier.create(userService.getUser(username))
