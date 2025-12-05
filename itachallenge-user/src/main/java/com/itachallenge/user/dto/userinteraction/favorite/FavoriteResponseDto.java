@@ -6,9 +6,9 @@ import lombok.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Data
 @Builder
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class FavoriteResponseDto {

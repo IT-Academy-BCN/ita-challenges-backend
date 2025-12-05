@@ -59,7 +59,7 @@ class UserServiceImplTest {
     @Test
     void getUser_ShouldReturnUser_WhenUserExists() {
         String username = "existingUser";
-        UserDocument existingUser = new UserDocument(UUID.randomUUID(), username, Role.ADMIN, 0);
+        UserDocument existingUser = new UserDocument(UUID.randomUUID(), username, Role.ADMIN, null, 0);
         when(userRepository.findByUsername(username)).thenReturn(Mono.just(existingUser));
 
         StepVerifier.create(userService.getUser(username))
@@ -462,7 +462,11 @@ class UserServiceImplTest {
         UUID userId = UUID.randomUUID();
         UUID challengeId = UUID.randomUUID();
         UserDocument user = new UserDocument(userId, "testUser", null, 0);
-        FavoriteDocument favorite = new FavoriteDocument(UUID.randomUUID(), userId, challengeId, LocalDateTime.now());
+        FavoriteDocument favorite = FavoriteDocument.builder()
+                .uuid(UUID.randomUUID())
+                .userId(userId)
+                .challengeId(challengeId)
+                .build();
 
         when(userRepository.findById(userId)).thenReturn(Mono.just(user));
         when(favoriteRepository.findByUserIdAndChallengeId(userId, challengeId))
@@ -485,7 +489,11 @@ class UserServiceImplTest {
         UUID challengeId = UUID.randomUUID();
         UUID userId = UUID.randomUUID();
         UserDocument user = new UserDocument(userId, "testUser", null, 0);
-        BookmarkDocument bookmark = new BookmarkDocument(UUID.randomUUID(), userId, challengeId, LocalDateTime.now());
+        BookmarkDocument bookmark = BookmarkDocument.builder()
+                .uuid(UUID.randomUUID())
+                .userId(userId)
+                .challengeId(challengeId)
+                .build();
 
 
         when(userRepository.findById(userId)).thenReturn(Mono.just(user));
