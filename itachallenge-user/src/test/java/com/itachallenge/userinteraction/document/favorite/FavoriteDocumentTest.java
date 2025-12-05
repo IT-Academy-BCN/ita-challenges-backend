@@ -3,7 +3,6 @@ package com.itachallenge.userinteraction.document.favorite;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import com.itachallenge.userinteraction.document.bookmark.BookmarkDocument;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
