@@ -3,9 +3,6 @@ package com.itachallenge.user.service;
 import com.itachallenge.user.document.UserDocument;
 import reactor.core.publisher.Mono;
 
-import java.util.Set;
-import java.util.UUID;
-
 public interface UserService {
     Mono<UserDocument> getUser(String githubUsername);
 
@@ -17,7 +14,5 @@ public interface UserService {
 
     Mono<Boolean> deleteChallengeFromBookmarks(String userId, String challengeId);
 
-    Mono<Set<UUID>> getUserBookmarks(String userId);
-    
     Mono<UserDocument> getUserById(String userId);
 }
