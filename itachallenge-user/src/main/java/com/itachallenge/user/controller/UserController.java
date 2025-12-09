@@ -354,34 +354,6 @@ public class UserController {
     }
 
     @Operation(
-            summary = "Gets challenges marked as bookmarks by a user",
-            description = "Returns a set of challenge IDs that the specified user has marked as bookmarked",
-            parameters = {
-                    @Parameter(
-                            name = "userId",
-                            description = "UUID of the user",
-                            required = true,
-                            in = ParameterIn.PATH
-                    )
-            },
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Set of bookmarked challengeIds by user"),
-                    @ApiResponse(responseCode = "404", description = "User not found"),
-                    @ApiResponse(responseCode = "400", description = "The provided IDs are not valid."),
-                    @ApiResponse(responseCode = "500", description = "Unexpected error")
-            }
-    )
-
-    @GetMapping("/users/{userId}/bookmarks")
-    public Mono<ResponseEntity<Set<UUID>>> getUserBookmarks(@PathVariable String userId) {
-        return bookmarkService.getUserBookmarks(userId)
-                .map(bookmarks -> {
-                    log.info("Retrieved {} bookmarked challenges for user {}", bookmarks.size(), userId);
-                    return ResponseEntity.ok().body(bookmarks);
-                });
-    }
-
-    @Operation(
             summary = "Retrieve all solutions for a user.",
             parameters = {
                     @Parameter(
