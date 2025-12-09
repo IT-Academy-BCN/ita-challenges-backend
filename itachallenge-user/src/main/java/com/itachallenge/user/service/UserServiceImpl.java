@@ -4,15 +4,14 @@ import com.itachallenge.user.document.UserDocument;
 import com.itachallenge.user.exception.BadUUIDException;
 import com.itachallenge.user.exception.NotFoundException;
 import com.itachallenge.user.repository.UserRepository;
+import com.itachallenge.userinteraction.document.bookmark.BookmarkDocument;
 import org.springframework.stereotype.Service;
 
 import com.itachallenge.userinteraction.document.favorite.FavoriteDocument;
 import com.itachallenge.userinteraction.repository.favorite.FavoriteRepository;
+import com.itachallenge.userinteraction.repository.bookmark.BookmarkRepository;
 import reactor.core.publisher.Mono;
 
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -20,10 +19,12 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final FavoriteRepository favoriteRepository;
+    private final BookmarkRepository bookmarkRepository;
 
-    public UserServiceImpl(UserRepository userRepository, FavoriteRepository favoriteRepository) {
+    public UserServiceImpl(UserRepository userRepository, FavoriteRepository favoriteRepository, BookmarkRepository bookmarkRepository) {
         this.userRepository = userRepository;
         this.favoriteRepository = favoriteRepository;
+        this.bookmarkRepository = bookmarkRepository;
     }
 
     @Override
@@ -47,6 +48,7 @@ public class UserServiceImpl implements UserService {
                 });
     }
 
+    //TODO : TO IMPLEMENT TO BOOKMARK SERVICE IMPL
     @Override
     public Mono<Boolean> addChallengeToBookmarks(String userId, String challengeId) {
         return Mono.zip(parseAndValidateUUID(userId), parseAndValidateUUID(challengeId))
@@ -56,7 +58,7 @@ public class UserServiceImpl implements UserService {
 
                     return userRepository.findById(userUuid)
                             .switchIfEmpty(Mono.error(new NotFoundException("User not found")))
-                            .flatMap(user -> addToBookmarks(user, challengeUuid));
+                            .flatMap(user -> addToBookmarks(userUuid, challengeUuid));
                 });
     }
 
@@ -74,6 +76,7 @@ public class UserServiceImpl implements UserService {
                 });
     }
 
+    //TODO : TO IMPLEMENT TO BOOKMARK SERVICE IMPL
     @Override
     public Mono<Boolean> deleteChallengeFromBookmarks(String userId, String challengeId) {
         return Mono.zip(parseAndValidateUUID(userId), parseAndValidateUUID(challengeId))
@@ -83,7 +86,7 @@ public class UserServiceImpl implements UserService {
 
                     return userRepository.findById(userUuid)
                             .switchIfEmpty(Mono.error(new NotFoundException("User not found")))
-                            .flatMap(user -> deleteFromBookmarks(user, challengeUuid));
+                            .flatMap(user -> deleteFromBookmarks(userUuid, challengeUuid));
                 });
     }
 
@@ -105,18 +108,21 @@ public class UserServiceImpl implements UserService {
                 });
     }
 
-    private Mono<Boolean> addToBookmarks(UserDocument user, UUID challengeUuid) {
-        Set<UUID> bookmarks = Optional.ofNullable(user.getBookmarkChallenges())
-                .orElseGet(HashSet::new);
+    //TODO : TO IMPLEMENT TO BOOKMARK SERVICE IMPL
+    private Mono<Boolean> addToBookmarks(UUID userUuid, UUID challengeUuid) {
+        return bookmarkRepository.existsByUserIdAndChallengeId(userUuid, challengeUuid)
+                .flatMap(exists -> {
+                    if (exists.booleanValue())
+                        return Mono.just(false);
 
-        boolean added = bookmarks.add(challengeUuid);
+                    BookmarkDocument bookmark = new BookmarkDocument();
+                    bookmark.setUuid(UUID.randomUUID());
+                    bookmark.setUserId(userUuid);
+                    bookmark.setChallengeId(challengeUuid);
 
-        if (added) {
-            user.setBookmarkChallenges(bookmarks);
-            return userRepository.save(user).then(Mono.just(true));
-        }
-
-        return Mono.just(false);
+                    return bookmarkRepository.save(bookmark)
+                            .thenReturn(true);
+                });
     }
 
     //TODO : TO IMPLEMENT IN FAVORITE SERVICE IMPL
@@ -129,20 +135,15 @@ public class UserServiceImpl implements UserService {
                 .switchIfEmpty(Mono.just(false));
     }
 
-    private Mono<Boolean> deleteFromBookmarks(UserDocument user, UUID challengeUuid) {
-        Set<UUID> bookmarks = Optional.ofNullable(user.getBookmarkChallenges())
-                .orElseGet(HashSet::new);
-
-        boolean deleted = bookmarks.remove(challengeUuid);
-
-        if (deleted) {
-            user.setBookmarkChallenges(bookmarks);
-            return userRepository.save(user).then(Mono.just(true));
-        }
-
-        return Mono.just(false);
+    //TODO : TO IMPLEMENT TO BOOKMARK SERVICE IMPL
+    private Mono<Boolean> deleteFromBookmarks(UUID userId, UUID challengeUuid) {
+        return bookmarkRepository.findByUserIdAndChallengeId(userId, challengeUuid)
+                .flatMap(bookmark ->
+                        bookmarkRepository.delete(bookmark)
+                                .then(Mono.just(true))
+                )
+                .switchIfEmpty(Mono.just(false));
     }
-
     private Mono<UUID> parseAndValidateUUID(String id) {
 
         if (id == null || id.isEmpty()) {
@@ -157,19 +158,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Mono<Set<UUID>> getUserBookmarks(String userId) {
-        return parseAndValidateUUID(userId)
-                .flatMap(userUuid ->
-                        userRepository.findById(userUuid)
-                                .switchIfEmpty(Mono.error(new NotFoundException("User not found with id: " + userId)))
-                                .map(user -> Optional.ofNullable(user.getBookmarkChallenges()).orElseGet(HashSet::new))
-                );
-    }
-    
-    @Override
     public Mono<UserDocument> getUserById(String userId) {
         return userRepository.findById(UUID.fromString(userId))
                 .switchIfEmpty(Mono.error(new NotFoundException("User not found")));
     }
-    
+
 }
