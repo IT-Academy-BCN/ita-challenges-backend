@@ -5,8 +5,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### [itachallenge-user-3.1.1-RELEASE] - 2025-11-27
 ### Added
+- Foundation for managing user bookmarks in a dedicated collection. (PR #1040 #1042 #1046 and #1049)
+  - Bookmarks domain & persistence
+    - BookmarkDocument & BookmarkDocumentTest
+    - BookmarkRepository (ReactiveMongoRepository<BookmarkDocument, UUID>) ; Bookmarks collection starts empty.
+    - BookmarkResponseDto & BookmarkResponseDtoTest
+    - Created BookmarkService interface and BookmarkServiceImpl implementation.
 - Created UserInteractionDocument : Extracted common fields into a new Document, now extended by both BookmarkDocument and FavoriteDocument.
-- Created BookmarkService interface and BookmarkServiceImpl implementation. (PR [##877])
 
 ### Changed
 - Refactor: Moved the GET bookmark-related logic out of UserServiceImpl into BookmarkServiceImpl.
