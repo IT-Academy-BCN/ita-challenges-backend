@@ -9,6 +9,7 @@ import com.itachallenge.userinteraction.document.bookmark.BookmarkDocument;
 import com.itachallenge.userinteraction.document.favorite.FavoriteDocument;
 import com.itachallenge.userinteraction.repository.bookmark.BookmarkRepository;
 import com.itachallenge.userinteraction.repository.favorite.FavoriteRepository;
+import com.itachallenge.userinteraction.service.favorite.FavoriteServiceImpl;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -39,6 +40,9 @@ class UserServiceImplTest {
 
     @InjectMocks
     private UserServiceImpl userService;
+
+    @InjectMocks
+    private FavoriteServiceImpl favoriteService;
 
     private AutoCloseable mocks;
 
@@ -172,7 +176,7 @@ class UserServiceImplTest {
 
         when(userRepository.findById(any(UUID.class))).thenReturn(Mono.empty());
 
-        StepVerifier.create(userService.addChallengeToFavorites(userId.toString(), challengeId.toString()))
+        StepVerifier.create(favoriteService.addChallengeToFavorites(userId.toString(), challengeId.toString()))
                 .expectErrorSatisfies(throwable -> {
                     assertInstanceOf(NotFoundException.class, throwable);
                     assertEquals("User not found", throwable.getMessage());
@@ -190,7 +194,7 @@ class UserServiceImplTest {
         String invalidUserId = null;
         String validChallengeId = UUID.randomUUID().toString();
 
-        StepVerifier.create(userService.addChallengeToFavorites(invalidUserId, validChallengeId))
+        StepVerifier.create(favoriteService.addChallengeToFavorites(invalidUserId, validChallengeId))
                 .expectErrorSatisfies(throwable -> {
                     assertInstanceOf(BadUUIDException.class, throwable);
                     assertEquals("Invalid ID format", throwable.getMessage());

@@ -55,7 +55,7 @@ class FavoriteServiceImplTest {
     void addChallengeToFavorites_ShouldReturnTrue_WhenFavoriteDoesNotExist() {
         UUID userId = UUID.randomUUID();
         UUID challengeId = UUID.randomUUID();
-        UserDocument user = new UserDocument(userId, "testUser", null, null, 0);
+        UserDocument user = new UserDocument(userId, "testUser", null, 0);
 
         when(userRepository.findById(userId)).thenReturn(Mono.just(user));
         when(favoriteRepository.existsByUserIdAndChallengeId(userId, challengeId))
@@ -77,7 +77,7 @@ class FavoriteServiceImplTest {
     void addChallengeToFavorites_ShouldReturnFalse_WhenFavoriteAlreadyExists() {
         UUID challengeId = UUID.randomUUID();
         UUID userId = UUID.randomUUID();
-        UserDocument user = new UserDocument(userId, "testUser", null, null, 0);
+        UserDocument user = new UserDocument(userId, "testUser", null, 0);
 
         when(userRepository.findById(userId)).thenReturn(Mono.just(user));
         when(favoriteRepository.existsByUserIdAndChallengeId(userId, challengeId))
