@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.UUID;
 
 public interface FavoriteService {
+    Mono<Boolean> addChallengeToFavorites(String userId, String challengeId);
 
     Mono<Set<UUID>> getUserFavorites(String userId);
 }

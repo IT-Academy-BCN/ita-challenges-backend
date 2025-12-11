@@ -6,8 +6,6 @@ import reactor.core.publisher.Mono;
 public interface UserService {
     Mono<UserDocument> getUser(String githubUsername);
 
-    Mono<Boolean> addChallengeToFavorites(String userId, String challengeId);
-
     Mono<Boolean> addChallengeToBookmarks(String userId, String challengeId);
 
     Mono<Boolean> deleteChallengeFromFavorites(String userId, String challengeId);
