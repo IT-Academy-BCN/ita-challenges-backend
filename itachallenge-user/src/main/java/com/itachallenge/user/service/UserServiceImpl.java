@@ -7,7 +7,6 @@ import com.itachallenge.user.repository.UserRepository;
 import com.itachallenge.userinteraction.document.bookmark.BookmarkDocument;
 import org.springframework.stereotype.Service;
 
-import com.itachallenge.userinteraction.document.favorite.FavoriteDocument;
 import com.itachallenge.userinteraction.repository.favorite.FavoriteRepository;
 import com.itachallenge.userinteraction.repository.bookmark.BookmarkRepository;
 import reactor.core.publisher.Mono;
@@ -31,21 +30,6 @@ public class UserServiceImpl implements UserService {
     public Mono<UserDocument> getUser(String githubUsername) {
         return userRepository.findByUsername(githubUsername)
                 .switchIfEmpty(Mono.error(new NotFoundException("User not found")));
-    }
-
-    //TODO : TO IMPLEMENT TO FAVORITE SERVICE IMPL
-    @Override
-    public Mono<Boolean> addChallengeToFavorites(String userId, String challengeId) {
-
-        return Mono.zip(parseAndValidateUUID(userId), parseAndValidateUUID(challengeId))
-                .flatMap(uuidTuple -> {
-                    UUID userUuid = uuidTuple.getT1();
-                    UUID challengeUuid = uuidTuple.getT2();
-
-                    return userRepository.findById(userUuid)
-                            .switchIfEmpty(Mono.error(new NotFoundException("User not found")))
-                            .flatMap(user -> addToFavorites(userUuid, challengeUuid));
-                });
     }
 
     //TODO : TO IMPLEMENT TO BOOKMARK SERVICE IMPL
@@ -90,24 +74,6 @@ public class UserServiceImpl implements UserService {
                 });
     }
 
-
-    //TODO : TO IMPLEMENT IN FAVORITE SERVICE IMPL
-    private Mono<Boolean> addToFavorites(UUID userUuid, UUID challengeUuid) {
-        return favoriteRepository.existsByUserIdAndChallengeId(userUuid, challengeUuid)
-                .flatMap(exists -> {
-                    if (exists.booleanValue())
-                        return Mono.just(false);
-
-                    FavoriteDocument favorite = new FavoriteDocument();
-                    favorite.setUuid(UUID.randomUUID());
-                    favorite.setUserId(userUuid);
-                    favorite.setChallengeId(challengeUuid);
-
-                    return favoriteRepository.save(favorite)
-                            .thenReturn(true);
-                });
-    }
-
     //TODO : TO IMPLEMENT TO BOOKMARK SERVICE IMPL
     private Mono<Boolean> addToBookmarks(UUID userUuid, UUID challengeUuid) {
         return bookmarkRepository.existsByUserIdAndChallengeId(userUuid, challengeUuid)
@@ -144,6 +110,7 @@ public class UserServiceImpl implements UserService {
                 )
                 .switchIfEmpty(Mono.just(false));
     }
+
     private Mono<UUID> parseAndValidateUUID(String id) {
 
         if (id == null || id.isEmpty()) {
@@ -162,5 +129,4 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(UUID.fromString(userId))
                 .switchIfEmpty(Mono.error(new NotFoundException("User not found")));
     }
-
 }

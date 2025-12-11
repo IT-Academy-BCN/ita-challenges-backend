@@ -39,6 +39,9 @@ Supported actions: SAVE, GIVE_UP, SUBMIT. (Taiga [#871], PR [#1043])
 
 ## [Unreleased]
 
+### Changed
+- [Changed] Refactored the logic for adding favorites to integrate it into the FavoriteService structure (Taiga [#917], PR [#1052])
+
 ### Chore/Internal
 - Introduced `SolutionAction` enum (internal change)
   - Values: SAVE, GIVE_UP, SUBMIT

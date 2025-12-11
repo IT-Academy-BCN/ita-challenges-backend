@@ -37,6 +37,36 @@ public class FavoriteServiceImpl implements FavoriteService {
     }
 
     @Override
+    public Mono<Boolean> addChallengeToFavorites(String userId, String challengeId) {
+
+        return Mono.zip(parseAndValidateUUID(userId), parseAndValidateUUID(challengeId))
+                .flatMap(uuidTuple -> {
+                    UUID userUuid = uuidTuple.getT1();
+                    UUID challengeUuid = uuidTuple.getT2();
+
+                    return userRepository.findById(userUuid)
+                            .switchIfEmpty(Mono.error(new NotFoundException("User not found")))
+                            .flatMap(user -> addToFavorites(userUuid, challengeUuid));
+                });
+    }
+
+    private Mono<Boolean> addToFavorites(UUID userUuid, UUID challengeUuid) {
+        return favoriteRepository.existsByUserIdAndChallengeId(userUuid, challengeUuid)
+                .flatMap(exists -> {
+                    if (exists.booleanValue())
+                        return Mono.just(false);
+
+                    FavoriteDocument favorite = new FavoriteDocument();
+                    favorite.setUuid(UUID.randomUUID());
+                    favorite.setUserId(userUuid);
+                    favorite.setChallengeId(challengeUuid);
+
+                    return favoriteRepository.save(favorite)
+                            .thenReturn(true);
+                });
+    }
+
+    @Override
     public Mono<Set<UUID>> getUserFavorites(String userId) {
         return parseAndValidateUUID(userId)
                 .flatMap(userUuid ->
