@@ -331,7 +331,6 @@ Supported actions: SAVE, GIVE_UP, SUBMIT. (Taiga [#871], PR [#1043])
 
 ### [docker-compose-1.0] - 2023-11-30
 * First version
-### Refactored
-- Changued @RequestMapping("/itachallenge/api/v1/user") in FavoriteController to @RequestMapping("/itachallenge/api/v1/userinteraction/favorites/{userId}") PR #1054
-- New tests for FavoriteController in FavoriteControllerTest PR #1054
-- Changued APISIX routes to match new FavoriteController endpoints PR #1054
+
+### [itachallenge-user-1.0.0-RELEASE] - 2023-12-04
+* Refactored - TAIGA User Story #903 - Change FavoriteController path the migration of all favorites endpoints
