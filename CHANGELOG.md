@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Implemented the new @RequestMapping("/itachallenge/api/v1/userinteraction/favorites/{userId}")
 - Updated the tests on FavoriteControllerTest and FavoriteControllerTestIntegration to include the new endpoint.
 ### Added
-- Updated APISIX to include the new endpoint and future methods (add and delete))
+- Updated APISIX to include the new endpoint and future methods (add and delete)
 
 ### [itachallenge-user-3.1.1-RELEASE] - 2025-11-27
 ### Added
