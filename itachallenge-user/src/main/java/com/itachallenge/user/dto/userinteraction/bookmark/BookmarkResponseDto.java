@@ -1,4 +1,4 @@
-package com.itachallenge.user.dto.userinteraction.favorite;
+package com.itachallenge.user.dto.userinteraction.bookmark;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
@@ -6,14 +6,15 @@ import lombok.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+
 @Builder
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class FavoriteResponseDto {
+public class BookmarkResponseDto {
 
-    @JsonProperty(value = "uuid_favorite")
+    @JsonProperty(value = "uuid_bookmark")
     private UUID uuid;
 
     @JsonProperty(value = "user_id")

@@ -7,6 +7,7 @@ import com.itachallenge.user.dto.UserSolutionRequestDto;
 import com.itachallenge.user.dto.UserSolutionResponseDto;
 import com.itachallenge.user.service.IUserSolutionService;
 import com.itachallenge.user.service.UserService;
+import com.itachallenge.userinteraction.service.bookmark.BookmarkService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -38,10 +39,12 @@ public class UserController {
 
     private final UserService userService;
     private final IUserSolutionService userSolutionService;
+    private final BookmarkService bookmarkService;
 
-    public UserController(UserService userService, IUserSolutionService userSolutionService) {
+    public UserController(UserService userService, IUserSolutionService userSolutionService, BookmarkService bookmarkService) {
         this.userService = userService;
         this.userSolutionService = userSolutionService;
+        this.bookmarkService = bookmarkService;
     }
 
     @GetMapping(value = "/test")
@@ -163,7 +166,7 @@ public class UserController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "Solution successfully processed",
                             content = {@Content(schema = @Schema(implementation = UserSolutionRequestDto.class),
-                            mediaType = "application/json")}),
+                                    mediaType = "application/json")}),
                     @ApiResponse(responseCode = "400", description = "Invalid action or bad request",
                             content = {@Content(schema = @Schema())}),
                     @ApiResponse(
@@ -347,34 +350,6 @@ public class UserController {
                         log.info("No change, User's '{}' bookmarks doesn't contain Challenge '{}'", userId, challengeId);
                         return ResponseEntity.ok().body(false);
                     }
-                });
-    }
-
-    @Operation(
-            summary = "Gets challenges marked as bookmarks by a user",
-            description = "Returns a set of challenge IDs that the specified user has marked as bookmarked",
-            parameters = {
-                    @Parameter(
-                            name = "userId",
-                            description = "UUID of the user",
-                            required = true,
-                            in = ParameterIn.PATH
-                    )
-            },
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Set of bookmarked challengeIds by user"),
-                    @ApiResponse(responseCode = "404", description = "User not found"),
-                    @ApiResponse(responseCode = "400", description = "The provided IDs are not valid."),
-                    @ApiResponse(responseCode = "500", description = "Unexpected error")
-            }
-    )
-
-    @GetMapping("/users/{userId}/bookmarks")
-    public Mono<ResponseEntity<Set<UUID>>> getUserBookmarks(@PathVariable String userId) {
-        return userService.getUserBookmarks(userId)
-                .map(bookmarks -> {
-                    log.info("Retrieved {} bookmarked challenges for user {}", bookmarks.size(), userId);
-                    return ResponseEntity.ok().body(bookmarks);
                 });
     }
 
