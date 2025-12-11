@@ -3,6 +3,14 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+### [itachallenge-user-3.1.2-RELEASE] - 2025-12-04
+### Changed
+- Created new path on FavoriteController to get favorites by user. (PR #1055) HU TAIGA #903
+- Implemented the new @RequestMapping("/itachallenge/api/v1/userinteraction/favorites/{userId}")
+- Updated the tests on FavoriteControllerTest and FavoriteControllerTestIntegration to include the new endpoint.
+### Added
+- Updated APISIX to include the new endpoint and future methods (add and delete))
+
 ### [itachallenge-user-3.1.1-RELEASE] - 2025-11-27
 ### Added
 - Foundation for managing user bookmarks in a dedicated collection. (PR #1040 #1042 #1046 and #1049)
