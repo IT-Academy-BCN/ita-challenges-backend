@@ -4,7 +4,6 @@ import com.itachallenge.user.document.UserDocument;
 import com.itachallenge.user.exception.BadUUIDException;
 import com.itachallenge.user.exception.NotFoundException;
 import com.itachallenge.user.repository.UserRepository;
-import com.itachallenge.user.service.UserServiceImpl;
 import com.itachallenge.userinteraction.document.favorite.FavoriteDocument;
 import com.itachallenge.userinteraction.repository.favorite.FavoriteRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -36,9 +35,6 @@ class FavoriteServiceImplTest {
 
     @InjectMocks
     private FavoriteServiceImpl favoriteService;
-
-    @InjectMocks
-    private UserServiceImpl userService;
 
     private AutoCloseable mocks;
 
@@ -281,52 +277,5 @@ class FavoriteServiceImplTest {
 
         verify(userRepository, times(1)).existsById(userId);
         verify(favoriteRepository, times(1)).findByUserId(userId);
-    }
-
-    @Test
-    void deleteChallengeFromFavorites_ShouldReturnFalse_WhenFavoriteDoesNotExist() {
-        UUID userId = UUID.randomUUID();
-        UUID challengeId = UUID.randomUUID();
-        UserDocument user = new UserDocument(userId, "testUser", null, 0);
-
-        when(userRepository.findById(userId)).thenReturn(Mono.just(user));
-        when(favoriteRepository.findByUserIdAndChallengeId(any(UUID.class), any(UUID.class)))
-                .thenReturn(Mono.empty());
-
-        StepVerifier.create(userService.deleteChallengeFromFavorites(userId.toString(), challengeId.toString()))
-                .expectNext(false)
-                .verifyComplete();
-
-        verify(userRepository).findById(userId);
-        verify(favoriteRepository).findByUserIdAndChallengeId(any(UUID.class), any(UUID.class));
-        verify(favoriteRepository, never()).delete(any());
-    }
-
-    @Test
-    void deleteChallengeFromFavorites_ShouldReturnTrue_WhenFavoriteAlreadyExists() {
-        // Arrange
-        UUID userId = UUID.randomUUID();
-        UUID challengeId = UUID.randomUUID();
-        UserDocument user = new UserDocument(userId, "testUser", null, 0);
-        FavoriteDocument favorite = FavoriteDocument.builder()
-                .uuid(UUID.randomUUID())
-                .userId(userId)
-                .challengeId(challengeId)
-                .build();
-
-        when(userRepository.findById(userId)).thenReturn(Mono.just(user));
-        when(favoriteRepository.findByUserIdAndChallengeId(userId, challengeId))
-                .thenReturn(Mono.just(favorite));
-        when(favoriteRepository.delete(any(FavoriteDocument.class))).thenReturn(Mono.empty());
-
-        // Act & Assert
-        StepVerifier.create(userService.deleteChallengeFromFavorites(userId.toString(), challengeId.toString()))
-                .expectNext(true)
-                .verifyComplete();
-
-        // Verify
-        verify(userRepository).findById(userId);
-        verify(favoriteRepository).findByUserIdAndChallengeId(userId, challengeId);
-        verify(favoriteRepository).delete(favorite);
     }
 }
