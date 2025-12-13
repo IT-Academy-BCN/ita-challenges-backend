@@ -371,6 +371,10 @@ public class UserController {
     public Mono<ResponseEntity<Flux<UserSolutionResponseDto>>> getAllSolutionsByUser(
             @PathVariable String userId
     ) {
+        // TODO [TECH-DEBT]: Endpoint legacy.
+        // It will be removed once the migration of solutions
+        // (GET + ADD) to CHALLENGE microservice si completed.
+        // See Taiga Issue: #934
         return Mono.just(ResponseEntity.ok()
                 .body(userSolutionService.getAllSolutionsByUser(userId)
                 )
