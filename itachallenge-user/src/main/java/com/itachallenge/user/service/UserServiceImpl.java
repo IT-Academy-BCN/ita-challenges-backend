@@ -7,7 +7,6 @@ import com.itachallenge.user.repository.UserRepository;
 import com.itachallenge.userinteraction.document.bookmark.BookmarkDocument;
 import org.springframework.stereotype.Service;
 
-import com.itachallenge.userinteraction.repository.favorite.FavoriteRepository;
 import com.itachallenge.userinteraction.repository.bookmark.BookmarkRepository;
 import reactor.core.publisher.Mono;
 
@@ -17,12 +16,10 @@ import java.util.UUID;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final FavoriteRepository favoriteRepository;
     private final BookmarkRepository bookmarkRepository;
 
-    public UserServiceImpl(UserRepository userRepository, FavoriteRepository favoriteRepository, BookmarkRepository bookmarkRepository) {
+    public UserServiceImpl(UserRepository userRepository, BookmarkRepository bookmarkRepository) {
         this.userRepository = userRepository;
-        this.favoriteRepository = favoriteRepository;
         this.bookmarkRepository = bookmarkRepository;
     }
 
@@ -43,20 +40,6 @@ public class UserServiceImpl implements UserService {
                     return userRepository.findById(userUuid)
                             .switchIfEmpty(Mono.error(new NotFoundException("User not found")))
                             .flatMap(user -> addToBookmarks(userUuid, challengeUuid));
-                });
-    }
-
-    //TODO : TO IMPLEMENT IN FAVORITE SERVICE IMPL
-    @Override
-    public Mono<Boolean> deleteChallengeFromFavorites(String userId, String challengeId) {
-        return Mono.zip(parseAndValidateUUID(userId), parseAndValidateUUID(challengeId))
-                .flatMap(uuidTuple -> {
-                    UUID userUuid = uuidTuple.getT1();
-                    UUID challengeUuid = uuidTuple.getT2();
-
-                    return userRepository.findById(userUuid)
-                            .switchIfEmpty(Mono.error(new NotFoundException("User not found")))
-                            .flatMap(user -> deleteFromFavorites(userUuid, challengeUuid));
                 });
     }
 
@@ -89,16 +72,6 @@ public class UserServiceImpl implements UserService {
                     return bookmarkRepository.save(bookmark)
                             .thenReturn(true);
                 });
-    }
-
-    //TODO : TO IMPLEMENT IN FAVORITE SERVICE IMPL
-    private Mono<Boolean> deleteFromFavorites(UUID userId, UUID challengeUuid) {
-        return favoriteRepository.findByUserIdAndChallengeId(userId, challengeUuid)
-                .flatMap(favorite ->
-                        favoriteRepository.delete(favorite)
-                                .then(Mono.just(true))
-                )
-                .switchIfEmpty(Mono.just(false));
     }
 
     //TODO : TO IMPLEMENT TO BOOKMARK SERVICE IMPL

@@ -81,4 +81,26 @@ public class FavoriteServiceImpl implements FavoriteService {
                                 })
                 );
     }
+
+    @Override
+    public Mono<Boolean> deleteChallengeFromFavorites(String userId, String challengeId) {
+        return Mono.zip(parseAndValidateUUID(userId), parseAndValidateUUID(challengeId))
+                .flatMap(uuidTuple -> {
+                    UUID userUuid = uuidTuple.getT1();
+                    UUID challengeUuid = uuidTuple.getT2();
+
+                    return userRepository.findById(userUuid)
+                            .switchIfEmpty(Mono.error(new NotFoundException("User not found")))
+                            .flatMap(user -> deleteFromFavorites(userUuid, challengeUuid));
+                });
+    }
+
+    private Mono<Boolean> deleteFromFavorites(UUID userId, UUID challengeUuid) {
+        return favoriteRepository.findByUserIdAndChallengeId(userId, challengeUuid)
+                .flatMap(favorite ->
+                        favoriteRepository.delete(favorite)
+                                .then(Mono.just(true))
+                )
+                .switchIfEmpty(Mono.just(false));
+    }
 }
