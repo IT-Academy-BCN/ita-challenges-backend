@@ -3,6 +3,14 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+
+## [itachallenge-user-3.1.3-RELEASE] - 2025-12-12
+
+### Changed
+- [Changed] Refactored the logic for deleting favorites to integrate it into the FavoriteService structure (without controller) (Taiga [#918], PR [#1053])
+- [Changed] Refactored the logic for adding favorites to integrate it into the FavoriteService structure (with controller) (Taiga [#917], PR [#1052])
+- [Changed] Moved add favorite controller logic from UserController to FavoriteController (Taiga [#935], PR [#1058])
+
 ### [itachallenge-user-3.1.2-RELEASE] - 2025-12-04
 
 ### Changed
