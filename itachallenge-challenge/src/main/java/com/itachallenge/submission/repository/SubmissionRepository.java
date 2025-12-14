@@ -9,7 +9,7 @@ import reactor.core.publisher.Mono;
 import java.util.UUID;
 
 @Repository
-public interface IUserSubmissionRepository extends ReactiveMongoRepository<UserSubmissionDocument, UUID> {
+public interface SubmissionRepository extends ReactiveMongoRepository<UserSubmissionDocument, UUID> {
 
     Mono<UserSubmissionDocument> findByUserIdAndChallengeIdAndLanguageId(UUID userId, UUID challengeId, UUID languageId);
     Flux<UserSubmissionDocument> findAllByUserId(UUID userId);
