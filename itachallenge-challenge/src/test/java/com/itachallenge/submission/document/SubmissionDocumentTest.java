@@ -1,6 +1,6 @@
 package com.itachallenge.submission.document;
 
-import com.itachallenge.submission.enums.UserChallengeStatus;
+import com.itachallenge.submission.enums.SubmissionStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -8,12 +8,10 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class UserSubmissionDocumentTest {
+class SubmissionDocumentTest {
 
     private UserSubmissionDocument userSubmissionDocumentAllArgs;
     private UserSubmissionDocument userSubmissionDocumentNoArgs;
-
-    private SubmissionAttemptDocument submissionAttemptDocumentNoArgs;
 
     private final String uuidText = "c4feec44-ac54-4e99-852b-9ba56c47e56f";
     private final UUID uuid = UUID.fromString(uuidText);
@@ -26,12 +24,13 @@ class UserSubmissionDocumentTest {
 
     private final String languageUuidText = "c4feec44-ac54-4e99-852b-9ba56c47eec4";
     private final UUID languageUuid = UUID.fromString(languageUuidText);
-    private final UserChallengeStatus userChallengeStatus = UserChallengeStatus.IN_PROGRESS;
+    private final SubmissionStatus submissionStatus = SubmissionStatus.IN_PROGRESS;
+
+    private final String submissionText = "Hello World!!";
 
     @BeforeEach
     void setUp() {
-        submissionAttemptDocumentNoArgs = new SubmissionAttemptDocument();
-        userSubmissionDocumentAllArgs = new UserSubmissionDocument(uuid, userUuid, challengeUuid, languageUuid, userChallengeStatus, submissionAttemptDocumentNoArgs);
+        userSubmissionDocumentAllArgs = new UserSubmissionDocument(uuid, userUuid, challengeUuid, languageUuid, submissionStatus, submissionText);
         userSubmissionDocumentNoArgs = new UserSubmissionDocument();
     }
 
@@ -40,7 +39,7 @@ class UserSubmissionDocumentTest {
 
         assertEquals(UUID.fromString(uuidText), userSubmissionDocumentAllArgs.getSubmissionId());
         assertEquals(UUID.fromString(userUuidText), userSubmissionDocumentAllArgs.getUserId());
-        assertEquals(UserChallengeStatus.IN_PROGRESS, userSubmissionDocumentAllArgs.getStatus());
+        assertEquals(SubmissionStatus.IN_PROGRESS, userSubmissionDocumentAllArgs.getStatus());
     }
 
     @Test
@@ -51,15 +50,15 @@ class UserSubmissionDocumentTest {
                 .userId(userUuid)
                 .challengeId(challengeUuid)
                 .languageId(languageUuid)
-                .status(userChallengeStatus)
-                .submissionAttemptDocument(submissionAttemptDocumentNoArgs)
+                .status(submissionStatus)
+                .submissionText(submissionText)
                 .build();
 
         assertEquals(UUID.fromString(uuidText), doc.getSubmissionId());
         assertEquals(UUID.fromString(userUuidText), doc.getUserId());
         assertEquals(UUID.fromString(challengeUuidText), doc.getChallengeId());
         assertEquals(UUID.fromString(languageUuidText), doc.getLanguageId());
-        assertEquals(UserChallengeStatus.IN_PROGRESS, doc.getStatus());
+        assertEquals(SubmissionStatus.IN_PROGRESS, doc.getStatus());
     }
 
     @Test
@@ -92,12 +91,12 @@ class UserSubmissionDocumentTest {
 
     @Test
     void shouldReturnStatusCorrectly() {
-        assertEquals(UserChallengeStatus.IN_PROGRESS, userSubmissionDocumentAllArgs.getStatus());
+        assertEquals(SubmissionStatus.IN_PROGRESS, userSubmissionDocumentAllArgs.getStatus());
     }
 
     @Test
     void shouldReturnSubmissionAttemptDocumentCorrectly() {
-        assertEquals(submissionAttemptDocumentNoArgs, userSubmissionDocumentAllArgs.getSubmissionAttemptDocument());
+        assertEquals(submissionText, userSubmissionDocumentAllArgs.getSubmissionText());
     }
 
     @Test
