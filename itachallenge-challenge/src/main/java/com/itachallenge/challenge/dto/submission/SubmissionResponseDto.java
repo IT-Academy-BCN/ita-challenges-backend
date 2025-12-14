@@ -16,9 +16,9 @@ public class SubmissionResponseDto {
     @JsonProperty(value = "uuid_language")
     private String languageId;
 
-    @JsonProperty(value = "submission_text")
-    private String submissionText;
-
     @JsonProperty("status")
     private String status;
+
+    @JsonProperty(value = "submission_text")
+    private String submissionText;
 }
