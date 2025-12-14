@@ -1,7 +1,7 @@
 package com.itachallenge.submission.service;
 
 import com.itachallenge.challenge.exception.BadRequestException;
-import com.itachallenge.submission.document.UserSubmissionDocument;
+import com.itachallenge.submission.document.SubmissionDocument;
 import com.itachallenge.challenge.dto.submission.SubmissionResponseDto;
 import com.itachallenge.submission.enums.SubmissionStatus;
 import com.itachallenge.submission.repository.SubmissionRepository;
@@ -36,7 +36,7 @@ class SubmissionServiceImplTest {
         String userId = userUuid.toString();
         String submissionText = "Hello World!!";
 
-        UserSubmissionDocument document = UserSubmissionDocument.builder()
+        SubmissionDocument document = SubmissionDocument.builder()
                 .submissionId(UUID.randomUUID())
                 .userId(userUuid)
                 .challengeId(challengeUuid)
