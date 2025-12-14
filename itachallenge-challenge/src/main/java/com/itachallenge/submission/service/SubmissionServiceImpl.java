@@ -1,5 +1,6 @@
 package com.itachallenge.submission.service;
 
+import com.itachallenge.challenge.mapper.submission.SubmissionResponseDtoMapper;
 import com.itachallenge.challenge.exception.BadRequestException;
 import com.itachallenge.challenge.dto.submission.SubmissionResponseDto;
 
@@ -21,13 +22,7 @@ public class SubmissionServiceImpl implements SubmissionService {
         return validateAndParseUuid(userId)
                 .flatMapMany(uuid ->
                         submissionRepository.findAllByUserId(uuid)
-                                .map(doc -> SubmissionResponseDto.builder()
-                                        .userId(doc.getUserId().toString())
-                                        .challengeId(doc.getChallengeId().toString())
-                                        .languageId(doc.getLanguageId().toString())
-                                        .submissionText(doc.getSubmissionText())
-                                        .status(doc.getStatus().name())
-                                        .build())
+                                .map(SubmissionResponseDtoMapper::toDto)
                 );
     }
 
