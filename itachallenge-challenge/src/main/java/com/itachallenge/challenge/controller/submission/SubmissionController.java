@@ -1,7 +1,7 @@
 package com.itachallenge.challenge.controller.submission;
 
-import com.itachallenge.challenge.dto.submission.UserSubmissionResponseDto;
-import com.itachallenge.submission.service.IUserSubmissionService;
+import com.itachallenge.challenge.dto.submission.SubmissionResponseDto;
+import com.itachallenge.submission.service.SubmissionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -16,15 +16,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 
-
 @RestController
 @Validated
 @RequiredArgsConstructor
 @RequestMapping("/itachallenge/api/v1/challenge")
-public class UserSubmissionController {
+public class SubmissionController {
 
-    private static final Logger log = LoggerFactory.getLogger(UserSubmissionController.class);
-    private final IUserSubmissionService userSubmissionService;
+    private static final Logger log = LoggerFactory.getLogger(SubmissionController.class);
+    private final SubmissionService submissionService;
 
     @GetMapping("/challenges/{userId}/submissions")
     @Operation(
@@ -33,14 +32,12 @@ public class UserSubmissionController {
             description = "Retrieve submissions for a given user from the database.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Successful retrieval - may return empty array if no submissions found",
-                            content = @Content(schema = @Schema(implementation = UserSubmissionResponseDto.class), mediaType = "application/json")),
+                            content = @Content(schema = @Schema(implementation = SubmissionResponseDto.class), mediaType = "application/json")),
                     @ApiResponse(responseCode = "400", description = "Malformed UUID or invalid parameters"),
             })
-    public Flux<UserSubmissionResponseDto> getAllSubmissionsByUser(
+    public Flux<SubmissionResponseDto> getAllSubmissionsByUser(
             @PathVariable String userId) {
 
-        return userSubmissionService.getAllSubmissionsByUser(userId);
-
+        return submissionService.getAllSubmissionsByUser(userId);
     }
 }
-
