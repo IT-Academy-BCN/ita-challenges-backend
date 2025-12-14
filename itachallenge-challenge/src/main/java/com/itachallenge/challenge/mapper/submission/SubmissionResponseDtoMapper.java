@@ -18,8 +18,8 @@ public final class SubmissionResponseDtoMapper {
                 .userId(doc.getUserId().toString())
                 .challengeId(doc.getChallengeId().toString())
                 .languageId(doc.getLanguageId().toString())
-                .submissionText(doc.getSubmissionText())
                 .status(doc.getStatus().name())
+                .submissionText(doc.getSubmissionText())
                 .build();
     }
 }
