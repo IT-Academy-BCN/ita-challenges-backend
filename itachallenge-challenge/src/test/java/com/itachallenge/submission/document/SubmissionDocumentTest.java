@@ -10,8 +10,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class SubmissionDocumentTest {
 
-    private UserSubmissionDocument userSubmissionDocumentAllArgs;
-    private UserSubmissionDocument userSubmissionDocumentNoArgs;
+    private SubmissionDocument submissionDocumentAllArgs;
+    private SubmissionDocument submissionDocumentNoArgs;
 
     private final String uuidText = "c4feec44-ac54-4e99-852b-9ba56c47e56f";
     private final UUID uuid = UUID.fromString(uuidText);
@@ -30,22 +30,22 @@ class SubmissionDocumentTest {
 
     @BeforeEach
     void setUp() {
-        userSubmissionDocumentAllArgs = new UserSubmissionDocument(uuid, userUuid, challengeUuid, languageUuid, submissionStatus, submissionText);
-        userSubmissionDocumentNoArgs = new UserSubmissionDocument();
+        submissionDocumentAllArgs = new SubmissionDocument(uuid, userUuid, challengeUuid, languageUuid, submissionStatus, submissionText);
+        submissionDocumentNoArgs = new SubmissionDocument();
     }
 
     @Test
     void shouldCreateDocumentWithAllArgsConstructor() {
 
-        assertEquals(UUID.fromString(uuidText), userSubmissionDocumentAllArgs.getSubmissionId());
-        assertEquals(UUID.fromString(userUuidText), userSubmissionDocumentAllArgs.getUserId());
-        assertEquals(SubmissionStatus.IN_PROGRESS, userSubmissionDocumentAllArgs.getStatus());
+        assertEquals(UUID.fromString(uuidText), submissionDocumentAllArgs.getSubmissionId());
+        assertEquals(UUID.fromString(userUuidText), submissionDocumentAllArgs.getUserId());
+        assertEquals(SubmissionStatus.IN_PROGRESS, submissionDocumentAllArgs.getStatus());
     }
 
     @Test
     void shouldBuildDocumentCorrectly() {
 
-        UserSubmissionDocument doc = UserSubmissionDocument.builder()
+        SubmissionDocument doc = SubmissionDocument.builder()
                 .submissionId(uuid)
                 .userId(userUuid)
                 .challengeId(challengeUuid)
@@ -64,43 +64,43 @@ class SubmissionDocumentTest {
     @Test
     void shouldSetAndGetFieldsCorrectly() {
 
-        userSubmissionDocumentAllArgs.setSubmissionId(userUuid);
+        submissionDocumentAllArgs.setSubmissionId(userUuid);
 
-        assertEquals(UUID.fromString(userUuidText), userSubmissionDocumentAllArgs.getSubmissionId());
+        assertEquals(UUID.fromString(userUuidText), submissionDocumentAllArgs.getSubmissionId());
     }
 
     @Test
     void shouldReturnUuidCorrectly() {
-        assertEquals(UUID.fromString(uuidText), userSubmissionDocumentAllArgs.getSubmissionId());
+        assertEquals(UUID.fromString(uuidText), submissionDocumentAllArgs.getSubmissionId());
     }
 
     @Test
     void shouldReturnUserUuidCorrectly() {
-        assertEquals(UUID.fromString(userUuidText), userSubmissionDocumentAllArgs.getUserId());
+        assertEquals(UUID.fromString(userUuidText), submissionDocumentAllArgs.getUserId());
     }
 
     @Test
     void shouldReturnChallengeUuidCorrectly() {
-        assertEquals(UUID.fromString(challengeUuidText), userSubmissionDocumentAllArgs.getChallengeId());
+        assertEquals(UUID.fromString(challengeUuidText), submissionDocumentAllArgs.getChallengeId());
     }
 
     @Test
     void shouldReturnLanguageUuidCorrectly() {
-        assertEquals(UUID.fromString(languageUuidText), userSubmissionDocumentAllArgs.getLanguageId());
+        assertEquals(UUID.fromString(languageUuidText), submissionDocumentAllArgs.getLanguageId());
     }
 
     @Test
     void shouldReturnStatusCorrectly() {
-        assertEquals(SubmissionStatus.IN_PROGRESS, userSubmissionDocumentAllArgs.getStatus());
+        assertEquals(SubmissionStatus.IN_PROGRESS, submissionDocumentAllArgs.getStatus());
     }
 
     @Test
     void shouldReturnSubmissionAttemptDocumentCorrectly() {
-        assertEquals(submissionText, userSubmissionDocumentAllArgs.getSubmissionText());
+        assertEquals(submissionText, submissionDocumentAllArgs.getSubmissionText());
     }
 
     @Test
     void shouldInstantiateDocumentWithNoArgsConstructor() {
-        assertNotNull(userSubmissionDocumentNoArgs);
+        assertNotNull(submissionDocumentNoArgs);
     }
 }
