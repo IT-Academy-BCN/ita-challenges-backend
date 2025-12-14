@@ -1,5 +1,6 @@
 package com.itachallenge.submission.enums;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -8,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class SubmissionStatusTest {
 
+    @DisplayName("Should return SUBMITTED_COMPLETE status ignoring case")
     @ParameterizedTest
     @ValueSource(strings = {
             "SUBMITTED_COMPLETE", "submitted_complete", "Submitted_Complete"
@@ -20,6 +22,7 @@ class SubmissionStatusTest {
         assertEquals(SubmissionStatus.SUBMITTED_COMPLETE, result);
     }
 
+    @DisplayName("Should return IN_PROGRESS status ignoring case")
     @ParameterizedTest
     @ValueSource(strings = {
             "IN_PROGRESS", "in_progress", "In_Progress"
@@ -32,6 +35,7 @@ class SubmissionStatusTest {
         assertEquals(SubmissionStatus.IN_PROGRESS, result);
     }
 
+    @DisplayName("Should return SUBMITTED_INCOMPLETE status ignoring case")
     @ParameterizedTest
     @ValueSource(strings = {
             "SUBMITTED_INCOMPLETE", "submitted_incomplete", "Submitted_Incomplete"
@@ -44,6 +48,7 @@ class SubmissionStatusTest {
         assertEquals(SubmissionStatus.SUBMITTED_INCOMPLETE, result);
     }
 
+    @DisplayName("Should return null when input status string is null")
     @Test
     void shouldReturnNullWhenInputIsNull() {
         // When
@@ -53,6 +58,7 @@ class SubmissionStatusTest {
         assertNull(result);
     }
 
+    @DisplayName("Should return null when status value does not exist")
     @Test
     void shouldReturnNullWhenValueDoesNotExist() {
         // Given
