@@ -6,7 +6,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class UserChallengeStatusTest {
+class SubmissionStatusTest {
 
     @ParameterizedTest
     @ValueSource(strings = {
@@ -14,10 +14,10 @@ class UserChallengeStatusTest {
     })
     void shouldReturnSubmittedCompleteIgnoringCase(String input) {
         // When
-        UserChallengeStatus result = UserChallengeStatus.challengeStatusFromString(input);
+        SubmissionStatus result = SubmissionStatus.challengeStatusFromString(input);
 
         // Then
-        assertEquals(UserChallengeStatus.SUBMITTED_COMPLETE, result);
+        assertEquals(SubmissionStatus.SUBMITTED_COMPLETE, result);
     }
 
     @ParameterizedTest
@@ -26,10 +26,10 @@ class UserChallengeStatusTest {
     })
     void shouldReturnInProgressIgnoringCase(String input) {
         // When
-        UserChallengeStatus result = UserChallengeStatus.challengeStatusFromString(input);
+        SubmissionStatus result = SubmissionStatus.challengeStatusFromString(input);
 
         // Then
-        assertEquals(UserChallengeStatus.IN_PROGRESS, result);
+        assertEquals(SubmissionStatus.IN_PROGRESS, result);
     }
 
     @ParameterizedTest
@@ -38,16 +38,16 @@ class UserChallengeStatusTest {
     })
     void shouldReturnSubmittedIncompleteIgnoringCase(String input) {
         // When
-        UserChallengeStatus result = UserChallengeStatus.challengeStatusFromString(input);
+        SubmissionStatus result = SubmissionStatus.challengeStatusFromString(input);
 
         // Then
-        assertEquals(UserChallengeStatus.SUBMITTED_INCOMPLETE, result);
+        assertEquals(SubmissionStatus.SUBMITTED_INCOMPLETE, result);
     }
 
     @Test
     void shouldReturnNullWhenInputIsNull() {
         // When
-        UserChallengeStatus result = UserChallengeStatus.challengeStatusFromString(null);
+        SubmissionStatus result = SubmissionStatus.challengeStatusFromString(null);
 
         // Then
         assertNull(result);
@@ -59,7 +59,7 @@ class UserChallengeStatusTest {
         String input = "UNKNOWN_STATUS";
 
         // When
-        UserChallengeStatus result = UserChallengeStatus.challengeStatusFromString(input);
+        SubmissionStatus result = SubmissionStatus.challengeStatusFromString(input);
 
         // Then
         assertNull(result);
