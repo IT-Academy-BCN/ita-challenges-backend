@@ -39,8 +39,8 @@ class SubmissionResponseDtoTest {
         when(document.getUserId()).thenReturn(userId);
         when(document.getChallengeId()).thenReturn(challengeId);
         when(document.getLanguageId()).thenReturn(languageId);
-        when(document.getSubmissionText()).thenReturn(submissionText);
         when(document.getStatus()).thenReturn(submissionStatus);
+        when(document.getSubmissionText()).thenReturn(submissionText);
     }
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -51,8 +51,8 @@ class SubmissionResponseDtoTest {
         assertEquals(userIdText, dto.getUserId());
         assertEquals(challengeIdText, dto.getChallengeId());
         assertEquals(languageIdText, dto.getLanguageId());
-        assertEquals(submissionText, dto.getSubmissionText());
         assertEquals(submissionStatusName, dto.getStatus());
+        assertEquals(submissionText, dto.getSubmissionText());
     }
 
     @Test
@@ -64,7 +64,7 @@ class SubmissionResponseDtoTest {
         assertTrue(json.contains("\"uuid_user\":\"" + userIdText + "\""));
         assertTrue(json.contains("\"uuid_challenge\":\"" + challengeIdText + "\""));
         assertTrue(json.contains("\"uuid_language\":\"" + languageIdText + "\""));
-        assertTrue(json.contains("\"submission_text\":\"" + submissionText + "\""));
         assertTrue(json.contains("\"status\":\"" + submissionStatusName + "\""));
+        assertTrue(json.contains("\"submission_text\":\"" + submissionText + "\""));
     }
 }

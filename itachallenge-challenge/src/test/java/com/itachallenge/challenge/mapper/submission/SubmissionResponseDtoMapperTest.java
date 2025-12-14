@@ -37,8 +37,8 @@ class SubmissionResponseDtoMapperTest {
         when(document.getUserId()).thenReturn(userId);
         when(document.getChallengeId()).thenReturn(challengeId);
         when(document.getLanguageId()).thenReturn(languageId);
-        when(document.getSubmissionText()).thenReturn(submissionText);
         when(document.getStatus()).thenReturn(submissionStatus);
+        when(document.getSubmissionText()).thenReturn(submissionText);
     }
 
     @Test
@@ -50,8 +50,8 @@ class SubmissionResponseDtoMapperTest {
         assertEquals(userIdText, resultDto.getUserId(), "The userId should be mapped to String.");
         assertEquals(challengeIdText, resultDto.getChallengeId(), "The challengeId should be mapped to String.");
         assertEquals(languageIdText, resultDto.getLanguageId(), "The languageId should be mapped to String.");
-        assertEquals(submissionText, resultDto.getSubmissionText(), "The submissionText should match.");
         assertEquals(submissionStatusName, resultDto.getStatus(), "The status Enum should be mapped to its String name.");
+        assertEquals(submissionText, resultDto.getSubmissionText(), "The submissionText should match.");
     }
 
     @Test
