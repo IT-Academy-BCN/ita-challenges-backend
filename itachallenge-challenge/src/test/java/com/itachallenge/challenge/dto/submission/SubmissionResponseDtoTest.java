@@ -2,47 +2,69 @@ package com.itachallenge.challenge.dto.submission;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.itachallenge.challenge.mapper.submission.SubmissionResponseDtoMapper;
+import com.itachallenge.submission.document.SubmissionDocument;
+import com.itachallenge.submission.enums.SubmissionStatus;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.UUID;
+
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class SubmissionResponseDtoTest {
 
+    private final String userIdText = "c4feec44-ac54-4e99-852b-9ba56c479ba5";
+    private final UUID userId = UUID.fromString(userIdText);
+
+    private final String challengeIdText = "c4feec44-ac54-4e99-852b-9ba56c476c47";
+    private final UUID challengeId = UUID.fromString(challengeIdText);
+
+    private final String languageIdText = "c4feec44-ac54-4e99-852b-9ba56c47eec4";
+    private final UUID languageId = UUID.fromString(languageIdText);
+
+    private final SubmissionStatus submissionStatus = SubmissionStatus.IN_PROGRESS;
+    private final String submissionStatusName = submissionStatus.name();
+
+    private final String submissionText = "Hello World!!";
+
+    private SubmissionDocument document;
+
+    @BeforeEach
+    void setUp() {
+        document = mock(SubmissionDocument.class);
+
+        when(document.getUserId()).thenReturn(userId);
+        when(document.getChallengeId()).thenReturn(challengeId);
+        when(document.getLanguageId()).thenReturn(languageId);
+        when(document.getSubmissionText()).thenReturn(submissionText);
+        when(document.getStatus()).thenReturn(submissionStatus);
+    }
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
-    void builderShouldCreateObjectCorrectly() {
-        SubmissionResponseDto dto = SubmissionResponseDto.builder()
-                .userId("123")
-                .challengeId("456")
-                .languageId("789")
-                .submissionText("my submission text")
-                .status("IN_PROGRESS")
-                .build();
+    void mapperShouldCreateObjectCorrectly() {
+        SubmissionResponseDto dto = SubmissionResponseDtoMapper.toDto(document);
 
-        assertEquals("123", dto.getUserId());
-        assertEquals("456", dto.getChallengeId());
-        assertEquals("789", dto.getLanguageId());
-        assertEquals("my submission text", dto.getSubmissionText());
-        assertEquals("IN_PROGRESS", dto.getStatus());
+        assertEquals(userIdText, dto.getUserId());
+        assertEquals(challengeIdText, dto.getChallengeId());
+        assertEquals(languageIdText, dto.getLanguageId());
+        assertEquals(submissionText, dto.getSubmissionText());
+        assertEquals(submissionStatusName, dto.getStatus());
     }
 
     @Test
     void jsonSerializationShouldUseJsonPropertyNames() throws JsonProcessingException {
-        SubmissionResponseDto dto = SubmissionResponseDto.builder()
-                .userId("111")
-                .challengeId("222")
-                .languageId("333")
-                .submissionText("text here")
-                .status("IN_PROGRESS")
-                .build();
+        SubmissionResponseDto dto = SubmissionResponseDtoMapper.toDto(document);
 
         String json = objectMapper.writeValueAsString(dto);
 
-        assertTrue(json.contains("\"uuid_user\":\"111\""));
-        assertTrue(json.contains("\"uuid_challenge\":\"222\""));
-        assertTrue(json.contains("\"uuid_language\":\"333\""));
-        assertTrue(json.contains("\"submission_text\":\"text here\""));
-        assertTrue(json.contains("\"status\":\"IN_PROGRESS\""));
+        assertTrue(json.contains("\"uuid_user\":\"" + userIdText + "\""));
+        assertTrue(json.contains("\"uuid_challenge\":\"" + challengeIdText + "\""));
+        assertTrue(json.contains("\"uuid_language\":\"" + languageIdText + "\""));
+        assertTrue(json.contains("\"submission_text\":\"" + submissionText + "\""));
+        assertTrue(json.contains("\"status\":\"" + submissionStatusName + "\""));
     }
 }
