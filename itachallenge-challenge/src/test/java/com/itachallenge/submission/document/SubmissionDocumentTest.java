@@ -13,32 +13,32 @@ class SubmissionDocumentTest {
     private SubmissionDocument submissionDocumentAllArgs;
     private SubmissionDocument submissionDocumentNoArgs;
 
-    private final String uuidText = "c4feec44-ac54-4e99-852b-9ba56c47e56f";
-    private final UUID uuid = UUID.fromString(uuidText);
+    private final String submissionIdText = "c4feec44-ac54-4e99-852b-9ba56c47e56f";
+    private final UUID submissionId = UUID.fromString(submissionIdText);
 
-    private final String userUuidText = "c4feec44-ac54-4e99-852b-9ba56c479ba5";
-    private final UUID userUuid = UUID.fromString(userUuidText);
+    private final String userIdText = "c4feec44-ac54-4e99-852b-9ba56c479ba5";
+    private final UUID userId = UUID.fromString(userIdText);
 
-    private final String challengeUuidText = "c4feec44-ac54-4e99-852b-9ba56c476c47";
-    private final UUID challengeUuid = UUID.fromString(challengeUuidText);
+    private final String challengeIdText = "c4feec44-ac54-4e99-852b-9ba56c476c47";
+    private final UUID challengeId = UUID.fromString(challengeIdText);
 
-    private final String languageUuidText = "c4feec44-ac54-4e99-852b-9ba56c47eec4";
-    private final UUID languageUuid = UUID.fromString(languageUuidText);
+    private final String languageIdText = "c4feec44-ac54-4e99-852b-9ba56c47eec4";
+    private final UUID languageId = UUID.fromString(languageIdText);
     private final SubmissionStatus submissionStatus = SubmissionStatus.IN_PROGRESS;
 
     private final String submissionText = "Hello World!!";
 
     @BeforeEach
     void setUp() {
-        submissionDocumentAllArgs = new SubmissionDocument(uuid, userUuid, challengeUuid, languageUuid, submissionStatus, submissionText);
+        submissionDocumentAllArgs = new SubmissionDocument(submissionId, userId, challengeId, languageId, submissionStatus, submissionText);
         submissionDocumentNoArgs = new SubmissionDocument();
     }
 
     @Test
     void shouldCreateDocumentWithAllArgsConstructor() {
 
-        assertEquals(UUID.fromString(uuidText), submissionDocumentAllArgs.getSubmissionId());
-        assertEquals(UUID.fromString(userUuidText), submissionDocumentAllArgs.getUserId());
+        assertEquals(UUID.fromString(submissionIdText), submissionDocumentAllArgs.getSubmissionId());
+        assertEquals(UUID.fromString(userIdText), submissionDocumentAllArgs.getUserId());
         assertEquals(SubmissionStatus.IN_PROGRESS, submissionDocumentAllArgs.getStatus());
     }
 
@@ -46,47 +46,47 @@ class SubmissionDocumentTest {
     void shouldBuildDocumentCorrectly() {
 
         SubmissionDocument doc = SubmissionDocument.builder()
-                .submissionId(uuid)
-                .userId(userUuid)
-                .challengeId(challengeUuid)
-                .languageId(languageUuid)
+                .submissionId(submissionId)
+                .userId(userId)
+                .challengeId(challengeId)
+                .languageId(languageId)
                 .status(submissionStatus)
                 .submissionText(submissionText)
                 .build();
 
-        assertEquals(UUID.fromString(uuidText), doc.getSubmissionId());
-        assertEquals(UUID.fromString(userUuidText), doc.getUserId());
-        assertEquals(UUID.fromString(challengeUuidText), doc.getChallengeId());
-        assertEquals(UUID.fromString(languageUuidText), doc.getLanguageId());
+        assertEquals(UUID.fromString(submissionIdText), doc.getSubmissionId());
+        assertEquals(UUID.fromString(userIdText), doc.getUserId());
+        assertEquals(UUID.fromString(challengeIdText), doc.getChallengeId());
+        assertEquals(UUID.fromString(languageIdText), doc.getLanguageId());
         assertEquals(SubmissionStatus.IN_PROGRESS, doc.getStatus());
     }
 
     @Test
     void shouldSetAndGetFieldsCorrectly() {
 
-        submissionDocumentAllArgs.setSubmissionId(userUuid);
+        submissionDocumentAllArgs.setSubmissionId(userId);
 
-        assertEquals(UUID.fromString(userUuidText), submissionDocumentAllArgs.getSubmissionId());
+        assertEquals(UUID.fromString(userIdText), submissionDocumentAllArgs.getSubmissionId());
     }
 
     @Test
     void shouldReturnUuidCorrectly() {
-        assertEquals(UUID.fromString(uuidText), submissionDocumentAllArgs.getSubmissionId());
+        assertEquals(UUID.fromString(submissionIdText), submissionDocumentAllArgs.getSubmissionId());
     }
 
     @Test
     void shouldReturnUserUuidCorrectly() {
-        assertEquals(UUID.fromString(userUuidText), submissionDocumentAllArgs.getUserId());
+        assertEquals(UUID.fromString(userIdText), submissionDocumentAllArgs.getUserId());
     }
 
     @Test
     void shouldReturnChallengeUuidCorrectly() {
-        assertEquals(UUID.fromString(challengeUuidText), submissionDocumentAllArgs.getChallengeId());
+        assertEquals(UUID.fromString(challengeIdText), submissionDocumentAllArgs.getChallengeId());
     }
 
     @Test
     void shouldReturnLanguageUuidCorrectly() {
-        assertEquals(UUID.fromString(languageUuidText), submissionDocumentAllArgs.getLanguageId());
+        assertEquals(UUID.fromString(languageIdText), submissionDocumentAllArgs.getLanguageId());
     }
 
     @Test
