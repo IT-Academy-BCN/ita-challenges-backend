@@ -53,8 +53,9 @@ class SubmissionServiceImplTest {
                     org.junit.jupiter.api.Assertions.assertEquals(userId, dto.getUserId());
                     org.junit.jupiter.api.Assertions.assertEquals(challengeUuid.toString(), dto.getChallengeId());
                     org.junit.jupiter.api.Assertions.assertEquals(languageUuid.toString(), dto.getLanguageId());
-                    org.junit.jupiter.api.Assertions.assertEquals("Hello World!!", dto.getSubmissionText());
                     org.junit.jupiter.api.Assertions.assertEquals("IN_PROGRESS", dto.getStatus());
+                    org.junit.jupiter.api.Assertions.assertEquals("Hello World!!", dto.getSubmissionText());
+
                 })
                 .verifyComplete();
     }
