@@ -6,13 +6,13 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class UserSubmissionResponseDtoTest {
+class SubmissionResponseDtoTest {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
     void builderShouldCreateObjectCorrectly() {
-        UserSubmissionResponseDto dto = UserSubmissionResponseDto.builder()
+        SubmissionResponseDto dto = SubmissionResponseDto.builder()
                 .userId("123")
                 .challengeId("456")
                 .languageId("789")
@@ -29,7 +29,7 @@ class UserSubmissionResponseDtoTest {
 
     @Test
     void jsonSerializationShouldUseJsonPropertyNames() throws JsonProcessingException {
-        UserSubmissionResponseDto dto = UserSubmissionResponseDto.builder()
+        SubmissionResponseDto dto = SubmissionResponseDto.builder()
                 .userId("111")
                 .challengeId("222")
                 .languageId("333")

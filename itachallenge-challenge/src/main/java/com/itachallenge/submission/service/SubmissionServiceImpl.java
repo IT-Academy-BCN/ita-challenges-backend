@@ -1,31 +1,32 @@
 package com.itachallenge.submission.service;
 
 import com.itachallenge.challenge.exception.BadRequestException;
-import com.itachallenge.submission.dto.UserSubmissionResponseDto;
-import com.itachallenge.submission.repository.IUserSubmissionRepository;
+import com.itachallenge.challenge.dto.submission.SubmissionResponseDto;
+
+import com.itachallenge.submission.repository.SubmissionRepository;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import java.util.UUID;
 
 @Service
-public class UserSubmissionServiceImpl implements IUserSubmissionService {
-    private final IUserSubmissionRepository userSubmissionRepository;
+public class SubmissionServiceImpl implements SubmissionService {
+    private final SubmissionRepository submissionRepository;
 
-    public UserSubmissionServiceImpl(IUserSubmissionRepository userSubmissionRepository) {
-        this.userSubmissionRepository = userSubmissionRepository;
+    public SubmissionServiceImpl(SubmissionRepository submissionRepository) {
+        this.submissionRepository = submissionRepository;
     }
     @Override
-    public Flux<UserSubmissionResponseDto> getAllSubmissionsByUser(String userId) {
+    public Flux<SubmissionResponseDto> getAllSubmissionsByUser(String userId) {
         return validateAndParseUuid(userId)
                 .flatMapMany(uuid ->
-                        userSubmissionRepository.findAllByUserId(uuid)
-                                .map(doc -> UserSubmissionResponseDto.builder()
+                        submissionRepository.findAllByUserId(uuid)
+                                .map(doc -> SubmissionResponseDto.builder()
                                         .userId(doc.getUserId().toString())
                                         .challengeId(doc.getChallengeId().toString())
                                         .languageId(doc.getLanguageId().toString())
-                                        .submissionText(doc.getSubmissionAttemptDocument().getSubmissionText())
-                                        .action(doc.getAction().name())
+                                        .submissionText(doc.getSubmissionText())
+                                        .status(doc.getStatus().name())
                                         .build())
                 );
     }
