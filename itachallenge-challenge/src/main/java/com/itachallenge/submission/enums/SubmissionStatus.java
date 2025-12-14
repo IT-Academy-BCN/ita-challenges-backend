@@ -26,4 +26,4 @@ public enum SubmissionStatus {
                 .findFirst()
                 .orElse(null);
     }
-    }
+}
