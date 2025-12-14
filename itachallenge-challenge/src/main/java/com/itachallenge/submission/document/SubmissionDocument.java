@@ -14,7 +14,7 @@ import java.util.UUID;
 @Setter
 @Builder
 @Document(collection = "submissions")
-public class UserSubmissionDocument {
+public class SubmissionDocument {
 
     @Id
     @Field("_id")
