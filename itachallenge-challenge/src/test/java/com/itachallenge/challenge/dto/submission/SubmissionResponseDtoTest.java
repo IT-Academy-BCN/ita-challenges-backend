@@ -1,4 +1,4 @@
-package com.itachallenge.submission.dto;
+package com.itachallenge.challenge.dto.submission;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,14 +17,14 @@ class SubmissionResponseDtoTest {
                 .challengeId("456")
                 .languageId("789")
                 .submissionText("my submission text")
-                .action("GIVE_UP")
+                .status("IN_PROGRESS")
                 .build();
 
         assertEquals("123", dto.getUserId());
         assertEquals("456", dto.getChallengeId());
         assertEquals("789", dto.getLanguageId());
         assertEquals("my submission text", dto.getSubmissionText());
-        assertEquals("GIVE_UP", dto.getAction());
+        assertEquals("IN_PROGRESS", dto.getStatus());
     }
 
     @Test
@@ -34,7 +34,7 @@ class SubmissionResponseDtoTest {
                 .challengeId("222")
                 .languageId("333")
                 .submissionText("text here")
-                .action("GIVE_UP")
+                .status("IN_PROGRESS")
                 .build();
 
         String json = objectMapper.writeValueAsString(dto);
@@ -43,6 +43,6 @@ class SubmissionResponseDtoTest {
         assertTrue(json.contains("\"uuid_challenge\":\"222\""));
         assertTrue(json.contains("\"uuid_language\":\"333\""));
         assertTrue(json.contains("\"submission_text\":\"text here\""));
-        assertTrue(json.contains("\"action\":\"GIVE_UP\""));
+        assertTrue(json.contains("\"status\":\"IN_PROGRESS\""));
     }
 }

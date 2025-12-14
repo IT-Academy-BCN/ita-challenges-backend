@@ -1,11 +1,10 @@
 package com.itachallenge.submission.service;
 
 import com.itachallenge.challenge.exception.BadRequestException;
-import com.itachallenge.submission.document.SubmissionAttemptDocument;
 import com.itachallenge.submission.document.UserSubmissionDocument;
-import com.itachallenge.submission.dto.UserSubmissionResponseDto;
-import com.itachallenge.submission.enums.UserSubmissionAction;
-import com.itachallenge.submission.repository.IUserSubmissionRepository;
+import com.itachallenge.challenge.dto.submission.SubmissionResponseDto;
+import com.itachallenge.submission.enums.SubmissionStatus;
+import com.itachallenge.submission.repository.SubmissionRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -20,13 +19,13 @@ import java.util.UUID;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class UserSubmissionServiceImplTest {
+class SubmissionServiceImplTest {
 
     @Mock
-    private IUserSubmissionRepository userSubmissionRepository;
+    private SubmissionRepository submissionRepository;
 
     @InjectMocks
-    private UserSubmissionServiceImpl userSubmissionService;
+    private SubmissionServiceImpl submissionService;
 
     @Test
     void getAllSubmissionsByUser_shouldReturnMappedDtos() {
@@ -35,38 +34,35 @@ class UserSubmissionServiceImplTest {
         UUID languageUuid = UUID.randomUUID();
 
         String userId = userUuid.toString();
+        String submissionText = "Hello World!!";
 
-        SubmissionAttemptDocument attempt = SubmissionAttemptDocument.builder()
-                .uuid(UUID.randomUUID())
-                .submissionText("my submission text")
-                .build();
         UserSubmissionDocument document = UserSubmissionDocument.builder()
                 .submissionId(UUID.randomUUID())
                 .userId(userUuid)
                 .challengeId(challengeUuid)
                 .languageId(languageUuid)
-                .action(UserSubmissionAction.GIVE_UP)
-                .submissionAttemptDocument(attempt)
+                .status(SubmissionStatus.IN_PROGRESS)
+                .submissionText(submissionText)
                 .build();
-        when(userSubmissionRepository.findAllByUserId(userUuid))
+        when(submissionRepository.findAllByUserId(userUuid))
                 .thenReturn(Flux.just(document));
-        Flux<UserSubmissionResponseDto> result =
-                userSubmissionService.getAllSubmissionsByUser(userId);
+        Flux<SubmissionResponseDto> result =
+                submissionService.getAllSubmissionsByUser(userId);
         StepVerifier.create(result)
                 .assertNext(dto -> {
                     org.junit.jupiter.api.Assertions.assertEquals(userId, dto.getUserId());
                     org.junit.jupiter.api.Assertions.assertEquals(challengeUuid.toString(), dto.getChallengeId());
                     org.junit.jupiter.api.Assertions.assertEquals(languageUuid.toString(), dto.getLanguageId());
-                    org.junit.jupiter.api.Assertions.assertEquals("my submission text", dto.getSubmissionText());
-                    org.junit.jupiter.api.Assertions.assertEquals("GIVE_UP", dto.getAction());
+                    org.junit.jupiter.api.Assertions.assertEquals("Hello World!!", dto.getSubmissionText());
+                    org.junit.jupiter.api.Assertions.assertEquals("IN_PROGRESS", dto.getStatus());
                 })
                 .verifyComplete();
     }
 
     @Test
     void getAllSubmissionsByUser_shouldThrow_whenUserIdIsNull() {
-        Flux<UserSubmissionResponseDto> result =
-                userSubmissionService.getAllSubmissionsByUser(null);
+        Flux<SubmissionResponseDto> result =
+                submissionService.getAllSubmissionsByUser(null);
         StepVerifier.create(result)
                 .expectErrorMatches(ex ->
                         ex instanceof BadRequestException &&
@@ -76,8 +72,8 @@ class UserSubmissionServiceImplTest {
 
     @Test
     void getAllSubmissionsByUser_shouldThrow_whenUserIdIsEmpty() {
-        Flux<UserSubmissionResponseDto> result =
-                userSubmissionService.getAllSubmissionsByUser("   ");
+        Flux<SubmissionResponseDto> result =
+                submissionService.getAllSubmissionsByUser("   ");
         StepVerifier.create(result)
                 .expectErrorMatches(ex ->
                         ex instanceof BadRequestException &&
@@ -88,8 +84,8 @@ class UserSubmissionServiceImplTest {
     @Test
     void getAllSubmissionsByUser_shouldThrow_whenUserIdIsInvalidUuid() {
         String invalid = "not-a-uuid";
-        Flux<UserSubmissionResponseDto> result =
-                userSubmissionService.getAllSubmissionsByUser(invalid);
+        Flux<SubmissionResponseDto> result =
+                submissionService.getAllSubmissionsByUser(invalid);
         StepVerifier.create(result)
                 .expectErrorMatches(ex ->
                         ex instanceof BadRequestException &&
@@ -97,4 +93,3 @@ class UserSubmissionServiceImplTest {
                 .verify();
     }
 }
-
