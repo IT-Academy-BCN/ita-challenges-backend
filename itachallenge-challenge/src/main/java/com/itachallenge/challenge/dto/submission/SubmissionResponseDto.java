@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 @Getter
 public class SubmissionResponseDto {
