@@ -18,7 +18,7 @@ public class SubmissionServiceImpl implements SubmissionService {
         this.submissionRepository = submissionRepository;
     }
     @Override
-    public Flux<SubmissionResponseDto> getAllSubmissionsByUser(String userId) {
+    public Flux<SubmissionResponseDto> getAllSubmissionsByUser(UUID userId) {
         return validateAndParseUuid(userId)
                 .flatMapMany(uuid ->
                         submissionRepository.findAllByUserId(uuid)
@@ -26,12 +26,12 @@ public class SubmissionServiceImpl implements SubmissionService {
                 );
     }
 
-    private Mono<UUID> validateAndParseUuid(String userId) {
-        if (userId == null || userId.trim().isEmpty()) {
+    private Mono<UUID> validateAndParseUuid(UUID userId) {
+        if (userId == null){
             return Mono.error(new BadRequestException("The 'userId' parameter cannot be null or empty."));
         }
         try {
-            return Mono.just(UUID.fromString(userId.trim()));
+            return Mono.just(userId);
         } catch (IllegalArgumentException ex) {
             return Mono.error(new BadRequestException("The 'userId' parameter must be a valid UUID: " + userId));
         }

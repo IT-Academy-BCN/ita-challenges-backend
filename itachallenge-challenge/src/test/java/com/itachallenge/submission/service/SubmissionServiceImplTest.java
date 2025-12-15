@@ -47,7 +47,7 @@ class SubmissionServiceImplTest {
         when(submissionRepository.findAllByUserId(userUuid))
                 .thenReturn(Flux.just(document));
         Flux<SubmissionResponseDto> result =
-                submissionService.getAllSubmissionsByUser(userId);
+                submissionService.getAllSubmissionsByUser(userUuid);
         StepVerifier.create(result)
                 .assertNext(dto -> {
                     org.junit.jupiter.api.Assertions.assertEquals(userId, dto.getUserId());
@@ -68,29 +68,6 @@ class SubmissionServiceImplTest {
                 .expectErrorMatches(ex ->
                         ex instanceof BadRequestException &&
                                 ex.getMessage().contains("cannot be null or empty"))
-                .verify();
-    }
-
-    @Test
-    void getAllSubmissionsByUser_shouldThrow_whenUserIdIsEmpty() {
-        Flux<SubmissionResponseDto> result =
-                submissionService.getAllSubmissionsByUser("   ");
-        StepVerifier.create(result)
-                .expectErrorMatches(ex ->
-                        ex instanceof BadRequestException &&
-                                ex.getMessage().contains("cannot be null or empty"))
-                .verify();
-    }
-
-    @Test
-    void getAllSubmissionsByUser_shouldThrow_whenUserIdIsInvalidUuid() {
-        String invalid = "not-a-uuid";
-        Flux<SubmissionResponseDto> result =
-                submissionService.getAllSubmissionsByUser(invalid);
-        StepVerifier.create(result)
-                .expectErrorMatches(ex ->
-                        ex instanceof BadRequestException &&
-                                ex.getMessage().contains("must be a valid UUID"))
                 .verify();
     }
 }
