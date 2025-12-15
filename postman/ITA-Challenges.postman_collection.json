@@ -1335,6 +1335,30 @@
             }
           },
           "response": []
+        },
+        {
+          "name": "User/favorites [dev-only]",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://{{ip}}:{{user_port}}/itachallenge/api/v1/userinteraction/favorites/d0d6e141-24ac-42ed-8e74-ebb64a83899e",
+              "protocol": "http",
+              "host": [
+                "{{ip}}"
+              ],
+              "port": "{{user_port}}",
+              "path": [
+                "itachallenge",
+                "api",
+                "v1",
+                "userinteraction",
+                "favorites",
+                "d0d6e141-24ac-42ed-8e74-ebb64a83899e"
+              ]
+            }
+          },
+          "response": []
         }
       ]
     },
