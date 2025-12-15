@@ -197,7 +197,7 @@ class FavoriteControllerIntegrationTest {
 
     private void addFavorite(String userId, String challengeId){
         webTestClient.post()
-                .uri("/itachallenge/api/v1/user/users/{userId}/favorites/{challengeId}", userId, challengeId)
+                .uri("/itachallenge/api/v1/userinteraction/favorites/users/{userId}/favorites/{challengeId}", userId, challengeId)
                 .exchange()
                 .expectStatus().isCreated();
     }
