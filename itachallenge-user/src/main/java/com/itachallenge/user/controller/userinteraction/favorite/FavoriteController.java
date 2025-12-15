@@ -4,6 +4,7 @@ import com.itachallenge.userinteraction.service.favorite.FavoriteService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,6 +51,60 @@ public class FavoriteController {
                 .map(favorites -> {
                     log.info("Retrieved {} favorite challenges for user {}", favorites.size(), userId);
                     return ResponseEntity.ok(favorites);
+                });
+    }
+
+    @Operation(
+            summary = "Delete Challenge from User Favorite Challenges",
+            description = "Deletes challenge from user favorites",
+            parameters = {
+                    @Parameter(
+                            name = "userId",
+                            description = "User ID",
+                            required = true,
+                            in = ParameterIn.PATH
+                    ),
+                    @Parameter(
+                            name = "challengeId",
+                            description = "Challenge ID",
+                            required = true,
+                            in = ParameterIn.PATH
+                    )
+            },
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Challenge deleted from favorites or was not in favorites",
+                            content = @Content(mediaType = "application/json")
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Bad Request. The provided IDs have a bad format",
+                            content = @Content(mediaType = "application/json")
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Not found. No user is found with the provided user id.",
+                            content = @Content(mediaType = "application/json")
+                    ),
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "Internal server error. An unexpected error occurred.",
+                            content = @Content(mediaType = "application/json")
+                    )
+            }
+    )
+    @DeleteMapping("/users/{userId}/favorites/{challengeId}")
+    public Mono<ResponseEntity<Boolean>> deleteFromFavorites(@PathVariable String userId, @PathVariable String challengeId) {
+        return favoriteService.deleteChallengeFromFavorites(userId, challengeId)
+                .map(deleted -> {
+                    if (Boolean.TRUE.equals(deleted)) {
+                        log.info("Challenge '{}' deleted from user '{}' favorites", challengeId, userId);
+                        return ResponseEntity.ok().body(true);
+                    } else {
+                        log.info("No change, User's '{}' favorites doesn't contain Challenge '{}'", userId, challengeId);
+                        return ResponseEntity.ok().body(false);
+                    }
                 });
     }
 }

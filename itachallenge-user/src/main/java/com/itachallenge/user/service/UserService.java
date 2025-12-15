@@ -8,8 +8,6 @@ public interface UserService {
 
     Mono<Boolean> addChallengeToBookmarks(String userId, String challengeId);
 
-    Mono<Boolean> deleteChallengeFromFavorites(String userId, String challengeId);
-
     Mono<Boolean> deleteChallengeFromBookmarks(String userId, String challengeId);
 
     Mono<UserDocument> getUserById(String userId);

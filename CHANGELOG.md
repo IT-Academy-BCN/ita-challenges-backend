@@ -43,6 +43,7 @@ Supported actions: SAVE, GIVE_UP, SUBMIT. (Taiga [#871], PR [#1043])
 
 ### Changed
 - [Changed] Refactored the logic for adding favorites to integrate it into the FavoriteService structure (Taiga [#917], PR [#1052])
+- [Changed] Refactored the logic for adding favorites to integrate it into the FavoriteService structure (Taiga [#918], PR [#1053])
 
 ### Chore/Internal
 - Introduced `SolutionAction` enum (internal change)

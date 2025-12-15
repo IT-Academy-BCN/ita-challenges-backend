@@ -271,22 +271,6 @@ class UserControllerTest {
     }
 
     @Test
-    void deleteFromFavorites_WhenDeleted_Returns200() {
-        String userId = UUID.randomUUID().toString();
-        String challengeId = UUID.randomUUID().toString();
-        when(userService.deleteChallengeFromFavorites(userId, challengeId))
-                .thenReturn(Mono.just(true));
-
-        webTestClient.delete()
-                .uri("/itachallenge/api/v1/user/users/" + userId + "/favorites/" + challengeId)
-                .exchange()
-                .expectStatus().isEqualTo(HttpStatus.OK)
-                .expectBody(Boolean.class).isEqualTo(true);
-
-        verify(userService, times(1)).deleteChallengeFromFavorites(userId, challengeId);
-    }
-
-    @Test
     void deleteFromBookmarks_WhenDeleted_Returns200() {
         String userId = UUID.randomUUID().toString();
         String challengeId = UUID.randomUUID().toString();
@@ -300,22 +284,6 @@ class UserControllerTest {
                 .expectBody(Boolean.class).isEqualTo(true);
 
         verify(userService, times(1)).deleteChallengeFromBookmarks(userId, challengeId);
-    }
-
-    @Test
-    void deleteFromFavorites_WhenNotInFavorites_Returns200() {
-        String userId = UUID.randomUUID().toString();
-        String challengeId = UUID.randomUUID().toString();
-        when(userService.deleteChallengeFromFavorites(userId, challengeId))
-                .thenReturn(Mono.just(false));
-
-        webTestClient.delete()
-                .uri("/itachallenge/api/v1/user/users/" + userId + "/favorites/" + challengeId)
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody(Boolean.class).isEqualTo(false);
-
-        verify(userService, times(1)).deleteChallengeFromFavorites(userId, challengeId);
     }
 
     @Test
@@ -335,22 +303,6 @@ class UserControllerTest {
     }
 
     @Test
-    void deleteFromFavorites_WhenUserNotExists_Returns404() {
-        String userId = UUID.randomUUID().toString();
-        String challengeId = UUID.randomUUID().toString();
-        when(userService.deleteChallengeFromFavorites(userId, challengeId))
-                .thenReturn(Mono.error(new NotFoundException("User not found")));
-
-        webTestClient.delete()
-                .uri("/itachallenge/api/v1/user/users/" + userId + "/favorites/" + challengeId)
-                .exchange()
-                .expectStatus().isEqualTo(HttpStatus.NOT_FOUND)
-                .expectBody(String.class).isEqualTo("User not found");
-
-        verify(userService, times(1)).deleteChallengeFromFavorites(userId, challengeId);
-    }
-
-    @Test
     void deleteFromBookmarks_WhenUserNotExists_Returns404() {
         String userId = UUID.randomUUID().toString();
         String challengeId = UUID.randomUUID().toString();
@@ -367,22 +319,6 @@ class UserControllerTest {
     }
 
     @Test
-    void deleteFromFavorites_WhenBadFormattedId_Returns404() {
-        String userId = "invalidUuid";
-        String challengeId = "invalidUUid";
-        when(userService.deleteChallengeFromFavorites(userId, challengeId))
-                .thenReturn(Mono.error(new BadUUIDException("Error message")));
-
-        webTestClient.delete()
-                .uri("/itachallenge/api/v1/user/users/" + userId + "/favorites/" + challengeId)
-                .exchange()
-                .expectStatus().isEqualTo(HttpStatus.BAD_REQUEST)
-                .expectBody(String.class).isEqualTo("The provided IDs are not valid.");
-
-        verify(userService, times(1)).deleteChallengeFromFavorites(userId, challengeId);
-    }
-
-    @Test
     void deleteFromBookmarks_WhenBadFormattedId_Returns404() {
         String userId = "invalidUuid";
         String challengeId = "invalidUUid";
@@ -396,22 +332,6 @@ class UserControllerTest {
                 .expectBody(String.class).isEqualTo("The provided IDs are not valid.");
 
         verify(userService, times(1)).deleteChallengeFromBookmarks(userId, challengeId);
-    }
-
-    @Test
-    void deleteFromFavorites_WhenUnexpectedError_Returns500() {
-        String userId = UUID.randomUUID().toString();
-        String challengeId = UUID.randomUUID().toString();
-        when(userService.deleteChallengeFromFavorites(userId, challengeId))
-                .thenReturn(Mono.error(new Exception()));
-
-        webTestClient.delete()
-                .uri("/itachallenge/api/v1/user/users/" + userId + "/favorites/" + challengeId)
-                .exchange()
-                .expectStatus().isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR)
-                .expectBody(String.class).isEqualTo("Unexpected error happened.");
-
-        verify(userService, times(1)).deleteChallengeFromFavorites(userId, challengeId);
     }
 
     @Test
