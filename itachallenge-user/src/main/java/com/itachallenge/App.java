@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Import;
 @EnableDiscoveryClient
 @OpenAPIDefinition(info = @Info(title = "Ita Backend User", version = "1.0", description = "Description"))
 public class App {
+    
     public static void main(String[] args) {
         SpringApplication.run(App.class, args);
     }
