@@ -16,6 +16,10 @@ import reactor.core.publisher.Mono;
 import java.util.Set;
 import java.util.UUID;
 
+// TODO [TECH-DEBT][Taiga-#938]:
+// Refactor endpoint structure to treat favorites as a user subresource
+// and remove duplicated path segments. See Taiga task for details.
+
 @RestController
 @RequestMapping("/itachallenge/api/v1/userinteraction/favorites")
 public class FavoriteController {
