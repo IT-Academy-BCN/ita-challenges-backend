@@ -22,7 +22,7 @@ public class UserServiceImplTest {
     private MockWebServer mockWebServer;
     private UserServiceImpl userService;
 
-    private static final String FAVORITES_URL = "/itachallenge/api/v1/user/users/%s/favorites/%s";
+    private static final String FAVORITES_URL = "/itachallenge/api/v1/userinteraction/favorites/users/%s/favorites/%s";
     private static final String BOOKMARKS_URL = "/itachallenge/api/v1/user/users/%s/bookmarks/%s";
     private static final String SOLVED_URL = "/itachallenge/api/v1/user/users/%s/solved/%s";
     public static final String X_FAVORITE_MESSAGE = "X-Favorite-Message";
