@@ -25,6 +25,11 @@ public class UserServiceImpl implements IUserService {
     private final String X_FAVORITE_MESSAGE = "X-Favorite-Message";
     private final String X_BOOKMARK_MESSAGE = "X-Bookmark-Message";
 
+    private static final String FAVORITES_PATH =
+            "/itachallenge/api/v1/userinteraction/favorites/users/{userId}/favorites/{challengeId}";
+    private static final String BOOKMARKS_PATH =
+            "/itachallenge/api/v1/user/users/{userId}/bookmarks/{challengeId}";
+
     public UserServiceImpl(
             WebClient.Builder webClientBuilder,
             @Value("${user.service.url}") String userServiceUrl) {
@@ -53,7 +58,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     private Mono<Boolean> callEndpoint(String userId, String challengeId, UserChallengeActionType type, String errorHeader, HttpMethod method) {
-        String url = buildUrl(userId, challengeId, type.toString().toLowerCase());
+        String url = buildUrl(userId, challengeId, type);
         log.debug("Calling {} endpoint with method={} and URL={}", type.name().toLowerCase(), method, url);
 
         return webClientBuilder.build()
@@ -79,10 +84,17 @@ public class UserServiceImpl implements IUserService {
                 .bodyToMono(Boolean.class);
     }
 
-    private String buildUrl(String userId, String challengeId, String type){
+    //TODO It should be config-driven (keys with defaults), so that the flip is by config.
+    private String buildUrl(String userId, String challengeId, UserChallengeActionType type){
+
+        String template = switch (type) {
+            case FAVORITES -> FAVORITES_PATH;
+            case BOOKMARKS -> BOOKMARKS_PATH;
+        };
+
         return UriComponentsBuilder.fromHttpUrl(userServiceUrl)
-                .path("/itachallenge/api/v1/user/users/{userId}/{type}/{challengeId}")
-                .buildAndExpand(userId, type, challengeId)
+                .path(template)
+                .buildAndExpand(userId, challengeId)
                 .toUriString();
     }
 }
