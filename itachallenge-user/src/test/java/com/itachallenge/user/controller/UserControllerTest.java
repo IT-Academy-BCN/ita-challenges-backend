@@ -8,7 +8,6 @@ import com.itachallenge.user.exception.NotFoundException;
 import com.itachallenge.user.exception.UserGlobalExceptionHandler;
 import com.itachallenge.user.service.IUserSolutionService;
 import com.itachallenge.user.service.UserService;
-import com.itachallenge.userinteraction.service.favorite.FavoriteService;
 import org.junit.jupiter.api.*;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -26,9 +25,6 @@ class UserControllerTest {
 
     @Mock
     private UserService userService;
-
-    @Mock
-    private FavoriteService favoriteService;
 
     @Mock
     private IUserSolutionService userSolutionService;
@@ -111,22 +107,6 @@ class UserControllerTest {
     }
 
     @Test
-    void addToFavorites_WhenAdded_Returns201() {
-        String userId = UUID.randomUUID().toString();
-        String challengeId = UUID.randomUUID().toString();
-        when(favoriteService.addChallengeToFavorites(userId, challengeId))
-                .thenReturn(Mono.just(true));
-
-        webTestClient.post()
-                .uri("/itachallenge/api/v1/user/users/" + userId + "/favorites/" + challengeId)
-                .exchange()
-                .expectStatus().isEqualTo(HttpStatus.CREATED)
-                .expectBody(Boolean.class).isEqualTo(true);
-
-        verify(favoriteService, times(1)).addChallengeToFavorites(userId, challengeId);
-    }
-
-    @Test
     void addToBookmarks_WhenAdded_Returns201() {
         String userId = UUID.randomUUID().toString();
         String challengeId = UUID.randomUUID().toString();
@@ -140,22 +120,6 @@ class UserControllerTest {
                 .expectBody(Boolean.class).isEqualTo(true);
 
         verify(userService, times(1)).addChallengeToBookmarks(userId, challengeId);
-    }
-
-    @Test
-    void addToFavorites_WhenAlreadyInFavorites_Returns200() {
-        String userId = UUID.randomUUID().toString();
-        String challengeId = UUID.randomUUID().toString();
-        when(favoriteService.addChallengeToFavorites(userId, challengeId))
-                .thenReturn(Mono.just(false));
-
-        webTestClient.post()
-                .uri("/itachallenge/api/v1/user/users/" + userId + "/favorites/" + challengeId)
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody(Boolean.class).isEqualTo(false);
-
-        verify(favoriteService, times(1)).addChallengeToFavorites(userId, challengeId);
     }
 
     @Test
@@ -175,22 +139,6 @@ class UserControllerTest {
     }
 
     @Test
-    void addToFavorites_WhenUserNotExists_Returns404() {
-        String userId = UUID.randomUUID().toString();
-        String challengeId = UUID.randomUUID().toString();
-        when(favoriteService.addChallengeToFavorites(userId, challengeId))
-                .thenReturn(Mono.error(new NotFoundException("User not found")));
-
-        webTestClient.post()
-                .uri("/itachallenge/api/v1/user/users/" + userId + "/favorites/" + challengeId)
-                .exchange()
-                .expectStatus().isNotFound()
-                .expectBody(String.class).isEqualTo("User not found");
-
-        verify(favoriteService, times(1)).addChallengeToFavorites(userId, challengeId);
-    }
-
-    @Test
     void addToBookmarks_WhenUserNotExists_Returns404() {
         String userId = UUID.randomUUID().toString();
         String challengeId = UUID.randomUUID().toString();
@@ -207,22 +155,6 @@ class UserControllerTest {
     }
 
     @Test
-    void addToFavorites_WhenBadFormattedId_Returns400() {
-        String userId = "invalidUuid";
-        String challengeId = "invalidUUid";
-        when(favoriteService.addChallengeToFavorites(userId, challengeId))
-                .thenReturn(Mono.error(new BadUUIDException("Error message")));
-
-        webTestClient.post()
-                .uri("/itachallenge/api/v1/user/users/" + userId + "/favorites/" + challengeId)
-                .exchange()
-                .expectStatus().isBadRequest()
-                .expectBody(String.class).isEqualTo("The provided IDs are not valid.");
-
-        verify(favoriteService, times(1)).addChallengeToFavorites(userId, challengeId);
-    }
-
-    @Test
     void addToBookmarks_WhenBadFormattedId_Returns400() {
         String userId = "invalidUuid";
         String challengeId = "invalidUUid";
@@ -236,22 +168,6 @@ class UserControllerTest {
                 .expectBody(String.class).isEqualTo("The provided IDs are not valid.");
 
         verify(userService, times(1)).addChallengeToBookmarks(userId, challengeId);
-    }
-
-    @Test
-    void addToFavorites_WhenUnexpectedError_Returns500() {
-        String userId = UUID.randomUUID().toString();
-        String challengeId = UUID.randomUUID().toString();
-        when(favoriteService.addChallengeToFavorites(userId, challengeId))
-                .thenReturn(Mono.error(new Exception()));
-
-        webTestClient.post()
-                .uri("/itachallenge/api/v1/user/users/" + userId + "/favorites/" + challengeId)
-                .exchange()
-                .expectStatus().isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR)
-                .expectBody(String.class).isEqualTo("Unexpected error happened.");
-
-        verify(favoriteService, times(1)).addChallengeToFavorites(userId, challengeId);
     }
 
     @Test

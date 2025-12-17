@@ -8,12 +8,17 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
 import java.util.Set;
 import java.util.UUID;
+
+// TODO [TECH-DEBT][Taiga-#938]:
+// Refactor endpoint structure to treat favorites as a user subresource
+// and remove duplicated path segments. See Taiga task for details.
 
 @RestController
 @RequestMapping("/itachallenge/api/v1/userinteraction/favorites")
@@ -25,6 +30,66 @@ public class FavoriteController {
 
     public FavoriteController(FavoriteService favoriteService) {
         this.favoriteService = favoriteService;
+    }
+
+    @Operation(
+            summary = "Add Challenge to User Favorite Challenges",
+            description = "Adds challenge to user favorites",
+            parameters = {
+                    @Parameter(
+                            name = "userId",
+                            description = "User ID",
+                            required = true,
+                            in = ParameterIn.PATH
+                    ),
+                    @Parameter(
+                            name = "challengeId",
+                            description = "Challenge ID",
+                            required = true,
+                            in = ParameterIn.PATH
+                    )
+            },
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Challenge is already in favorites",
+                            content = @Content(mediaType = "application/json")
+                    ),
+                    @ApiResponse(
+                            responseCode = "201",
+                            description = "Challenge added to favorites",
+                            content = @Content(mediaType = "application/json")
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Bad Request. The provided IDs have a bad format",
+                            content = @Content(mediaType = "application/json")
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Not found. No user is found with the provided user id.",
+                            content = @Content(mediaType = "application/json")
+                    ),
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "Internal server error. An unexpected error occurred.",
+                            content = @Content(mediaType = "application/json")
+                    )
+            }
+    )
+
+    @PostMapping("/users/{userId}/favorites/{challengeId}")
+    public Mono<ResponseEntity<Boolean>> addToFavorites(@PathVariable String userId, @PathVariable String challengeId) {
+        return favoriteService.addChallengeToFavorites(userId, challengeId)
+                .map(added -> {
+                    if (Boolean.TRUE.equals(added)) {
+                        log.info("Challenge '{}' added to user '{}' favorites", challengeId, userId);
+                        return ResponseEntity.status(HttpStatus.CREATED).body(true);
+                    } else {
+                        log.info("User's '{}' favorites already contain Challenge '{}'", userId, challengeId);
+                        return ResponseEntity.ok().body(false);
+                    }
+                });
     }
 
     @Operation(

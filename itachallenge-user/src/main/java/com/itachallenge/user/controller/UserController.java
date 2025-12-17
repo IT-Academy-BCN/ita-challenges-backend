@@ -7,7 +7,6 @@ import com.itachallenge.user.dto.UserSolutionRequestDto;
 import com.itachallenge.user.dto.UserSolutionResponseDto;
 import com.itachallenge.user.service.IUserSolutionService;
 import com.itachallenge.user.service.UserService;
-import com.itachallenge.userinteraction.service.favorite.FavoriteService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -35,12 +34,10 @@ public class UserController {
     public static final String X_GITHUB_USERNAME ="X-Github-Username";
 
     private final UserService userService;
-    private final FavoriteService favoriteService;
     private final IUserSolutionService userSolutionService;
 
-    public UserController(UserService userService, IUserSolutionService userSolutionService, FavoriteService favoriteService) {
+    public UserController(UserService userService, IUserSolutionService userSolutionService) {
         this.userService = userService;
-        this.favoriteService = favoriteService;
         this.userSolutionService = userSolutionService;
     }
 
@@ -93,66 +90,6 @@ public class UserController {
                             .header(X_VALIDATION_STATUS, "Success")
                             .header(X_GITHUB_USERNAME, githubUsername)
                             .body(user);
-                });
-    }
-
-    @Operation(
-            summary = "Add Challenge to User Favorite Challenges",
-            description = "Adds challenge to user favorites",
-            parameters = {
-                    @Parameter(
-                            name = "userId",
-                            description = "User ID",
-                            required = true,
-                            in = ParameterIn.PATH
-                    ),
-                    @Parameter(
-                            name = "challengeId",
-                            description = "Challenge ID",
-                            required = true,
-                            in = ParameterIn.PATH
-                    )
-            },
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "Challenge is already in favorites",
-                            content = @Content(mediaType = "application/json")
-                    ),
-                    @ApiResponse(
-                            responseCode = "201",
-                            description = "Challenge added to favorites",
-                            content = @Content(mediaType = "application/json")
-                    ),
-                    @ApiResponse(
-                            responseCode = "400",
-                            description = "Bad Request. The provided IDs have a bad format",
-                            content = @Content(mediaType = "application/json")
-                    ),
-                    @ApiResponse(
-                            responseCode = "404",
-                            description = "Not found. No user is found with the provided user id.",
-                            content = @Content(mediaType = "application/json")
-                    ),
-                    @ApiResponse(
-                            responseCode = "500",
-                            description = "Internal server error. An unexpected error occurred.",
-                            content = @Content(mediaType = "application/json")
-                    )
-            }
-    )
-
-    @PostMapping("/users/{userId}/favorites/{challengeId}")
-    public Mono<ResponseEntity<Boolean>> addToFavorites(@PathVariable String userId, @PathVariable String challengeId) {
-        return favoriteService.addChallengeToFavorites(userId, challengeId)
-                .map(added -> {
-                    if (Boolean.TRUE.equals(added)) {
-                        log.info("Challenge '{}' added to user '{}' favorites", challengeId, userId);
-                        return ResponseEntity.status(HttpStatus.CREATED).body(true);
-                    } else {
-                        log.info("User's '{}' favorites already contain Challenge '{}'", userId, challengeId);
-                        return ResponseEntity.ok().body(false);
-                    }
                 });
     }
 
