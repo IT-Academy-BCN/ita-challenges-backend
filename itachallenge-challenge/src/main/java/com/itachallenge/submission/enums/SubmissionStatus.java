@@ -1,5 +1,6 @@
 package com.itachallenge.submission.enums;
 
+import com.itachallenge.challenge.exception.BadRequestException;
 import lombok.Getter;
 
 import java.util.Arrays;
@@ -16,14 +17,14 @@ public enum SubmissionStatus {
         this.value = value;
     }
 
-    public static SubmissionStatus challengeStatusFromString(String status) {
-        if (status == null) {
-            return null;
+    public static SubmissionStatus fromString(String status) {
+        if (status == null || status.isBlank()) {
+            throw new BadRequestException("status is required");
         }
 
         return Arrays.stream(SubmissionStatus.values())
                 .filter(s -> status.equalsIgnoreCase(s.getValue()))
                 .findFirst()
-                .orElse(null);
+                .orElseThrow(() -> new BadRequestException("Invalid status: " + status));
     }
 }
