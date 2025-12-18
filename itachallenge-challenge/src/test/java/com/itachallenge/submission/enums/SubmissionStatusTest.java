@@ -1,5 +1,6 @@
 package com.itachallenge.submission.enums;
 
+import com.itachallenge.challenge.exception.BadRequestException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -16,7 +17,7 @@ class SubmissionStatusTest {
     })
     void shouldReturnSubmittedCompleteIgnoringCase(String input) {
         // When
-        SubmissionStatus result = SubmissionStatus.challengeStatusFromString(input);
+        SubmissionStatus result = SubmissionStatus.fromString(input);
 
         // Then
         assertEquals(SubmissionStatus.SUBMITTED_COMPLETE, result);
@@ -29,7 +30,7 @@ class SubmissionStatusTest {
     })
     void shouldReturnInProgressIgnoringCase(String input) {
         // When
-        SubmissionStatus result = SubmissionStatus.challengeStatusFromString(input);
+        SubmissionStatus result = SubmissionStatus.fromString(input);
 
         // Then
         assertEquals(SubmissionStatus.IN_PROGRESS, result);
@@ -42,7 +43,7 @@ class SubmissionStatusTest {
     })
     void shouldReturnSubmittedIncompleteIgnoringCase(String input) {
         // When
-        SubmissionStatus result = SubmissionStatus.challengeStatusFromString(input);
+        SubmissionStatus result = SubmissionStatus.fromString(input);
 
         // Then
         assertEquals(SubmissionStatus.SUBMITTED_INCOMPLETE, result);
@@ -51,23 +52,18 @@ class SubmissionStatusTest {
     @DisplayName("Should return null when input status string is null")
     @Test
     void shouldReturnNullWhenInputIsNull() {
-        // When
-        SubmissionStatus result = SubmissionStatus.challengeStatusFromString(null);
-
-        // Then
-        assertNull(result);
+        assertThrows(BadRequestException.class, () ->
+                SubmissionStatus.fromString(null)
+        );
     }
 
     @DisplayName("Should return null when status value does not exist")
     @Test
     void shouldReturnNullWhenValueDoesNotExist() {
-        // Given
         String input = "UNKNOWN_STATUS";
 
-        // When
-        SubmissionStatus result = SubmissionStatus.challengeStatusFromString(input);
-
-        // Then
-        assertNull(result);
+        assertThrows(BadRequestException.class, () ->
+                SubmissionStatus.fromString(input)
+        );
     }
 }
