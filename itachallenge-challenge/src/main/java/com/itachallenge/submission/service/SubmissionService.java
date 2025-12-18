@@ -1,9 +1,9 @@
 package com.itachallenge.submission.service;
 
-import com.itachallenge.challenge.dto.submission.SubmissionResponseDto;
+import com.itachallenge.submission.document.SubmissionDocument;
 import reactor.core.publisher.Flux;
 
 public interface SubmissionService {
 
-    Flux<SubmissionResponseDto> getAllSubmissionsByUser(String userId);
+    Flux<SubmissionDocument> getAllSubmissionsByUser(String userId);
 }
