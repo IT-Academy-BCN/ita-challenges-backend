@@ -4,7 +4,6 @@ plugins {
     id 'jacoco'
 }
 
-
 jar {
     manifest {
         attributes(
@@ -12,6 +11,7 @@ jar {
         )
     }
 }
+
 jacoco{
     toolVersion = '0.8.11'
     reportsDirectory = layout.buildDirectory.dir('jacocoXml')
@@ -60,8 +60,6 @@ dependencies {
 
     implementation project(":jwt-core")
 
-    implementation project (":error-response-core")
-
     testImplementation 'org.springframework.boot:spring-boot-starter-test:3.0.6'
     testImplementation 'org.springframework:spring-test:5.3.13'
     testImplementation 'org.junit.jupiter:junit-jupiter'
@@ -75,9 +73,6 @@ dependencies {
     testImplementation 'org.junit.platform:junit-platform-suite-engine:1.8.1'
     testImplementation group: 'io.github.hakky54', name: 'logcaptor', version: '2.9.3'
     testImplementation project(':jwt-core')
-
-
-
 
 }
 
