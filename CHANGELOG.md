@@ -5,12 +5,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [itachallenge-challenge-Unreleased]
 
+### Changed
+- `challenge.exception.GlobalExceptionHandler` – extended to handle submission-related exceptions and return consistent error responses.
+
 ### Added
-- New package `com.itachallenge.submission` (domain bootstrap).
-- `submission.document.SubmissionDocument` – MongoDB entity for submissions.
-- `submission.repository.SubmissionRepository` – ReactiveMongo repository.
-- `submission.enums.SubmissionStatus` – canonical submission statuses.
-- Unit tests: `SubmissionDocumentTest`, `SubmissionStatusTest`.
+- New package `com.itachallenge.submission` – submission domain bootstrap.
+- `submission.document.SubmissionDocument` – MongoDB entity representing a code submission.
+- `submission.repository.SubmissionRepository` – Reactive Mongo repository for submissions.
+- `submission.enums.SubmissionStatus` – canonical submission status values.
+- `challenge.exception.SubmissionNotFoundException` – exception thrown when a submission is not found.
+- `challenge.dto.submission.SubmissionResponseDto` – response DTO exposed by submission endpoints.
+- `challenge.mapper.submission.SubmissionResponseDtoMapper` – mapper between `SubmissionDocument` and `SubmissionResponseDto`.
+- `submission.service.SubmissionService` – submission domain service contract.
+- `submission.service.SubmissionServiceImpl` – submission domain service implementation.
+- Unit tests:
+  - `SubmissionDocumentTest`
+  - `SubmissionStatusTest`
+  - `SubmissionServiceImplTest`
+  - `SubmissionResponseDtoTest`
+  - `SubmissionResponseDtoMapperTest`
 
 ### [itachallenge-challenge-3.0.4-RELEASE] - 2025-12-17
 
