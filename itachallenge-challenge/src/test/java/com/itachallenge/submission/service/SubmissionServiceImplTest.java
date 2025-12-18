@@ -1,10 +1,10 @@
 package com.itachallenge.submission.service;
 
-import com.itachallenge.challenge.exception.BadRequestException;
+import com.itachallenge.challenge.exception.SubmissionNotFoundException;
 import com.itachallenge.submission.document.SubmissionDocument;
-import com.itachallenge.challenge.dto.submission.SubmissionResponseDto;
 import com.itachallenge.submission.enums.SubmissionStatus;
 import com.itachallenge.submission.repository.SubmissionRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -28,7 +28,7 @@ class SubmissionServiceImplTest {
     private SubmissionServiceImpl submissionService;
 
     @Test
-    void getAllSubmissionsByUser_shouldReturnMappedDtos() {
+    void getAllSubmissionsByUser_shouldReturnSubmissionDocuments() {
         UUID userUuid = UUID.randomUUID();
         UUID challengeUuid = UUID.randomUUID();
         UUID languageUuid = UUID.randomUUID();
@@ -44,40 +44,42 @@ class SubmissionServiceImplTest {
                 .status(SubmissionStatus.IN_PROGRESS)
                 .submissionText(submissionText)
                 .build();
+
         when(submissionRepository.findAllByUserId(userUuid))
                 .thenReturn(Flux.just(document));
-        Flux<SubmissionResponseDto> result =
-                submissionService.getAllSubmissionsByUser(userId);
-        StepVerifier.create(result)
-                .assertNext(dto -> {
-                    org.junit.jupiter.api.Assertions.assertEquals(userId, dto.getUserId());
-                    org.junit.jupiter.api.Assertions.assertEquals(challengeUuid.toString(), dto.getChallengeId());
-                    org.junit.jupiter.api.Assertions.assertEquals(languageUuid.toString(), dto.getLanguageId());
-                    org.junit.jupiter.api.Assertions.assertEquals("IN_PROGRESS", dto.getStatus());
-                    org.junit.jupiter.api.Assertions.assertEquals("Hello World!!", dto.getSubmissionText());
 
+        Flux<SubmissionDocument> result =
+                submissionService.getAllSubmissionsByUser(userId);
+
+        StepVerifier.create(result)
+                .assertNext(submission -> {
+                    Assertions.assertEquals(userUuid, submission.getUserId());
+                    Assertions.assertEquals(challengeUuid, submission.getChallengeId());
+                    Assertions.assertEquals(languageUuid, submission.getLanguageId());
+                    Assertions.assertEquals(SubmissionStatus.IN_PROGRESS, submission.getStatus());
+                    Assertions.assertEquals(submissionText, submission.getSubmissionText());
                 })
                 .verifyComplete();
     }
 
     @Test
     void getAllSubmissionsByUser_shouldThrow_whenUserIdIsNull() {
-        Flux<SubmissionResponseDto> result =
+        Flux<SubmissionDocument> result =
                 submissionService.getAllSubmissionsByUser(null);
         StepVerifier.create(result)
                 .expectErrorMatches(ex ->
-                        ex instanceof BadRequestException &&
+                        ex instanceof SubmissionNotFoundException &&
                                 ex.getMessage().contains("cannot be null or empty"))
                 .verify();
     }
 
     @Test
     void getAllSubmissionsByUser_shouldThrow_whenUserIdIsEmpty() {
-        Flux<SubmissionResponseDto> result =
+        Flux<SubmissionDocument> result =
                 submissionService.getAllSubmissionsByUser("   ");
         StepVerifier.create(result)
                 .expectErrorMatches(ex ->
-                        ex instanceof BadRequestException &&
+                        ex instanceof SubmissionNotFoundException &&
                                 ex.getMessage().contains("cannot be null or empty"))
                 .verify();
     }
@@ -85,11 +87,11 @@ class SubmissionServiceImplTest {
     @Test
     void getAllSubmissionsByUser_shouldThrow_whenUserIdIsInvalidUuid() {
         String invalid = "not-a-uuid";
-        Flux<SubmissionResponseDto> result =
+        Flux<SubmissionDocument> result =
                 submissionService.getAllSubmissionsByUser(invalid);
         StepVerifier.create(result)
                 .expectErrorMatches(ex ->
-                        ex instanceof BadRequestException &&
+                        ex instanceof SubmissionNotFoundException &&
                                 ex.getMessage().contains("must be a valid UUID"))
                 .verify();
     }
