@@ -24,17 +24,18 @@ public class UserServiceImpl implements IUserService {
     private final String userServiceUrl;
     private final String X_FAVORITE_MESSAGE = "X-Favorite-Message";
     private final String X_BOOKMARK_MESSAGE = "X-Bookmark-Message";
-
-    private static final String FAVORITES_PATH =
-            "/itachallenge/api/v1/userinteraction/favorites/users/{userId}/favorites/{challengeId}";
-    private static final String BOOKMARKS_PATH =
-            "/itachallenge/api/v1/user/users/{userId}/bookmarks/{challengeId}";
+    private final String favoritesPath;
+    private final String bookmarksPath;
 
     public UserServiceImpl(
             WebClient.Builder webClientBuilder,
-            @Value("${user.service.url}") String userServiceUrl) {
+            @Value("${user.service.url}") String userServiceUrl,
+            @Value("${user.endpoints.favorites}") String favoritesPath,
+            @Value("${user.endpoints.bookmarks}") String bookmarksPath) {
         this.webClientBuilder = webClientBuilder;
         this.userServiceUrl = userServiceUrl;
+        this.favoritesPath = favoritesPath;
+        this.bookmarksPath = bookmarksPath;
     }
 
     @Override
@@ -84,12 +85,11 @@ public class UserServiceImpl implements IUserService {
                 .bodyToMono(Boolean.class);
     }
 
-    //TODO It should be config-driven (keys with defaults), so that the flip is by config.
     private String buildUrl(String userId, String challengeId, UserChallengeActionType type){
 
         String template = switch (type) {
-            case FAVORITES -> FAVORITES_PATH;
-            case BOOKMARKS -> BOOKMARKS_PATH;
+            case FAVORITES -> favoritesPath;
+            case BOOKMARKS -> bookmarksPath;
         };
 
         return UriComponentsBuilder.fromHttpUrl(userServiceUrl)

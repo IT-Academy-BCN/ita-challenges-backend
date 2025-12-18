@@ -21,9 +21,14 @@ public class UserServiceImplTest {
 
     private MockWebServer mockWebServer;
     private UserServiceImpl userService;
-
-    private static final String FAVORITES_URL = "/itachallenge/api/v1/userinteraction/favorites/users/%s/favorites/%s";
-    private static final String BOOKMARKS_URL = "/itachallenge/api/v1/user/users/%s/bookmarks/%s";
+    private static final String FAVORITES_URL =
+            "/itachallenge/api/v1/userinteraction/favorites/users/%s/favorites/%s";
+    private static final String BOOKMARKS_URL =
+            "/itachallenge/api/v1/user/users/%s/bookmarks/%s";
+    private static final String FAVORITES_TEMPLATE =
+            "/itachallenge/api/v1/userinteraction/favorites/users/{userId}/favorites/{challengeId}";
+    private static final String BOOKMARKS_TEMPLATE =
+            "/itachallenge/api/v1/user/users/{userId}/bookmarks/{challengeId}";
     private static final String SOLVED_URL = "/itachallenge/api/v1/user/users/%s/solved/%s";
     public static final String X_FAVORITE_MESSAGE = "X-Favorite-Message";
     public static final String X_BOOKMARK_MESSAGE = "X-Bookmark-Message";
@@ -36,7 +41,9 @@ public class UserServiceImplTest {
 
         userService = new UserServiceImpl(
                 WebClient.builder(),
-                mockWebServer.url("").toString()
+                mockWebServer.url("").toString(),
+                FAVORITES_TEMPLATE,
+                BOOKMARKS_TEMPLATE
         );
     }
 
