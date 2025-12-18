@@ -3,6 +3,12 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+### [itachallenge-challenge-3.0.4-RELEASE] - 2025-12-17
+
+### Fixed
+- Updated the favorites integration path to point to the new `FavoriteController` of the `user` micro.
+(No changes to the public `challenge` API. Bookmarks remains the same.)
+
 ### [itachallenge-user-3.1.3-RELEASE] - 2025-12-12
 
 ### Changed

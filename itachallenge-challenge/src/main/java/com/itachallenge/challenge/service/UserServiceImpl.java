@@ -24,12 +24,18 @@ public class UserServiceImpl implements IUserService {
     private final String userServiceUrl;
     private final String X_FAVORITE_MESSAGE = "X-Favorite-Message";
     private final String X_BOOKMARK_MESSAGE = "X-Bookmark-Message";
+    private final String favoritesPath;
+    private final String bookmarksPath;
 
     public UserServiceImpl(
             WebClient.Builder webClientBuilder,
-            @Value("${user.service.url}") String userServiceUrl) {
+            @Value("${user.service.url}") String userServiceUrl,
+            @Value("${user.endpoints.favorites}") String favoritesPath,
+            @Value("${user.endpoints.bookmarks}") String bookmarksPath) {
         this.webClientBuilder = webClientBuilder;
         this.userServiceUrl = userServiceUrl;
+        this.favoritesPath = favoritesPath;
+        this.bookmarksPath = bookmarksPath;
     }
 
     @Override
@@ -53,7 +59,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     private Mono<Boolean> callEndpoint(String userId, String challengeId, UserChallengeActionType type, String errorHeader, HttpMethod method) {
-        String url = buildUrl(userId, challengeId, type.toString().toLowerCase());
+        String url = buildUrl(userId, challengeId, type);
         log.debug("Calling {} endpoint with method={} and URL={}", type.name().toLowerCase(), method, url);
 
         return webClientBuilder.build()
@@ -79,10 +85,16 @@ public class UserServiceImpl implements IUserService {
                 .bodyToMono(Boolean.class);
     }
 
-    private String buildUrl(String userId, String challengeId, String type){
+    private String buildUrl(String userId, String challengeId, UserChallengeActionType type){
+
+        String template = switch (type) {
+            case FAVORITES -> favoritesPath;
+            case BOOKMARKS -> bookmarksPath;
+        };
+
         return UriComponentsBuilder.fromHttpUrl(userServiceUrl)
-                .path("/itachallenge/api/v1/user/users/{userId}/{type}/{challengeId}")
-                .buildAndExpand(userId, type, challengeId)
+                .path(template)
+                .buildAndExpand(userId, challengeId)
                 .toUriString();
     }
 }
