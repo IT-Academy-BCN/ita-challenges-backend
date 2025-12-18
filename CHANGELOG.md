@@ -3,6 +3,15 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [itachallenge-challenge-Unreleased]
+
+### Added
+- New package `com.itachallenge.submission` (domain bootstrap).
+- `submission.document.SubmissionDocument` – MongoDB entity for submissions.
+- `submission.repository.SubmissionRepository` – ReactiveMongo repository.
+- `submission.enums.SubmissionStatus` – canonical submission statuses.
+- Unit tests: `SubmissionDocumentTest`, `SubmissionStatusTest`.
+
 ### [itachallenge-challenge-3.0.4-RELEASE] - 2025-12-17
 
 ### Fixed
