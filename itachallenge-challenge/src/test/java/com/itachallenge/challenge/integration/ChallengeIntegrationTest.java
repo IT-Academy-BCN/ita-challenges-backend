@@ -6,11 +6,13 @@ import com.itachallenge.challenge.document.LanguageDocument;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.enums.Topic;
 import com.itachallenge.challenge.repository.ChallengeRepository;
+import com.itachallenge.common.exception.GlobalExceptionHandler;
 import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -33,6 +35,7 @@ import static org.mockito.Mockito.when;
 @AutoConfigureWebTestClient
 @Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
+@Import(GlobalExceptionHandler.class)
 
 class ChallengeIntegrationTest {
 
@@ -122,8 +125,7 @@ class ChallengeIntegrationTest {
                 .expectBody()
                 .jsonPath("$.message").value(msg -> {
                     Assertions.assertNotNull(msg);
-                    String m = msg.toString().toLowerCase();
-                    Assertions.assertTrue(m.contains("not found"));
+                    Assertions.assertTrue(msg.toString().toLowerCase().contains("not found"));
                 });
     }
 
