@@ -1,7 +1,7 @@
 package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.dto.FavoriteDto;
-import com.itachallenge.challenge.exception.BadRequestException;
+import com.itachallenge.common.exception.BadRequestException;
 import com.itachallenge.challenge.exception.JwtException;
 import com.itachallenge.challenge.service.IFavoriteService;
 import com.itachallenge.challenge.service.IChallengeJwtFacade;

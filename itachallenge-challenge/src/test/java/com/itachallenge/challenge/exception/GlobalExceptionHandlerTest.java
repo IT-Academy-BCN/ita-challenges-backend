@@ -5,6 +5,7 @@ import com.itachallenge.challenge.config.PropertiesConfig;
 import com.itachallenge.challenge.dto.MessageDto;
 import com.itachallenge.challenge.repository.*;
 import com.itachallenge.challenge.service.*;
+import com.itachallenge.common.exception.GlobalExceptionHandler;
 import com.itachallenge.jwtcore.service.IJwtService;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;

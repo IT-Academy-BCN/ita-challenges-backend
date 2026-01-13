@@ -1,7 +1,9 @@
-package com.itachallenge.challenge.exception;
+package com.itachallenge.common.exception;
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.itachallenge.challenge.dto.MessageDto;
+import com.itachallenge.challenge.exception.*;
+import com.itachallenge.submission.exception.SubmissionNotFoundException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.slf4j.Logger;

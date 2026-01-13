@@ -7,7 +7,7 @@ import com.itachallenge.challenge.dto.ResourceDto;
 import com.itachallenge.challenge.enums.AssociationType;
 import com.itachallenge.challenge.enums.ResourceContentType;
 import com.itachallenge.challenge.enums.Topic;
-import com.itachallenge.challenge.exception.BadRequestException;
+import com.itachallenge.common.exception.BadRequestException;
 import com.itachallenge.challenge.exception.InternalServerErrorException;
 import com.itachallenge.challenge.exception.ResourceNotFoundException;
 import com.itachallenge.challenge.helper.DocumentToDtoConverter;

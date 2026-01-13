@@ -1,8 +1,8 @@
 package com.itachallenge.submission.service;
 
-import com.itachallenge.challenge.exception.SubmissionNotFoundException;
 import com.itachallenge.submission.document.SubmissionDocument;
 import com.itachallenge.submission.enums.SubmissionStatus;
+import com.itachallenge.submission.exception.SubmissionNotFoundException;
 import com.itachallenge.submission.repository.SubmissionRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

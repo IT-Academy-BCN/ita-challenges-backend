@@ -1,19 +1,19 @@
-package com.itachallenge.challenge.mapper.submission;
+package com.itachallenge.submission.mapper;
 
-import com.itachallenge.challenge.dto.submission.SubmissionResponseDto;
+import com.itachallenge.challenge.dto.submission.SubmissionDto;
 import com.itachallenge.submission.document.SubmissionDocument;
 
 import java.util.Objects;
 
-public final class SubmissionResponseDtoMapper {
+public final class SubmissionMapper {
 
-    private SubmissionResponseDtoMapper() {
+    private SubmissionMapper() {
     }
 
-    public static SubmissionResponseDto toDto(SubmissionDocument doc) {
+    public static SubmissionDto toDto(SubmissionDocument doc) {
         Objects.requireNonNull(doc, "SubmissionDocument cannot be null");
 
-        return SubmissionResponseDto.builder()
+        return SubmissionDto.builder()
                 .userId(doc.getUserId().toString())
                 .challengeId(doc.getChallengeId().toString())
                 .languageId(doc.getLanguageId().toString())

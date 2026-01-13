@@ -1,7 +1,7 @@
 package com.itachallenge.challenge.service;
 
 import com.itachallenge.challenge.enums.UserChallengeActionType;
-import com.itachallenge.challenge.exception.BadRequestException;
+import com.itachallenge.common.exception.BadRequestException;
 import com.itachallenge.challenge.exception.InternalServerErrorException;
 import com.itachallenge.challenge.exception.UserNotFoundException;
 import org.slf4j.Logger;

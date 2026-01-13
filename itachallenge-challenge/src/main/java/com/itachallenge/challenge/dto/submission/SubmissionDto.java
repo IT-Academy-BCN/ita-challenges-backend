@@ -6,7 +6,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @Getter
-public class SubmissionResponseDto {
+public class SubmissionDto {
     @JsonProperty(value = "uuid_user")
     private String userId;
 
