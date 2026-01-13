@@ -1,8 +1,8 @@
 package com.itachallenge.submission.service;
 
+import com.itachallenge.common.exception.BadRequestException;
 import com.itachallenge.submission.document.SubmissionDocument;
 import com.itachallenge.submission.enums.SubmissionStatus;
-import com.itachallenge.submission.exception.SubmissionNotFoundException;
 import com.itachallenge.submission.repository.SubmissionRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -11,7 +11,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Flux;
-
 import reactor.test.StepVerifier;
 
 import java.util.UUID;
@@ -64,34 +63,30 @@ class SubmissionServiceImplTest {
 
     @Test
     void getAllSubmissionsByUser_shouldThrow_whenUserIdIsNull() {
-        Flux<SubmissionDocument> result =
-                submissionService.getAllSubmissionsByUser(null);
-        StepVerifier.create(result)
+        StepVerifier.create(submissionService.getAllSubmissionsByUser(null))
                 .expectErrorMatches(ex ->
-                        ex instanceof SubmissionNotFoundException &&
+                        ex instanceof BadRequestException &&
+                                ex.getMessage().contains("userId") &&
                                 ex.getMessage().contains("cannot be null or empty"))
                 .verify();
     }
 
     @Test
     void getAllSubmissionsByUser_shouldThrow_whenUserIdIsEmpty() {
-        Flux<SubmissionDocument> result =
-                submissionService.getAllSubmissionsByUser("   ");
-        StepVerifier.create(result)
+        StepVerifier.create(submissionService.getAllSubmissionsByUser("   "))
                 .expectErrorMatches(ex ->
-                        ex instanceof SubmissionNotFoundException &&
+                        ex instanceof BadRequestException &&
+                                ex.getMessage().contains("userId") &&
                                 ex.getMessage().contains("cannot be null or empty"))
                 .verify();
     }
 
     @Test
     void getAllSubmissionsByUser_shouldThrow_whenUserIdIsInvalidUuid() {
-        String invalid = "not-a-uuid";
-        Flux<SubmissionDocument> result =
-                submissionService.getAllSubmissionsByUser(invalid);
-        StepVerifier.create(result)
+        StepVerifier.create(submissionService.getAllSubmissionsByUser("not-a-uuid"))
                 .expectErrorMatches(ex ->
-                        ex instanceof SubmissionNotFoundException &&
+                        ex instanceof BadRequestException &&
+                                ex.getMessage().contains("userId") &&
                                 ex.getMessage().contains("must be a valid UUID"))
                 .verify();
     }
