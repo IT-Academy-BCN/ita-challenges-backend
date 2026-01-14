@@ -3,16 +3,17 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [itachallenge-challenge-Unreleased]
+### [itachallenge-challenge-3.1.0-RELEASE] - 2026-01-14
 
 ### Changed
 - Refactored submission logic into a dedicated `submission` domain module.
 - Decoupled submission use cases from `UserService` in preparation for new submission endpoints.
 - Extended `GlobalExceptionHandler` to handle submission-related exceptions.
-- 
+
 ### Added
 - Submission domain bootstrap (documents, repository, service layer and DTOs).
-- 
+- New `SubmissionController` exposing read endpoints for user submissions.
+ 
 ### [itachallenge-challenge-3.0.4-RELEASE] - 2025-12-17
 
 ### Fixed

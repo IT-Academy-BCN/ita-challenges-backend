@@ -4,8 +4,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 @AllArgsConstructor
-@Builder
+@NoArgsConstructor
 @Getter
+@Setter
+@Builder
 public class SubmissionDto {
     @JsonProperty(value = "uuid_user")
     private String userId;
