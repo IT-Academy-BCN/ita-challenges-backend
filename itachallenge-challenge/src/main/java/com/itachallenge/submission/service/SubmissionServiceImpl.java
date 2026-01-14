@@ -2,7 +2,6 @@ package com.itachallenge.submission.service;
 
 import com.itachallenge.challenge.dto.submission.SubmissionDto;
 import com.itachallenge.common.exception.BadRequestException;
-import com.itachallenge.submission.document.SubmissionDocument;
 import com.itachallenge.submission.mapper.SubmissionMapper;
 import com.itachallenge.submission.repository.SubmissionRepository;
 import org.springframework.stereotype.Service;

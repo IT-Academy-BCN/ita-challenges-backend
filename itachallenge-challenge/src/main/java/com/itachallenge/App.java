@@ -8,7 +8,6 @@ import org.springframework.context.annotation.ComponentScan;
 @SpringBootApplication
 @EnableDiscoveryClient
 @ComponentScan(basePackages = {
-        "com.itachallenge.challenge",
         "com.itachallenge.jwtcore"
 })
 
