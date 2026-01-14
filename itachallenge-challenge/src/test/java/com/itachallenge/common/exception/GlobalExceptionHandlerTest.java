@@ -1,8 +1,9 @@
-package com.itachallenge.challenge.exception;
+package com.itachallenge.common.exception;
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.itachallenge.challenge.config.PropertiesConfig;
 import com.itachallenge.challenge.dto.MessageDto;
+import com.itachallenge.challenge.exception.*;
 import com.itachallenge.challenge.repository.*;
 import com.itachallenge.challenge.service.*;
 import com.itachallenge.jwtcore.service.IJwtService;

@@ -5,13 +5,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [itachallenge-challenge-Unreleased]
 
+### Changed
+- Refactored submission logic into a dedicated `submission` domain module.
+- Decoupled submission use cases from `UserService` in preparation for new submission endpoints.
+- Extended `GlobalExceptionHandler` to handle submission-related exceptions.
+- 
 ### Added
-- New package `com.itachallenge.submission` (domain bootstrap).
-- `submission.document.SubmissionDocument` – MongoDB entity for submissions.
-- `submission.repository.SubmissionRepository` – ReactiveMongo repository.
-- `submission.enums.SubmissionStatus` – canonical submission statuses.
-- Unit tests: `SubmissionDocumentTest`, `SubmissionStatusTest`.
-
+- Submission domain bootstrap (documents, repository, service layer and DTOs).
+- 
 ### [itachallenge-challenge-3.0.4-RELEASE] - 2025-12-17
 
 ### Fixed

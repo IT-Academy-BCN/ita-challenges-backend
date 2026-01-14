@@ -7,11 +7,13 @@ import com.itachallenge.challenge.enums.Topic;
 import com.itachallenge.challenge.exception.ResourceNotFoundException;
 import com.itachallenge.challenge.repository.*;
 import com.itachallenge.challenge.service.IResourceService;
+import com.itachallenge.common.exception.GlobalExceptionHandler;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
@@ -30,6 +32,7 @@ import static org.mockito.Mockito.*;
 
 
 @WebFluxTest(ResourceController.class)
+@Import(GlobalExceptionHandler.class)
 @ActiveProfiles("test")
 class ResourceControllerTest {
 

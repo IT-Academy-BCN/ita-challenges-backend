@@ -8,6 +8,8 @@ import com.itachallenge.challenge.enums.Topic;
 import com.itachallenge.challenge.exception.*;
 import com.itachallenge.challenge.repository.ChallengeRepository;
 import com.itachallenge.challenge.service.*;
+import com.itachallenge.common.exception.BadRequestException;
+import com.itachallenge.common.exception.GlobalExceptionHandler;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -20,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
@@ -43,6 +46,7 @@ import static org.mockito.Mockito.*;
 
 @WebFluxTest(controllers = ChallengeController.class)
 @ExtendWith(SpringExtension.class)
+@Import(GlobalExceptionHandler.class)
 @ActiveProfiles("test")
 class ChallengeControllerTest {
 

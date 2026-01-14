@@ -1,9 +1,9 @@
 package com.itachallenge.challenge.service;
 
 import com.itachallenge.challenge.document.ChallengeDocument;
-import com.itachallenge.challenge.dto.FavoriteDto;
 import com.itachallenge.challenge.exception.*;
 import com.itachallenge.challenge.repository.ChallengeRepository;
+import com.itachallenge.common.exception.BadRequestException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

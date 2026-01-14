@@ -1,6 +1,6 @@
 package com.itachallenge.submission.enums;
 
-import com.itachallenge.challenge.exception.BadRequestException;
+import com.itachallenge.common.exception.BadRequestException;
 import lombok.Getter;
 
 import java.util.Arrays;

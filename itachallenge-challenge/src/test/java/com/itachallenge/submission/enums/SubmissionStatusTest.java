@@ -1,6 +1,6 @@
 package com.itachallenge.submission.enums;
 
-import com.itachallenge.challenge.exception.BadRequestException;
+import com.itachallenge.common.exception.BadRequestException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

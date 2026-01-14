@@ -70,9 +70,6 @@ class ErrorCoreIntegrationTest {
         private String name;
     }
 
-    // ----------------------------------------------------------------
-    // 1️⃣  handleAny(Exception)
-    // ----------------------------------------------------------------
     @Test
     void handleAny_shouldReturnInternalServerError() {
         Exception ex = new Exception("Unexpected error");
@@ -83,9 +80,6 @@ class ErrorCoreIntegrationTest {
         assertThat(response.getBody().getStatus()).isEqualTo(500);
     }
 
-    // ----------------------------------------------------------------
-    // 2️⃣  handleApiCustomException(BaseApiException)
-    // ----------------------------------------------------------------
     @Test
     void handleApiCustomException_shouldReturnCustomStatusAndText() {
 
@@ -99,9 +93,6 @@ class ErrorCoreIntegrationTest {
         assertThat(response.getBody().getMessage()).isEqualTo("You are not authorized to perform this action.");
     }
 
-    // ----------------------------------------------------------------
-    // 3️⃣  handleIllegalArgument(IllegalArgumentException)
-    // ----------------------------------------------------------------
     @Test
     void handleIllegalArgument_shouldReturnBadRequest() {
         IllegalArgumentException ex = new IllegalArgumentException("Invalid input");
@@ -113,9 +104,6 @@ class ErrorCoreIntegrationTest {
         assertThat(response.getBody().getMessage()).isEqualTo("Illegal argument in request.");
     }
 
-    // ----------------------------------------------------------------
-// 4️⃣  handleValidationExceptions(ConstraintViolationException)
-// ----------------------------------------------------------------
     @Test
     void handleValidationExceptions_shouldReturnBadRequest_withSingleViolation() {
         // Given
@@ -159,10 +147,6 @@ class ErrorCoreIntegrationTest {
         assertThat(response.getBody().getMessage()).contains("Parameter 'dto' has invalid value 'abc'. Expected type: EmptyDto");
     }
 
-
-    // ----------------------------------------------------------------
-    // 6️⃣  handleMethodArgumentNotValidException(MethodArgumentNotValidException)
-    // ----------------------------------------------------------------
     @Test
     void handleMethodArgumentNotValid_shouldReturnBadRequest() throws NoSuchMethodException {
         // Fake method parameter
@@ -185,9 +169,6 @@ class ErrorCoreIntegrationTest {
         assertThat(response.getBody().getErrors().getFirst().getMessage()).isEqualTo("Invalid or malformed request.");
     }
 
-    // ----------------------------------------------------------------
-    // 7️⃣  handleResponseStatusException(ResponseStatusException)
-    // ----------------------------------------------------------------
     @Test
     void handleResponseStatusException_shouldReturnStatusFromException() {
         ResponseStatusException ex = new ResponseStatusException(HttpStatus.NOT_FOUND, "Resource not found");
@@ -199,9 +180,6 @@ class ErrorCoreIntegrationTest {
         assertThat(response.getBody().getMessage()).isEqualTo("The requested resource could not be found.");
     }
 
-    // ----------------------------------------------------------------
-    // 8️⃣  handleInvalidFormat(InvalidFormatException)
-    // ----------------------------------------------------------------
     @Test
     void handleInvalidFormat_shouldReturnBadRequest() {
         InvalidFormatException ex = new InvalidFormatException(null, "Bad format", "123", Integer.class);
@@ -213,9 +191,6 @@ class ErrorCoreIntegrationTest {
         assertThat(response.getBody().getMessage()).isEqualTo("Invalid or malformed request.");
     }
 
-    // ----------------------------------------------------------------
-    // 9️⃣  handleWebFluxBindingErrors(HttpMessageNotReadableException, etc.)
-    // ----------------------------------------------------------------
     @Test
     void handleWebFluxBindingErrors_shouldReturnBadRequest() {
         DecodingException ex = new DecodingException("Unreadable message");
