@@ -1,5 +1,6 @@
 package com.itachallenge.submission.service;
 
+import com.itachallenge.challenge.dto.submission.SubmissionDto;
 import com.itachallenge.common.exception.BadRequestException;
 import com.itachallenge.submission.document.SubmissionDocument;
 import com.itachallenge.submission.enums.SubmissionStatus;
@@ -47,15 +48,15 @@ class SubmissionServiceImplTest {
         when(submissionRepository.findAllByUserId(userUuid))
                 .thenReturn(Flux.just(document));
 
-        Flux<SubmissionDocument> result =
+        Flux<SubmissionDto> result =
                 submissionService.getAllSubmissionsByUser(userId);
 
         StepVerifier.create(result)
                 .assertNext(submission -> {
-                    Assertions.assertEquals(userUuid, submission.getUserId());
-                    Assertions.assertEquals(challengeUuid, submission.getChallengeId());
-                    Assertions.assertEquals(languageUuid, submission.getLanguageId());
-                    Assertions.assertEquals(SubmissionStatus.IN_PROGRESS, submission.getStatus());
+                    Assertions.assertEquals(userUuid.toString(), submission.getUserId());
+                    Assertions.assertEquals(challengeUuid.toString(), submission.getChallengeId());
+                    Assertions.assertEquals(languageUuid.toString(), submission.getLanguageId());
+                    Assertions.assertEquals(SubmissionStatus.IN_PROGRESS.name(), submission.getStatus());
                     Assertions.assertEquals(submissionText, submission.getSubmissionText());
                 })
                 .verifyComplete();
