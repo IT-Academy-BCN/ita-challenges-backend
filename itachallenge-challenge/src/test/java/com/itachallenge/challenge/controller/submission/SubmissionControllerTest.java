@@ -1,6 +1,7 @@
 package com.itachallenge.challenge.controller.submission;
 
 import com.itachallenge.challenge.dto.submission.SubmissionDto;
+import com.itachallenge.challenge.exception.BadUUIDException;
 import com.itachallenge.common.exception.GlobalExceptionHandler;
 import com.itachallenge.submission.service.SubmissionService;
 import org.junit.jupiter.api.Test;
@@ -13,11 +14,11 @@ import reactor.core.publisher.Flux;
 
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class SubmissionControllerTest {
+class SubmissionControllerTest {
 
     @Mock
     SubmissionService submissionService;
@@ -55,10 +56,7 @@ public class SubmissionControllerTest {
                 .thenReturn(Flux.just(s1, s2));
 
         client().get()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/itachallenge/api/v1/submissions")
-                        .queryParam("userId", userId)
-                        .build())
+                .uri("/itachallenge/api/v1/users/{userId}/submissions", userId)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBodyList(SubmissionDto.class)
@@ -68,7 +66,7 @@ public class SubmissionControllerTest {
                     assertEquals(s2.getChallengeId(), list.get(1).getChallengeId());
                 });
 
-        verify(submissionService, times(1)).getAllSubmissionsByUser(userId);
+        verify(submissionService).getAllSubmissionsByUser(userId);
     }
 
     @Test
@@ -79,16 +77,26 @@ public class SubmissionControllerTest {
                 .thenReturn(Flux.empty());
 
         client().get()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/itachallenge/api/v1/submissions")
-                        .queryParam("userId", userId)
-                        .build())
+                .uri("/itachallenge/api/v1/users/{userId}/submissions", userId)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBodyList(SubmissionDto.class)
                 .hasSize(0);
 
         verify(submissionService).getAllSubmissionsByUser(userId);
+    }
+    @Test
+    void getAllSubmissions_returns400WhenUserIdIsMalformed_byService() {
+        String badId = "not-a-uuid";
+        when(submissionService.getAllSubmissionsByUser(badId))
+                .thenReturn(Flux.error(new BadUUIDException("Invalid UUID")));
+
+        client().get()
+                .uri("/itachallenge/api/v1/users/{userId}/submissions", badId)
+                .exchange()
+                .expectStatus().isBadRequest();
+
+        verify(submissionService).getAllSubmissionsByUser(badId);
     }
 
     @Test
@@ -99,14 +107,10 @@ public class SubmissionControllerTest {
                 .thenReturn(Flux.error(new RuntimeException("Boom")));
 
         client().get()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/itachallenge/api/v1/submissions")
-                        .queryParam("userId", userId)
-                        .build())
+                .uri("/itachallenge/api/v1/users/{userId}/submissions", userId)
                 .exchange()
                 .expectStatus().is5xxServerError();
 
         verify(submissionService).getAllSubmissionsByUser(userId);
     }
 }
-
