@@ -777,27 +777,16 @@
           "response": []
         },
         {
-          "name": "Challenge/submissions",
+          "name": "Challenge / user submissions",
           "request": {
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://{{ip}}:{{challenge_port}}/itachallenge/api/v1/submissions?userId=a75fa943-6bc9-4e62-b1db-d43d15b149c7",
+              "raw": "http://{{ip}}:{{challenge_port}}/itachallenge/api/v1/users/{{user_id}}/submissions",
               "protocol": "http",
               "host": ["{{ip}}"],
               "port": "{{challenge_port}}",
-              "path": [
-                "itachallenge",
-                "api",
-                "v1",
-                "submissions"
-              ],
-              "query": [
-                {
-                  "key": "userId",
-                  "value": "a75fa943-6bc9-4e62-b1db-d43d15b149c7"
-                }
-              ]
+              "path": ["itachallenge","api","v1","users","{{user_id}}","submissions"]
             }
           },
           "response": []
