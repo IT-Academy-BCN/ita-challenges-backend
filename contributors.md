@@ -113,6 +113,7 @@
 * Diego Balaguer Gálvez - https://github.com/DiegoBalaguer
 * Jose L Diaz I - https://github.com/jose-Diaz1002
 * Ana Beuzón Rodríguez - https://github.com/anaberod
+* Adolfo Caicaguare - https://github.com/adolcc
 
 
 
