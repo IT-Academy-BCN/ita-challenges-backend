@@ -113,5 +113,10 @@
 * Diego Balaguer Gálvez - https://github.com/DiegoBalaguer
 * Jose L Diaz I - https://github.com/jose-Diaz1002
 * Ana Beuzón Rodríguez - https://github.com/anaberod
+<<<<<<< HEAD
 * Adolfo Caicaguare - https://github.com/adolcc
 * Alvaro Mendoza Cuello - https://github.com/AlvaroLMC
+=======
+* Alvaro Mendoza - https://github.com/AlvaroLMC
+
+>>>>>>> c7902b785 (add contributors)
