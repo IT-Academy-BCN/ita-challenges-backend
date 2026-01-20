@@ -31,22 +31,4 @@ public class UserDocument {
     @Builder.Default
     @Field
     private Integer points = 0;
-
-    @Override
-    public String toString() {
-        StringJoiner joiner = new StringJoiner(", ", "UserDocument{", "}");
-
-        if (uuid != null) {
-            joiner.add("uuid=" + uuid);
-        }
-        if (username != null) {
-            joiner.add("username='" + username + "'");
-        }
-        if (role != null) {
-            joiner.add("role='" + role + "'");
-        }
-
-        return joiner.toString();
-    }
-
 }
