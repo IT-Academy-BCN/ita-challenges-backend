@@ -1,6 +1,7 @@
 package com.itachallenge.githubcore.service;
 
 import com.itachallenge.githubcore.document.enums.GithubUserStatus;
+import com.itachallenge.githubcore.dto.GithubUserRequestDto;
 import com.itachallenge.githubcore.exception.GithubUnavailableException;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -30,7 +31,9 @@ class GithubApiServiceImplTest {
     @BeforeEach
     void setup() {
         String mockBaseUrl = mockWebServer.url("/").toString();
-        githubApiServiceImpl = new GithubApiServiceImpl(WebClient.builder(), mockBaseUrl);
+        String mockTokenUri = mockWebServer.url("/").toString();
+
+        githubApiServiceImpl = new GithubApiServiceImpl(WebClient.builder(), mockBaseUrl, mockTokenUri);
     }
 
     @Test
@@ -69,5 +72,56 @@ class GithubApiServiceImplTest {
                 .verify();
     }
 
+    @Test
+    @DisplayName("Debe autenticar correctamente y devolver el perfil de usuario")
+    void authenticate_ShouldReturnUserData_WhenSuccessful() {
+        mockWebServer.enqueue(new MockResponse()
+                .setResponseCode(200)
+                .setBody("{\"access_token\":\"gho_test123\"}")
+                .addHeader("Content-Type", "application/json"));
 
+        mockWebServer.enqueue(new MockResponse()
+                .setResponseCode(200)
+                .setBody("{\"login\":\"testUser\"}")
+                .addHeader("Content-Type", "application/json"));
+
+        GithubUserRequestDto requestDto = new GithubUserRequestDto("code123", "clientId", "clientSecret");
+
+        StepVerifier.create(githubApiServiceImpl.authenticate(requestDto))
+                .expectNextMatches(userData -> userData.username().equals("testUser"))
+                .verifyComplete();
+    }
+
+    @Test
+    @DisplayName("Debe lanzar excepción cuando el código de GitHub es inválido")
+    void authenticate_ShouldReturnError_WhenTokenIsMissing() {
+        mockWebServer.enqueue(new MockResponse()
+                .setResponseCode(200)
+                .setBody("{\"error\":\"bad_verification_code\"}")
+                .addHeader("Content-Type", "application/json"));
+
+        GithubUserRequestDto requestDto = new GithubUserRequestDto("wrong_code", "clientId", "clientSecret");
+
+        StepVerifier.create(githubApiServiceImpl.authenticate(requestDto))
+                .expectError(GithubUnavailableException.class)
+                .verify();
+    }
+
+    @Test
+    @DisplayName("Debe lanzar excepción cuando el perfil de usuario falla (500)")
+    void authenticate_ShouldReturnError_WhenProfileFails() {
+        mockWebServer.enqueue(new MockResponse()
+                .setResponseCode(200)
+                .setBody("{\"access_token\":\"gho_test123\"}")
+                .addHeader("Content-Type", "application/json"));
+
+        mockWebServer.enqueue(new MockResponse()
+                .setResponseCode(500));
+
+        GithubUserRequestDto requestDto = new GithubUserRequestDto("code123", "clientId", "clientSecret");
+
+        StepVerifier.create(githubApiServiceImpl.authenticate(requestDto))
+                .expectError(GithubUnavailableException.class)
+                .verify();
+    }
 }
