@@ -13,8 +13,11 @@ public class GithubServiceConfig {
     @Value("${github.user-info-uri}")
     private String githubApiUrl;
 
+    @Value("${github.token-uri}")
+    private String githubTokenUrl;
+
     @Bean
     public GithubApiService githubApiService(WebClient.Builder webClientBuilder) {
-        return new GithubApiServiceImpl(webClientBuilder, githubApiUrl);
+        return new GithubApiServiceImpl(webClientBuilder, githubApiUrl, githubTokenUrl);
     }
 }
