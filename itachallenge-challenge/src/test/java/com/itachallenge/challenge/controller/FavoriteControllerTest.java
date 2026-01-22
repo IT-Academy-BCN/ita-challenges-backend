@@ -1,5 +1,6 @@
 package com.itachallenge.challenge.controller;
 
+import com.itachallenge.challenge.dto.AddFavoriteRequest;
 import com.itachallenge.challenge.dto.FavoriteDto;
 import com.itachallenge.common.exception.BadRequestException;
 import com.itachallenge.challenge.exception.ChallengeNotFoundException;
@@ -33,13 +34,15 @@ public class FavoriteControllerTest {
         String challengeId = "123e4567-e89b-12d3-a456-426614174000";
         String userId = "321e4567-e89b-12d3-a456-426614174000";
         String authHeader = "Bearer token";
+        AddFavoriteRequest request = new AddFavoriteRequest();
+        request.setChallengeId(challengeId);
+
         FavoriteDto dto = new FavoriteDto(true, 1);
 
         when(challengeJwtFacade.getUserUuIdFromAuthenticationHeader(authHeader)).thenReturn(userId);
         when(favoriteService.addChallengeToFavorites(challengeId, userId)).thenReturn(Mono.just(dto));
 
-        Mono<ResponseEntity<FavoriteDto>> result = favoriteController.addFavorite(challengeId, authHeader);
-
+        Mono<ResponseEntity<FavoriteDto>> result = favoriteController.addFavorite(userId, authHeader, request);
         StepVerifier.create(result)
                 .expectNextMatches(response -> response.getStatusCode().is2xxSuccessful() &&
                         response.getBody().isFavorite() && response.getBody().getTimesFavorited() == 1)
@@ -50,9 +53,11 @@ public class FavoriteControllerTest {
     void addFavorite_missingAuthHeader_400() {
         String challengeId = "123e4567-e89b-12d3-a456-426614174000";
         String authHeader = null;
+        AddFavoriteRequest request = new AddFavoriteRequest();
+
         when(challengeJwtFacade.getUserUuIdFromAuthenticationHeader(authHeader)).thenThrow(new JwtException("Missing header"));
 
-        Mono<ResponseEntity<FavoriteDto>> result = favoriteController.addFavorite(challengeId, authHeader);
+        Mono<ResponseEntity<FavoriteDto>> result = favoriteController.addFavorite(challengeId, authHeader, request);
 
         StepVerifier.create(result)
                 .expectError(BadRequestException.class)
@@ -63,9 +68,10 @@ public class FavoriteControllerTest {
     void addFavorite_invalidAuthHeader_400() {
         String challengeId = "123e4567-e89b-12d3-a456-426614174000";
         String authHeader = "invalid";
+        AddFavoriteRequest request = new AddFavoriteRequest();
         when(challengeJwtFacade.getUserUuIdFromAuthenticationHeader(authHeader)).thenThrow(new JwtException("Invalid header"));
 
-        Mono<ResponseEntity<FavoriteDto>> result = favoriteController.addFavorite(challengeId, authHeader);
+        Mono<ResponseEntity<FavoriteDto>> result = favoriteController.addFavorite(challengeId, authHeader, request);
 
         StepVerifier.create(result)
                 .expectError(BadRequestException.class)
@@ -78,11 +84,15 @@ public class FavoriteControllerTest {
         String userId = "321e4567-e89b-12d3-a456-426614174000";
         String authHeader = "Bearer token";
 
+        AddFavoriteRequest request = new AddFavoriteRequest();
+        request.setChallengeId(challengeId);
+
+
         when(challengeJwtFacade.getUserUuIdFromAuthenticationHeader(authHeader)).thenReturn(userId);
         when(favoriteService.addChallengeToFavorites(challengeId, userId))
                 .thenReturn(Mono.error(new ChallengeNotFoundException("Challenge not found")));
 
-        Mono<ResponseEntity<FavoriteDto>> result = favoriteController.addFavorite(challengeId, authHeader);
+        Mono<ResponseEntity<FavoriteDto>> result = favoriteController.addFavorite(userId, authHeader, request);
 
         StepVerifier.create(result)
                 .expectError(ChallengeNotFoundException.class)
@@ -95,11 +105,14 @@ public class FavoriteControllerTest {
         String userId = "321e4567-e89b-12d3-a456-426614174000";
         String authHeader = "Bearer token";
 
+        AddFavoriteRequest request = new AddFavoriteRequest();
+        request.setChallengeId(challengeId);
+
         when(challengeJwtFacade.getUserUuIdFromAuthenticationHeader(authHeader)).thenReturn(userId);
         when(favoriteService.addChallengeToFavorites(challengeId, userId))
                 .thenReturn(Mono.error(new InternalServerErrorException("Internal error")));
 
-        Mono<ResponseEntity<FavoriteDto>> result = favoriteController.addFavorite(challengeId, authHeader);
+        Mono<ResponseEntity<FavoriteDto>> result = favoriteController.addFavorite(userId, authHeader, request);
 
         StepVerifier.create(result)
                 .expectError(InternalServerErrorException.class)
