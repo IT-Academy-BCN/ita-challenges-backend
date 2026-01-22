@@ -20,7 +20,7 @@ import org.springframework.http.HttpHeaders;
 
 
 @RestController
-@RequestMapping("/itachallenge/api/v1/favorite/challenges/")
+@RequestMapping("/itachallenge/api/v1/challenges/")
 public class FavoriteController {
 
     private final IFavoriteService favoriteService;
