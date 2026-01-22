@@ -1,6 +1,8 @@
 package com.itachallenge.submission.service;
 
 import com.itachallenge.challenge.dto.submission.SubmissionDto;
+import com.itachallenge.challenge.dto.submission.SubmissionRequestDto;
+import com.itachallenge.challenge.dto.submission.SubmissionResponseDto;
 import com.itachallenge.common.exception.BadRequestException;
 import com.itachallenge.submission.mapper.SubmissionMapper;
 import com.itachallenge.submission.repository.SubmissionRepository;
@@ -25,6 +27,11 @@ public class SubmissionServiceImpl implements SubmissionService {
                         submissionRepository.findAllByUserId(uuid)
                                 .map(SubmissionMapper::toDto)
                 );
+    }
+
+    @Override
+    public Mono<SubmissionResponseDto> createOrUpdateSubmission(String userId, SubmissionRequestDto request) {
+        return Mono.error(new UnsupportedOperationException("Not implemented yet"));
     }
 
     private Mono<UUID> validateAndParseUuid(String userId) {
