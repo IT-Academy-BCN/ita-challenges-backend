@@ -38,8 +38,9 @@ public class FavoriteController {
         summary = "Add a challenge to favorites.",
         description = "Adds a challenge to the user's favorites via User subresource.",
         responses = {
-                @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = FavoriteDto.class), mediaType = "application/json")}),
-                @ApiResponse(responseCode = "400", description = "Missing or invalid authorization header."),
+                @ApiResponse(responseCode = "201", description = "Favorite created successfully.",
+                        content = {@Content(schema = @Schema(implementation = FavoriteDto.class), mediaType = "application/json")}),
+                @ApiResponse(responseCode = "400", description = "Missing or invalid authorization header / ID mismatch."),
                 @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found."),
                 @ApiResponse(responseCode = "500", description = "Internal Server Error")
         }
@@ -55,14 +56,13 @@ public Mono<ResponseEntity<FavoriteDto>> addFavorite(
                 if (!userIdFromToken.equals(userId)) {
                     return Mono.error(new BadRequestException("You cannot add favorites for another user."));
                 }
-
                 return favoriteService.addChallengeToFavorites(request.getChallengeId(), userId);
             })
             .doOnError(e -> log.error("Security violation or error for user {}: {}", userId, e.getMessage()))
-            .map(ResponseEntity::ok);
+            .map(dto -> ResponseEntity.status(org.springframework.http.HttpStatus.CREATED).body(dto));
 }
 
-    // LEGACY
+    // LEGACY UPDATED 200 TO 201 FOR CONSISTENCY
     /**
      * @deprecated since v2.0.4.
      * Use {@code POST /users/{userId}/favorites} instead.
@@ -76,7 +76,7 @@ public Mono<ResponseEntity<FavoriteDto>> addFavorite(
             summary = "Add a challenge to favorites.",
             description = "The ID Challenge sent through the URI is added to the user's favorites. User Id is determined from the headers.",
             responses = {
-                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = FavoriteDto.class), mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "201", content = {@Content(schema = @Schema(implementation = FavoriteDto.class), mediaType = "application/json")}),
                     @ApiResponse(responseCode = "400", description = "Missing or invalid authorization header."),
                     @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found."),
                     @ApiResponse(responseCode = "500", description = "Internal Server Error")

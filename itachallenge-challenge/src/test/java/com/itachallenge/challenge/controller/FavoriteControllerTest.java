@@ -30,7 +30,7 @@ public class FavoriteControllerTest {
     }
 
     @Test
-    void addFavorite_success_200() {
+    void addFavorite_success_201() {
         String challengeId = "123e4567-e89b-12d3-a456-426614174000";
         String userId = "321e4567-e89b-12d3-a456-426614174000";
         String authHeader = "Bearer token";
@@ -43,9 +43,13 @@ public class FavoriteControllerTest {
         when(favoriteService.addChallengeToFavorites(challengeId, userId)).thenReturn(Mono.just(dto));
 
         Mono<ResponseEntity<FavoriteDto>> result = favoriteController.addFavorite(userId, authHeader, request);
+
         StepVerifier.create(result)
-                .expectNextMatches(response -> response.getStatusCode().is2xxSuccessful() &&
-                        response.getBody().isFavorite() && response.getBody().getTimesFavorited() == 1)
+                .expectNextMatches(response ->
+                        response.getStatusCode().equals(org.springframework.http.HttpStatus.CREATED) && // Validamos 201
+                                response.getBody() != null &&
+                                response.getBody().isFavorite() &&
+                                response.getBody().getTimesFavorited() == 1)
                 .verifyComplete();
     }
 
