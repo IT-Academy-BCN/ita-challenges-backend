@@ -14,10 +14,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
-
+import org.springframework.http.HttpHeaders;
 
 @RestController
-@RequestMapping("/itachallenge/api/v1/favorite/challenges/")
+@RequestMapping("/itachallenge/api/v1/challenges/")
 public class FavoriteController {
 
     private final IFavoriteService favoriteService;
@@ -51,6 +51,43 @@ public class FavoriteController {
                 .map(ResponseEntity::ok);
     }
 
+    // NEW REST CONTRACT
+    @DeleteMapping("/users/{userId}/favorites/{challengeId}")
+    @Operation(
+            operationId = "Remove a challenge from User's favorites (new REST contract).",
+            summary = "Remove a challenge from favorites.",
+            description = "Removes a challenge from the user's favorites via User subresource.",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = FavoriteDto.class), mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "400", description = "Invalid token or ID mismatch."),
+                    @ApiResponse(responseCode = "404", description = "The Challenge or User was not found."),
+                    @ApiResponse(responseCode = "500", description = "Internal Server Error")
+            }
+    )
+    public Mono<ResponseEntity<FavoriteDto>> removeFavorite(
+            @PathVariable String userId,
+            @PathVariable String challengeId,
+            @RequestHeader(name = "Authorization", required = false) String authHeader) {
+
+        return Mono.fromCallable(() -> challengeJwtFacade.getUserUuIdFromAuthenticationHeader(authHeader))
+                .onErrorMap(JwtException.class, e -> new BadRequestException("Invalid token"))
+                .flatMap(userIdFromToken -> {
+                    if (!userIdFromToken.equals(userId)) {
+                        return Mono.error(new BadRequestException("You cannot remove favorites for another user."));
+                    }
+                    return favoriteService.removeChallengeFromFavorites(challengeId, userId);
+                })
+                .doOnError(e -> log.error("Security violation or error for user {} on delete: {}", userId, e.getMessage()))
+                .map(ResponseEntity::ok);
+    }
+
+    // LEGACY DELETE
+    /**
+     * @deprecated since v2.0.4.
+     * Use {@code DELETE /users/{userId}/favorites/{challengeId}} instead.
+     */
+    @Deprecated(since = "2.0.4", forRemoval = true)
+    @SuppressWarnings("java:S1133")
     @DeleteMapping("/{challengeId}")
     @Operation(
             operationId = "Remove a challenge from the User's favorites.",
@@ -63,12 +100,17 @@ public class FavoriteController {
                     @ApiResponse(responseCode = "500", description = "Internal Server Error")
             }
     )
-    public Mono<ResponseEntity<FavoriteDto>> removeFavorite(
+    public Mono<ResponseEntity<FavoriteDto>> removeFavoriteLegacy(
             @PathVariable String challengeId,
             @RequestHeader(name = "Authorization", required = false) String authHeader) {
         return Mono.fromCallable(() -> challengeJwtFacade.getUserUuIdFromAuthenticationHeader(authHeader))
                 .onErrorMap(JwtException.class, e -> new BadRequestException(e.getMessage()))
                 .flatMap(userId -> favoriteService.removeChallengeFromFavorites(challengeId, userId))
-                .map(ResponseEntity::ok);
+                .map(dto -> {
+                    HttpHeaders headers = new HttpHeaders();
+                    headers.add("Deprecation", "true");
+                    headers.add("Link", "</users/{userId}/favorites/{challengeId}>; rel=\"successor-version\"");
+                    return ResponseEntity.ok().headers(headers).body(dto);
+                });
     }
 }
