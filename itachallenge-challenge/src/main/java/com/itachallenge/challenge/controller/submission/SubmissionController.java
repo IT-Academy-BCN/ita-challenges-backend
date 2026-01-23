@@ -15,6 +15,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
+import com.itachallenge.challenge.dto.submission.SubmissionRequestDto;
+import com.itachallenge.challenge.dto.submission.SubmissionResponseDto;
+import org.springframework.http.ResponseEntity;
+import reactor.core.publisher.Mono;
+
+
 
 @RestController
 @Validated
@@ -52,4 +58,41 @@ public class SubmissionController {
     public Flux<SubmissionDto> getAllSubmissionsByUser(@PathVariable String userId) {
         return submissionService.getAllSubmissionsByUser(userId);
     }
+
+    @PostMapping
+    @Operation(
+            summary = "Create or update a submission",
+            description = "Creates or updates a user submission depending on the action (SAVE, SUBMIT, GIVE_UP).",
+            parameters = {
+                    @Parameter(
+                            name = "userId",
+                            in = ParameterIn.PATH,
+                            required = true,
+                            description = "User UUID"
+                    )
+            },
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = SubmissionResponseDto.class)
+                            )
+                    ),
+                    @ApiResponse(responseCode = "400", description = "Invalid UUID or action"),
+                    @ApiResponse(responseCode = "409", description = "Submission already completed"),
+                    @ApiResponse(responseCode = "500", description = "Unexpected error")
+            }
+    )
+    public Mono<ResponseEntity<SubmissionResponseDto>> createOrUpdateSubmission(
+            @PathVariable String userId,
+            @org.springframework.web.bind.annotation.RequestBody SubmissionRequestDto request
+    ) {
+        return submissionService.createOrUpdateSubmission(userId, request)
+                .map(ResponseEntity::ok);
+    }
+
+
+
 }

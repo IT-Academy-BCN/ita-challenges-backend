@@ -11,6 +11,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
+import com.itachallenge.challenge.dto.submission.SubmissionRequestDto;
+import com.itachallenge.challenge.dto.submission.SubmissionResponseDto;
+import com.itachallenge.common.exception.BadRequestException;
+import com.itachallenge.submission.exception.UnmodifiableSubmissionException;
+import reactor.core.publisher.Mono;
+
 
 import java.util.UUID;
 
@@ -113,4 +119,83 @@ class SubmissionControllerTest {
 
         verify(submissionService).getAllSubmissionsByUser(userId);
     }
+    @Test
+    void postSubmission_returns200_whenServiceSucceeds() {
+        String userId = UUID.randomUUID().toString();
+
+        SubmissionRequestDto request = SubmissionRequestDto.builder()
+                .challengeId(UUID.randomUUID().toString())
+                .languageId(UUID.randomUUID().toString())
+                .action("SAVE")
+                .submissionText("draft text")
+                .build();
+
+        SubmissionResponseDto response = SubmissionResponseDto.builder()
+                .submissionText("draft text")
+                .isSolved(false)
+                .timesSolved(0)
+                .status("IN_PROGRESS")
+                .build();
+
+        when(submissionService.createOrUpdateSubmission(eq(userId), any(SubmissionRequestDto.class)))
+                .thenReturn(Mono.just(response));
+
+        client().post()
+                .uri("/itachallenge/api/v1/users/{userId}/submissions", userId)
+                .bodyValue(request)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.submission_text").isEqualTo("draft text")
+                .jsonPath("$.status").isEqualTo("IN_PROGRESS");
+
+        verify(submissionService).createOrUpdateSubmission(eq(userId), any(SubmissionRequestDto.class));
+    }
+
+    @Test
+    void postSubmission_returns400_whenServiceThrowsBadRequest() {
+        String userId = UUID.randomUUID().toString();
+
+        SubmissionRequestDto request = SubmissionRequestDto.builder()
+                .challengeId("not-a-uuid")
+                .languageId(UUID.randomUUID().toString())
+                .action("SAVE")
+                .submissionText("draft text")
+                .build();
+
+        when(submissionService.createOrUpdateSubmission(eq(userId), any(SubmissionRequestDto.class)))
+                .thenReturn(Mono.error(new BadRequestException("Invalid UUID or action")));
+
+        client().post()
+                .uri("/itachallenge/api/v1/users/{userId}/submissions", userId)
+                .bodyValue(request)
+                .exchange()
+                .expectStatus().isBadRequest();
+
+        verify(submissionService).createOrUpdateSubmission(eq(userId), any(SubmissionRequestDto.class));
+    }
+
+    @Test
+    void postSubmission_returns409_whenSubmissionIsUnmodifiable() {
+        String userId = UUID.randomUUID().toString();
+
+        SubmissionRequestDto request = SubmissionRequestDto.builder()
+                .challengeId(UUID.randomUUID().toString())
+                .languageId(UUID.randomUUID().toString())
+                .action("SUBMIT")
+                .submissionText("final text")
+                .build();
+
+        when(submissionService.createOrUpdateSubmission(eq(userId), any(SubmissionRequestDto.class)))
+                .thenReturn(Mono.error(new UnmodifiableSubmissionException("Submission already completed")));
+
+        client().post()
+                .uri("/itachallenge/api/v1/users/{userId}/submissions", userId)
+                .bodyValue(request)
+                .exchange()
+                .expectStatus().isEqualTo(409);
+
+        verify(submissionService).createOrUpdateSubmission(eq(userId), any(SubmissionRequestDto.class));
+    }
+
 }
