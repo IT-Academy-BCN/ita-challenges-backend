@@ -116,7 +116,7 @@ public class FavoriteControllerTest {
         when(challengeJwtFacade.getUserUuIdFromAuthenticationHeader(authHeader)).thenReturn(userId);
         when(favoriteService.removeChallengeFromFavorites(challengeId, userId)).thenReturn(Mono.just(dto));
 
-        Mono<ResponseEntity<FavoriteDto>> result = favoriteController.removeFavorite(challengeId, authHeader);
+        Mono<ResponseEntity<FavoriteDto>> result = favoriteController.removeFavorite(userId, challengeId, authHeader);
 
         StepVerifier.create(result)
                 .expectNextMatches(response -> response.getStatusCode().is2xxSuccessful() &&
@@ -128,9 +128,10 @@ public class FavoriteControllerTest {
     void removeFavorite_missingAuthHeader_400() {
         String challengeId = "123e4567-e89b-12d3-a456-426614174000";
         String authHeader = null;
+        String userId = "user-123";
         when(challengeJwtFacade.getUserUuIdFromAuthenticationHeader(authHeader)).thenThrow(new JwtException("Missing header"));
 
-        Mono<ResponseEntity<FavoriteDto>> result = favoriteController.removeFavorite(challengeId, authHeader);
+        Mono<ResponseEntity<FavoriteDto>> result = favoriteController.removeFavorite(userId, challengeId, authHeader);
 
         StepVerifier.create(result)
                 .expectError(BadRequestException.class)
@@ -147,7 +148,7 @@ public class FavoriteControllerTest {
         when(favoriteService.removeChallengeFromFavorites(challengeId, userId))
                 .thenReturn(Mono.error(new ChallengeNotFoundException("Challenge not found")));
 
-        Mono<ResponseEntity<FavoriteDto>> result = favoriteController.removeFavorite(challengeId, authHeader);
+        Mono<ResponseEntity<FavoriteDto>> result = favoriteController.removeFavorite(userId, challengeId, authHeader);
 
         StepVerifier.create(result)
                 .expectError(ChallengeNotFoundException.class)
@@ -164,7 +165,7 @@ public class FavoriteControllerTest {
         when(favoriteService.removeChallengeFromFavorites(challengeId, userId))
                 .thenReturn(Mono.error(new InternalServerErrorException("Internal error")));
 
-        Mono<ResponseEntity<FavoriteDto>> result = favoriteController.removeFavorite(challengeId, authHeader);
+        Mono<ResponseEntity<FavoriteDto>> result = favoriteController.removeFavorite(userId, challengeId, authHeader);
 
         StepVerifier.create(result)
                 .expectError(InternalServerErrorException.class)
