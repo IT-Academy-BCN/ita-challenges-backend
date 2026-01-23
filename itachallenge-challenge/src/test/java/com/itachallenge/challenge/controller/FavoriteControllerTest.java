@@ -171,4 +171,21 @@ public class FavoriteControllerTest {
                 .expectError(InternalServerErrorException.class)
                 .verify();
     }
+
+    @Test
+    void removeFavorite_userIdMismatch_400() {
+        String challengeId = "123e4567-e89b-12d3-a456-426614174000";
+        String userIdInPath = "user-abc";
+        String userIdInToken = "user-diff";
+        String authHeader = "Bearer valid-token";
+
+        when(challengeJwtFacade.getUserUuIdFromAuthenticationHeader(authHeader)).thenReturn(userIdInToken);
+
+        Mono<ResponseEntity<FavoriteDto>> result = favoriteController.removeFavorite(userIdInPath, challengeId, authHeader);
+
+        StepVerifier.create(result)
+                .expectErrorMatches(throwable -> throwable instanceof BadRequestException &&
+                        throwable.getMessage().contains("You cannot remove favorites for another user"))
+                .verify();
+    }
 }
