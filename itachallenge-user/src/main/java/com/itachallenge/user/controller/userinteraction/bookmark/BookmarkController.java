@@ -15,7 +15,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/itachallenge/api/v1/user")
+@RequestMapping("/itachallenge/api/v1")
 public class BookmarkController {
 
     private static final Logger log = LoggerFactory.getLogger(BookmarkController.class);
@@ -44,12 +44,23 @@ public class BookmarkController {
                     @ApiResponse(responseCode = "500", description = "Unexpected error")
             }
     )
-    @GetMapping("/users/{userId}/bookmarks")
+
+    @GetMapping("/userinteraction/bookmarks/{userId}")
     public Mono<ResponseEntity<Set<UUID>>> getUserBookmarks(@PathVariable String userId) {
         return bookmarkService.getUserBookmarks(userId)
                 .map(bookmarks -> {
                     log.info("Retrieved {} bookmark challenges for user {}", bookmarks.size(), userId);
                     return ResponseEntity.ok(bookmarks);
                 });
+    }
+
+    @Operation(summary = "DEPRECATED: Use /userinteraction/bookmarks/{userId}")
+    @GetMapping("/user/users/{userId}/bookmarks")
+    @Deprecated
+    public Mono<ResponseEntity<Set<UUID>>> getUserBookmarksLegacy(@PathVariable String userId) {
+        return getUserBookmarks(userId)
+                .map(response -> ResponseEntity.status(response.getStatusCode())
+                        .header("Deprecation", "true")
+                        .body(response.getBody()));
     }
 }

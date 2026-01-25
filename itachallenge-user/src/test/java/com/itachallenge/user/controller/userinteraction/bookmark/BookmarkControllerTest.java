@@ -39,7 +39,27 @@ class BookmarkControllerTest {
     }
 
     @Test
-    @DisplayName("GET /users/{userId}/bookmarks returns bookmarked challenges")
+    @DisplayName("GET /userinteraction/bookmarks/{userId} returns bookmarked challenges - NEW PATH")
+    void getUserBookmarks_NewPath_Success() {
+        UUID userId = UUID.randomUUID();
+        Set<UUID> expectedBookmarks = Set.of(UUID.randomUUID(), UUID.randomUUID());
+
+        when(bookmarkService.getUserBookmarks(userId.toString()))
+                .thenReturn(Mono.just(expectedBookmarks));
+
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/userinteraction/bookmarks/{userId}", userId)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(UUID.class)
+                .hasSize(expectedBookmarks.size())
+                .contains(expectedBookmarks.toArray(new UUID[0]));
+
+        verify(bookmarkService, times(1)).getUserBookmarks(userId.toString());
+    }
+
+    @Test
+    @DisplayName("GET /users/{userId}/bookmarks returns bookmarked challenges - LEGACY")
     void getUserBookmarks_returnsBookmarks() {
         UUID userId = UUID.randomUUID();
         Set<UUID> expectedBookmarks = Set.of(UUID.randomUUID(), UUID.randomUUID());
@@ -51,6 +71,7 @@ class BookmarkControllerTest {
                 .uri("/itachallenge/api/v1/user/users/{userId}/bookmarks", userId)
                 .exchange()
                 .expectStatus().isOk()
+                .expectHeader().valueEquals("Deprecation", "true")
                 .expectBodyList(UUID.class)
                 .hasSize(expectedBookmarks.size())
                 .contains(expectedBookmarks.toArray(new UUID[0]));
