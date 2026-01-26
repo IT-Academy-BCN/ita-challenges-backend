@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
@@ -66,7 +65,7 @@ public class GithubApiServiceImpl implements GithubApiService {
 
     private Mono<GithubUserResponseDto> fetchUserProfile(String token) {
         return webClient.get()
-                .uri("/user")
+                .uri(githubProperties.getUserInfoUri() + "/user")
                 .header("Authorization", "Bearer " + token)
                 .retrieve()
                 .bodyToMono(Map.class)
