@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -91,10 +92,32 @@ public class FavoriteController {
                     }
                 });
     }
-
+    //NEW PATH
     @Operation(
             summary = "Gets challenges marked as favorites by a user",
-            description = "Returns all favorites that the specified user has marked.",
+            description = "Returns all favorites for the specified user with identity validation.",
+            parameters = {
+                    @Parameter(name = "userId", description = "UUID of the user", required = true, in = ParameterIn.PATH)
+            },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Set of favorite challengeIds by user"),
+                    @ApiResponse(responseCode = "400", description = "Invalid token or ID mismatch"),
+                    @ApiResponse(responseCode = "404", description = "User not found"),
+                    @ApiResponse(responseCode = "500", description = "Unexpected error")
+            }
+    )
+    @GetMapping("/users/{userId}/favorites")
+    public Mono<ResponseEntity<Set<UUID>>> getUserFavorites(@PathVariable String userId) {
+        return favoriteService.getUserFavorites(userId)
+                .map(ResponseEntity::ok);
+    }
+    //LEGACY PATH - to be refactored in the future
+    /**
+     * @deprecated since 2.0.4. Use {@link #getUserFavorites(String)} instead.
+     */
+    @Operation(
+            summary = "Gets challenges marked as favorites by a user (LEGACY)",
+            description = "Legacy endpoint with deprecation warning.",
             parameters = {
                     @Parameter(
                             name = "userId",
@@ -110,12 +133,16 @@ public class FavoriteController {
                     @ApiResponse(responseCode = "500", description = "Unexpected error")
             }
     )
+    @Deprecated(since = "2.0.4", forRemoval = true)
+    @SuppressWarnings("java:S1133")
     @GetMapping("/{userId}")
-    public Mono<ResponseEntity<Set<UUID>>> getUserFavorites(@PathVariable String userId) {
+    public Mono<ResponseEntity<Set<UUID>>> getUserFavoritesLegacy(@PathVariable String userId) {
         return favoriteService.getUserFavorites(userId)
                 .map(favorites -> {
-                    log.info("Retrieved {} favorite challenges for user {}", favorites.size(), userId);
-                    return ResponseEntity.ok(favorites);
+                    HttpHeaders headers = new HttpHeaders();
+                    headers.add("Deprecation", "true");
+                    headers.add("Link", "</itachallenge/api/v1/userinteraction/favorites/users/" + userId + "/favorites>; rel=\"successor-version\"");                    log.info("Retrieved {} favorite challenges for user {}", favorites.size(), userId);
+                    return ResponseEntity.ok().headers(headers).body(favorites);
                 });
     }
 
