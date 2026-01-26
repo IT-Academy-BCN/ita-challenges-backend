@@ -1,5 +1,6 @@
 package com.itachallenge.githubcore.service;
 
+import com.itachallenge.githubcore.config.GithubProperties;
 import com.itachallenge.githubcore.document.enums.GithubUserStatus;
 import com.itachallenge.githubcore.dto.GithubUserRequestDto;
 import com.itachallenge.githubcore.exception.GithubUnavailableException;
@@ -15,6 +16,7 @@ class GithubApiServiceImplTest {
 
     private static MockWebServer mockWebServer;
     private GithubApiServiceImpl githubApiServiceImpl;
+    private GithubProperties githubProperties;
 
     @BeforeAll
     static void startServer() throws IOException {
@@ -30,10 +32,16 @@ class GithubApiServiceImplTest {
 
     @BeforeEach
     void setup() {
-        String mockBaseUrl = mockWebServer.url("/").toString();
-        String mockTokenUri = mockWebServer.url("/").toString();
+        String baseUrl = mockWebServer.url("/").toString();
 
-        githubApiServiceImpl = new GithubApiServiceImpl(WebClient.builder(), mockBaseUrl, mockTokenUri);
+        githubProperties = new GithubProperties();
+        githubProperties.setBaseUrl(baseUrl);
+        githubProperties.setUserInfoUri("");
+        githubProperties.setTokenUri("/login/oauth/access_token");
+        githubProperties.setClientId("testClientId");
+        githubProperties.setClientSecret("testClientSecret");
+
+        githubApiServiceImpl = new GithubApiServiceImpl(githubProperties, WebClient.builder());
     }
 
     @Test
@@ -85,7 +93,7 @@ class GithubApiServiceImplTest {
                 .setBody("{\"login\":\"testUser\"}")
                 .addHeader("Content-Type", "application/json"));
 
-        GithubUserRequestDto requestDto = new GithubUserRequestDto("code123", "clientId", "clientSecret");
+        GithubUserRequestDto requestDto = new GithubUserRequestDto("code123");
 
         StepVerifier.create(githubApiServiceImpl.authenticate(requestDto))
                 .expectNextMatches(userData -> userData.username().equals("testUser"))
@@ -100,7 +108,7 @@ class GithubApiServiceImplTest {
                 .setBody("{\"error\":\"bad_verification_code\"}")
                 .addHeader("Content-Type", "application/json"));
 
-        GithubUserRequestDto requestDto = new GithubUserRequestDto("wrong_code", "clientId", "clientSecret");
+        GithubUserRequestDto requestDto = new GithubUserRequestDto("wrong_code");
 
         StepVerifier.create(githubApiServiceImpl.authenticate(requestDto))
                 .expectError(GithubUnavailableException.class)
@@ -118,7 +126,7 @@ class GithubApiServiceImplTest {
         mockWebServer.enqueue(new MockResponse()
                 .setResponseCode(500));
 
-        GithubUserRequestDto requestDto = new GithubUserRequestDto("code123", "clientId", "clientSecret");
+        GithubUserRequestDto requestDto = new GithubUserRequestDto("code123");
 
         StepVerifier.create(githubApiServiceImpl.authenticate(requestDto))
                 .expectError(GithubUnavailableException.class)
