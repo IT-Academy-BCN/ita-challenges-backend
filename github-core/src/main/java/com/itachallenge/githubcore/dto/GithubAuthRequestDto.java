@@ -1,6 +1,6 @@
 package com.itachallenge.githubcore.dto;
 
-public record GithubUserRequestDto(
+public record GithubAuthRequestDto(
         String code
 ) {
 }

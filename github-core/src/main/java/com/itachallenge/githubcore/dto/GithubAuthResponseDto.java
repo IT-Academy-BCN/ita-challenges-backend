@@ -1,7 +1,6 @@
 package com.itachallenge.githubcore.dto;
 
-public record GithubUserResponseDto(
-        //boolean valid,
+public record GithubAuthResponseDto(
         String username
 ) {
 }

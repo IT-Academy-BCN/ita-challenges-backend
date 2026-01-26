@@ -2,8 +2,8 @@ package com.itachallenge.githubcore.service;
 
 import com.itachallenge.githubcore.config.GithubProperties;
 import com.itachallenge.githubcore.document.enums.GithubUserStatus;
-import com.itachallenge.githubcore.dto.GithubUserResponseDto;
-import com.itachallenge.githubcore.dto.GithubUserRequestDto;
+import com.itachallenge.githubcore.dto.GithubAuthResponseDto;
+import com.itachallenge.githubcore.dto.GithubAuthRequestDto;
 import com.itachallenge.githubcore.exception.GithubUnavailableException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,14 +46,14 @@ public class GithubApiServiceImpl implements GithubApiService {
     }
 
     @Override
-    public Mono<GithubUserResponseDto> authenticate(GithubUserRequestDto githubUserRequestDto) {
+    public Mono<GithubAuthResponseDto> authenticate(GithubAuthRequestDto githubAuthRequestDto) {
         return webClient.post()
                 .uri(githubProperties.getTokenUri())
                 .header("Accept", "application/json")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(Map.of("client_id", githubProperties.getClientId(),
                         "client_secret", githubProperties.getClientSecret(),
-                        "code", githubUserRequestDto.code()))
+                        "code", githubAuthRequestDto.code()))
                 .retrieve()
                 .bodyToMono(Map.class)
                 .flatMap(response -> {
@@ -63,13 +63,13 @@ public class GithubApiServiceImpl implements GithubApiService {
                 });
     }
 
-    private Mono<GithubUserResponseDto> fetchUserProfile(String token) {
+    private Mono<GithubAuthResponseDto> fetchUserProfile(String token) {
         return webClient.get()
                 .uri(githubProperties.getUserProfileUri())
                 .header("Authorization", "Bearer " + token)
                 .retrieve()
                 .bodyToMono(Map.class)
-                .map(profile -> new GithubUserResponseDto((String) profile.get("login")))
+                .map(profile -> new GithubAuthResponseDto((String) profile.get("login")))
                 .onErrorResume(e -> Mono.error(new GithubUnavailableException("Error fetching GitHub profile")));
     }
 }
