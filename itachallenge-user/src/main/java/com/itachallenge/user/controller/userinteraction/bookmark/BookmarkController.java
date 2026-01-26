@@ -53,10 +53,13 @@ public class BookmarkController {
                     return ResponseEntity.ok(bookmarks);
                 });
     }
-
+    /**
+     * @deprecated This endpoint is deprecated because the domain logic has moved
+     * to userinteraction. Use {@link #getUserBookmarks(String)} instead.
+     */
     @Operation(summary = "DEPRECATED: Use /userinteraction/bookmarks/{userId}")
     @GetMapping("/user/users/{userId}/bookmarks")
-    @Deprecated
+    @Deprecated(since = "3.1.4-RELEASE", forRemoval = true)
     public Mono<ResponseEntity<Set<UUID>>> getUserBookmarksLegacy(@PathVariable String userId) {
         return getUserBookmarks(userId)
                 .map(response -> ResponseEntity.status(response.getStatusCode())
