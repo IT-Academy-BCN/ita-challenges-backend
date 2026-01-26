@@ -124,8 +124,8 @@ class SubmissionControllerTest {
         String userId = UUID.randomUUID().toString();
 
         SubmissionRequestDto request = SubmissionRequestDto.builder()
-                .challengeId(UUID.randomUUID().toString())
-                .languageId(UUID.randomUUID().toString())
+                .challengeId(UUID.randomUUID())
+                .languageId(UUID.randomUUID())
                 .action("SAVE")
                 .submissionText("draft text")
                 .build();
@@ -153,18 +153,15 @@ class SubmissionControllerTest {
     }
 
     @Test
-    void postSubmission_returns400_whenServiceThrowsBadRequest() {
+    void postSubmission_returns400_whenRequestIsInvalid() {
         String userId = UUID.randomUUID().toString();
 
         SubmissionRequestDto request = SubmissionRequestDto.builder()
-                .challengeId("not-a-uuid")
-                .languageId(UUID.randomUUID().toString())
+                .challengeId(null)
+                .languageId(UUID.randomUUID())
                 .action("SAVE")
                 .submissionText("draft text")
                 .build();
-
-        when(submissionService.createOrUpdateSubmission(eq(userId), any(SubmissionRequestDto.class)))
-                .thenReturn(Mono.error(new BadRequestException("Invalid UUID or action")));
 
         client().post()
                 .uri("/itachallenge/api/v1/users/{userId}/submissions", userId)
@@ -172,19 +169,22 @@ class SubmissionControllerTest {
                 .exchange()
                 .expectStatus().isBadRequest();
 
-        verify(submissionService).createOrUpdateSubmission(eq(userId), any(SubmissionRequestDto.class));
+        verify(submissionService, never())
+                .createOrUpdateSubmission(any(), any());
     }
+
 
     @Test
     void postSubmission_returns409_whenSubmissionIsUnmodifiable() {
         String userId = UUID.randomUUID().toString();
 
         SubmissionRequestDto request = SubmissionRequestDto.builder()
-                .challengeId(UUID.randomUUID().toString())
-                .languageId(UUID.randomUUID().toString())
-                .action("SUBMIT")
-                .submissionText("final text")
+                .challengeId(UUID.randomUUID())
+                .languageId(UUID.randomUUID())
+                .action("SAVE")
+                .submissionText("draft text")
                 .build();
+
 
         when(submissionService.createOrUpdateSubmission(eq(userId), any(SubmissionRequestDto.class)))
                 .thenReturn(Mono.error(new UnmodifiableSubmissionException("Submission already completed")));

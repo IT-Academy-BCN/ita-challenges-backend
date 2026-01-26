@@ -19,6 +19,8 @@ import com.itachallenge.challenge.dto.submission.SubmissionRequestDto;
 import com.itachallenge.challenge.dto.submission.SubmissionResponseDto;
 import org.springframework.http.ResponseEntity;
 import reactor.core.publisher.Mono;
+import jakarta.validation.Valid;
+
 
 
 
@@ -87,7 +89,7 @@ public class SubmissionController {
     )
     public Mono<ResponseEntity<SubmissionResponseDto>> createOrUpdateSubmission(
             @PathVariable String userId,
-            @org.springframework.web.bind.annotation.RequestBody SubmissionRequestDto request
+            @Valid @RequestBody SubmissionRequestDto request
     ) {
         return submissionService.createOrUpdateSubmission(userId, request)
                 .map(ResponseEntity::ok);

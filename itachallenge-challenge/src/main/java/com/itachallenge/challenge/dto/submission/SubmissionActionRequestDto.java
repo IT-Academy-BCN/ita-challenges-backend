@@ -4,6 +4,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.itachallenge.submission.enums.SubmissionAction;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import com.itachallenge.challenge.annotations.ValidUUID;
+import jakarta.validation.constraints.NotNull;
+
+import java.util.UUID;
 
 import java.util.UUID;
 
