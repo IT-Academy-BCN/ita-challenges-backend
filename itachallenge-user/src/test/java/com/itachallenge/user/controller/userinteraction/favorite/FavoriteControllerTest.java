@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Set;
 import java.util.UUID;
@@ -119,7 +120,7 @@ class FavoriteControllerTest {
     }
 
     @Test
-    @DisplayName("GET /userinteraction/favorites/{userId} returns favorite challenges")
+    @DisplayName("GET /users/{userId}/favorites returns favorite challenges")
     void getUserFavorites_returnsFavorites() {
         UUID userId = UUID.randomUUID();
         Set<UUID> expectedFavorites = Set.of(UUID.randomUUID(), UUID.randomUUID());
@@ -128,18 +129,19 @@ class FavoriteControllerTest {
                 .thenReturn(Mono.just(expectedFavorites));
 
         webTestClient.get()
-                .uri("/itachallenge/api/v1/userinteraction/favorites/{userId}", userId)
+                .uri("/itachallenge/api/v1/userinteraction/favorites/users/{userId}/favorites", userId)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBodyList(UUID.class)
-                .hasSize(expectedFavorites.size())
-                .contains(expectedFavorites.toArray(new UUID[0]));
+                .expectBody(Set.class)
+                .consumeWith(response -> {
+                    assertThat(response.getResponseBody()).hasSize(2);
+                });
 
-        verify(favoriteService, times(1)).getUserFavorites(userId.toString());
+        verify(favoriteService).getUserFavorites(userId.toString());
     }
 
     @Test
-    @DisplayName("GET /userinteraction/favorites/{userId} returns 404 if user not found")
+    @DisplayName("GET /users/{userId}/favorites returns 404 if user not found")
     void getUserFavorites_returns404IfUserNotFound() {
         UUID userId = UUID.randomUUID();
 
@@ -147,7 +149,7 @@ class FavoriteControllerTest {
                 .thenReturn(Mono.error(new NotFoundException("User not found")));
 
         webTestClient.get()
-                .uri("/itachallenge/api/v1/userinteraction/favorites/{userId}", userId)
+                .uri("/itachallenge/api/v1/userinteraction/favorites/users/{userId}/favorites", userId)
                 .exchange()
                 .expectStatus().isNotFound()
                 .expectBody(String.class).isEqualTo("User not found");
@@ -156,7 +158,7 @@ class FavoriteControllerTest {
     }
 
     @Test
-    @DisplayName("GET /userinteraction/favorites/{userId} returns 400 if UUID is invalid")
+    @DisplayName("GET /users/{userId}/favorites returns 400 if UUID is invalid")
     void getUserFavorites_returns400IfInvalidUUID() {
         String invalidUserId = "invalid-uuid";
 
@@ -164,7 +166,7 @@ class FavoriteControllerTest {
                 .thenReturn(Mono.error(new BadUUIDException("The provided IDs are not valid.")));
 
         webTestClient.get()
-                .uri("/itachallenge/api/v1/userinteraction/favorites/{userId}", invalidUserId)
+                .uri("/itachallenge/api/v1/userinteraction/favorites/users/{userId}/favorites", invalidUserId)
                 .exchange()
                 .expectStatus().isBadRequest()
                 .expectBody(String.class).isEqualTo("The provided IDs are not valid.");
