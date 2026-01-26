@@ -41,8 +41,13 @@ public class SubmissionServiceImpl implements SubmissionService {
     public Mono<SubmissionResponseDto> createOrUpdateSubmission(String userId, SubmissionRequestDto request) {
 
         Mono<UUID> userUuidMono = validateAndParseUuid(userId);
-        Mono<UUID> challengeUuidMono = validateAndParseUuid(request.getChallengeId(), "challengeId");
-        Mono<UUID> languageUuidMono = validateAndParseUuid(request.getLanguageId(), "languageId");
+
+        Mono<UUID> challengeUuidMono = Mono.justOrEmpty(request.getChallengeId())
+                .switchIfEmpty(Mono.error(new BadRequestException("The 'challengeId' parameter cannot be null.")));
+
+        Mono<UUID> languageUuidMono = Mono.justOrEmpty(request.getLanguageId())
+                .switchIfEmpty(Mono.error(new BadRequestException("The 'languageId' parameter cannot be null.")));
+
 
         return Mono.zip(userUuidMono, challengeUuidMono, languageUuidMono)
                 .flatMap(tuple -> {
