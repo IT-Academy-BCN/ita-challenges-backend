@@ -2,7 +2,7 @@ package com.itachallenge.githubcore.service;
 
 import com.itachallenge.githubcore.config.GithubProperties;
 import com.itachallenge.githubcore.document.enums.GithubUserStatus;
-import com.itachallenge.githubcore.dto.GithubUserRequestDto;
+import com.itachallenge.githubcore.dto.GithubAuthRequestDto;
 import com.itachallenge.githubcore.exception.GithubUnavailableException;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -93,9 +93,9 @@ class GithubApiServiceImplTest {
                 .setBody("{\"login\":\"testUser\"}")
                 .addHeader("Content-Type", "application/json"));
 
-        GithubUserRequestDto requestDto = new GithubUserRequestDto("code123");
+        GithubAuthRequestDto githubAuthRequestDto = new GithubAuthRequestDto("code123");
 
-        StepVerifier.create(githubApiServiceImpl.authenticate(requestDto))
+        StepVerifier.create(githubApiServiceImpl.authenticate(githubAuthRequestDto))
                 .expectNextMatches(userData -> userData.username().equals("testUser"))
                 .verifyComplete();
     }
@@ -108,9 +108,9 @@ class GithubApiServiceImplTest {
                 .setBody("{\"error\":\"bad_verification_code\"}")
                 .addHeader("Content-Type", "application/json"));
 
-        GithubUserRequestDto requestDto = new GithubUserRequestDto("wrong_code");
+        GithubAuthRequestDto githubAuthRequestDto = new GithubAuthRequestDto("wrong_code");
 
-        StepVerifier.create(githubApiServiceImpl.authenticate(requestDto))
+        StepVerifier.create(githubApiServiceImpl.authenticate(githubAuthRequestDto))
                 .expectError(GithubUnavailableException.class)
                 .verify();
     }
@@ -126,9 +126,9 @@ class GithubApiServiceImplTest {
         mockWebServer.enqueue(new MockResponse()
                 .setResponseCode(500));
 
-        GithubUserRequestDto requestDto = new GithubUserRequestDto("code123");
+        GithubAuthRequestDto githubAuthRequestDto = new GithubAuthRequestDto("code123");
 
-        StepVerifier.create(githubApiServiceImpl.authenticate(requestDto))
+        StepVerifier.create(githubApiServiceImpl.authenticate(githubAuthRequestDto))
                 .expectError(GithubUnavailableException.class)
                 .verify();
     }
