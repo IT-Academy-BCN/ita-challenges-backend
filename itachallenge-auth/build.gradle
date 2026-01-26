@@ -46,6 +46,7 @@ dependencies {
     implementation 'org.projectlombok:lombok:1.18.30'
     implementation project(':jwt-core')
     annotationProcessor 'org.projectlombok:lombok:1.18.30'
+    implementation project(':github-core')
 
     testImplementation group: 'com.squareup.okhttp3', name: 'mockwebserver', version: '4.12.0'
     testImplementation 'org.springframework.boot:spring-boot-starter-test:3.0.6'
@@ -59,6 +60,7 @@ dependencies {
     testImplementation 'com.squareup.okhttp3:mockwebserver:4.9.3'
     testImplementation 'org.junit.platform:junit-platform-suite-engine:1.8.1'
     testImplementation project(':jwt-core')
+    testImplementation project(':github-core')
 
 }
 
