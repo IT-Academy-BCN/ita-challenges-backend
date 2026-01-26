@@ -1,5 +1,6 @@
 package com.itachallenge.githubcore.service;
 
+import com.itachallenge.githubcore.config.GithubProperties;
 import com.itachallenge.githubcore.document.enums.GithubUserStatus;
 import com.itachallenge.githubcore.dto.GithubUserResponseDto;
 import com.itachallenge.githubcore.dto.GithubUserRequestDto;
@@ -8,27 +9,27 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import java.util.Map;
 
-
 public class GithubApiServiceImpl implements GithubApiService {
 
     private static final Logger log = LoggerFactory.getLogger(GithubApiServiceImpl.class);
     private final WebClient webClient;
-    private final String tokenUri;
+    private final GithubProperties githubProperties;
 
-    public GithubApiServiceImpl(WebClient.Builder builder, String baseUrl, String tokenUri) {
-        this.webClient = builder.baseUrl(baseUrl).build();
-        this.tokenUri = tokenUri;
+    public GithubApiServiceImpl(GithubProperties githubProperties, WebClient.Builder builder) {
+        this.githubProperties = githubProperties;
+        this.webClient = builder.baseUrl(githubProperties.getBaseUrl()).build();
     }
 
     @Override
     public Mono<GithubUserStatus> userExists(String username) {
         return webClient.get()
-                .uri("/users/{username}", username)
+                .uri(githubProperties.getUserInfoUri() + "/users/{username}", username)
                 .exchangeToMono(response -> {
                     if (response.statusCode().equals(HttpStatus.OK)) {
                         return Mono.just(GithubUserStatus.FOUND);
@@ -43,17 +44,16 @@ public class GithubApiServiceImpl implements GithubApiService {
                         return Mono.error(new GithubUnavailableException("Unexpected response from GitHub"));
                     }
                 });
-
     }
 
     @Override
     public Mono<GithubUserResponseDto> authenticate(GithubUserRequestDto githubUserRequestDto) {
         return webClient.post()
-                .uri(tokenUri)
+                .uri(githubProperties.getTokenUri())
                 .header("Accept", "application/json")
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(Map.of("client_id", githubUserRequestDto.clientId(),
-                        "client_secret", githubUserRequestDto.clientSecret(),
+                .bodyValue(Map.of("client_id", githubProperties.getClientId(),
+                        "client_secret", githubProperties.getClientSecret(),
                         "code", githubUserRequestDto.code()))
                 .retrieve()
                 .bodyToMono(Map.class)
