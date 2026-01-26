@@ -113,8 +113,8 @@ class SubmissionServiceImplTest {
         UUID languageUuid = UUID.randomUUID();
 
         SubmissionRequestDto request = SubmissionRequestDto.builder()
-                .challengeId(challengeUuid.toString())
-                .languageId(languageUuid.toString())
+                .challengeId(challengeUuid)
+                .languageId(languageUuid)
                 .action(SubmissionAction.SAVE.name())
                 .submissionText("draft text")
                 .build();
@@ -153,8 +153,8 @@ class SubmissionServiceImplTest {
                 .build();
 
         SubmissionRequestDto request = SubmissionRequestDto.builder()
-                .challengeId(challengeUuid.toString())
-                .languageId(languageUuid.toString())
+                .challengeId(challengeUuid)
+                .languageId(languageUuid)
                 .action(SubmissionAction.SUBMIT.name())
                 .submissionText("final")
                 .build();
@@ -195,8 +195,8 @@ class SubmissionServiceImplTest {
                 .build();
 
         SubmissionRequestDto request = SubmissionRequestDto.builder()
-                .challengeId(challengeUuid.toString())
-                .languageId(languageUuid.toString())
+                .challengeId(challengeUuid)
+                .languageId(languageUuid)
                 .action(SubmissionAction.SAVE.name())
                 .submissionText("try change")
                 .build();
