@@ -65,7 +65,7 @@ public class GithubApiServiceImpl implements GithubApiService {
 
     private Mono<GithubUserResponseDto> fetchUserProfile(String token) {
         return webClient.get()
-                .uri(githubProperties.getUserInfoUri() + "/user")
+                .uri(githubProperties.getUserProfileUri())
                 .header("Authorization", "Bearer " + token)
                 .retrieve()
                 .bodyToMono(Map.class)

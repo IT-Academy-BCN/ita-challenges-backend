@@ -14,5 +14,6 @@ public class GithubProperties {
     private String tokenUri;
     private String clientId;
     private String clientSecret;
+    private String userProfileUri;
     private String userInfoUri;
 }
