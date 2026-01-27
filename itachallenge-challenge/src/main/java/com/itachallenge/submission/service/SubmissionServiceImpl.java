@@ -115,9 +115,6 @@ public class SubmissionServiceImpl implements SubmissionService {
     }
 
     private Mono<UUID> validateAndParseUuid(String value, String fieldName) {
-        if (value == null || value.trim().isEmpty()) {
-            return Mono.error(new BadRequestException("The '" + fieldName + "' parameter cannot be null or empty."));
-        }
         return Mono.fromCallable(() -> UUID.fromString(value.trim()))
                 .onErrorMap(IllegalArgumentException.class,
                         ex -> new BadRequestException("The '" + fieldName + "' parameter must be a valid UUID."));

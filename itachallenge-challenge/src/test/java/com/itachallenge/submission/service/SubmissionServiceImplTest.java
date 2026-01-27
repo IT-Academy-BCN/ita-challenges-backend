@@ -210,9 +210,4 @@ class SubmissionServiceImplTest {
 
         verify(challengeService, never()).addChallengeToSolved(anyString());
     }
-
-
-
-
-
 }
