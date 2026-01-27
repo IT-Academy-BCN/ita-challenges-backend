@@ -115,3 +115,4 @@
 * Ana Beuzón Rodríguez - https://github.com/anaberod
 * Adolfo Caicaguare - https://github.com/adolcc
 * Alvaro Mendoza Cuello - https://github.com/AlvaroLMC
+* Carlos de Cozar Ruiz-Salinas - https://github.com/carlosPc1987
