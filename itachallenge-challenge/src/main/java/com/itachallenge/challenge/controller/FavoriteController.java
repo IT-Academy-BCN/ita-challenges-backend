@@ -68,7 +68,7 @@ public Mono<ResponseEntity<FavoriteDto>> addFavorite(
      * Use {@code POST /users/{userId}/favorites} instead.
      * This endpoint will be removed once all consumers migrate.
      */
-    @Deprecated(since = "2.0.4", forRemoval = true)
+    @Deprecated(since = "2.0.4")
     @SuppressWarnings("java:S1133")
     @PostMapping("/{challengeId}")
     @Operation(

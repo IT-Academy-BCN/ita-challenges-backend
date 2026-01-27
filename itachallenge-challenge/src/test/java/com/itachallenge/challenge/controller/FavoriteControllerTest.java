@@ -9,6 +9,7 @@ import com.itachallenge.challenge.exception.InternalServerErrorException;
 import com.itachallenge.challenge.service.IFavoriteService;
 import com.itachallenge.challenge.service.IChallengeJwtFacade;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
 import reactor.core.publisher.Mono;
@@ -121,6 +122,53 @@ public class FavoriteControllerTest {
         StepVerifier.create(result)
                 .expectError(InternalServerErrorException.class)
                 .verify();
+    }
+
+    @Test
+    @DisplayName("POST /add returns error when Token ID does not match Path ID")
+    void addFavorite_IdMismatch_ReturnsError() {
+        String pathUserId = "user-123";
+        String tokenId = "different-user-456";
+        String authHeader = "Bearer token-valido";
+        AddFavoriteRequest request = new AddFavoriteRequest();
+        request.setChallengeId("challenge-789");
+
+        when(challengeJwtFacade.getUserUuIdFromAuthenticationHeader(authHeader))
+                .thenReturn(tokenId);
+
+        Mono<ResponseEntity<FavoriteDto>> result = favoriteController.addFavorite(pathUserId, authHeader, request);
+
+        StepVerifier.create(result)
+                .expectErrorMatches(throwable -> throwable instanceof BadRequestException &&
+                        throwable.getMessage().equals("You cannot add favorites for another user."))
+                .verify();
+
+        verifyNoInteractions(favoriteService);
+    }
+
+    @Test
+    @SuppressWarnings("deprecation")
+    @DisplayName("POST Legacy /add returns 200 with Deprecation headers")
+    void addFavoriteLegacy_Success_ReturnsHeaders() {
+        String challengeId = "challenge-123";
+        String userId = "user-456";
+        String authHeader = "Bearer valid-token";
+        FavoriteDto mockDto = new FavoriteDto(true, 1);
+
+        when(challengeJwtFacade.getUserUuIdFromAuthenticationHeader(authHeader))
+                .thenReturn(userId);
+        when(favoriteService.addChallengeToFavorites(challengeId, userId))
+                .thenReturn(Mono.just(mockDto));
+
+        Mono<ResponseEntity<FavoriteDto>> result = favoriteController.addFavoriteLegacy(challengeId, authHeader);
+
+        StepVerifier.create(result)
+                .expectNextMatches(response ->
+                        response.getStatusCode().is2xxSuccessful() &&
+                                "true".equals(response.getHeaders().getFirst("Deprecation")) &&
+                                response.getHeaders().containsKey("Link") &&
+                                response.getBody().equals(mockDto))
+                .verifyComplete();
     }
 
     @Test
