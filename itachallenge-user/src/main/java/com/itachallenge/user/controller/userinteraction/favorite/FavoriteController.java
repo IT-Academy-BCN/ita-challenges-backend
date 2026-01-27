@@ -113,7 +113,7 @@ public class FavoriteController {
     }
     //LEGACY PATH - to be refactored in the future
     /**
-     * @deprecated since 2.0.4. Use {@link #getUserFavorites(String)} instead.
+     * @deprecated since 3.1.4. Use {@link #getUserFavorites(String)} instead.
      */
     @Operation(
             summary = "Gets challenges marked as favorites by a user (LEGACY)",
@@ -133,7 +133,7 @@ public class FavoriteController {
                     @ApiResponse(responseCode = "500", description = "Unexpected error")
             }
     )
-    @Deprecated(since = "2.0.4", forRemoval = true)
+    @Deprecated(since = "3.1.4", forRemoval = true)
     @SuppressWarnings("java:S1133")
     @GetMapping("/{userId}")
     public Mono<ResponseEntity<Set<UUID>>> getUserFavoritesLegacy(@PathVariable String userId) {

@@ -3,6 +3,18 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+### [itachallenge-user-3.1.4-RELEASE] - 2026-01-27
+
+### Changed
+- Refactored favorite challenges retrieval logic to follow the hierarchical model: GET /users/{userId}/favorites.
+- Deprecated legacy endpoint GET /favorites/{userId} in favor of the new user-centric structured path.
+- Updated FavoriteControllerTest to include validation for reactive retrieval flows and pagination (if applicable).
+
+### Added
+- Implemented RFC 8594 compliant Deprecation and Link headers in the legacy GET endpoint to guide consumer migration to the new resource URI.
+- Added security validation to the retrieval flow to ensure users can only access their own favorites list.
+- Increased unit test coverage for the GET block, verifying the correct mapping of the favorite challenges list and response metadata.
+
 ### [itachallenge-challenge-3.1.0-RELEASE] - 2026-01-14
 
 ### Changed
