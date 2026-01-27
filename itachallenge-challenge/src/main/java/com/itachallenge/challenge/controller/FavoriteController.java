@@ -83,10 +83,10 @@ public class FavoriteController {
 
     // LEGACY DELETE
     /**
-     * @deprecated since v2.0.4.
+     * @deprecated since v3.1.1.
      * Use {@code DELETE /users/{userId}/favorites/{challengeId}} instead.
      */
-    @Deprecated(since = "2.0.4", forRemoval = true)
+    @Deprecated(since = "3.1.1")
     @SuppressWarnings("java:S1133")
     @DeleteMapping("/{challengeId}")
     @Operation(

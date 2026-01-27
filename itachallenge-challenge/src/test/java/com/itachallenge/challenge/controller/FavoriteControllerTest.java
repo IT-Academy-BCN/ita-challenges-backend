@@ -8,6 +8,7 @@ import com.itachallenge.challenge.exception.InternalServerErrorException;
 import com.itachallenge.challenge.service.IFavoriteService;
 import com.itachallenge.challenge.service.IChallengeJwtFacade;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
 import reactor.core.publisher.Mono;
@@ -187,5 +188,32 @@ public class FavoriteControllerTest {
                 .expectErrorMatches(throwable -> throwable instanceof BadRequestException &&
                         throwable.getMessage().contains("You cannot remove favorites for another user"))
                 .verify();
+    }
+
+    @Test
+    @SuppressWarnings("deprecation")
+    @DisplayName("DELETE Legacy /remove returns 200 with Deprecation headers")
+    void removeFavoriteLegacy_Success_ReturnsHeaders() {
+        String challengeId = "challenge-789";
+        String userId = "user-123";
+        String authHeader = "Bearer valid-token";
+        FavoriteDto mockDto = new FavoriteDto(false, 0);
+
+        when(challengeJwtFacade.getUserUuIdFromAuthenticationHeader(authHeader))
+                .thenReturn(userId);
+        when(favoriteService.removeChallengeFromFavorites(challengeId, userId))
+                .thenReturn(Mono.just(mockDto));
+
+        Mono<ResponseEntity<FavoriteDto>> result = favoriteController.removeFavoriteLegacy(challengeId, authHeader);
+
+        StepVerifier.create(result)
+                .expectNextMatches(response ->
+                        response.getStatusCode().is2xxSuccessful() &&
+                                "true".equals(response.getHeaders().getFirst("Deprecation")) &&
+                                response.getHeaders().containsKey("Link") &&
+                                response.getBody().equals(mockDto))
+                .verifyComplete();
+
+        verify(favoriteService).removeChallengeFromFavorites(challengeId, userId);
     }
 }

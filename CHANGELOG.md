@@ -3,6 +3,18 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+### [itachallenge-user-3.1.1] - 2026-01-27
+
+### Changed
+- Refactored favorite challenge removal logic to follow the hierarchical model: DELETE /users/{userId}/favorites/{challengeId}.
+- Deprecated legacy delete endpoint DELETE /{challengeId} in favor of the new user-centric structured path.
+- Updated FavoriteControllerTest to include validation for reactive deletion flows.
+
+### Added
+- Implemented RFC 8594 compliant Deprecation and Link headers in the legacy delete endpoint to guide consumer migration.
+- Added security validation in the deletion flow to ensure users can only remove challenges from their own favorites list.
+- Increased unit test coverage for the delete block, ensuring correct construction of ResponseEntity and its metadata.
+
 ### [itachallenge-challenge-3.1.0-RELEASE] - 2026-01-14
 
 ### Changed
