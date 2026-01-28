@@ -125,7 +125,7 @@ class SubmissionServiceImplTest {
         when(submissionRepository.save(any(SubmissionDocument.class)))
                 .thenAnswer(invocation -> Mono.just(invocation.getArgument(0)));
 
-        StepVerifier.create(submissionService.createOrUpdateSubmission(userUuid.toString(), request))
+        StepVerifier.create(submissionService.processSubmissionAction(userUuid.toString(), request))
                 .assertNext(response -> {
                     Assertions.assertEquals("draft text", response.getSubmissionText());
                     Assertions.assertEquals(SubmissionStatus.IN_PROGRESS.name(), response.getStatus());
@@ -168,7 +168,7 @@ class SubmissionServiceImplTest {
         when(challengeService.addChallengeToSolved(challengeUuid.toString()))
                 .thenReturn(Mono.just(new SolvedDto(true, 3)));
 
-        StepVerifier.create(submissionService.createOrUpdateSubmission(userUuid.toString(), request))
+        StepVerifier.create(submissionService.processSubmissionAction(userUuid.toString(), request))
                 .assertNext(response -> {
                     Assertions.assertEquals(SubmissionStatus.SUBMITTED_COMPLETE.name(), response.getStatus());
                     Assertions.assertTrue(response.getIsSolved());
@@ -204,7 +204,7 @@ class SubmissionServiceImplTest {
         when(submissionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid))
                 .thenReturn(Mono.just(existing));
 
-        StepVerifier.create(submissionService.createOrUpdateSubmission(userUuid.toString(), request))
+        StepVerifier.create(submissionService.processSubmissionAction(userUuid.toString(), request))
                 .expectError(UnmodifiableSubmissionException.class)
                 .verify();
 
@@ -230,7 +230,7 @@ class SubmissionServiceImplTest {
         when(submissionRepository.save(any(SubmissionDocument.class)))
                 .thenAnswer(invocation -> Mono.just(invocation.getArgument(0)));
 
-        StepVerifier.create(submissionService.createOrUpdateSubmission(userUuid.toString(), request))
+        StepVerifier.create(submissionService.processSubmissionAction(userUuid.toString(), request))
                 .assertNext(response -> Assertions.assertEquals(SubmissionStatus.IN_PROGRESS.name(), response.getStatus()))
                 .verifyComplete();
     }
