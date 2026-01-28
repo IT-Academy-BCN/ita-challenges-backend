@@ -92,7 +92,7 @@ public class FavoriteController {
                     }
                 });
     }
-    //NEW PATH
+
     @Operation(
             summary = "Gets challenges marked as favorites by a user",
             description = "Returns all favorites for the specified user with identity validation.",
@@ -111,7 +111,7 @@ public class FavoriteController {
         return favoriteService.getUserFavorites(userId)
                 .map(ResponseEntity::ok);
     }
-    //LEGACY PATH - to be refactored in the future
+
     /**
      * @deprecated since 3.1.4. Use {@link #getUserFavorites(String)} instead.
      */
