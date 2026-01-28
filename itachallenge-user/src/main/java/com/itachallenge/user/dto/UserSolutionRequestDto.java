@@ -32,7 +32,6 @@ public class UserSolutionRequestDto {
     private SolutionAction action;
 
     @JsonProperty(value ="solution_text")
-    @NotNull(message = "Solution cannot be null")
     private String solutionText;
 
 }
