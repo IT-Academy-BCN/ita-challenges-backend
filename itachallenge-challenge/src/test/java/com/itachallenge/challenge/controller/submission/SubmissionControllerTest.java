@@ -17,6 +17,7 @@ import com.itachallenge.challenge.dto.submission.SubmissionRequestDto;
 import com.itachallenge.common.exception.BadRequestException;
 import com.itachallenge.submission.exception.UnmodifiableSubmissionException;
 import reactor.core.publisher.Mono;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 
 import java.util.UUID;
@@ -143,6 +144,8 @@ class SubmissionControllerTest {
 
         client().post()
                 .uri("/itachallenge/api/v1/users/{userId}/submissions", userId)
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
                 .bodyValue(request)
                 .exchange()
                 .expectStatus().isOk()
@@ -166,6 +169,8 @@ class SubmissionControllerTest {
 
         client().post()
                 .uri("/itachallenge/api/v1/users/{userId}/submissions", userId)
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
                 .bodyValue(request)
                 .exchange()
                 .expectStatus().isBadRequest();
@@ -192,6 +197,8 @@ class SubmissionControllerTest {
 
         client().post()
                 .uri("/itachallenge/api/v1/users/{userId}/submissions", userId)
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
                 .bodyValue(request)
                 .exchange()
                 .expectStatus().isEqualTo(409);
