@@ -8,8 +8,9 @@ import com.itachallenge.auth.exception.InvalidRoleChangeRequestException;
 import com.itachallenge.auth.service.IAuthService;
 import com.itachallenge.auth.service.IAuthJwtFacade;
 import com.itachallenge.auth.service.IUserService;
+import com.itachallenge.githubcore.config.GithubProperties;
+import com.itachallenge.githubcore.service.GithubApiService;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
@@ -20,6 +21,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
@@ -31,7 +33,11 @@ import java.util.Map;
 import static org.mockito.Mockito.when;
 
 @WebFluxTest(AuthController.class)
-@TestPropertySource(properties = "token.expiration.minutes=60")
+@TestPropertySource(properties = {
+        "token.expiration.minutes=60",
+        "spring.application.version=1.0.0",
+        "spring.application.name=itachallenge-auth"
+})
 @Import(TestAuthConfig.class)
 @ActiveProfiles("test")
 class AuthControllerTest {
@@ -50,8 +56,14 @@ class AuthControllerTest {
     @MockBean
     private IUserService userService;
 
-    @InjectMocks
-    private AuthController authController;
+    @MockBean
+    private WebClient.Builder webClientBuilder;
+
+    @MockBean
+    private GithubProperties githubProperties;
+
+    @MockBean
+    private GithubApiService githubApiService;
 
     @MockBean
     private IAuthJwtFacade authJwtFacade;
@@ -59,7 +71,6 @@ class AuthControllerTest {
     @Test
     void authenticateWithGithub_ValidCode_ReturnsJwt() {
         String validCode = "valid-code";
-        String accessToken = "valid-token";
         String githubUsername = "octocat";
         User user = new User("1234", githubUsername, "ADMIN");
         String jwtToken = "generatedJwt";
@@ -69,8 +80,7 @@ class AuthControllerTest {
         validationResult.put("username", githubUsername);
         validationResult.put("token", jwtToken);
 
-        when(authService.exchangeCodeForToken(validCode)).thenReturn(Mono.just(accessToken));
-        when(authService.validateTokenWithGithub(accessToken)).thenReturn(Mono.just(validationResult));
+        when(authService.authenticateWithGithub(validCode)).thenReturn(Mono.just(validationResult));
         when(userService.fetchUserData(githubUsername)).thenReturn(Mono.just(user));
         when(authJwtFacade.generateToken(user.getUsername(), user.getRole(), user.getUuid())).thenReturn(jwtToken);
 
@@ -88,13 +98,11 @@ class AuthControllerTest {
     @Test
     void authenticateWithGithub_InvalidCode_ReturnsUnauthorized() {
         String invalidCode = "invalid-code";
-        String accessToken = "invalid-token";
         Map<String, Object> validationResult = new HashMap<>();
         validationResult.put("isValid", false);
         validationResult.put("username", null);
 
-        when(authService.exchangeCodeForToken(invalidCode)).thenReturn(Mono.just(accessToken));
-        when(authService.validateTokenWithGithub(accessToken)).thenReturn(Mono.just(validationResult));
+        when(authService.authenticateWithGithub(invalidCode)).thenReturn(Mono.just(validationResult));
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/auth/github/authenticate")
@@ -107,29 +115,10 @@ class AuthControllerTest {
     }
 
     @Test
-    void authenticateWithGithub_TokenExchangeError_ReturnsInternalServerError() {
-        String invalidCode = "invalid-code";
-
-        when(authService.exchangeCodeForToken(invalidCode))
-                .thenReturn(Mono.error(new RuntimeException("Token exchange failed")));
-
-        webTestClient.post()
-                .uri("/itachallenge/api/v1/auth/github/authenticate")
-                .bodyValue(Map.of("code", invalidCode))
-                .exchange()
-                .expectStatus().is5xxServerError()
-                .expectBody()
-                .jsonPath("$.isValid").isEqualTo(false)
-                .jsonPath("$.username").isEmpty();
-    }
-
-    @Test
     void authenticateWithGithub_TokenValidationError_ReturnsInternalServerError() {
         String validCode = "valid-code";
-        String accessToken = "valid-token";
 
-        when(authService.exchangeCodeForToken(validCode)).thenReturn(Mono.just(accessToken));
-        when(authService.validateTokenWithGithub(accessToken))
+        when(authService.authenticateWithGithub(validCode))
                 .thenReturn(Mono.error(new RuntimeException("Token validation failed")));
 
         webTestClient.post()
@@ -145,14 +134,12 @@ class AuthControllerTest {
     @Test
     void authenticateWithGithub_UserDoesNotExist_ReturnsForbidden() {
         String validCode = "valid-code";
-        String accessToken = "valid-token";
         String githubUsername = "octocat";
         Map<String, Object> validationResult = new HashMap<>();
         validationResult.put("isValid", true);
         validationResult.put("username", githubUsername);
 
-        when(authService.exchangeCodeForToken(validCode)).thenReturn(Mono.just(accessToken));
-        when(authService.validateTokenWithGithub(accessToken)).thenReturn(Mono.just(validationResult));
+        when(authService.authenticateWithGithub(validCode)).thenReturn(Mono.just(validationResult));
         when(userService.fetchUserData(githubUsername)).thenReturn(Mono.empty());
 
         webTestClient.post()
@@ -170,14 +157,12 @@ class AuthControllerTest {
     @Test
     void authenticateWithGithub_UserValidationError_ReturnsInternalServerError() {
         String validCode = "valid-code";
-        String accessToken = "valid-token";
         String githubUsername = "octocat";
         Map<String, Object> validationResult = new HashMap<>();
         validationResult.put("isValid", true);
         validationResult.put("username", githubUsername);
 
-        when(authService.exchangeCodeForToken(validCode)).thenReturn(Mono.just(accessToken));
-        when(authService.validateTokenWithGithub(accessToken)).thenReturn(Mono.just(validationResult));
+        when(authService.authenticateWithGithub(validCode)).thenReturn(Mono.just(validationResult));
         when(userService.fetchUserData(githubUsername)).thenReturn(Mono.error(new RuntimeException("Database error")));
 
         webTestClient.post()

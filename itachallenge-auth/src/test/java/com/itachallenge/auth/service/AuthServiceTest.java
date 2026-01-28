@@ -1,114 +1,40 @@
 package com.itachallenge.auth.service;
 
-
-import okhttp3.mockwebserver.MockResponse;
-import okhttp3.mockwebserver.MockWebServer;
-import okhttp3.mockwebserver.RecordedRequest;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import com.itachallenge.githubcore.dto.GithubAuthRequestDto;
+import com.itachallenge.githubcore.dto.GithubAuthResponseDto;
+import com.itachallenge.githubcore.service.GithubApiService;
 import org.junit.jupiter.api.Test;
-import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import java.io.IOException;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 class AuthServiceTest {
+    @Mock
+    private GithubApiService githubApiService;
 
-    private MockWebServer mockWebServer;
+    @InjectMocks
     private AuthService authService;
 
-    @BeforeEach
-    void setUp() throws IOException {
-        mockWebServer = new MockWebServer();
-        mockWebServer.start();
-
-        String baseUrl = mockWebServer.url("").toString();
-        String githubTokenUri = baseUrl + "login/oauth/access_token";
-        String githubUserInfoUri = baseUrl + "user";
-
-        authService = new AuthService(
-                WebClient.builder(),
-                githubTokenUri,
-                githubUserInfoUri,
-                "test-client-id",
-                "test-client-secret");
-    }
-
-    @AfterEach
-    void tearDown() throws IOException {
-        mockWebServer.shutdown();
-    }
+    private final String testCode = "test-auth-code";
+    private final String githubUsername = "octocat";
 
     @Test
-    void exchangeCodeForToken_Successful() throws InterruptedException {
-        String code = "auth-code";
-        String accessToken = "github-access-token";
-        String mockResponse = "{\"access_token\": \"" + accessToken + "\"}";
+    void authenticateWithGithub_Successful() {
+        GithubAuthResponseDto mockResponse = new GithubAuthResponseDto(githubUsername);
+        when(githubApiService.authenticate(any(GithubAuthRequestDto.class)))
+                .thenReturn(Mono.just(mockResponse));
 
-        mockWebServer.enqueue(new MockResponse()
-                .setBody(mockResponse)
-                .setResponseCode(200)
-                .addHeader("Content-Type", "application/json"));
-
-        Mono<String> result = authService.exchangeCodeForToken(code);
-
-        StepVerifier.create(result)
-                .expectNext(accessToken)
-                .verifyComplete();
-
-        RecordedRequest request = mockWebServer.takeRequest();
-        assertEquals("/login/oauth/access_token", request.getRequestUrl().encodedPath());
-        assertEquals("application/json", request.getHeader("Accept"));
-    }
-
-    @Test
-    void exchangeCodeForToken_InvalidCode_ReturnsError() {
-        String code = "invalid-code";
-        String mockResponse = "{\"error\": \"bad_verification_code\"}";
-
-        mockWebServer.enqueue(new MockResponse()
-                .setBody(mockResponse)
-                .setResponseCode(400) // Simulate GitHub rejecting the code
-                .addHeader("Content-Type", "application/json"));
-
-        Mono<String> result = authService.exchangeCodeForToken(code);
-
-        StepVerifier.create(result)
-                .expectError(WebClientResponseException.BadRequest.class)
-                .verify();
-    }
-
-    @Test
-    void exchangeCodeForToken_NetworkFailure_ReturnsError() {
-        String code = "auth-code";
-
-        mockWebServer.enqueue(new MockResponse()
-                .setResponseCode(500));
-
-        Mono<String> result = authService.exchangeCodeForToken(code);
-
-        StepVerifier.create(result)
-                .expectError(WebClientResponseException.class)
-                .verify();
-    }
-
-    @Test
-    void validateTokenWithGithub_ValidToken_ReturnsUsername() throws Exception {
-        String validToken = "valid-token";
-        String githubUsername = "octocat";
-        String mockResponse = "{\"login\": \"" + githubUsername + "\"}";
-
-        mockWebServer.enqueue(new MockResponse()
-                .setBody(mockResponse)
-                .setResponseCode(200)
-                .addHeader("Content-Type", "application/json"));
-
-        Mono<Map<String, Object>> result = authService.validateTokenWithGithub(validToken);
+        Mono<Map<String, Object>> result = authService.authenticateWithGithub(testCode);
 
         StepVerifier.create(result)
                 .assertNext(response -> {
@@ -116,44 +42,90 @@ class AuthServiceTest {
                     assertEquals(githubUsername, response.get("username"));
                 })
                 .verifyComplete();
-
-        RecordedRequest request = mockWebServer.takeRequest();
-        assertEquals("/user", request.getRequestUrl().encodedPath());
-        assertEquals("token " + validToken, request.getHeader("Authorization"));
     }
 
     @Test
-    void validateTokenWithGithub_ExpiredToken_ReturnsInvalid() {
-        String expiredToken = "expired-token";
-        String mockResponse = "{\"message\": \"Bad credentials\"}";
+    void authenticateWithGithub_ErrorInLibrary_ReturnsInvalid() {
+        when(githubApiService.authenticate(any(GithubAuthRequestDto.class)))
+                .thenReturn(Mono.error(new RuntimeException("GitHub error")));
 
-        mockWebServer.enqueue(new MockResponse()
-                .setBody(mockResponse)
-                .setResponseCode(401)
-                .addHeader("Content-Type", "application/json"));
-
-        Mono<Map<String, Object>> result = authService.validateTokenWithGithub(expiredToken);
+        Mono<Map<String, Object>> result = authService.authenticateWithGithub(testCode);
 
         StepVerifier.create(result)
-                .assertNext(response -> assertEquals(false, response.get("isValid")))
+                .assertNext(response -> {
+                    assertEquals(false, response.get("isValid"));
+                    assertEquals(null, response.get("username"));
+                })
                 .verifyComplete();
     }
 
     @Test
-    void validateTokenWithGithub_UnexpectedResponse_ReturnsError() {
-        String token = "valid-token";
-        String mockResponse = "{\"unexpected_key\": \"unexpected_value\"}";
+    void authenticateWithGithub_NullUsername_ReturnsInvalid() {
+        GithubAuthResponseDto mockResponse = new GithubAuthResponseDto(null);
+        when(githubApiService.authenticate(any(GithubAuthRequestDto.class)))
+                .thenReturn(Mono.just(mockResponse));
 
-        mockWebServer.enqueue(new MockResponse()
-                .setBody(mockResponse)
-                .setResponseCode(200)
-                .addHeader("Content-Type", "application/json"));
-
-        Mono<Map<String, Object>> result = authService.validateTokenWithGithub(token);
+        Mono<Map<String, Object>> result = authService.authenticateWithGithub(testCode);
 
         StepVerifier.create(result)
-                .assertNext(response -> assertEquals(false, response.get("isValid")))
+                .assertNext(response -> {
+                    assertEquals(false, response.get("isValid"));
+                    assertEquals(null, response.get("username"));
+                })
                 .verifyComplete();
     }
 
+    @Test
+    void login_ReturnsUsernameG() {
+        String validCode = "valid-code";
+        String githubUsername = "octocat";
+        GithubAuthResponseDto mockResponse = new GithubAuthResponseDto(githubUsername);
+
+        when(githubApiService.authenticate(any(GithubAuthRequestDto.class)))
+                .thenReturn(Mono.just(mockResponse));
+
+        Mono<Map<String, Object>> result = authService.authenticateWithGithub(validCode);
+
+        StepVerifier.create(result)
+                .assertNext(response -> {
+                    assertEquals(true, response.get("isValid"));
+                    assertEquals(githubUsername, response.get("username"));
+                })
+                .verifyComplete();
+    }
+
+    @Test
+    void login_ReturnsInvalidG() {
+        String expiredCode = "expired-code";
+        when(githubApiService.authenticate(any(GithubAuthRequestDto.class)))
+                .thenReturn(Mono.error(new RuntimeException("Bad credentials")));
+
+        Mono<Map<String, Object>> result = authService.authenticateWithGithub(expiredCode);
+
+        StepVerifier.create(result)
+                .assertNext(response -> {
+                    // El onErrorResume del Service debe capturar esto y devolver isValid: false
+                    assertEquals(false, response.get("isValid"));
+                    assertEquals(null, response.get("username"));
+                })
+                .verifyComplete();
+    }
+
+    @Test
+    void authenticateWithGithub_UnexpectedResponse_ReturnsError() {
+        GithubAuthResponseDto mockResponse = new GithubAuthResponseDto(null);
+
+        when(githubApiService.authenticate(any(GithubAuthRequestDto.class)))
+                .thenReturn(Mono.just(mockResponse));
+
+        Mono<Map<String, Object>> result = authService.authenticateWithGithub("any-code");
+
+        StepVerifier.create(result)
+                .assertNext(response -> {
+                    // Gracias a la nueva lógica, esto ahora será false
+                    assertEquals(false, response.get("isValid"));
+                    assertEquals(null, response.get("username"));
+                })
+                .verifyComplete();
+    }
 }
