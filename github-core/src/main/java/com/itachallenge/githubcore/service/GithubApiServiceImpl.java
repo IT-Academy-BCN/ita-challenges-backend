@@ -17,18 +17,21 @@ import java.util.Map;
 public class GithubApiServiceImpl implements GithubApiService {
 
     private static final Logger log = LoggerFactory.getLogger(GithubApiServiceImpl.class);
-    private final WebClient webClient;
+    private final WebClient apiWebClient;
+    private final WebClient authWebClient;
     private final GithubProperties githubProperties;
 
     public GithubApiServiceImpl(GithubProperties githubProperties, WebClient.Builder builder) {
         this.githubProperties = githubProperties;
-        this.webClient = builder.baseUrl(githubProperties.getBaseUrl()).build();
+
+        this.apiWebClient = builder.baseUrl(githubProperties.getBaseApiUrl()).build();
+        this.authWebClient = builder.baseUrl(githubProperties.getBaseAuthUrl()).build();
     }
 
     @Override
     public Mono<GithubUserStatus> userExists(String username) {
-        return webClient.get()
-                .uri(githubProperties.getUserInfoUri() + "/users/{username}", username)
+        return apiWebClient.get()
+                .uri(githubProperties.getUserInfoUri() + "/{username}", username)
                 .exchangeToMono(response -> {
                     if (response.statusCode().equals(HttpStatus.OK)) {
                         return Mono.just(GithubUserStatus.FOUND);
@@ -47,7 +50,7 @@ public class GithubApiServiceImpl implements GithubApiService {
 
     @Override
     public Mono<GithubAuthResponseDto> authenticate(GithubAuthRequestDto githubAuthRequestDto) {
-        return webClient.post()
+        return authWebClient.post()
                 .uri(githubProperties.getTokenUri())
                 .header("Accept", "application/json")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -64,7 +67,7 @@ public class GithubApiServiceImpl implements GithubApiService {
     }
 
     private Mono<GithubAuthResponseDto> fetchUserProfile(String token) {
-        return webClient.get()
+        return apiWebClient.get()
                 .uri(githubProperties.getUserProfileUri())
                 .header("Authorization", "Bearer " + token)
                 .retrieve()
