@@ -1,7 +1,6 @@
 package com.itachallenge.challenge.dto.submission;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.itachallenge.challenge.annotations.ValidUUID;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
@@ -15,12 +14,10 @@ import java.util.UUID;
 public class SubmissionRequestDto {
 
     @NotNull
-    @ValidUUID
     @JsonProperty(value = "uuid_challenge")
     private UUID challengeId;
 
     @NotNull
-    @ValidUUID
     @JsonProperty(value = "uuid_language")
     private UUID languageId;
 
