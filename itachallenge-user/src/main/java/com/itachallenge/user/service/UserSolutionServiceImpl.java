@@ -102,7 +102,15 @@ public class UserSolutionServiceImpl implements IUserSolutionService {
                             .isSolved(solvedDto.isSolved())
                             .timesSolved(solvedDto.getTimesSolved())
                             .status(status.name())
-                            .build());
+                            .build())
+                    .onErrorResume(e -> {
+                        log.error("Error connecting Challenges{}", e.getMessage());
+                        return Mono.just(SubmitSolutionResponseDto.builder()
+                                .solutionText(solutionText)
+                                .isSolved(true)
+                                .status(status.name())
+                                .build());
+                    });
         } else {
             // TODO: Enhance the response for non-ended statuses like IN_PROGRESS if additional info is needed
             return Mono.just(SubmitSolutionResponseDto.builder()
