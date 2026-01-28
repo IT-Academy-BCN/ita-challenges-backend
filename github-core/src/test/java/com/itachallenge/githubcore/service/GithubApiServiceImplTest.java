@@ -32,12 +32,14 @@ class GithubApiServiceImplTest {
 
     @BeforeEach
     void setup() {
-        String baseUrl = mockWebServer.url("/").toString();
+        String mockBaseUrl = mockWebServer.url("/").toString();
 
         githubProperties = new GithubProperties();
-        githubProperties.setBaseUrl(baseUrl);
+        githubProperties.setBaseApiUrl(mockBaseUrl);
+        githubProperties.setBaseAuthUrl(mockBaseUrl);
         githubProperties.setUserInfoUri("");
         githubProperties.setTokenUri("/login/oauth/access_token");
+        githubProperties.setUserProfileUri("/user");
         githubProperties.setClientId("testClientId");
         githubProperties.setClientSecret("testClientSecret");
 
@@ -81,7 +83,6 @@ class GithubApiServiceImplTest {
     }
 
     @Test
-    @DisplayName("Debe autenticar correctamente y devolver el perfil de usuario")
     void authenticate_ShouldReturnUserData_WhenSuccessful() {
         mockWebServer.enqueue(new MockResponse()
                 .setResponseCode(200)
@@ -101,7 +102,6 @@ class GithubApiServiceImplTest {
     }
 
     @Test
-    @DisplayName("Debe lanzar excepción cuando el código de GitHub es inválido")
     void authenticate_ShouldReturnError_WhenTokenIsMissing() {
         mockWebServer.enqueue(new MockResponse()
                 .setResponseCode(200)
@@ -116,7 +116,6 @@ class GithubApiServiceImplTest {
     }
 
     @Test
-    @DisplayName("Debe lanzar excepción cuando el perfil de usuario falla (500)")
     void authenticate_ShouldReturnError_WhenProfileFails() {
         mockWebServer.enqueue(new MockResponse()
                 .setResponseCode(200)
