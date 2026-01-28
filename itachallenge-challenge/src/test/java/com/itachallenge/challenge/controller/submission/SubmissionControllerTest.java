@@ -198,4 +198,28 @@ class SubmissionControllerTest {
         verify(submissionService).createOrUpdateSubmission(eq(userId), any(SubmissionRequestDto.class));
     }
 
+    @Test
+    void postSubmission_returns400_whenBodyContainsInvalidUUID() {
+        String userId = UUID.randomUUID().toString();
+
+        String invalidJson = """
+        {
+          "uuid_challenge": "not-a-uuid",
+          "uuid_language": "also-not-a-uuid",
+          "action": "SAVE",
+          "submission_text": "draft text"
+        }
+        """;
+
+        client().post()
+                .uri("/itachallenge/api/v1/users/{userId}/submissions", userId)
+                .header("Content-Type", "application/json")
+                .bodyValue(invalidJson)
+                .exchange()
+                .expectStatus().isBadRequest();
+
+        verify(submissionService, never())
+                .createOrUpdateSubmission(any(), any());
+    }
+
 }
