@@ -2,7 +2,7 @@ package com.itachallenge.submission.service;
 
 import com.itachallenge.challenge.dto.submission.SubmissionDto;
 import com.itachallenge.challenge.dto.submission.SubmissionRequestDto;
-import com.itachallenge.challenge.dto.submission.SubmissionResponseDto;
+import com.itachallenge.challenge.dto.submission.SubmissionActionResponseDto;
 import com.itachallenge.challenge.service.IChallengeService;
 import com.itachallenge.common.exception.BadRequestException;
 import com.itachallenge.submission.document.SubmissionDocument;
@@ -38,7 +38,7 @@ public class SubmissionServiceImpl implements SubmissionService {
     }
 
     @Override
-    public Mono<SubmissionResponseDto> createOrUpdateSubmission(String userId, SubmissionRequestDto request) {
+    public Mono<SubmissionActionResponseDto> createOrUpdateSubmission(String userId, SubmissionRequestDto request) {
 
         Mono<UUID> userUuidMono = validateAndParseUuid(userId);
 
@@ -86,7 +86,7 @@ public class SubmissionServiceImpl implements SubmissionService {
                             .flatMap(saved -> {
                                 if (saved.getStatus() == SubmissionStatus.SUBMITTED_COMPLETE) {
                                     return challengeService.addChallengeToSolved(challengeUuid.toString())
-                                            .map(solvedDto -> SubmissionResponseDto.builder()
+                                            .map(solvedDto -> SubmissionActionResponseDto.builder()
                                                     .submissionText(saved.getSubmissionText())
                                                     .status(saved.getStatus().name())
                                                     .isSolved(true)
@@ -94,7 +94,7 @@ public class SubmissionServiceImpl implements SubmissionService {
                                                     .build());
                                 }
 
-                                return Mono.just(SubmissionResponseDto.builder()
+                                return Mono.just(SubmissionActionResponseDto.builder()
                                         .submissionText(saved.getSubmissionText())
                                         .status(saved.getStatus().name())
                                         .isSolved(false)

@@ -8,7 +8,7 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
-public class SubmissionResponseDto {
+public class SubmissionActionResponseDto {
 
     @JsonProperty(value = "submission_text")
     private String submissionText;
