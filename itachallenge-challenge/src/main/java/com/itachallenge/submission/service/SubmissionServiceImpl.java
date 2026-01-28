@@ -38,7 +38,7 @@ public class SubmissionServiceImpl implements SubmissionService {
     }
 
     @Override
-    public Mono<SubmissionActionResponseDto> createOrUpdateSubmission(String userId, SubmissionRequestDto request) {
+    public Mono<SubmissionActionResponseDto> processSubmissionAction(String userId, SubmissionRequestDto request) {
 
         Mono<UUID> userUuidMono = validateAndParseUuid(userId);
 

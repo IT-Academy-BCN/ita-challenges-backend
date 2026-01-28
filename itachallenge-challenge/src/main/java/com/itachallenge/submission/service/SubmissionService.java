@@ -10,6 +10,7 @@ public interface SubmissionService {
 
     Flux<SubmissionDto> getAllSubmissionsByUser(String userId);
 
-    Mono<SubmissionActionResponseDto> createOrUpdateSubmission(String userId, SubmissionRequestDto request);
+    Mono<SubmissionActionResponseDto> processSubmissionAction(String userId, SubmissionRequestDto request);
+
 
 }
