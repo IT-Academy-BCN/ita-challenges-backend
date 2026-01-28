@@ -1,5 +1,6 @@
 package com.itachallenge.challenge.controller.submission;
 
+import com.itachallenge.challenge.dto.submission.SubmissionActionResponseDto;
 import com.itachallenge.challenge.dto.submission.SubmissionDto;
 import com.itachallenge.challenge.exception.BadUUIDException;
 import com.itachallenge.common.exception.GlobalExceptionHandler;
@@ -12,7 +13,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import com.itachallenge.challenge.dto.submission.SubmissionRequestDto;
-import com.itachallenge.challenge.dto.submission.SubmissionResponseDto;
 import com.itachallenge.common.exception.BadRequestException;
 import com.itachallenge.submission.exception.UnmodifiableSubmissionException;
 import reactor.core.publisher.Mono;
@@ -130,7 +130,7 @@ class SubmissionControllerTest {
                 .submissionText("draft text")
                 .build();
 
-        SubmissionResponseDto response = SubmissionResponseDto.builder()
+        SubmissionActionResponseDto response = SubmissionActionResponseDto.builder()
                 .submissionText("draft text")
                 .isSolved(false)
                 .timesSolved(0)

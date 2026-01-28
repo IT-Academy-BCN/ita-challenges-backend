@@ -16,7 +16,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import com.itachallenge.challenge.dto.submission.SubmissionRequestDto;
-import com.itachallenge.challenge.dto.submission.SubmissionResponseDto;
+import com.itachallenge.challenge.dto.submission.SubmissionActionResponseDto;
 import org.springframework.http.ResponseEntity;
 import reactor.core.publisher.Mono;
 import jakarta.validation.Valid;
@@ -79,7 +79,7 @@ public class SubmissionController {
                             description = "OK",
                             content = @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = SubmissionResponseDto.class)
+                                    schema = @Schema(implementation = SubmissionActionResponseDto.class)
                             )
                     ),
                     @ApiResponse(responseCode = "400", description = "Invalid UUID or action"),
@@ -87,7 +87,7 @@ public class SubmissionController {
                     @ApiResponse(responseCode = "500", description = "Unexpected error")
             }
     )
-    public Mono<ResponseEntity<SubmissionResponseDto>> createOrUpdateSubmission(
+    public Mono<ResponseEntity<SubmissionActionResponseDto>> createOrUpdateSubmission(
             @PathVariable String userId,
             @Valid @RequestBody SubmissionRequestDto request
     ) {
