@@ -4,6 +4,7 @@ import com.itachallenge.user.dto.AdminCreateUserRequestDto;
 import com.itachallenge.user.dto.AdminCreateUserResponseDto;
 import com.itachallenge.user.exception.UsernameAlreadyExistsException;
 import com.itachallenge.user.service.AdminCreateUserService;
+import com.itachallenge.user.service.ExternalGithubService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
@@ -24,6 +26,10 @@ import static org.mockito.Mockito.when;
 @WebFluxTest(controllers = AdminCreateUserController.class)
 @ContextConfiguration(classes = { AdminCreateUserController.class })
 @Import(UserGlobalExceptionHandler.class)
+@TestPropertySource(properties = {
+        "github.base-api-url=http://localhost:8080",
+        "github.base-auth-url=http://localhost:8080"
+})
 class AdminCreateUserControllerTest {
 
     @Autowired
@@ -31,6 +37,9 @@ class AdminCreateUserControllerTest {
 
     @MockBean
     private AdminCreateUserService adminCreateUserService;
+
+    @MockBean
+    private ExternalGithubService externalGithubService;
 
     @Test
     @DisplayName("Test: POST /admin/users/create with new user should return 201 Created")
