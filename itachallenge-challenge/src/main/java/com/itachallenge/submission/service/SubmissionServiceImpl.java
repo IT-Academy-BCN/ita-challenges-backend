@@ -1,8 +1,8 @@
 package com.itachallenge.submission.service;
 
+import com.itachallenge.challenge.dto.submission.SubmissionActionResponseDto;
 import com.itachallenge.challenge.dto.submission.SubmissionDto;
 import com.itachallenge.challenge.dto.submission.SubmissionRequestDto;
-import com.itachallenge.challenge.dto.submission.SubmissionActionResponseDto;
 import com.itachallenge.challenge.service.IChallengeService;
 import com.itachallenge.common.exception.BadRequestException;
 import com.itachallenge.submission.document.SubmissionDocument;
@@ -112,12 +112,6 @@ public class SubmissionServiceImpl implements SubmissionService {
         return Mono.fromCallable(() -> UUID.fromString(userId.trim()))
                 .onErrorMap(IllegalArgumentException.class,
                         ex -> new BadRequestException("The 'userId' parameter must be a valid UUID."));
-    }
-
-    private Mono<UUID> validateAndParseUuid(String value, String fieldName) {
-        return Mono.fromCallable(() -> UUID.fromString(value.trim()))
-                .onErrorMap(IllegalArgumentException.class,
-                        ex -> new BadRequestException("The '" + fieldName + "' parameter must be a valid UUID."));
     }
 
 }
