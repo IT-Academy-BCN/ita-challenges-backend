@@ -70,8 +70,7 @@ public class AuthController {
 
     @PostMapping("/github/authenticate")
     public Mono<ResponseEntity<Map<String, Object>>> authenticateWithGithub(@RequestBody Map<String, String> codeRequest) {
-        return authService.exchangeCodeForToken(codeRequest.get("code"))
-                .flatMap(authService::validateTokenWithGithub)
+        return authService.authenticateWithGithub(codeRequest.get("code"))
                 .flatMap(response -> {
                     if (!(boolean) response.get(KEY_IS_VALID)) {
                         return Mono.just(ResponseEntity.status(HttpStatus.UNAUTHORIZED)
