@@ -51,7 +51,6 @@ public class FavoriteController {
                 .map(ResponseEntity::ok);
     }
 
-    // NEW REST CONTRACT
     @DeleteMapping("/users/{userId}/favorites/{challengeId}")
     @Operation(
             operationId = "Remove a challenge from User's favorites (new REST contract).",
@@ -81,7 +80,6 @@ public class FavoriteController {
                 .map(ResponseEntity::ok);
     }
 
-    // LEGACY DELETE
     /**
      * @deprecated since v3.1.1.
      * Use {@code DELETE /users/{userId}/favorites/{challengeId}} instead.
