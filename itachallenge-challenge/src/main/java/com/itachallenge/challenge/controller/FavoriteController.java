@@ -31,7 +31,7 @@ public class FavoriteController {
         this.favoriteService = favoriteService;
         this.challengeJwtFacade = challengeJwtFacade;
     }
-// ✅ NEW REST CONTRACT
+
 @PostMapping("/users/{userId}/favorites")
 @Operation(
         operationId = "Add a challenge to User's favorites (new REST contract).",
@@ -62,7 +62,6 @@ public Mono<ResponseEntity<FavoriteDto>> addFavorite(
             .map(dto -> ResponseEntity.status(org.springframework.http.HttpStatus.CREATED).body(dto));
 }
 
-    // LEGACY UPDATED 200 TO 201 FOR CONSISTENCY
     /**
      * @deprecated since v3.1.1.
      * Use {@code POST /users/{userId}/favorites} instead.

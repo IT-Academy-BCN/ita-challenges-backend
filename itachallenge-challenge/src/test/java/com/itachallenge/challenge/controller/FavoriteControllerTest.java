@@ -47,7 +47,7 @@ public class FavoriteControllerTest {
 
         StepVerifier.create(result)
                 .expectNextMatches(response ->
-                        response.getStatusCode().equals(org.springframework.http.HttpStatus.CREATED) && // Validamos 201
+                        response.getStatusCode().equals(org.springframework.http.HttpStatus.CREATED) &&
                                 response.getBody() != null &&
                                 response.getBody().isFavorite() &&
                                 response.getBody().getTimesFavorited() == 1)
