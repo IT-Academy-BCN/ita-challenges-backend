@@ -56,7 +56,13 @@ public class SubmissionServiceImpl implements SubmissionService {
                     UUID languageUuid = tuple.getT3();
 
                     SubmissionAction action = request.getAction();
+                    if (action == SubmissionAction.SUBMIT &&
+                            (request.getSubmissionText() == null || request.getSubmissionText().isBlank())) {
+                        return Mono.error(new BadRequestException("The 'submissionText' parameter cannot be blank when action is SUBMIT."));
+                    }
+
                     SubmissionStatus targetStatus = action.toStatus();
+
 
                     return submissionRepository
                             .findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid)

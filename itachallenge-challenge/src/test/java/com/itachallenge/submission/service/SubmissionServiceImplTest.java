@@ -210,4 +210,29 @@ class SubmissionServiceImplTest {
 
         verify(challengeService, never()).addChallengeToSolved(anyString());
     }
+
+    @Test
+    void createOrUpdateSubmission_shouldAllowEmptySubmissionText_whenActionIsSave() {
+        UUID userUuid = UUID.randomUUID();
+        UUID challengeUuid = UUID.randomUUID();
+        UUID languageUuid = UUID.randomUUID();
+
+        SubmissionRequestDto request = SubmissionRequestDto.builder()
+                .challengeId(challengeUuid)
+                .languageId(languageUuid)
+                .action(SubmissionAction.SAVE)
+                .submissionText("   ")
+                .build();
+
+        when(submissionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid))
+                .thenReturn(Mono.empty());
+
+        when(submissionRepository.save(any(SubmissionDocument.class)))
+                .thenAnswer(invocation -> Mono.just(invocation.getArgument(0)));
+
+        StepVerifier.create(submissionService.createOrUpdateSubmission(userUuid.toString(), request))
+                .assertNext(response -> Assertions.assertEquals(SubmissionStatus.IN_PROGRESS.name(), response.getStatus()))
+                .verifyComplete();
+    }
+
 }

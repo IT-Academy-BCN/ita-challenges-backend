@@ -26,7 +26,6 @@ public class SubmissionRequestDto {
     @JsonProperty("action")
     private SubmissionAction action;
 
-    @NotNull
     @JsonProperty(value = "submission_text")
     private String submissionText;
 }
