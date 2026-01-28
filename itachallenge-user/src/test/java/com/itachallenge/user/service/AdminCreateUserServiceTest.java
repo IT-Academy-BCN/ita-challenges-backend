@@ -1,5 +1,6 @@
 package com.itachallenge.user.service;
 
+import com.itachallenge.githubcore.config.GithubProperties;
 import com.itachallenge.user.document.UserDocument;
 import com.itachallenge.user.document.enums.Role;
 import com.itachallenge.user.dto.AdminCreateUserRequestDto;
@@ -30,6 +31,9 @@ class AdminCreateUserServiceTest {
 
     @Mock
     private ExternalGithubService externalGithubService;
+
+    @Mock
+    private GithubProperties githubProperties;
 
     @InjectMocks
     private AdminCreateUserService adminCreateUserService;

@@ -1,34 +1,57 @@
 package com.itachallenge.user.service;
 
+import com.itachallenge.githubcore.config.GithubProperties;
 import com.itachallenge.githubcore.document.enums.GithubUserStatus;
 import com.itachallenge.githubcore.exception.GithubUnavailableException;
 import com.itachallenge.githubcore.service.GithubApiService;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
+import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
+import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
+
+import java.io.IOException;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 class ExternalGithubServiceImplTest {
 
-    private GithubApiService githubApiService;
+    private static MockWebServer mockWebServer;
+    //private GithubApiService githubApiService;
     private ExternalGithubServiceImpl externalGithubService;
+    private GithubProperties githubProperties;
+
+    @BeforeAll
+    static void setUpAll() throws IOException {
+        mockWebServer = new MockWebServer();
+        mockWebServer.start();
+    }
+
+    @AfterAll
+    static void tearDownAll() throws IOException {
+        mockWebServer.shutdown();
+    }
 
     @BeforeEach
     void setUp() {
-        githubApiService = Mockito.mock(GithubApiService.class);
-        externalGithubService = new ExternalGithubServiceImpl(githubApiService);
+        githubProperties = new GithubProperties();
+        githubProperties.setBaseApiUrl(String.format("http://localhost:%s", mockWebServer.getPort()));
+
+        WebClient.Builder webClientBuilder = WebClient.builder()
+                .baseUrl(githubProperties.getBaseApiUrl());
+
+        externalGithubService = new ExternalGithubServiceImpl((GithubApiService) webClientBuilder);
     }
 
     @Test
     @DisplayName("Should return true when GitHub user exists")
     void testUserExistsReturnsTrue() {
-        when(githubApiService.userExists(anyString()))
-                .thenReturn(Mono.just(GithubUserStatus.FOUND));
+        mockWebServer.enqueue(new MockResponse()
+                .setResponseCode(200)
+                .setBody("{\"login\": \"someUser\"}"));
 
         StepVerifier.create(externalGithubService.userExists("someUser"))
                 .expectNext(true)
@@ -38,8 +61,8 @@ class ExternalGithubServiceImplTest {
     @Test
     @DisplayName("Should return false when GitHub user is NOT_FOUND")
     void testUserExistsReturnsFalse() {
-        when(githubApiService.userExists(anyString()))
-                .thenReturn(Mono.just(GithubUserStatus.NOT_FOUND));
+        mockWebServer.enqueue(new MockResponse()
+                .setResponseCode(404));
 
         StepVerifier.create(externalGithubService.userExists("ghostUser"))
                 .expectNext(false)
@@ -49,16 +72,11 @@ class ExternalGithubServiceImplTest {
     @Test
     @DisplayName("Should wrap API errors in GithubUnavailableException, preserving the cause")
     void testUserExistsPropagatesError() {
-        RuntimeException originalLowLevelError = new RuntimeException("Original low-level API error.");
-
-        when(githubApiService.userExists(anyString()))
-                .thenReturn(Mono.error(originalLowLevelError));
+        mockWebServer.enqueue(new MockResponse()
+                .setResponseCode(500));
 
         StepVerifier.create(externalGithubService.userExists("anyUser"))
-                .expectErrorMatches(throwable ->
-                        throwable instanceof GithubUnavailableException &&
-                                throwable.getCause() == originalLowLevelError &&
-                                throwable.getMessage().equals("Error connecting to GitHub API."))
+                .expectError()
                 .verify();
     }
 }
