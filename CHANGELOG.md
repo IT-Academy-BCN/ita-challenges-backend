@@ -6,16 +6,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### [itachallenge-auth-2.1.0-RELEASE] - 2026-01-30
 
 ### Added - Github-core
-- Introduced GithubProperties to encapsulate configuration parameters required for GitHub API integration.
-- Added GithubAuthRequestDto and GithubAuthResponseDto to standardize the GitHub validation process.
+- Introduced GithubProperties to encapsulate configuration parameters required for GitHub API integration. (Github Task [#23], SubTask [#53], PR [#1068])
+- Added GithubAuthRequestDto and GithubAuthResponseDto to standardize the GitHub validation process. (Github Task [#23], SubTask [#53], PR [#1068])
 
 ### Changed - Github-core
-- Refactored GithubServiceConfig and GithubApiService to centralize GitHub validation logic within the core library.
-- Updated GithubApiServiceImplTest to ensure full coverage of the newly implemented validation features.
+- Refactored GithubServiceConfig and GithubApiService to centralize GitHub validation logic within the core library. (Github Task [#23], SubTask [#53], PR [#1068])
+- Updated GithubApiServiceImplTest to ensure full coverage of the newly implemented validation features. (Github Task [#23], SubTask [#53], PR [#1068])
 
 ### Changed - Auth
-- Refactored AuthController and AuthService to leverage the github-core library for authentication, removing legacy code and direct GitHub API configurations.
-- Updated AuthControllerTest and AuthServiceTest to align with the new implementation and dependency structure.
+- Refactored AuthController and AuthService to leverage the github-core library for authentication, removing legacy code and direct GitHub API configurations. (Github Task [#23], SubTask [#69], PR [#1075])
+- Updated AuthControllerTest and AuthServiceTest to align with the new implementation and dependency structure. (task 23, subtask 69) (Github Task [#23], SubTask [#69], PR [#1075])
 
 ### [itachallenge-challenge-3.2.0-RELEASE] - 2026-01-27
 
