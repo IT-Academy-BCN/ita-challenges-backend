@@ -55,7 +55,7 @@ public class SubmissionServiceImpl implements SubmissionService {
                     UUID challengeUuid = tuple.getT2();
                     UUID languageUuid = tuple.getT3();
 
-                    SubmissionAction action = SubmissionAction.fromString(request.getAction());
+                    SubmissionAction action = request.getAction();
                     SubmissionStatus targetStatus = action.toStatus();
 
                     return submissionRepository

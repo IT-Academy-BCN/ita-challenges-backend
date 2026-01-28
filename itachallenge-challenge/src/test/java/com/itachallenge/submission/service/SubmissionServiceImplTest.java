@@ -115,7 +115,7 @@ class SubmissionServiceImplTest {
         SubmissionRequestDto request = SubmissionRequestDto.builder()
                 .challengeId(challengeUuid)
                 .languageId(languageUuid)
-                .action(SubmissionAction.SAVE.name())
+                .action(SubmissionAction.SAVE)
                 .submissionText("draft text")
                 .build();
 
@@ -155,7 +155,7 @@ class SubmissionServiceImplTest {
         SubmissionRequestDto request = SubmissionRequestDto.builder()
                 .challengeId(challengeUuid)
                 .languageId(languageUuid)
-                .action(SubmissionAction.SUBMIT.name())
+                .action(SubmissionAction.SUBMIT)
                 .submissionText("final")
                 .build();
 
@@ -197,7 +197,7 @@ class SubmissionServiceImplTest {
         SubmissionRequestDto request = SubmissionRequestDto.builder()
                 .challengeId(challengeUuid)
                 .languageId(languageUuid)
-                .action(SubmissionAction.SAVE.name())
+                .action(SubmissionAction.SAVE)
                 .submissionText("try change")
                 .build();
 

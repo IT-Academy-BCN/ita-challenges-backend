@@ -1,6 +1,7 @@
 package com.itachallenge.challenge.dto.submission;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.itachallenge.submission.enums.SubmissionAction;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
@@ -23,7 +24,7 @@ public class SubmissionRequestDto {
 
     @NotNull
     @JsonProperty("action")
-    private String action;
+    private SubmissionAction action;
 
     @NotNull
     @JsonProperty(value = "submission_text")
