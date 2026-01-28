@@ -3,6 +3,20 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+### [itachallenge-auth-2.1.0-RELEASE] - 2026-01-30
+
+### Added - Github-core
+- Introduced GithubProperties to encapsulate configuration parameters required for GitHub API integration.
+- Added GithubAuthRequestDto and GithubAuthResponseDto to standardize the GitHub validation process.
+
+### Changed - Github-core
+- Refactored GithubServiceConfig and GithubApiService to centralize GitHub validation logic within the core library.
+- Updated GithubApiServiceImplTest to ensure full coverage of the newly implemented validation features.
+
+### Changed - Auth
+- Refactored AuthController and AuthService to leverage the github-core library for authentication, removing legacy code and direct GitHub API configurations.
+- Updated AuthControllerTest and AuthServiceTest to align with the new implementation and dependency structure.
+
 ### [itachallenge-challenge-3.2.0-RELEASE] - 2026-01-27
 
 ### Added
