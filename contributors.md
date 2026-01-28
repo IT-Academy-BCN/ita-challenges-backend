@@ -115,3 +115,4 @@
 * Ana Beuzón Rodríguez - https://github.com/anaberod
 * Adolfo Caicaguare - https://github.com/adolcc
 * Alvaro Mendoza Cuello - https://github.com/AlvaroLMC
+* Lois González Alonso - https://github.com/pantalois
