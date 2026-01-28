@@ -91,7 +91,7 @@ public class SubmissionController {
             @PathVariable String userId,
             @Valid @RequestBody SubmissionRequestDto request
     ) {
-        return submissionService.createOrUpdateSubmission(userId, request)
+        return submissionService.processSubmissionAction(userId, request)
                 .map(ResponseEntity::ok);
     }
 

@@ -4,6 +4,7 @@ import com.itachallenge.challenge.dto.submission.SubmissionActionResponseDto;
 import com.itachallenge.challenge.dto.submission.SubmissionDto;
 import com.itachallenge.challenge.exception.BadUUIDException;
 import com.itachallenge.common.exception.GlobalExceptionHandler;
+import com.itachallenge.submission.enums.SubmissionAction;
 import com.itachallenge.submission.service.SubmissionService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -126,7 +127,7 @@ class SubmissionControllerTest {
         SubmissionRequestDto request = SubmissionRequestDto.builder()
                 .challengeId(UUID.randomUUID())
                 .languageId(UUID.randomUUID())
-                .action("SAVE")
+                .action(SubmissionAction.SAVE)
                 .submissionText("draft text")
                 .build();
 
@@ -137,7 +138,7 @@ class SubmissionControllerTest {
                 .status("IN_PROGRESS")
                 .build();
 
-        when(submissionService.createOrUpdateSubmission(eq(userId), any(SubmissionRequestDto.class)))
+        when(submissionService.processSubmissionAction(eq(userId), any(SubmissionRequestDto.class)))
                 .thenReturn(Mono.just(response));
 
         client().post()
@@ -149,7 +150,7 @@ class SubmissionControllerTest {
                 .jsonPath("$.submission_text").isEqualTo("draft text")
                 .jsonPath("$.status").isEqualTo("IN_PROGRESS");
 
-        verify(submissionService).createOrUpdateSubmission(eq(userId), any(SubmissionRequestDto.class));
+        verify(submissionService).processSubmissionAction(eq(userId), any(SubmissionRequestDto.class));
     }
 
     @Test
@@ -159,7 +160,7 @@ class SubmissionControllerTest {
         SubmissionRequestDto request = SubmissionRequestDto.builder()
                 .challengeId(null)
                 .languageId(UUID.randomUUID())
-                .action("SAVE")
+                .action(SubmissionAction.SAVE)
                 .submissionText("draft text")
                 .build();
 
@@ -170,7 +171,7 @@ class SubmissionControllerTest {
                 .expectStatus().isBadRequest();
 
         verify(submissionService, never())
-                .createOrUpdateSubmission(any(), any());
+                .processSubmissionAction(any(), any());
     }
 
 
@@ -181,12 +182,12 @@ class SubmissionControllerTest {
         SubmissionRequestDto request = SubmissionRequestDto.builder()
                 .challengeId(UUID.randomUUID())
                 .languageId(UUID.randomUUID())
-                .action("SAVE")
+                .action(SubmissionAction.SAVE)
                 .submissionText("draft text")
                 .build();
 
 
-        when(submissionService.createOrUpdateSubmission(eq(userId), any(SubmissionRequestDto.class)))
+        when(submissionService.processSubmissionAction(eq(userId), any(SubmissionRequestDto.class)))
                 .thenReturn(Mono.error(new UnmodifiableSubmissionException("Submission already completed")));
 
         client().post()
@@ -195,7 +196,7 @@ class SubmissionControllerTest {
                 .exchange()
                 .expectStatus().isEqualTo(409);
 
-        verify(submissionService).createOrUpdateSubmission(eq(userId), any(SubmissionRequestDto.class));
+        verify(submissionService).processSubmissionAction(eq(userId), any(SubmissionRequestDto.class));
     }
 
     @Test
@@ -219,7 +220,7 @@ class SubmissionControllerTest {
                 .expectStatus().isBadRequest();
 
         verify(submissionService, never())
-                .createOrUpdateSubmission(any(), any());
+                .processSubmissionAction(any(), any());
     }
 
 }
