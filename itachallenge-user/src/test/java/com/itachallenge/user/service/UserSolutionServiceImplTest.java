@@ -394,7 +394,7 @@ class UserSolutionServiceImplTest {
         StepVerifier.create(result)
                 .assertNext(dto -> {
                     assertEquals(solutionText, dto.getSolutionText());
-                    assertTrue(dto.getIsSolved()); // El fallback devuelve true
+                    assertTrue(dto.getIsSolved()); 
                     assertEquals("SUBMITTED_COMPLETE", dto.getStatus());
                 })
                 .verifyComplete();
