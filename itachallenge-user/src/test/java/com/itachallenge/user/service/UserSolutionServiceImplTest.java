@@ -344,4 +344,62 @@ class UserSolutionServiceImplTest {
         verify(userSolutionRepository).save(any(UserSolutionDocument.class));
         verifyNoInteractions(challengeService);
     }
+    @Test
+    @DisplayName("addSolution SUBMIT action with blank solution text throws BadRequestException")
+    void addSolution_SubmitAction_BlankText_ThrowsException() {
+        UserSolutionRequestDto request = UserSolutionRequestDto.builder()
+                .userId(userUuid.toString())
+                .challengeId(challengeUuid.toString())
+                .languageId(languageUuid.toString())
+                .action(SolutionAction.SUBMIT)
+                .solutionText("   ") // Texto en blanco
+                .build();
+
+        StepVerifier.create(userSolutionService.addSolution(request))
+                .expectErrorMatches(throwable ->
+                        throwable instanceof BadRequestException &&
+                                throwable.getMessage().equals("Solution text is required when finalizing (SUBMIT)."))
+                .verify();
+
+        verifyNoInteractions(userSolutionRepository);
+    }
+
+    @Test
+    @DisplayName("addSolution SUBMIT action returns success fallback when challengeService fails")
+    void addSolution_ChallengeServiceFails_ReturnsFallback() {
+        UserSolutionRequestDto request = UserSolutionRequestDto.builder()
+                .userId(userUuid.toString())
+                .challengeId(challengeUuid.toString())
+                .languageId(languageUuid.toString())
+                .action(SolutionAction.SUBMIT)
+                .solutionText(solutionText)
+                .build();
+
+        UserSolutionDocument savedDoc = UserSolutionDocument.builder()
+                .status(ChallengeStatus.SUBMITTED_COMPLETE)
+                .challengeId(challengeUuid)
+                .solutionAttemptDocument(SolutionAttemptDocument.builder().solutionText(solutionText).build())
+                .build();
+
+        when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid))
+                .thenReturn(Mono.empty());
+        when(userSolutionRepository.save(any(UserSolutionDocument.class)))
+                .thenReturn(Mono.just(savedDoc));
+
+        when(challengeService.addChallengeToSolved(challengeUuid.toString()))
+                .thenReturn(Mono.error(new RuntimeException("Service Unavailable")));
+
+        Mono<SubmitSolutionResponseDto> result = userSolutionService.addSolution(request);
+
+        StepVerifier.create(result)
+                .assertNext(dto -> {
+                    assertEquals(solutionText, dto.getSolutionText());
+                    assertTrue(dto.getIsSolved()); // El fallback devuelve true
+                    assertEquals("SUBMITTED_COMPLETE", dto.getStatus());
+                })
+                .verifyComplete();
+
+        verify(userSolutionRepository).save(any(UserSolutionDocument.class));
+        verify(challengeService).addChallengeToSolved(challengeUuid.toString());
+    }
 }
