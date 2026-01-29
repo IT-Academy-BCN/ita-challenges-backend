@@ -6,6 +6,7 @@ import com.itachallenge.challenge.dto.submission.SubmissionDto;
 import com.itachallenge.challenge.exception.BadUUIDException;
 import com.itachallenge.common.exception.GlobalExceptionHandler;
 import com.itachallenge.submission.enums.SubmissionAction;
+import com.itachallenge.submission.exception.UnmodifiableSubmissionException;
 import com.itachallenge.submission.service.SubmissionService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,17 +15,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
-import com.itachallenge.challenge.dto.submission.SubmissionRequestDto;
-import com.itachallenge.common.exception.BadRequestException;
-import com.itachallenge.submission.exception.UnmodifiableSubmissionException;
 import reactor.core.publisher.Mono;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-
 
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 @ExtendWith(MockitoExtension.class)
 class SubmissionControllerTest {
