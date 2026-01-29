@@ -1,5 +1,6 @@
 package com.itachallenge.challenge.controller.submission;
 
+import com.itachallenge.challenge.dto.submission.SubmissionActionRequestDto;
 import com.itachallenge.challenge.dto.submission.SubmissionActionResponseDto;
 import com.itachallenge.challenge.dto.submission.SubmissionDto;
 import com.itachallenge.challenge.exception.BadUUIDException;
@@ -125,7 +126,7 @@ class SubmissionControllerTest {
     void postSubmission_returns200_whenServiceSucceeds() {
         String userId = UUID.randomUUID().toString();
 
-        SubmissionRequestDto request = SubmissionRequestDto.builder()
+        SubmissionActionRequestDto request = SubmissionActionRequestDto.builder()
                 .challengeId(UUID.randomUUID())
                 .languageId(UUID.randomUUID())
                 .action(SubmissionAction.SAVE)
@@ -139,7 +140,7 @@ class SubmissionControllerTest {
                 .status("IN_PROGRESS")
                 .build();
 
-        when(submissionService.processSubmissionAction(eq(userId), any(SubmissionRequestDto.class)))
+        when(submissionService.processSubmissionAction(eq(userId), any(SubmissionActionRequestDto.class)))
                 .thenReturn(Mono.just(response));
 
         client().post()
@@ -153,14 +154,14 @@ class SubmissionControllerTest {
                 .jsonPath("$.submission_text").isEqualTo("draft text")
                 .jsonPath("$.status").isEqualTo("IN_PROGRESS");
 
-        verify(submissionService).processSubmissionAction(eq(userId), any(SubmissionRequestDto.class));
+        verify(submissionService).processSubmissionAction(eq(userId), any(SubmissionActionRequestDto.class));
     }
 
     @Test
     void postSubmission_returns400_whenRequestIsInvalid() {
         String userId = UUID.randomUUID().toString();
 
-        SubmissionRequestDto request = SubmissionRequestDto.builder()
+        SubmissionActionRequestDto request = SubmissionActionRequestDto.builder()
                 .challengeId(null)
                 .languageId(UUID.randomUUID())
                 .action(SubmissionAction.SAVE)
@@ -184,7 +185,7 @@ class SubmissionControllerTest {
     void postSubmission_returns409_whenSubmissionIsUnmodifiable() {
         String userId = UUID.randomUUID().toString();
 
-        SubmissionRequestDto request = SubmissionRequestDto.builder()
+        SubmissionActionRequestDto request = SubmissionActionRequestDto.builder()
                 .challengeId(UUID.randomUUID())
                 .languageId(UUID.randomUUID())
                 .action(SubmissionAction.SAVE)
@@ -192,7 +193,7 @@ class SubmissionControllerTest {
                 .build();
 
 
-        when(submissionService.processSubmissionAction(eq(userId), any(SubmissionRequestDto.class)))
+        when(submissionService.processSubmissionAction(eq(userId), any(SubmissionActionRequestDto.class)))
                 .thenReturn(Mono.error(new UnmodifiableSubmissionException("Submission already completed")));
 
         client().post()
@@ -203,7 +204,7 @@ class SubmissionControllerTest {
                 .exchange()
                 .expectStatus().isEqualTo(409);
 
-        verify(submissionService).processSubmissionAction(eq(userId), any(SubmissionRequestDto.class));
+        verify(submissionService).processSubmissionAction(eq(userId), any(SubmissionActionRequestDto.class));
     }
 
     @Test
