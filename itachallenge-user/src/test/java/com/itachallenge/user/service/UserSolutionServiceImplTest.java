@@ -352,7 +352,7 @@ class UserSolutionServiceImplTest {
                 .challengeId(challengeUuid.toString())
                 .languageId(languageUuid.toString())
                 .action(SolutionAction.SUBMIT)
-                .solutionText("   ") // Texto en blanco
+                .solutionText("   ") 
                 .build();
 
         StepVerifier.create(userSolutionService.addSolution(request))
@@ -394,7 +394,7 @@ class UserSolutionServiceImplTest {
         StepVerifier.create(result)
                 .assertNext(dto -> {
                     assertEquals(solutionText, dto.getSolutionText());
-                    assertTrue(dto.getIsSolved()); 
+                    assertTrue(dto.getIsSolved());
                     assertEquals("SUBMITTED_COMPLETE", dto.getStatus());
                 })
                 .verifyComplete();
