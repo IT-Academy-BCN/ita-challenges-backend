@@ -1,5 +1,6 @@
 package com.itachallenge.challenge.controller.submission;
 
+import com.itachallenge.challenge.dto.submission.SubmissionActionRequestDto;
 import com.itachallenge.challenge.dto.submission.SubmissionDto;
 import com.itachallenge.submission.service.SubmissionService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,7 +16,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
-import com.itachallenge.challenge.dto.submission.SubmissionRequestDto;
 import com.itachallenge.challenge.dto.submission.SubmissionActionResponseDto;
 import org.springframework.http.ResponseEntity;
 import reactor.core.publisher.Mono;
@@ -89,7 +89,7 @@ public class SubmissionController {
     )
     public Mono<ResponseEntity<SubmissionActionResponseDto>> createOrUpdateSubmission(
             @PathVariable String userId,
-            @Valid @RequestBody SubmissionRequestDto request
+            @Valid @RequestBody SubmissionActionRequestDto request
     ) {
         return submissionService.processSubmissionAction(userId, request)
                 .map(ResponseEntity::ok);
