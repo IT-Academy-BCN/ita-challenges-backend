@@ -1,5 +1,6 @@
 package com.itachallenge.challenge.controller.submission;
 
+import com.itachallenge.challenge.dto.submission.SubmissionActionRequestDto;
 import com.itachallenge.challenge.dto.submission.SubmissionDto;
 import com.itachallenge.submission.service.SubmissionService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,6 +16,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
+import com.itachallenge.challenge.dto.submission.SubmissionActionResponseDto;
+import org.springframework.http.ResponseEntity;
+import reactor.core.publisher.Mono;
+import jakarta.validation.Valid;
+
+
+
 
 @RestController
 @Validated
@@ -52,4 +60,41 @@ public class SubmissionController {
     public Flux<SubmissionDto> getAllSubmissionsByUser(@PathVariable String userId) {
         return submissionService.getAllSubmissionsByUser(userId);
     }
+
+    @PostMapping
+    @Operation(
+            summary = "Create or update a submission",
+            description = "Creates or updates a user submission depending on the action (SAVE, SUBMIT, GIVE_UP).",
+            parameters = {
+                    @Parameter(
+                            name = "userId",
+                            in = ParameterIn.PATH,
+                            required = true,
+                            description = "User UUID"
+                    )
+            },
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = SubmissionActionResponseDto.class)
+                            )
+                    ),
+                    @ApiResponse(responseCode = "400", description = "Invalid UUID or action"),
+                    @ApiResponse(responseCode = "409", description = "Submission already completed"),
+                    @ApiResponse(responseCode = "500", description = "Unexpected error")
+            }
+    )
+    public Mono<ResponseEntity<SubmissionActionResponseDto>> createOrUpdateSubmission(
+            @PathVariable String userId,
+            @Valid @RequestBody SubmissionActionRequestDto request
+    ) {
+        return submissionService.processSubmissionAction(userId, request)
+                .map(ResponseEntity::ok);
+    }
+
+
+
 }
