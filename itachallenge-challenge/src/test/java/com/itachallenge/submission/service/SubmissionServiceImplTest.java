@@ -1,7 +1,7 @@
 package com.itachallenge.submission.service;
 
 import com.itachallenge.challenge.dto.submission.SubmissionDto;
-import com.itachallenge.challenge.dto.submission.SubmissionRequestDto;
+import com.itachallenge.challenge.dto.submission.SubmissionActionRequestDto;
 import com.itachallenge.challenge.service.IChallengeService;
 import com.itachallenge.common.exception.BadRequestException;
 import com.itachallenge.submission.document.SubmissionDocument;
@@ -112,7 +112,7 @@ class SubmissionServiceImplTest {
         UUID challengeUuid = UUID.randomUUID();
         UUID languageUuid = UUID.randomUUID();
 
-        SubmissionRequestDto request = SubmissionRequestDto.builder()
+        SubmissionActionRequestDto request = SubmissionActionRequestDto.builder()
                 .challengeId(challengeUuid)
                 .languageId(languageUuid)
                 .action(SubmissionAction.SAVE)
@@ -152,7 +152,7 @@ class SubmissionServiceImplTest {
                 .submissionText("draft")
                 .build();
 
-        SubmissionRequestDto request = SubmissionRequestDto.builder()
+        SubmissionActionRequestDto request = SubmissionActionRequestDto.builder()
                 .challengeId(challengeUuid)
                 .languageId(languageUuid)
                 .action(SubmissionAction.SUBMIT)
@@ -194,7 +194,7 @@ class SubmissionServiceImplTest {
                 .submissionText("done")
                 .build();
 
-        SubmissionRequestDto request = SubmissionRequestDto.builder()
+        SubmissionActionRequestDto request = SubmissionActionRequestDto.builder()
                 .challengeId(challengeUuid)
                 .languageId(languageUuid)
                 .action(SubmissionAction.SAVE)
@@ -217,7 +217,7 @@ class SubmissionServiceImplTest {
         UUID challengeUuid = UUID.randomUUID();
         UUID languageUuid = UUID.randomUUID();
 
-        SubmissionRequestDto request = SubmissionRequestDto.builder()
+        SubmissionActionRequestDto request = SubmissionActionRequestDto.builder()
                 .challengeId(challengeUuid)
                 .languageId(languageUuid)
                 .action(SubmissionAction.SAVE)

@@ -12,7 +12,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
-public class SubmissionRequestDto {
+public class SubmissionActionRequestDto {
 
     @NotNull
     @JsonProperty(value = "uuid_challenge")
