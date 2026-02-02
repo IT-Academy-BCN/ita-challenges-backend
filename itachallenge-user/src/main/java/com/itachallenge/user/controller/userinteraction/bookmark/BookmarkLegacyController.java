@@ -8,6 +8,8 @@ import reactor.core.publisher.Mono;
 import java.util.Set;
 import java.util.UUID;
 
+@RestController
+@RequestMapping("/itachallenge/api/v1/user/users")
 public class BookmarkLegacyController {
     private final BookmarkService bookmarkService;
 
