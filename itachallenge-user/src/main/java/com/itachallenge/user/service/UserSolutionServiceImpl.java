@@ -127,7 +127,6 @@ public class UserSolutionServiceImpl implements IUserSolutionService {
                                         .build())
                 );
     }
-
     private Mono<UUID> validateAndParseUuid(String userId) {
         if (userId == null || userId.trim().isEmpty()) {
             return Mono.error(new BadRequestException("The 'userId' parameter cannot be null or empty."));
