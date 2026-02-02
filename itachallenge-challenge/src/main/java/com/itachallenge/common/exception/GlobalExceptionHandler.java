@@ -15,6 +15,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.server.ResponseStatusException;
+import com.itachallenge.submission.exception.UnmodifiableSubmissionException;
+
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -129,4 +131,10 @@ public class GlobalExceptionHandler {
         }
         return Optional.empty();
     }
+
+    @ExceptionHandler(UnmodifiableSubmissionException.class)
+    public ResponseEntity<MessageDto> handleUnmodifiableSubmission(UnmodifiableSubmissionException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageDto(ex.getMessage()));
+    }
+
 }
