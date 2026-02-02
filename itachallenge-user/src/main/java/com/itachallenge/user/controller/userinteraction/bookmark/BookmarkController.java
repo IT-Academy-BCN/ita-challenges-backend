@@ -15,7 +15,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/itachallenge/api/v1")
+@RequestMapping("/itachallenge/api/v1/users/{userId}/bookmarks")
 public class BookmarkController {
 
     private static final Logger log = LoggerFactory.getLogger(BookmarkController.class);
@@ -45,25 +45,12 @@ public class BookmarkController {
             }
     )
 
-    @GetMapping("/userinteraction/bookmarks/{userId}")
+    @GetMapping
     public Mono<ResponseEntity<Set<UUID>>> getUserBookmarks(@PathVariable String userId) {
         return bookmarkService.getUserBookmarks(userId)
                 .map(bookmarks -> {
                     log.info("Retrieved {} bookmark challenges for user {}", bookmarks.size(), userId);
                     return ResponseEntity.ok(bookmarks);
                 });
-    }
-    /**
-     * @deprecated This endpoint is deprecated because the domain logic has moved
-     * to userinteraction. Use {@link #getUserBookmarks(String)} instead.
-     */
-    @Operation(summary = "DEPRECATED: Use /userinteraction/bookmarks/{userId}")
-    @GetMapping("/user/users/{userId}/bookmarks")
-    @Deprecated(since = "3.1.4-RELEASE", forRemoval = true)
-    public Mono<ResponseEntity<Set<UUID>>> getUserBookmarksLegacy(@PathVariable String userId) {
-        return getUserBookmarks(userId)
-                .map(response -> ResponseEntity.status(response.getStatusCode())
-                        .header("Deprecation", "true")
-                        .body(response.getBody()));
     }
 }

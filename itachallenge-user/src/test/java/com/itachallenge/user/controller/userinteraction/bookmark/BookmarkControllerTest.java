@@ -20,7 +20,7 @@ import java.util.UUID;
 
 import static org.mockito.Mockito.*;
 
-@WebFluxTest(controllers = BookmarkController.class)
+@WebFluxTest(controllers = {BookmarkController.class, BookmarkLegacyController.class})
 class BookmarkControllerTest {
 
     @MockBean
@@ -39,7 +39,7 @@ class BookmarkControllerTest {
     }
 
     @Test
-    @DisplayName("GET /userinteraction/bookmarks/{userId} returns bookmarked challenges - NEW PATH")
+    @DisplayName("GET /users/{userId}/bookmarks returns bookmarked challenges")
     void getUserBookmarks_NewPath_Success() {
         UUID userId = UUID.randomUUID();
         Set<UUID> expectedBookmarks = Set.of(UUID.randomUUID(), UUID.randomUUID());
@@ -48,7 +48,7 @@ class BookmarkControllerTest {
                 .thenReturn(Mono.just(expectedBookmarks));
 
         webTestClient.get()
-                .uri("/itachallenge/api/v1/userinteraction/bookmarks/{userId}", userId)
+                .uri("/itachallenge/api/v1/users/{userId}/bookmarks", userId)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBodyList(UUID.class)
@@ -59,7 +59,7 @@ class BookmarkControllerTest {
     }
 
     @Test
-    @DisplayName("GET /users/{userId}/bookmarks returns bookmarked challenges - LEGACY")
+    @DisplayName("GET /user/users/{userId}/bookmarks returns bookmarked challenges - LEGACY")
     void getUserBookmarks_returnsBookmarks() {
         UUID userId = UUID.randomUUID();
         Set<UUID> expectedBookmarks = Set.of(UUID.randomUUID(), UUID.randomUUID());
