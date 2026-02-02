@@ -116,3 +116,4 @@
 * Adolfo Caicaguare - https://github.com/adolcc
 * Alvaro Mendoza Cuello - https://github.com/AlvaroLMC
 * Lucía (Lucy) I. Castro Bertaina - https://github.com/Lucy-SD
+* Lois González Alonso - https://github.com/pantalois
