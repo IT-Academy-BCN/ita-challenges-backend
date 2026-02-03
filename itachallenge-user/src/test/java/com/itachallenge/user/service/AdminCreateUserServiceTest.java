@@ -107,6 +107,7 @@ class AdminCreateUserServiceTest {
         AdminCreateUserRequestDto request = new AdminCreateUserRequestDto();
         request.setUsername("newUser");
 
+        when(userRepository.findByUsername("newUser")).thenReturn(Mono.empty());
         when(externalGithubService.userExists("newUser"))
                 .thenReturn(Mono.error(new GithubUnavailableException("GitHub timeout")));
 
