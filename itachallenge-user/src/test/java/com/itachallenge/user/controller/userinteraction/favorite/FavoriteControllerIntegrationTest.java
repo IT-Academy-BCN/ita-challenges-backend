@@ -1,6 +1,5 @@
 package com.itachallenge.user.controller.userinteraction.favorite;
 
-
 import com.itachallenge.user.dto.AdminCreateUserRequestDto;
 import com.itachallenge.user.dto.AdminCreateUserResponseDto;
 import com.itachallenge.user.repository.UserRepository;
@@ -30,7 +29,7 @@ import reactor.core.publisher.Mono;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
-import static reactor.core.publisher.Mono.when;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest(  webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
