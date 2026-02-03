@@ -1,6 +1,6 @@
 package com.itachallenge.user.service;
 
-import com.itachallenge.githubcore.config.GithubProperties;
+import com.itachallenge.githubcore.exception.GithubUnavailableException;
 import com.itachallenge.user.document.UserDocument;
 import com.itachallenge.user.document.enums.Role;
 import com.itachallenge.user.dto.AdminCreateUserRequestDto;
@@ -17,7 +17,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import java.time.Duration;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -31,9 +30,6 @@ class AdminCreateUserServiceTest {
 
     @Mock
     private ExternalGithubService externalGithubService;
-
-    @Mock
-    private GithubProperties githubProperties;
 
     @InjectMocks
     private AdminCreateUserService adminCreateUserService;
@@ -113,12 +109,12 @@ class AdminCreateUserServiceTest {
 
         when(userRepository.findByUsername("newUser")).thenReturn(Mono.empty());
         when(externalGithubService.userExists("newUser"))
-                .thenReturn(Mono.delay(Duration.ofSeconds(5)).thenReturn(true));
+                .thenReturn(Mono.error(new GithubUnavailableException("GitHub timeout")));
 
         Mono<AdminCreateUserResponseDto> result = adminCreateUserService.createUser(request);
 
         StepVerifier.create(result)
-                .expectErrorMatches(ex -> ex instanceof com.itachallenge.githubcore.exception.GithubUnavailableException)
+                .expectError(GithubUnavailableException.class)
                 .verify();
 
         verify(userRepository, never()).save(any());

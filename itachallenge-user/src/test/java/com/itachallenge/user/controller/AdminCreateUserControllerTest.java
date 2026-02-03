@@ -1,12 +1,9 @@
 package com.itachallenge.user.controller;
-import com.itachallenge.githubcore.config.GithubProperties;
 import com.itachallenge.user.exception.UserGlobalExceptionHandler;
 import com.itachallenge.user.dto.AdminCreateUserRequestDto;
 import com.itachallenge.user.dto.AdminCreateUserResponseDto;
 import com.itachallenge.user.exception.UsernameAlreadyExistsException;
 import com.itachallenge.user.service.AdminCreateUserService;
-import com.itachallenge.user.service.ExternalGithubService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,18 +31,6 @@ class AdminCreateUserControllerTest {
 
     @MockBean
     private AdminCreateUserService adminCreateUserService;
-
-    @MockBean
-    private ExternalGithubService externalGithubService;
-
-    @MockBean
-    private GithubProperties githubProperties;
-
-    @BeforeEach
-    void setUp() {
-        when(githubProperties.getBaseApiUrl()).thenReturn("http://localhost:8080");
-        when(githubProperties.getBaseAuthUrl()).thenReturn("http://localhost:8080");
-    }
 
     @Test
     @DisplayName("Test: POST /admin/users/create with new user should return 201 Created")

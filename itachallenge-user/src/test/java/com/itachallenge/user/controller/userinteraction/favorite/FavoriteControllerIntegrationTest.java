@@ -4,6 +4,7 @@ package com.itachallenge.user.controller.userinteraction.favorite;
 import com.itachallenge.user.dto.AdminCreateUserRequestDto;
 import com.itachallenge.user.dto.AdminCreateUserResponseDto;
 import com.itachallenge.user.repository.UserRepository;
+import com.itachallenge.user.service.ExternalGithubService;
 import com.itachallenge.userinteraction.repository.favorite.FavoriteRepository;
 
 import java.util.Set;
@@ -12,6 +13,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
@@ -24,8 +26,11 @@ import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import reactor.core.publisher.Mono;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyString;
+import static reactor.core.publisher.Mono.when;
 
 @SpringBootTest(  webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
@@ -50,12 +55,16 @@ class FavoriteControllerIntegrationTest {
     @Autowired
     private UserRepository userRepository;
 
+    @MockBean
+    private ExternalGithubService externalGithubService;
+
     @BeforeEach
     void setUp(){
         favoriteRepository.deleteAll().block();
         userRepository.deleteAll().block();
+        when(externalGithubService.userExists(anyString()))
+                .thenReturn(Mono.just(true));
     }
-
 
     @Test
     void getUserFavorites_WithExistingFavorites_ReturnsSetOfChallengeIds(){
