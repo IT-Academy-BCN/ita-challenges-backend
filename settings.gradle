@@ -4,7 +4,6 @@ include 'itachallenge-user'
 include 'itachallenge-mock'
 include 'itachallenge-auth'
 include 'itachallenge-document'
-include 'error-response-core'
 
 include 'jwt-core'
 include 'github-core'
