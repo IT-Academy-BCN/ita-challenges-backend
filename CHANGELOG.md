@@ -3,6 +3,12 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+### [error-response-core-1.0.1-RELEASE] - 2026-02-04
+
+### Removed
+- Error Response module (error-response-core) removed as it is no longer needed.
+- Remove from settings.gradle
+
 ### [itachallenge-challenge-3.2.0-RELEASE] - 2026-01-27
 
 ### Added
