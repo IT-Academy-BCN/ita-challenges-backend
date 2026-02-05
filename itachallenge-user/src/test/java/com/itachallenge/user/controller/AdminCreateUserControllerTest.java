@@ -1,5 +1,5 @@
 package com.itachallenge.user.controller;
-import com.itachallenge.user.exception.UserGlobalExceptionHandler;
+import com.itachallenge.common.exception.UserGlobalExceptionHandler;
 import com.itachallenge.user.dto.AdminCreateUserRequestDto;
 import com.itachallenge.user.dto.AdminCreateUserResponseDto;
 import com.itachallenge.user.exception.UsernameAlreadyExistsException;
