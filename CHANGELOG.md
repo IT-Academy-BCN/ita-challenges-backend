@@ -15,6 +15,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - The path `/itachallenge/api/v1/user/users/{userId}/bookmarks` is now deprecated. It remains functional for backward compatibility but returns a `Deprecation: true` header.
 
+### [itachallenge-challenge-3.2.0-RELEASE] - 2026-01-27
+
+### Added
+- New POST endpoint `/itachallenge/api/v1/users/{userId}/submissions` in Challenge to create/update submissions.
+- Request validation added for `SubmissionRequestDto` (UUID fields + required fields) and documented behavior for SAVE/SUBMIT/GIVE_UP.
+
 ### [itachallenge-challenge-3.1.0-RELEASE] - 2026-01-14
 
 ### Changed
