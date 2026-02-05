@@ -4,7 +4,6 @@ import com.itachallenge.user.annotations.ValidGithubUsername;
 import com.itachallenge.user.document.UserDocument;
 import com.itachallenge.user.dto.SubmitSolutionResponseDto;
 import com.itachallenge.user.dto.UserSolutionRequestDto;
-import com.itachallenge.user.dto.UserSolutionResponseDto;
 import com.itachallenge.user.service.IUserSolutionService;
 import com.itachallenge.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -21,7 +20,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RestController
@@ -233,30 +231,4 @@ public class UserController {
                 });
     }
 
-    @Operation(
-            summary = "Retrieve all solutions for a user.",
-            parameters = {
-                    @Parameter(
-                            name = "userId",
-                            in = ParameterIn.PATH,
-                            required = true,
-                            description = "User UUID")
-            },
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Solutions found, if none are found, returns an empty array"),
-                    @ApiResponse(responseCode = "400", description = "Invalid UUID"),
-                    @ApiResponse(responseCode = "500", description = "Unexpected error")
-            }
-    )
-    @GetMapping(
-            path = "/users/{userId}/solutions"
-    )
-    public Mono<ResponseEntity<Flux<UserSolutionResponseDto>>> getAllSolutionsByUser(
-            @PathVariable String userId
-    ) {
-        return Mono.just(ResponseEntity.ok()
-                .body(userSolutionService.getAllSolutionsByUser(userId)
-                )
-        );
-    }
 }
