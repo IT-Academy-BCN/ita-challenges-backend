@@ -108,21 +108,6 @@ public class UserSolutionServiceImpl implements IUserSolutionService {
         }
     }
 
-    @Override
-    public Flux<UserSolutionResponseDto> getAllSolutionsByUser(String userId) {
-        return validateAndParseUuid(userId)
-                .flatMapMany(uuid ->
-                        userSolutionRepository.findAllByUserId(uuid)
-                                .map(doc -> UserSolutionResponseDto.builder()
-                                        .userId(doc.getUserId().toString())
-                                        .challengeId(doc.getChallengeId().toString())
-                                        .languageId(doc.getLanguageId().toString())
-                                        .solutionText(doc.getSolutionAttemptDocument().getSolutionText())
-                                        .status(doc.getStatus().name())
-                                        .build())
-                );
-    }
-
     private Mono<UUID> validateAndParseUuid(String userId) {
         if (userId == null || userId.trim().isEmpty()) {
             return Mono.error(new BadRequestException("The 'userId' parameter cannot be null or empty."));
