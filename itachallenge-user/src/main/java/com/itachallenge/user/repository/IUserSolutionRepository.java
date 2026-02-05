@@ -12,6 +12,5 @@ import java.util.UUID;
 public interface IUserSolutionRepository extends ReactiveMongoRepository<UserSolutionDocument, UUID> {
 
     Mono<UserSolutionDocument> findByUserIdAndChallengeIdAndLanguageId(UUID userId, UUID challengeId, UUID languageId);
-    Flux<UserSolutionDocument> findAllByUserId(UUID userId);
 }
 
