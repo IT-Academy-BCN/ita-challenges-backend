@@ -20,6 +20,8 @@ import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -285,10 +287,14 @@ public class ChallengeController {
             }
     )
     public Mono<ResponseEntity<DeleteResponseDto>> deleteChallenge(
-            @PathVariable String challengeId) {
-
-        return challengeService.deleteChallengeById(challengeId)
-                .map(ResponseEntity::ok);
+            @PathVariable String challengeId,
+            @RequestHeader(name = "Authorization", required = false) String authHeader
+    ) {
+        return Mono.fromCallable(() -> challengeJwtFacade.getUserUuIdFromAuthenticationHeader(authHeader))
+                .onErrorMap(io.jsonwebtoken.JwtException.class, e -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Missing or invalid authorization token", e))
+                .flatMap(userId -> challengeService.deleteChallengeById(challengeId))
+                .map(ResponseEntity::ok)
+                .doOnError(error -> log.error("Error deleting challenge: {}", error.getMessage()));
     }
 
     @PostMapping("/challenges/{challengeId}/bookmarks")

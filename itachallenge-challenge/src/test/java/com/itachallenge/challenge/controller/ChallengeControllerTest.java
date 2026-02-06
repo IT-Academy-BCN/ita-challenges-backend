@@ -582,16 +582,39 @@ class ChallengeControllerTest {
     @Test
     void deleteOneChallenge_notFound() {
         String id = "non_existing_id";
+        String authHeader = "Bearer valid.token";
+        String userId = "existing_userId";
 
+        when(challengeJwtFacade.getUserUuIdFromAuthenticationHeader(authHeader)).thenReturn(userId);
         when(challengeService.deleteChallengeById(id))
-                .thenReturn(Mono.error(new ChallengeNotFoundException(String.format("Challenge with id: %s not found", id))));
+                .thenReturn(Mono.error(new ChallengeNotFoundException(
+                        String.format("Challenge with id: %s not found", id)
+                )));
 
         webTestClient.delete()
                 .uri("/itachallenge/api/v1/challenge/challenges/" + id)
+                .header("Authorization", authHeader)
                 .exchange()
                 .expectStatus().isNotFound()
                 .expectBody()
                 .jsonPath("$.message").isEqualTo("Challenge with id: non_existing_id not found");
+
+        verify(challengeService, times(1)).deleteChallengeById(id);
+    }
+
+    @Test
+    void deleteOneChallenge_missingHeader_shouldReturn401() {
+        String id = "non_existing_id";
+
+        when(challengeJwtFacade.getUserUuIdFromAuthenticationHeader(null))
+                .thenThrow(new io.jsonwebtoken.JwtException("Missing or bad formatted Authorization header"));
+
+        webTestClient.delete()
+                .uri("/itachallenge/api/v1/challenge/challenges/" + id)
+                .exchange()
+                .expectStatus().isUnauthorized();
+
+        verify(challengeService, never()).deleteChallengeById(anyString());
     }
 
     @Test
