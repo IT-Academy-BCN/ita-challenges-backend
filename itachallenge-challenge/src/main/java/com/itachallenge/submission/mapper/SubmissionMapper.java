@@ -14,6 +14,7 @@ public final class SubmissionMapper {
         Objects.requireNonNull(doc, "SubmissionDocument cannot be null");
 
         return SubmissionDto.builder()
+                //TODO: Remove userId mapping once frontend stops using uuid_user
                 .userId(doc.getUserId().toString())
                 .challengeId(doc.getChallengeId().toString())
                 .languageId(doc.getLanguageId().toString())
