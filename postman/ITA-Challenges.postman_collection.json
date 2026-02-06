@@ -1123,103 +1123,34 @@
           },
           "response": []
         },
+        {
+          "name": "User/solution",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://{{ip}}:{{user_port}}/itachallenge/api/v1/user/solution/user/c3a92f9d-5d10-4f76-8c0b-6d884c549b1c/challenges/solutions",
+              "protocol": "http",
+              "host": [
+                "{{ip}}"
+              ],
+              "port": "{{user_port}}",
+              "path": [
+                "itachallenge",
+                "api",
+                "v1",
+                "user",
+                "solution",
+                "user",
+                "c3a92f9d-5d10-4f76-8c0b-6d884c549b1c",
+                "challenges",
+                "solutions"
+              ]
+            }
+          },
+          "response": []
+        },
 
-        {
-          "name": "User/solution - SUBMIT",
-          "request": {
-            "method": "PUT",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n\"uuid_challenge\": \"8cd0fbc2-d940-4d41-ab95-7749f0382f6a\",\n\"uuid_language\": \"660e1b18-0c0a-4262-a28a-85de9df6ac5f\",\n\"uuid_user\": \"c3a92f9d-5d10-4f76-8c0b-6d884c549b1c\",\n\"action\": \"SUBMIT\",\n\"solution_text\": \"MY SOLUTION\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "http://{{ip}}:{{user_port}}/itachallenge/api/v1/user/solution",
-              "protocol": "http",
-              "host": [
-                "{{ip}}"
-              ],
-              "port": "{{user_port}}",
-              "path": [
-                "itachallenge",
-                "api",
-                "v1",
-                "user",
-                "solution"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "User/solution - SAVE",
-          "request": {
-            "method": "PUT",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"uuid_challenge\": \"2044f0b7-ccef-429b-a8d3-7a2168a5dafe\",\n  \"uuid_language\": \"660e1b18-0c0a-4262-a28a-85de9df6ac5f\",\n  \"uuid_user\": \"c3a92f9d-5d10-4f76-8c0b-6d884c549b1c\",\n  \"action\": \"SAVE\",\n  \"solution_text\": \"This is a solution still in progress.\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "http://{{ip}}:{{user_port}}/itachallenge/api/v1/user/solution",
-              "protocol": "http",
-              "host": [
-                "{{ip}}"
-              ],
-              "port": "{{user_port}}",
-              "path": [
-                "itachallenge",
-                "api",
-                "v1",
-                "user",
-                "solution"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "User/solution - GIVE_UP",
-          "request": {
-            "method": "PUT",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"uuid_challenge\": \"6e237137-3567-4585-9a21-5a6d4f5f037b\",\n  \"uuid_language\": \"660e1b18-0c0a-4262-a28a-85de9df6ac5f\",\n  \"uuid_user\": \"7a8d03f6-5489-417d-a736-777be159eab5\",\n  \"action\": \"GIVE_UP\",\n  \"solution_text\": \"I won't get it. Let me see the solution\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "http://{{ip}}:{{user_port}}/itachallenge/api/v1/user/solution",
-              "protocol": "http",
-              "host": [
-                "{{ip}}"
-              ],
-              "port": "{{user_port}}",
-              "path": [
-                "itachallenge",
-                "api",
-                "v1",
-                "user",
-                "solution"
-              ]
-            }
-          },
-          "response": []
-        },
         {
           "name": "User/challenges/solutions",
           "request": {
