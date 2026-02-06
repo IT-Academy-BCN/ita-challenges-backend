@@ -1123,33 +1123,7 @@
           },
           "response": []
         },
-        {
-          "name": "User/solution",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "http://{{ip}}:{{user_port}}/itachallenge/api/v1/user/solution/user/c3a92f9d-5d10-4f76-8c0b-6d884c549b1c/challenges/solutions",
-              "protocol": "http",
-              "host": [
-                "{{ip}}"
-              ],
-              "port": "{{user_port}}",
-              "path": [
-                "itachallenge",
-                "api",
-                "v1",
-                "user",
-                "solution",
-                "user",
-                "c3a92f9d-5d10-4f76-8c0b-6d884c549b1c",
-                "challenges",
-                "solutions"
-              ]
-            }
-          },
-          "response": []
-        },
+
         {
           "name": "User/solution - SUBMIT",
           "request": {
