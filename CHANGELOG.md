@@ -3,6 +3,14 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+### [itachallenge-challenge-3.2.1-RELEASE] - 2026-02-07
+
+### Deprecated
+
+- The field `uuid_user` in `SubmissionDto` is now deprecated.  
+  It remains functional for backward compatibility but is marked with `@Deprecated(since = "3.2.1", forRemoval = true)`.  
+  The backend will remove this field once the frontend stops using it (see issue #1090).
+
 ### [itachallenge-user-3.2.1-RELEASE] - 2026-02-10
 
 ### Changed
