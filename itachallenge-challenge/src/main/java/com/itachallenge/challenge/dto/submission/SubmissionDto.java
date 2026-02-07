@@ -12,7 +12,7 @@ public class SubmissionDto {
     /**Deprecated: this field will be removed in a future release.
      * Frontend must stop relying on uuid_user before removal.
      */
-    @Deprecated
+    @Deprecated(since = "0.0.1", forRemoval = true)
     @JsonProperty(value = "uuid_user")
     private String userId;
 
