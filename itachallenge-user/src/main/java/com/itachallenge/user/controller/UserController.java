@@ -2,9 +2,6 @@ package com.itachallenge.user.controller;
 
 import com.itachallenge.user.annotations.ValidGithubUsername;
 import com.itachallenge.user.document.UserDocument;
-import com.itachallenge.user.dto.SubmitSolutionResponseDto;
-import com.itachallenge.user.dto.UserSolutionRequestDto;
-import com.itachallenge.user.service.IUserSolutionService;
 import com.itachallenge.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -31,11 +28,9 @@ public class UserController {
     public static final String X_GITHUB_USERNAME ="X-Github-Username";
 
     private final UserService userService;
-    private final IUserSolutionService userSolutionService;
 
-    public UserController(UserService userService, IUserSolutionService userSolutionService) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.userSolutionService = userSolutionService;
     }
 
     @GetMapping(value = "/test")
