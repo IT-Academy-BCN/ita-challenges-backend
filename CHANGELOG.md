@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Updated UserSolutionRequestDto to include blank solution possibility to the User
+### [itachallenge-user-3.2.0-RELEASE] - 2026-02-05
+
+### Changed
+
+- Refactored bookmark retrieval logic into the `userinteraction` module (GitHub Task [#65]).
+- Created new professional path: `/itachallenge/api/v1/userinteraction/bookmarks/{userId}`.
+- Updated `BookmarkControllerTest` to validate both the new path and the legacy path.
+
+### Deprecated
+
+- The path `/itachallenge/api/v1/user/users/{userId}/bookmarks` is now deprecated. It remains functional for backward compatibility but returns a `Deprecation: true` header.
+
 ### [itachallenge-challenge-3.2.0-RELEASE] - 2026-01-27
 
 ### Added
