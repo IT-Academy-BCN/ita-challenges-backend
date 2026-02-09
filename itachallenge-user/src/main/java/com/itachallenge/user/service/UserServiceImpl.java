@@ -1,7 +1,7 @@
 package com.itachallenge.user.service;
 
 import com.itachallenge.user.document.UserDocument;
-import com.itachallenge.user.exception.BadUUIDException;
+import com.itachallenge.common.exception.BadUUIDException;
 import com.itachallenge.common.exception.NotFoundException;
 import com.itachallenge.user.repository.UserRepository;
 import com.itachallenge.userinteraction.document.bookmark.BookmarkDocument;

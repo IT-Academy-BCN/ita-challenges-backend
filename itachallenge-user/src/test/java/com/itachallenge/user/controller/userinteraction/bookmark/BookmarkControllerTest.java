@@ -1,6 +1,6 @@
 package com.itachallenge.user.controller.userinteraction.bookmark;
 
-import com.itachallenge.user.exception.BadUUIDException;
+import com.itachallenge.common.exception.BadUUIDException;
 import com.itachallenge.common.exception.NotFoundException;
 import com.itachallenge.userinteraction.service.bookmark.BookmarkService;
 import org.junit.jupiter.api.DisplayName;

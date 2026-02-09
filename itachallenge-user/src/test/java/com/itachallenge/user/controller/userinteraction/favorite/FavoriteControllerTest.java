@@ -1,6 +1,6 @@
 package com.itachallenge.user.controller.userinteraction.favorite;
 
-import com.itachallenge.user.exception.BadUUIDException;
+import com.itachallenge.common.exception.BadUUIDException;
 import com.itachallenge.common.exception.NotFoundException;
 import com.itachallenge.userinteraction.service.favorite.FavoriteService;
 import org.junit.jupiter.api.DisplayName;

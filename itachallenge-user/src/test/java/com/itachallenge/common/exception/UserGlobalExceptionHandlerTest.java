@@ -6,10 +6,7 @@ import static org.mockito.Mockito.mock;
 
 import com.itachallenge.githubcore.exception.GithubUnavailableException;
 import com.itachallenge.user.dto.APIErrorResponse;
-import com.itachallenge.user.exception.BadRequestException;
-import com.itachallenge.user.exception.DatabaseException;
-import com.itachallenge.user.exception.UnmodificableSolutionException;
-import com.itachallenge.user.exception.UsernameAlreadyExistsException;
+import com.itachallenge.user.exception.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
