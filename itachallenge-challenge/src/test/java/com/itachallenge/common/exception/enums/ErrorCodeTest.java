@@ -7,8 +7,8 @@ class ErrorCodeTest {
 
     @Test
     void testEnumValues() {
-        assertThat(ErrorCode.VALIDATION_ERROR.getCode()).isEqualTo("VALIDATION_ERROR");
-        assertThat(ErrorCode.CHALLENGE_NOT_FOUND.getCode()).isEqualTo("CHALLENGE_NOT_FOUND");
+        assertThat(ErrorCode.VALIDATION_ERROR.name()).isEqualTo("VALIDATION_ERROR");
+        assertThat(ErrorCode.CHALLENGE_NOT_FOUND.name()).isEqualTo("CHALLENGE_NOT_FOUND");
     }
 
     @Test

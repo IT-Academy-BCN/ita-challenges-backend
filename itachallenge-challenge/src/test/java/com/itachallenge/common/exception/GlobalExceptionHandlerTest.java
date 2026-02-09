@@ -393,7 +393,7 @@ class GlobalExceptionHandlerTest {
         assertTrue(response.getBody() instanceof ErrorResponseDto);
 
         ErrorResponseDto body = (ErrorResponseDto) response.getBody();
-        assertEquals(ErrorCode.VALIDATION_ERROR.getCode(), body.getErrorCode());
+        assertEquals(ErrorCode.VALIDATION_ERROR.name(), body.getErrorCode());
         assertEquals("/itachallenge/api/v1/challenge/challenges", body.getPath());
         assertNotNull(body.getTimestamp());
         assertNotNull(body.getDetails());
@@ -423,7 +423,7 @@ class GlobalExceptionHandlerTest {
 
         ErrorResponseDto body = (ErrorResponseDto) resp.getBody();
 
-        assertEquals(ErrorCode.VALIDATION_ERROR.getCode(), body.getErrorCode());
+        assertEquals(ErrorCode.VALIDATION_ERROR.name(), body.getErrorCode());
         assertEquals("Validation failed", body.getMessage());
         assertNotNull(body.getTimestamp());
         assertEquals("/itachallenge/api/v1/challenge/challenges", body.getPath());
