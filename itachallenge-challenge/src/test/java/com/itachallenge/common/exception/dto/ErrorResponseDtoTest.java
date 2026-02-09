@@ -1,40 +1,41 @@
 package com.itachallenge.common.exception.dto;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ErrorResponseDtoTest {
 
-    @Test
-    void testErrorResponseDtoBuilderAndGetters() {
-        String errorCode = "VALIDATION_ERROR";
-        String message = "Validation failed";
-        String timestamp = "2026-02-08T12:00:00Z";
-        String path = "/api/v1/test";
-        Map<String, Object> details = Map.of("field", "error message");
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
+    @Test
+    void whenDetailsIsPresent_thenItIsSerialized() throws Exception {
         ErrorResponseDto dto = ErrorResponseDto.builder()
-                .errorCode(errorCode)
-                .message(message)
-                .timestamp(timestamp)
-                .path(path)
-                .details(details)
+                .errorCode("VALIDATION_ERROR")
+                .message("Validation failed")
+                .timestamp("2026-02-08T12:00:00Z")
+                .path("/api/v1/test")
+                .details(Map.of("field", "error"))
                 .build();
 
-        assertThat(dto.getErrorCode()).isEqualTo(errorCode);
-        assertThat(dto.getMessage()).isEqualTo(message);
-        assertThat(dto.getTimestamp()).isEqualTo(timestamp);
-        assertThat(dto.getPath()).isEqualTo(path);
-        assertThat(dto.getDetails()).isEqualTo(details);
+        String json = objectMapper.writeValueAsString(dto);
+
+        assertThat(json).contains("\"details\"");
+        assertThat(json).contains("\"field\":\"error\"");
     }
 
     @Test
-    void testErrorResponseDtoNoDetails() {
+    void whenDetailsIsNull_thenItIsNotSerialized() throws Exception {
         ErrorResponseDto dto = ErrorResponseDto.builder()
-                .errorCode("ERR")
+                .errorCode("VALIDATION_ERROR")
+                .message("Validation failed")
+                .timestamp("2026-02-08T12:00:00Z")
+                .path("/api/v1/test")
                 .build();
 
-        assertThat(dto.getDetails()).isNull();
+        String json = objectMapper.writeValueAsString(dto);
+
+        assertThat(json).doesNotContain("details");
     }
 }
