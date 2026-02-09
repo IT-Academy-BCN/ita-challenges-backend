@@ -4,21 +4,27 @@ import com.fasterxml.jackson.databind.JsonMappingException.Reference;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.itachallenge.challenge.dto.MessageDto;
 import com.itachallenge.challenge.exception.*;
+import com.itachallenge.common.exception.dto.ErrorResponseDto;
+import com.itachallenge.common.exception.enums.ErrorCode;
 import com.itachallenge.submission.exception.SubmissionNotFoundException;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.server.ResponseStatusException;
 import com.itachallenge.submission.exception.UnmodifiableSubmissionException;
 
-
+import java.time.Instant;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -54,7 +60,21 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ChallengeNotFoundException.class)
-    public ResponseEntity<MessageDto> handleChallengeNotFoundException(ChallengeNotFoundException ex) {
+    public ResponseEntity<?> handleChallengeNotFoundException(ChallengeNotFoundException ex,
+                                                              HttpServletRequest request) {
+        if (request.getMethod().equals(HttpMethod.GET.name())
+                && request.getRequestURI()
+                .startsWith("/itachallenge/api/v1/challenge/challenges/")
+                && !request.getRequestURI().endsWith("/byFilter")
+                && !request.getRequestURI().endsWith("/related")) {
+            ErrorResponseDto error = ErrorResponseDto.builder()
+                    .errorCode(ErrorCode.CHALLENGE_NOT_FOUND.getCode())
+                    .message(ex.getMessage())
+                    .timestamp(Instant.now().toString())
+                    .path(request.getRequestURI())
+                    .build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+        }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageDto(ex.getMessage()));
     }
 
@@ -84,7 +104,27 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<MessageDto> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+    public ResponseEntity<?> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex,
+                                                                   HttpServletRequest request) {
+        if (request.getMethod().equals(HttpMethod.POST.name())
+                && request.getRequestURI().equals("/itachallenge/api/v1/challenge/challenges")) {
+            Map<String, Object> details = ex.getBindingResult()
+                    .getFieldErrors()
+                    .stream()
+                    .collect(Collectors.toMap(
+                            FieldError::getField,
+                            FieldError::getDefaultMessage,
+                            (first, second) -> first
+                    ));
+            ErrorResponseDto error = ErrorResponseDto.builder()
+                    .errorCode(ErrorCode.VALIDATION_ERROR.getCode())
+                    .message("Validation failed")
+                    .timestamp(Instant.now().toString())
+                    .path(request.getRequestURI())
+                    .details(details)
+                    .build();
+            return ResponseEntity.badRequest().body(error);
+        }
         return ResponseEntity.badRequest().body(new MessageDto(ex.getMessage()));
     }
 
@@ -109,13 +149,28 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(InvalidFormatException.class)
-    public ResponseEntity<MessageDto> handleInvalidFormat(InvalidFormatException ex) {
+    public ResponseEntity<?> handleInvalidFormat(InvalidFormatException ex,
+                                                 HttpServletRequest request) {
+        if (request.getMethod().equals(HttpMethod.POST.name())
+                && request.getRequestURI().equals("/itachallenge/api/v1/challenge/challenges")) {
+            Map<String, Object> details = Map.of(
+                    "invalidValue", String.valueOf(ex.getValue())
+            );
+            ErrorResponseDto error = ErrorResponseDto.builder()
+                    .errorCode(ErrorCode.VALIDATION_ERROR.getCode())
+                    .message("Validation failed")
+                    .timestamp(Instant.now().toString())
+                    .path(request.getRequestURI())
+                    .details(details)
+                    .build();
+            return ResponseEntity.badRequest().body(error);
+        }
         return buildTagUuidError(ex)
                 .orElseGet(() ->
-        ResponseEntity.badRequest().body(new MessageDto(ex.getOriginalMessage()))
+                        ResponseEntity.badRequest().body(new MessageDto(ex.getOriginalMessage()))
                 );
     }
-    
+
     private Optional<ResponseEntity<MessageDto>> buildTagUuidError(InvalidFormatException ex) {
         if (UUID.class.equals(ex.getTargetType())) {
             String badValue = ex.getValue().toString();
