@@ -68,7 +68,7 @@ public class GlobalExceptionHandler {
                 && !request.getRequestURI().endsWith("/byFilter")
                 && !request.getRequestURI().endsWith("/related")) {
             ErrorResponseDto error = ErrorResponseDto.builder()
-                    .errorCode(ErrorCode.CHALLENGE_NOT_FOUND.getCode())
+                    .errorCode(ErrorCode.CHALLENGE_NOT_FOUND.name())
                     .message(ex.getMessage())
                     .timestamp(Instant.now().toString())
                     .path(request.getRequestURI())
@@ -117,7 +117,7 @@ public class GlobalExceptionHandler {
                             (first, second) -> first
                     ));
             ErrorResponseDto error = ErrorResponseDto.builder()
-                    .errorCode(ErrorCode.VALIDATION_ERROR.getCode())
+                    .errorCode(ErrorCode.VALIDATION_ERROR.name())
                     .message("Validation failed")
                     .timestamp(Instant.now().toString())
                     .path(request.getRequestURI())
@@ -157,7 +157,7 @@ public class GlobalExceptionHandler {
                     "invalidValue", String.valueOf(ex.getValue())
             );
             ErrorResponseDto error = ErrorResponseDto.builder()
-                    .errorCode(ErrorCode.VALIDATION_ERROR.getCode())
+                    .errorCode(ErrorCode.VALIDATION_ERROR.name())
                     .message("Validation failed")
                     .timestamp(Instant.now().toString())
                     .path(request.getRequestURI())
