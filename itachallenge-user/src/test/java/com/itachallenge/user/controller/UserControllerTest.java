@@ -4,7 +4,7 @@ import com.itachallenge.user.document.UserDocument;
 import com.itachallenge.user.document.enums.Role;
 import com.itachallenge.user.dto.UserSolutionResponseDto;
 import com.itachallenge.user.exception.BadUUIDException;
-import com.itachallenge.user.exception.NotFoundException;
+import com.itachallenge.common.exception.NotFoundException;
 import com.itachallenge.common.exception.UserGlobalExceptionHandler;
 import com.itachallenge.user.service.IUserSolutionService;
 import com.itachallenge.user.service.UserService;

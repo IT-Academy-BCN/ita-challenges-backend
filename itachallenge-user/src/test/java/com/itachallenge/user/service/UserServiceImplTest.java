@@ -3,7 +3,7 @@ package com.itachallenge.user.service;
 import com.itachallenge.user.document.UserDocument;
 import com.itachallenge.user.document.enums.Role;
 import com.itachallenge.user.exception.BadUUIDException;
-import com.itachallenge.user.exception.NotFoundException;
+import com.itachallenge.common.exception.NotFoundException;
 import com.itachallenge.user.repository.UserRepository;
 import com.itachallenge.userinteraction.document.bookmark.BookmarkDocument;
 import com.itachallenge.userinteraction.repository.bookmark.BookmarkRepository;
