@@ -120,7 +120,7 @@ class FavoriteControllerIntegrationTest {
 
     private void addFavorite(String userId, String challengeId) {
         webTestClient.post()
-                .uri("/itachallenge/api/v1/users/{userId}/favorites/{challengeId}", userId, challengeId) // Nueva ruta
+                .uri("/itachallenge/api/v1/users/{userId}/favorites/{challengeId}", userId, challengeId)
                 .exchange()
                 .expectStatus().isCreated();
     }
