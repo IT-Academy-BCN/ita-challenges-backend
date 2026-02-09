@@ -17,20 +17,25 @@ import java.util.Set;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/itachallenge/api/v1/users/{userId}/favorites")
-public class FavoriteController {
+@RequestMapping("/itachallenge/api/v1/userinteraction/favorites")
+public class FavoriteLegacyController {
 
-    private static final Logger log = LoggerFactory.getLogger(FavoriteController.class);
+    private static final Logger log = LoggerFactory.getLogger(FavoriteLegacyController.class);
 
     private final FavoriteService favoriteService;
 
-    public FavoriteController(FavoriteService favoriteService) {
+    public FavoriteLegacyController(FavoriteService favoriteService) {
         this.favoriteService = favoriteService;
     }
 
+    /**
+     * @deprecated This endpoint is deprecated because the domain logic has moved
+     * to a subresource structure.
+     */
     @Operation(
-            summary = "Add Challenge to User Favorite Challenges",
-            description = "Adds challenge to user favorites",
+            summary = "DEPRECATED: Add Challenge to User Favorite Challenges",
+            description = "Adds challenge to user favorites. Use /itachallenge/api/v1/users/{userId}/favorites/{challengeId} instead.",
+            deprecated = true,
             parameters = {
                     @Parameter(
                             name = "userId",
@@ -73,25 +78,33 @@ public class FavoriteController {
                     )
             }
     )
-    @PostMapping("/{challengeId}")
-    public Mono<ResponseEntity<Boolean>> addToFavorites(
-            @PathVariable String userId,
-            @PathVariable String challengeId) {
+    @PostMapping("/users/{userId}/favorites/{challengeId}")
+    @Deprecated(since = "2.0.4-RELEASE", forRemoval = true)
+    public Mono<ResponseEntity<Boolean>> addToFavoritesLegacy(@PathVariable String userId, @PathVariable String challengeId) {
         return favoriteService.addChallengeToFavorites(userId, challengeId)
                 .map(added -> {
-                    if (Boolean.TRUE.equals(added)) {
-                        log.info("Challenge '{}' added to user '{}' favorites", challengeId, userId);
-                        return ResponseEntity.status(HttpStatus.CREATED).body(true);
-                    } else {
-                        log.info("User's '{}' favorites already contain Challenge '{}'", userId, challengeId);
-                        return ResponseEntity.ok().body(false);
-                    }
+                    ResponseEntity.BodyBuilder responseBuilder = Boolean.TRUE.equals(added) ?
+                            ResponseEntity.status(HttpStatus.CREATED) : ResponseEntity.ok();
+
+                    log.info(Boolean.TRUE.equals(added) ?
+                            "Challenge '{}' added to user '{}' favorites" :
+                            "User's '{}' favorites already contain Challenge '{}'", challengeId, userId);
+
+                    return responseBuilder
+                            .header("Deprecation", "true")
+                            .header("Link", "</itachallenge/api/v1/users/" + userId + "/favorites/" + challengeId + ">; rel=\"successor-version\"")
+                            .body(added);
                 });
     }
 
+    /**
+     * @deprecated This endpoint is deprecated because the domain logic has moved
+     * to a subresource structure.
+     */
     @Operation(
-            summary = "Gets challenges marked as favorites by a user",
-            description = "Returns all favorites that the specified user has marked.",
+            summary = "DEPRECATED: Gets challenges marked as favorites by a user",
+            description = "Returns all favorites. Use /itachallenge/api/v1/users/{userId}/favorites instead.",
+            deprecated = true,
             parameters = {
                     @Parameter(
                             name = "userId",
@@ -107,18 +120,27 @@ public class FavoriteController {
                     @ApiResponse(responseCode = "500", description = "Unexpected error")
             }
     )
-    @GetMapping
-    public Mono<ResponseEntity<Set<UUID>>> getUserFavorites(@PathVariable String userId) {
+    @GetMapping("/{userId}")
+    @Deprecated(since = "2.0.4-RELEASE", forRemoval = true)
+    public Mono<ResponseEntity<Set<UUID>>> getUserFavoritesLegacy(@PathVariable String userId) {
         return favoriteService.getUserFavorites(userId)
                 .map(favorites -> {
                     log.info("Retrieved {} favorite challenges for user {}", favorites.size(), userId);
-                    return ResponseEntity.ok(favorites);
+                    return ResponseEntity.ok()
+                            .header("Deprecation", "true")
+                            .header("Link", "</itachallenge/api/v1/users/" + userId + "/favorites>; rel=\"successor-version\"")
+                            .body(favorites);
                 });
     }
 
+    /**
+     * @deprecated This endpoint is deprecated because the domain logic has moved
+     * to a subresource structure.
+     */
     @Operation(
-            summary = "Delete Challenge from User Favorite Challenges",
-            description = "Deletes challenge from user favorites",
+            summary = "DEPRECATED: Delete Challenge from User Favorite Challenges",
+            description = "Deletes challenge from favorites. Use /itachallenge/api/v1/users/{userId}/favorites/{challengeId} instead.",
+            deprecated = true,
             parameters = {
                     @Parameter(
                             name = "userId",
@@ -156,19 +178,19 @@ public class FavoriteController {
                     )
             }
     )
-    @DeleteMapping("/{challengeId}")
-    public Mono<ResponseEntity<Boolean>> deleteFromFavorites(
-            @PathVariable String userId,
-            @PathVariable String challengeId) {
+    @DeleteMapping("/users/{userId}/favorites/{challengeId}")
+    @Deprecated(since = "2.0.4-RELEASE", forRemoval = true)
+    public Mono<ResponseEntity<Boolean>> deleteFromFavoritesLegacy(@PathVariable String userId, @PathVariable String challengeId) {
         return favoriteService.deleteChallengeFromFavorites(userId, challengeId)
                 .map(deleted -> {
-                    if (Boolean.TRUE.equals(deleted)) {
-                        log.info("Challenge '{}' deleted from user '{}' favorites", challengeId, userId);
-                        return ResponseEntity.ok().body(true);
-                    } else {
-                        log.info("No change, User's '{}' favorites doesn't contain Challenge '{}'", userId, challengeId);
-                        return ResponseEntity.ok().body(false);
-                    }
+                    log.info(Boolean.TRUE.equals(deleted) ?
+                            "Challenge '{}' deleted from user '{}' favorites" :
+                            "No change, User's '{}' favorites doesn't contain Challenge '{}'", challengeId, userId);
+
+                    return ResponseEntity.ok()
+                            .header("Deprecation", "true")
+                            .header("Link", "</itachallenge/api/v1/users/" + userId + "/favorites/" + challengeId + ">; rel=\"successor-version\"")
+                            .body(deleted);
                 });
     }
 }
