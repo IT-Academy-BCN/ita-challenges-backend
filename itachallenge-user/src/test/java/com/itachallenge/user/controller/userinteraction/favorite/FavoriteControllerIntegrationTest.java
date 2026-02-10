@@ -65,7 +65,7 @@ class FavoriteControllerIntegrationTest {
         addFavorite(userId, challengeId2);
 
         webTestClient.get()
-                .uri("/itachallenge/api/v1/users/{userId}/favorites", userId) // Nueva ruta
+                .uri("/itachallenge/api/v1/users/{userId}/favorites", userId)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
@@ -80,7 +80,7 @@ class FavoriteControllerIntegrationTest {
     @Test
     void getUserFavorites_WithInvalidUUID_Returns400() {
         webTestClient.get()
-                .uri("/itachallenge/api/v1/users/{userId}/favorites", "invalid-uuid") // Nueva ruta
+                .uri("/itachallenge/api/v1/users/{userId}/favorites", "invalid-uuid")
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isBadRequest()
@@ -95,7 +95,7 @@ class FavoriteControllerIntegrationTest {
         addFavorite(userId, challengeId);
 
         webTestClient.delete()
-                .uri("/itachallenge/api/v1/users/{userId}/favorites/{challengeId}", userId, challengeId) // Nueva ruta
+                .uri("/itachallenge/api/v1/users/{userId}/favorites/{challengeId}", userId, challengeId)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(Boolean.class).isEqualTo(true);
@@ -120,7 +120,7 @@ class FavoriteControllerIntegrationTest {
 
     private void addFavorite(String userId, String challengeId) {
         webTestClient.post()
-                .uri("/itachallenge/api/v1/users/{userId}/favorites/{challengeId}", userId, challengeId) // Nueva ruta
+                .uri("/itachallenge/api/v1/users/{userId}/favorites/{challengeId}", userId, challengeId)
                 .exchange()
                 .expectStatus().isCreated();
     }
