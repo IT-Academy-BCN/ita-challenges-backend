@@ -3,14 +3,16 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-### [itachallenge-user-3.2.1-UNRELEASE] - 2026-02-10
+### [itachallenge-user-3.2.2-RELEASE] - 2026-02-10
 
 ### Changed
 - Refactor of UserGlobalExceptionHandler from `main/java/com/itachallenge/user/exception` to
-  `main/java/com/itachallenge/common/exception`.
+ `main/java/com/itachallenge/common/exception`.
 - Refactor of UserGlobalExceptionHandlerTest from `test/java/com/itachallenge/user/exception` to
-    `test/java/com/itachallenge/common/exception`.
+  `test/java/com/itachallenge/common/exception`.
 - Refactor of `NotFoundException` from `main/java/com/itachallenge/user/exception` to
+  `main/java/com/itachallenge/common/exception`.
+- Refactor `BadUUIDException` from `main/java/com/itachallenge/user/exception` to
   `main/java/com/itachallenge/common/exception`.
 
 ### [itachallenge-user-3.2.1-RELEASE] - 2026-02-10
