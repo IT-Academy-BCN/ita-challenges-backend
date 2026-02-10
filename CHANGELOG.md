@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 - Removed legacy GET endpoint for user solutions from User microservice.
+### [itachallenge-user-3.2.1-RELEASE] - 2026-02-10
+
+### Changed
+- Updated UserSolutionRequestDto to include blank solution possibility to the User
+
+### [itachallenge-challenge-3.2.1-RELEASE] - 2026-02-09
+
+### Added
+- New common.exception.dto.ErrorResponseDto to standardize error responses. (GitHub Task [#133], Subtask [#138], PR [#1088])
+- New common.exception.enums.ErrorCode to formalize error codes across the API. (GitHub Task [#133], Subtask [#138], PR [#1088])
+- Added ChallengeControllerErrorTest to cover error scenarios that require HTTP request context. (GitHub Task [#133], Subtask [#138], PR [#1088])
+
+### Changed
+- Updated common.exception.GlobalExceptionHandler to return the new error response format for: (GitHub Task [#133], Subtask [#138], PR [#1088])
+  - GET /challenges/{id} → 404 Not Found
+  - POST /challenges → 400 Validation error
+- Updated GlobalExceptionHandlerTest to align with the new error-handling guidelines. (GitHub Task [#133], Subtask [#138], PR [#1088])
+- Refactored ChallengeControllerTest to remove tests that depend on raw HTTP request handling. (GitHub Task [#133], Subtask [#138], PR [#1088])
 
 ### [itachallenge-user-3.2.0-RELEASE] - 2026-02-05
 
