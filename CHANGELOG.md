@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Removed
-- Removed legacy PUT `/itachallenge/api/v1/user/solution` endpoint and related code from User service.
+- Removed legacy GET `/itachallenge/api/v1/user/solution` endpoint and related code from User service.
 
 ### [itachallenge-user-3.2.0-RELEASE] - 2026-02-05
 
