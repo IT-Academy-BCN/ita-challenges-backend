@@ -106,6 +106,8 @@ class UserControllerTest {
         verify(userService, times(1)).getUser(githubUsername);
     }
 
+    @Deprecated
+    @SuppressWarnings("removal")
     @Test
     void addToBookmarks_WhenAdded_Returns201() {
         String userId = UUID.randomUUID().toString();
@@ -122,6 +124,8 @@ class UserControllerTest {
         verify(userService, times(1)).addChallengeToBookmarks(userId, challengeId);
     }
 
+    @Deprecated
+    @SuppressWarnings("removal")
     @Test
     void addToBookmarks_WhenAlreadyInBookmarks_Returns200() {
         String userId = UUID.randomUUID().toString();
@@ -138,6 +142,8 @@ class UserControllerTest {
         verify(userService, times(1)).addChallengeToBookmarks(userId, challengeId);
     }
 
+    @Deprecated
+    @SuppressWarnings("removal")
     @Test
     void addToBookmarks_WhenUserNotExists_Returns404() {
         String userId = UUID.randomUUID().toString();
@@ -154,6 +160,8 @@ class UserControllerTest {
         verify(userService, times(1)).addChallengeToBookmarks(userId, challengeId);
     }
 
+    @Deprecated
+    @SuppressWarnings("removal")
     @Test
     void addToBookmarks_WhenBadFormattedId_Returns400() {
         String userId = "invalidUuid";
@@ -170,6 +178,8 @@ class UserControllerTest {
         verify(userService, times(1)).addChallengeToBookmarks(userId, challengeId);
     }
 
+    @Deprecated
+    @SuppressWarnings("removal")
     @Test
     void addToBookmarks_WhenUnexpectedError_Returns500() {
         String userId = UUID.randomUUID().toString();
@@ -186,6 +196,8 @@ class UserControllerTest {
         verify(userService, times(1)).addChallengeToBookmarks(userId, challengeId);
     }
 
+    @Deprecated
+    @SuppressWarnings("removal")
     @Test
     void deleteFromBookmarks_WhenDeleted_Returns200() {
         String userId = UUID.randomUUID().toString();
@@ -202,6 +214,8 @@ class UserControllerTest {
         verify(userService, times(1)).deleteChallengeFromBookmarks(userId, challengeId);
     }
 
+    @Deprecated
+    @SuppressWarnings("removal")
     @Test
     void deleteFromBookmarks_WhenNotInBookmarks_Returns200() {
         String userId = UUID.randomUUID().toString();
@@ -218,6 +232,8 @@ class UserControllerTest {
         verify(userService, times(1)).deleteChallengeFromBookmarks(userId, challengeId);
     }
 
+    @Deprecated
+    @SuppressWarnings("removal")
     @Test
     void deleteFromBookmarks_WhenUserNotExists_Returns404() {
         String userId = UUID.randomUUID().toString();
@@ -234,6 +250,8 @@ class UserControllerTest {
         verify(userService, times(1)).deleteChallengeFromBookmarks(userId, challengeId);
     }
 
+    @Deprecated
+    @SuppressWarnings("removal")
     @Test
     void deleteFromBookmarks_WhenBadFormattedId_Returns404() {
         String userId = "invalidUuid";
@@ -250,6 +268,8 @@ class UserControllerTest {
         verify(userService, times(1)).deleteChallengeFromBookmarks(userId, challengeId);
     }
 
+    @Deprecated
+    @SuppressWarnings("removal")
     @Test
     void deleteFromBookmarks_WhenUnexpectedError_Returns500() {
         String userId = UUID.randomUUID().toString();
@@ -265,7 +285,6 @@ class UserControllerTest {
 
         verify(userService, times(1)).deleteChallengeFromBookmarks(userId, challengeId);
     }
-
 
     @Test
     @DisplayName("GET /users/{userId}/solutions returns solutions")
@@ -297,10 +316,10 @@ class UserControllerTest {
                 .hasSize(2)
                 .value(list -> {
 
-                    Assertions.assertEquals(sol1.getUserId(), list.getFirst().getUserId());
-                    Assertions.assertEquals(sol1.getChallengeId(), list.getFirst().getChallengeId());
-                    Assertions.assertEquals(sol1.getLanguageId(), list.getFirst().getLanguageId());
-                    Assertions.assertEquals(sol1.getSolutionText(), list.getFirst().getSolutionText());
+                    Assertions.assertEquals(sol1.getUserId(), list.get(0).getUserId());
+                    Assertions.assertEquals(sol1.getChallengeId(), list.get(0).getChallengeId());
+                    Assertions.assertEquals(sol1.getLanguageId(), list.get(0).getLanguageId());
+                    Assertions.assertEquals(sol1.getSolutionText(), list.get(0).getSolutionText());
 
                     Assertions.assertEquals(sol2.getUserId(), list.get(1).getUserId());
                     Assertions.assertEquals(sol2.getChallengeId(), list.get(1).getChallengeId());
