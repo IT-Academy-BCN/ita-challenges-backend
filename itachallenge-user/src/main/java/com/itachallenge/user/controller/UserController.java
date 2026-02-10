@@ -119,6 +119,10 @@ public class UserController {
                 );
     }
 
+    /**
+     * @deprecated This endpoint is deprecated because the domain logic has moved
+     * to a subresource structure.
+     */
     @Operation(
             summary = "Add Challenge to User Bookmark Challenges",
             description = "Adds challenge to user Bookmarks",
@@ -166,6 +170,7 @@ public class UserController {
     )
 
     @PostMapping("/users/{userId}/bookmarks/{challengeId}")
+    @Deprecated(forRemoval = true)
     public Mono<ResponseEntity<Boolean>> addToBookmarks(@PathVariable String userId, @PathVariable String challengeId) {
         return userService.addChallengeToBookmarks(userId, challengeId)
                 .map(added -> {
@@ -179,6 +184,10 @@ public class UserController {
                 });
     }
 
+    /**
+     * @deprecated This endpoint is deprecated because the domain logic has moved
+     * to a subresource structure.
+     */
     @Operation(
             summary = "Delete Challenge from User Bookmark Challenges",
             description = "Deletes challenge from user bookmarks",
@@ -220,6 +229,7 @@ public class UserController {
             }
     )
     @DeleteMapping("/users/{userId}/bookmarks/{challengeId}")
+    @Deprecated(forRemoval = true)
     public Mono<ResponseEntity<Boolean>> deleteFromBookmarks(@PathVariable String userId, @PathVariable String challengeId) {
         return userService.deleteChallengeFromBookmarks(userId, challengeId)
                 .map(deleted -> {
