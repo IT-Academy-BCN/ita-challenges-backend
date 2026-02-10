@@ -316,10 +316,10 @@ class UserControllerTest {
                 .hasSize(2)
                 .value(list -> {
 
-                    Assertions.assertEquals(sol1.getUserId(), list.get(0).getUserId());
-                    Assertions.assertEquals(sol1.getChallengeId(), list.get(0).getChallengeId());
-                    Assertions.assertEquals(sol1.getLanguageId(), list.get(0).getLanguageId());
-                    Assertions.assertEquals(sol1.getSolutionText(), list.get(0).getSolutionText());
+                    Assertions.assertEquals(sol1.getUserId(), list.getFirst().getUserId());
+                    Assertions.assertEquals(sol1.getChallengeId(), list.getFirst().getChallengeId());
+                    Assertions.assertEquals(sol1.getLanguageId(), list.getFirst().getLanguageId());
+                    Assertions.assertEquals(sol1.getSolutionText(), list.getFirst().getSolutionText());
 
                     Assertions.assertEquals(sol2.getUserId(), list.get(1).getUserId());
                     Assertions.assertEquals(sol2.getChallengeId(), list.get(1).getChallengeId());
