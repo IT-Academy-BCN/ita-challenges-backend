@@ -1,4 +1,4 @@
-## CHANGELOG
+**## CHANGELOG
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
@@ -6,36 +6,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Removed
-- Removed legacy GET endpoint for user solutions from User microservice.
-### [itachallenge-user-3.2.1-RELEASE] - 2026-02-10
-
-### Changed
-- Updated UserSolutionRequestDto to include blank solution possibility to the User
-
-### [itachallenge-challenge-3.2.1-RELEASE] - 2026-02-09
-
-### Added
-- New common.exception.dto.ErrorResponseDto to standardize error responses. (GitHub Task [#133], Subtask [#138], PR [#1088])
-- New common.exception.enums.ErrorCode to formalize error codes across the API. (GitHub Task [#133], Subtask [#138], PR [#1088])
-- Added ChallengeControllerErrorTest to cover error scenarios that require HTTP request context. (GitHub Task [#133], Subtask [#138], PR [#1088])
-
-### Changed
-- Updated common.exception.GlobalExceptionHandler to return the new error response format for: (GitHub Task [#133], Subtask [#138], PR [#1088])
-  - GET /challenges/{id} → 404 Not Found
-  - POST /challenges → 400 Validation error
-- Updated GlobalExceptionHandlerTest to align with the new error-handling guidelines. (GitHub Task [#133], Subtask [#138], PR [#1088])
-- Refactored ChallengeControllerTest to remove tests that depend on raw HTTP request handling. (GitHub Task [#133], Subtask [#138], PR [#1088])
+- Removed legacy PUT `/itachallenge/api/v1/user/solution` endpoint and related code from User service.
 
 ### [itachallenge-user-3.2.0-RELEASE] - 2026-02-05
 
 ### Changed
+
 - Refactored bookmark retrieval logic into the `userinteraction` module (GitHub Task [#65]).
 - Created new professional path: `/itachallenge/api/v1/userinteraction/bookmarks/{userId}`.
 - Updated `BookmarkControllerTest` to validate both the new path and the legacy path.
 
 ### Deprecated
-- The path `/itachallenge/api/v1/user/users/{userId}/bookmarks` is now deprecated.
 
+- The path `/itachallenge/api/v1/user/users/{userId}/bookmarks` is now deprecated. It remains functional for backward compatibility but returns a `Deprecation: true` header.
 
 ### [itachallenge-challenge-3.2.0-RELEASE] - 2026-01-27
 
@@ -67,7 +50,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Refactored the logic for deleting favorites to integrate it into the FavoriteService structure (with controller) (Taiga US [#904], Taiga Task [#918], PR [#1053])
 - Moved add favorite controller logic from UserController to FavoriteController (Taiga US [#904], Taiga Task [#953], PR [#1058])
 
-### [itachallenge-user-3.1.2-RELEASE] - 2025-12-04
+### [itachallenge-user-3.1.2-RELEASE] - 2025-12-04**
 
 ### Changed
 - Created new path on FavoriteController to get favorites by user. (PR #1055) HU TAIGA #903
