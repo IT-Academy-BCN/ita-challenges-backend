@@ -1,4 +1,4 @@
-package com.itachallenge.submission.openapi;
+package com.itachallenge.challenge.dto.submission;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
