@@ -6,17 +6,15 @@ import static org.mockito.Mockito.mock;
 
 import com.itachallenge.githubcore.exception.GithubUnavailableException;
 import com.itachallenge.user.dto.APIErrorResponse;
+import jakarta.validation.ConstraintViolationException;
+import java.net.ConnectException;
+import java.net.SocketTimeoutException;
+import java.util.Objects;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-
-import jakarta.validation.ConstraintViolationException;
-
-import java.net.ConnectException;
-import java.net.SocketTimeoutException;
-import java.util.Objects;
 
 class UserGlobalExceptionHandlerTest {
 
@@ -91,7 +89,7 @@ class UserGlobalExceptionHandlerTest {
     }
 
     @Test
-    void testHandleUnmodifiableSolutionException(){
+    void testHandleUnmodifiableSolutionException() {
         String message = "There's an existing solution with status 'SUBMITTED_COMPLETE'.";
         UnmodificableSolutionException exception = new UnmodificableSolutionException(message);
         ResponseEntity<String> response = exceptionHandler.handleUnmodifiableSolutionException(exception);
@@ -110,7 +108,6 @@ class UserGlobalExceptionHandlerTest {
         assertEquals("The username 'alfonso79' is already registered.", response.getBody());
     }
 
-
     @Test
     void handleGithubUnavailable_shouldReturn503() {
         Throwable connectCause = new ConnectException("Connection refused");
@@ -118,9 +115,12 @@ class UserGlobalExceptionHandlerTest {
 
         ResponseEntity<APIErrorResponse> response = exceptionHandler.handleGithubUnavailable(ex);
 
-        assertEquals(HttpStatus.SERVICE_UNAVAILABLE, response.getStatusCode(),
+        assertEquals(
+                HttpStatus.SERVICE_UNAVAILABLE,
+                response.getStatusCode(),
                 "The handler must return HTTP 503 for a ConnectException cause.");
-        assertTrue(Objects.requireNonNull(response.getBody()).getMessage().contains("unavailable"),
+        assertTrue(
+                Objects.requireNonNull(response.getBody()).getMessage().contains("unavailable"),
                 "The secured message should indicate service unavailability.");
     }
 
@@ -131,23 +131,28 @@ class UserGlobalExceptionHandlerTest {
 
         ResponseEntity<APIErrorResponse> response = exceptionHandler.handleGithubUnavailable(ex);
 
-        assertEquals(HttpStatus.GATEWAY_TIMEOUT, response.getStatusCode(),
-        "The handler must return HTTP 504 for a SocketTimeoutException cause.");
-        assertTrue(Objects.requireNonNull(response.getBody()).getMessage().contains("timed out"),
+        assertEquals(
+                HttpStatus.GATEWAY_TIMEOUT,
+                response.getStatusCode(),
+                "The handler must return HTTP 504 for a SocketTimeoutException cause.");
+        assertTrue(
+                Objects.requireNonNull(response.getBody()).getMessage().contains("timed out"),
                 "The secured message should indicate a timeout.");
     }
 
     @Test
     void handleGithubUnavailable_shouldReturn503ForOtherCauses() {
-        GithubUnavailableException ex = new GithubUnavailableException("Unknown error.");
+        GithubUnavailableException ex =
+                new GithubUnavailableException("Unknown error.", new RuntimeException("boom"));
 
         ResponseEntity<APIErrorResponse> response = exceptionHandler.handleGithubUnavailable(ex);
 
-        assertEquals(HttpStatus.SERVICE_UNAVAILABLE, response.getStatusCode(),
-                "The handler must return HTTP 503 for other types of causes (not recognized or null).");
-        assertTrue(Objects.requireNonNull(response.getBody()).getMessage().contains("external service error"),
+        assertEquals(
+                HttpStatus.SERVICE_UNAVAILABLE,
+                response.getStatusCode(),
+                "The handler must return HTTP 503 for other types of causes (not recognized).");
+        assertTrue(
+                Objects.requireNonNull(response.getBody()).getMessage().contains("external service error"),
                 "The secured message should indicate an external service error.");
     }
-
 }
-
