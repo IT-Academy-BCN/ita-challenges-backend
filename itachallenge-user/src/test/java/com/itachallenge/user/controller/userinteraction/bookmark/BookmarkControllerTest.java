@@ -51,6 +51,7 @@ class BookmarkControllerTest {
                 .uri("/itachallenge/api/v1/users/{userId}/bookmarks", userId)
                 .exchange()
                 .expectStatus().isOk()
+                .expectHeader().valueEquals("Deprecation", "true")
                 .expectBodyList(UUID.class)
                 .hasSize(expectedBookmarks.size())
                 .contains(expectedBookmarks.toArray(new UUID[0]));
