@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `main/java/com/itachallenge/common/exception`.
 - Refactor of UserGlobalExceptionHandlerTest from `test/java/com/itachallenge/user/exception` to
     `test/java/com/itachallenge/common/exception`.
+- Refactor of `NotFoundException` from `main/java/com/itachallenge/user/exception` to
+  `main/java/com/itachallenge/common/exception`.
 
 ### [itachallenge-user-3.2.1-RELEASE] - 2026-02-10
 
