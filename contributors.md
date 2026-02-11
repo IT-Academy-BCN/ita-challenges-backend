@@ -115,5 +115,6 @@
 * Ana Beuzón Rodríguez - https://github.com/anaberod
 * Adolfo Caicaguare - https://github.com/adolcc
 * Alvaro Mendoza Cuello - https://github.com/AlvaroLMC
+* Carlos de Cozar Ruiz-Salinas - https://github.com/carlosPc1987
 * Lucía (Lucy) I. Castro Bertaina - https://github.com/Lucy-SD
 * Lois González Alonso - https://github.com/pantalois

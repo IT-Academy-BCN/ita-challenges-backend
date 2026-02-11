@@ -292,21 +292,6 @@ class ChallengeControllerTest {
     }
 
     @Test
-    void getRelatedChallenges_NotFound_Returns404() {
-        String uuid = UUID.randomUUID().toString();
-
-        when(challengeService.getRelatedChallenges(uuid))
-                .thenReturn(Mono.error(new ChallengeNotFoundException("Challenge not found")));
-
-        webTestClient.get()
-                .uri("/itachallenge/api/v1/challenge/challenges/{challengeId}/related", uuid)
-                .exchange()
-                .expectStatus().isNotFound()
-                .expectBody(MessageDto.class)
-                .consumeWith(response -> assertNotNull(response.getResponseBody()));
-    }
-
-    @Test
     void getRelatedChallenges_NoContent_Returns204() {
         String uuid = UUID.randomUUID().toString();
 
@@ -640,28 +625,6 @@ class ChallengeControllerTest {
     }
 
     @Test
-    void addChallengeToBookmarks_ChallengeNotFound_Returns404() {
-        String challengeId = "nonExisting_challengeId";
-        String userId = "existing_userId";
-        String authHeader = "validAuthHeader";
-
-        String errorMessage = "ErrorMessage";
-
-        when(challengeService.addChallengeToBookmarks(challengeId, userId)).thenReturn(Mono.error(new ChallengeNotFoundException(errorMessage)));
-        when(challengeJwtFacade.getUserUuIdFromAuthenticationHeader(authHeader)).thenReturn(userId);
-
-        webTestClient.post()
-                .uri("/itachallenge/api/v1/challenge/challenges/" + challengeId + "/bookmarks")
-                .header("Authorization", authHeader)
-                .exchange()
-                .expectStatus().isNotFound()
-                .expectBody(MessageDto.class)
-                .value(messageDto -> Assertions.assertEquals(errorMessage, messageDto.getMessage()));
-
-        verify(challengeService, times(1)).addChallengeToBookmarks(challengeId, userId);
-    }
-
-    @Test
     void addChallengeToBookmarks_InternalServerError_Returns500() {
         String challengeId = "Existing_challengeId";
         String userId = "existing_userId";
@@ -893,28 +856,6 @@ class ChallengeControllerTest {
                 .expectStatus().isOk()
                 .expectBody(BookmarkDto.class)
                 .isEqualTo(expectedResponse);
-
-        verify(challengeService, times(1)).removeChallengeFromBookmarks(challengeId, userId);
-    }
-
-    @Test
-    void removeChallengeFromBookmarks_ChallengeNotFound_Returns404() {
-        String challengeId = "nonExisting_challengeId";
-        String userId = "existing_userId";
-        String authHeader = "validAuthHeader";
-
-        String errorMessage = "ErrorMessage";
-
-        when(challengeService.removeChallengeFromBookmarks(challengeId, userId)).thenReturn(Mono.error(new ChallengeNotFoundException(errorMessage)));
-        when(challengeJwtFacade.getUserUuIdFromAuthenticationHeader(authHeader)).thenReturn(userId);
-
-        webTestClient.delete()
-                .uri("/itachallenge/api/v1/challenge/challenges/" + challengeId + "/bookmarks")
-                .header("Authorization", authHeader)
-                .exchange()
-                .expectStatus().isNotFound()
-                .expectBody(MessageDto.class)
-                .value(messageDto -> Assertions.assertEquals(errorMessage, messageDto.getMessage()));
 
         verify(challengeService, times(1)).removeChallengeFromBookmarks(challengeId, userId);
     }

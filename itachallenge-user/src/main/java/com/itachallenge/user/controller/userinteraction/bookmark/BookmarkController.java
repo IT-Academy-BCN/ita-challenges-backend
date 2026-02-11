@@ -15,7 +15,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/itachallenge/api/v1/user")
+@RequestMapping("/itachallenge/api/v1/users/{userId}/bookmarks")
 public class BookmarkController {
 
     private static final Logger log = LoggerFactory.getLogger(BookmarkController.class);
@@ -44,7 +44,8 @@ public class BookmarkController {
                     @ApiResponse(responseCode = "500", description = "Unexpected error")
             }
     )
-    @GetMapping("/users/{userId}/bookmarks")
+
+    @GetMapping
     public Mono<ResponseEntity<Set<UUID>>> getUserBookmarks(@PathVariable String userId) {
         return bookmarkService.getUserBookmarks(userId)
                 .map(bookmarks -> {
