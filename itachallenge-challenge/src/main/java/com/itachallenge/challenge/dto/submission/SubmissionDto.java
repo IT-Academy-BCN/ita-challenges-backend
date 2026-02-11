@@ -1,6 +1,6 @@
 package com.itachallenge.challenge.dto.submission;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 @AllArgsConstructor
@@ -9,10 +9,8 @@ import lombok.*;
 @Setter
 @Builder
 public class SubmissionDto {
-    /**Deprecated: this field will be removed in a future release.
-     * Frontend must stop relying on uuid_user before removal.
-     */
     @Deprecated(since = "3.2.1", forRemoval = true)
+    @Schema(deprecated = true, description = "Deprecated: this field will be removed in a future release.")
     @JsonProperty(value = "uuid_user")
     private String userId;
 
