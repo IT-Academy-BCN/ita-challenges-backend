@@ -116,7 +116,7 @@ class UserControllerTest {
     void addToBookmarks_WhenAdded_Returns201() {
         String userId = UUID.randomUUID().toString();
         String challengeId = UUID.randomUUID().toString();
-        when(bookmarkService.addChallengeToBookmarks(userId, challengeId))
+        when(userService.addChallengeToBookmarks(userId, challengeId))
                 .thenReturn(Mono.just(true));
 
         webTestClient.post()
@@ -125,7 +125,7 @@ class UserControllerTest {
                 .expectStatus().isEqualTo(HttpStatus.CREATED)
                 .expectBody(Boolean.class).isEqualTo(true);
 
-        verify(bookmarkService, times(1)).addChallengeToBookmarks(userId, challengeId);
+        verify(userService, times(1)).addChallengeToBookmarks(userId, challengeId);
     }
 
     @Deprecated
@@ -134,7 +134,7 @@ class UserControllerTest {
     void addToBookmarks_WhenAlreadyInBookmarks_Returns200() {
         String userId = UUID.randomUUID().toString();
         String challengeId = UUID.randomUUID().toString();
-        when(bookmarkService.addChallengeToBookmarks(userId, challengeId))
+        when(userService.addChallengeToBookmarks(userId, challengeId))
                 .thenReturn(Mono.just(false));
 
         webTestClient.post()
@@ -143,7 +143,7 @@ class UserControllerTest {
                 .expectStatus().isOk()
                 .expectBody(Boolean.class).isEqualTo(false);
 
-        verify(bookmarkService, times(1)).addChallengeToBookmarks(userId, challengeId);
+        verify(userService, times(1)).addChallengeToBookmarks(userId, challengeId);
     }
 
     @Deprecated
@@ -152,7 +152,7 @@ class UserControllerTest {
     void addToBookmarks_WhenUserNotExists_Returns404() {
         String userId = UUID.randomUUID().toString();
         String challengeId = UUID.randomUUID().toString();
-        when(bookmarkService.addChallengeToBookmarks(userId, challengeId))
+        when(userService.addChallengeToBookmarks(userId, challengeId))
                 .thenReturn(Mono.error(new NotFoundException("User not found")));
 
         webTestClient.post()
@@ -161,7 +161,7 @@ class UserControllerTest {
                 .expectStatus().isEqualTo(HttpStatus.NOT_FOUND)
                 .expectBody(String.class).isEqualTo("User not found");
 
-        verify(bookmarkService, times(1)).addChallengeToBookmarks(userId, challengeId);
+        verify(userService, times(1)).addChallengeToBookmarks(userId, challengeId);
     }
 
     @Deprecated
@@ -170,7 +170,7 @@ class UserControllerTest {
     void addToBookmarks_WhenBadFormattedId_Returns400() {
         String userId = "invalidUuid";
         String challengeId = "invalidUUid";
-        when(bookmarkService.addChallengeToBookmarks(userId, challengeId))
+        when(userService.addChallengeToBookmarks(userId, challengeId))
                 .thenReturn(Mono.error(new BadUUIDException("Error message")));
 
         webTestClient.post()
@@ -179,7 +179,7 @@ class UserControllerTest {
                 .expectStatus().isEqualTo(HttpStatus.BAD_REQUEST)
                 .expectBody(String.class).isEqualTo("The provided IDs are not valid.");
 
-        verify(bookmarkService, times(1)).addChallengeToBookmarks(userId, challengeId);
+        verify(userService, times(1)).addChallengeToBookmarks(userId, challengeId);
     }
 
     @Deprecated
@@ -188,7 +188,7 @@ class UserControllerTest {
     void addToBookmarks_WhenUnexpectedError_Returns500() {
         String userId = UUID.randomUUID().toString();
         String challengeId = UUID.randomUUID().toString();
-        when(bookmarkService.addChallengeToBookmarks(userId, challengeId))
+        when(userService.addChallengeToBookmarks(userId, challengeId))
                 .thenReturn(Mono.error(new Exception()));
 
         webTestClient.post()
@@ -197,7 +197,7 @@ class UserControllerTest {
                 .expectStatus().isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR)
                 .expectBody(String.class).isEqualTo("Unexpected error happened.");
 
-        verify(bookmarkService, times(1)).addChallengeToBookmarks(userId, challengeId);
+        verify(userService, times(1)).addChallengeToBookmarks(userId, challengeId);
     }
 
     @Deprecated
@@ -206,7 +206,7 @@ class UserControllerTest {
     void deleteFromBookmarks_WhenDeleted_Returns200() {
         String userId = UUID.randomUUID().toString();
         String challengeId = UUID.randomUUID().toString();
-        when(bookmarkService.deleteChallengeFromBookmarks(userId, challengeId))
+        when(userService.deleteChallengeFromBookmarks(userId, challengeId))
                 .thenReturn(Mono.just(true));
 
         webTestClient.delete()
@@ -215,7 +215,7 @@ class UserControllerTest {
                 .expectStatus().isEqualTo(HttpStatus.OK)
                 .expectBody(Boolean.class).isEqualTo(true);
 
-        verify(bookmarkService, times(1)).deleteChallengeFromBookmarks(userId, challengeId);
+        verify(userService, times(1)).deleteChallengeFromBookmarks(userId, challengeId);
     }
 
     @Deprecated
@@ -224,7 +224,7 @@ class UserControllerTest {
     void deleteFromBookmarks_WhenNotInBookmarks_Returns200() {
         String userId = UUID.randomUUID().toString();
         String challengeId = UUID.randomUUID().toString();
-        when(bookmarkService.deleteChallengeFromBookmarks(userId, challengeId))
+        when(userService.deleteChallengeFromBookmarks(userId, challengeId))
                 .thenReturn(Mono.just(false));
 
         webTestClient.delete()
@@ -233,7 +233,7 @@ class UserControllerTest {
                 .expectStatus().isOk()
                 .expectBody(Boolean.class).isEqualTo(false);
 
-        verify(bookmarkService, times(1)).deleteChallengeFromBookmarks(userId, challengeId);
+        verify(userService, times(1)).deleteChallengeFromBookmarks(userId, challengeId);
     }
 
     @Deprecated
@@ -242,7 +242,7 @@ class UserControllerTest {
     void deleteFromBookmarks_WhenUserNotExists_Returns404() {
         String userId = UUID.randomUUID().toString();
         String challengeId = UUID.randomUUID().toString();
-        when(bookmarkService.deleteChallengeFromBookmarks(userId, challengeId))
+        when(userService.deleteChallengeFromBookmarks(userId, challengeId))
                 .thenReturn(Mono.error(new NotFoundException("User not found")));
 
         webTestClient.delete()
@@ -251,7 +251,7 @@ class UserControllerTest {
                 .expectStatus().isEqualTo(HttpStatus.NOT_FOUND)
                 .expectBody(String.class).isEqualTo("User not found");
 
-        verify(bookmarkService, times(1)).deleteChallengeFromBookmarks(userId, challengeId);
+        verify(userService, times(1)).deleteChallengeFromBookmarks(userId, challengeId);
     }
 
     @Deprecated
@@ -260,7 +260,7 @@ class UserControllerTest {
     void deleteFromBookmarks_WhenBadFormattedId_Returns404() {
         String userId = "invalidUuid";
         String challengeId = "invalidUUid";
-        when(bookmarkService.deleteChallengeFromBookmarks(userId, challengeId))
+        when(userService.deleteChallengeFromBookmarks(userId, challengeId))
                 .thenReturn(Mono.error(new BadUUIDException("Error message")));
 
         webTestClient.delete()
@@ -269,7 +269,7 @@ class UserControllerTest {
                 .expectStatus().isEqualTo(HttpStatus.BAD_REQUEST)
                 .expectBody(String.class).isEqualTo("The provided IDs are not valid.");
 
-        verify(bookmarkService, times(1)).deleteChallengeFromBookmarks(userId, challengeId);
+        verify(userService, times(1)).deleteChallengeFromBookmarks(userId, challengeId);
     }
 
     @Deprecated
@@ -278,7 +278,7 @@ class UserControllerTest {
     void deleteFromBookmarks_WhenUnexpectedError_Returns500() {
         String userId = UUID.randomUUID().toString();
         String challengeId = UUID.randomUUID().toString();
-        when(bookmarkService.deleteChallengeFromBookmarks(userId, challengeId))
+        when(userService.deleteChallengeFromBookmarks(userId, challengeId))
                 .thenReturn(Mono.error(new Exception()));
 
         webTestClient.delete()
@@ -287,7 +287,7 @@ class UserControllerTest {
                 .expectStatus().isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR)
                 .expectBody(String.class).isEqualTo("Unexpected error happened.");
 
-        verify(bookmarkService, times(1)).deleteChallengeFromBookmarks(userId, challengeId);
+        verify(userService, times(1)).deleteChallengeFromBookmarks(userId, challengeId);
     }
 
     @Test
