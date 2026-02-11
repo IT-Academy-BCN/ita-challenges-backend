@@ -7,6 +7,7 @@ import com.itachallenge.user.dto.UserSolutionRequestDto;
 import com.itachallenge.user.dto.UserSolutionResponseDto;
 import com.itachallenge.user.service.IUserSolutionService;
 import com.itachallenge.user.service.UserService;
+import com.itachallenge.userinteraction.service.bookmark.BookmarkService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -35,10 +36,12 @@ public class UserController {
 
     private final UserService userService;
     private final IUserSolutionService userSolutionService;
+    private final BookmarkService bookmarkService;
 
-    public UserController(UserService userService, IUserSolutionService userSolutionService) {
+    public UserController(UserService userService, IUserSolutionService userSolutionService, BookmarkService bookmarkService) {
         this.userService = userService;
         this.userSolutionService = userSolutionService;
+        this.bookmarkService  = bookmarkService;
     }
 
     @GetMapping(value = "/test")
@@ -172,7 +175,7 @@ public class UserController {
     @PostMapping("/users/{userId}/bookmarks/{challengeId}")
     @Deprecated(forRemoval = true)
     public Mono<ResponseEntity<Boolean>> addToBookmarks(@PathVariable String userId, @PathVariable String challengeId) {
-        return userService.addChallengeToBookmarks(userId, challengeId)
+        return bookmarkService.addChallengeToBookmarks(userId, challengeId)
                 .map(added -> {
                     if (Boolean.TRUE.equals(added)) {
                         log.info("Challenge '{}' added to user '{}' bookmarks", challengeId, userId);
@@ -231,7 +234,7 @@ public class UserController {
     @DeleteMapping("/users/{userId}/bookmarks/{challengeId}")
     @Deprecated(forRemoval = true)
     public Mono<ResponseEntity<Boolean>> deleteFromBookmarks(@PathVariable String userId, @PathVariable String challengeId) {
-        return userService.deleteChallengeFromBookmarks(userId, challengeId)
+        return bookmarkService.deleteChallengeFromBookmarks(userId, challengeId)
                 .map(deleted -> {
                     if (Boolean.TRUE.equals(deleted)) {
                         log.info("Challenge '{}' deleted from user '{}' bookmarks", challengeId, userId);
