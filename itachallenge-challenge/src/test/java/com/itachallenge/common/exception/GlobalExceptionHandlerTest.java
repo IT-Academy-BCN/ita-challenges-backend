@@ -6,7 +6,10 @@ import com.itachallenge.challenge.dto.MessageDto;
 import com.itachallenge.challenge.exception.*;
 import com.itachallenge.challenge.repository.*;
 import com.itachallenge.challenge.service.*;
+import com.itachallenge.common.exception.dto.ErrorResponseDto;
+import com.itachallenge.common.exception.enums.ErrorCode;
 import com.itachallenge.jwtcore.service.IJwtService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.hamcrest.MatcherAssert;
@@ -22,6 +25,7 @@ import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -33,8 +37,7 @@ import com.fasterxml.jackson.databind.JsonMappingException.Reference;
 import java.util.*;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -107,8 +110,8 @@ class GlobalExceptionHandlerTest {
         ResponseEntity<MessageDto> responseEntity = handler.handleResponseStatusException(ex);
 
         // Assert
-                    assertEquals(expectedStatus, responseEntity.getStatusCode());
-                    assertEquals(expectedErrorMessage, responseEntity.getBody().getMessage());
+        assertEquals(expectedStatus, responseEntity.getStatusCode());
+        assertEquals(expectedErrorMessage, responseEntity.getBody().getMessage());
     }
 
     @Test
@@ -125,7 +128,7 @@ class GlobalExceptionHandlerTest {
         ResponseEntity<MessageDto> responseEntity = handler.handleResponseStatusException(ex);
 
         // Assert
-                    assertEquals(expectedStatus, responseEntity.getStatusCode());
+        assertEquals(expectedStatus, responseEntity.getStatusCode());
         assertEquals("Validation failed", Objects.requireNonNull(responseEntity.getBody()).getMessage());
     }
 
@@ -137,8 +140,13 @@ class GlobalExceptionHandlerTest {
         when(bindingResult.getFieldErrors()).thenReturn(List.of(new FieldError("object", "field", "message")));
         when(methodArgumentNotValidException.getBindingResult()).thenReturn(bindingResult);
 
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setMethod("POST");
+        request.setRequestURI("/itachallenge/api/v1/challenge/challenges");
+
         // Act
-        ResponseEntity<MessageDto> responseEntity = globalExceptionHandler.handleMethodArgumentNotValidException(methodArgumentNotValidException);
+        ResponseEntity<?> responseEntity =
+                globalExceptionHandler.handleMethodArgumentNotValidException(methodArgumentNotValidException, request);
 
         // Assert
         MatcherAssert.assertThat(responseEntity, notNullValue());
@@ -156,8 +164,13 @@ class GlobalExceptionHandlerTest {
         when(bindingResult.getFieldErrors()).thenReturn(List.of(fieldError));
         when(methodArgumentNotValidException.getBindingResult()).thenReturn(bindingResult);
 
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setMethod("PUT");
+        request.setRequestURI("/whatever");
+
         // Act
-        ResponseEntity<MessageDto> responseEntity = globalExceptionHandler.handleMethodArgumentNotValidException(methodArgumentNotValidException);
+        ResponseEntity<?> responseEntity =
+                globalExceptionHandler.handleMethodArgumentNotValidException(methodArgumentNotValidException, request);
 
         // Assert
         MatcherAssert.assertThat(responseEntity, notNullValue());
@@ -182,7 +195,7 @@ class GlobalExceptionHandlerTest {
         ResponseEntity<MessageDto> responseEntity = globalExceptionHandler.handleConstraintViolation(exception);
 
         // Assert
-                    assertEquals(BAD_REQUEST, responseEntity.getStatusCode());
+        assertEquals(BAD_REQUEST, responseEntity.getStatusCode());
         String responseBody = Objects.requireNonNull(responseEntity.getBody()).getMessage();
         Assertions.assertTrue(responseBody.contains("Expected message"));
     }
@@ -193,12 +206,17 @@ class GlobalExceptionHandlerTest {
         // Arrange
         ChallengeNotFoundException challengeNotFoundException = new ChallengeNotFoundException("Challenge not found");
 
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getMethod()).thenReturn("GET");
+        when(request.getRequestURI()).thenReturn("/whatever");
+
         // Act
-        ResponseEntity<MessageDto> responseEntity = globalExceptionHandler.handleChallengeNotFoundException(challengeNotFoundException);
+        ResponseEntity<?> responseEntity = globalExceptionHandler.handleChallengeNotFoundException(challengeNotFoundException, request);
 
         // Assert
         assertEquals(NOT_FOUND_REQUEST, responseEntity.getStatusCode());
-        String responseBody = Objects.requireNonNull(responseEntity.getBody()).getMessage();
+        MessageDto body = (MessageDto) responseEntity.getBody();
+        String responseBody = Objects.requireNonNull(body).getMessage();
         Assertions.assertTrue(responseBody.contains("Challenge not found"));
     }
 
@@ -237,7 +255,7 @@ class GlobalExceptionHandlerTest {
         ResponseEntity<MessageDto> responseEntity = globalExceptionHandler.handleBadUUIDException(badUUIDException);
 
         // Assert
-                    assertEquals(BAD_REQUEST, responseEntity.getStatusCode());
+        assertEquals(BAD_REQUEST, responseEntity.getStatusCode());
         String responseBody = Objects.requireNonNull(responseEntity.getBody()).getMessage();
         Assertions.assertTrue(responseBody.contains("Invalid Id format"));
     }
@@ -277,7 +295,7 @@ class GlobalExceptionHandlerTest {
         String responseBody = responseEntity.getBody().getMessage();
         assertTrue(responseBody.contains("Tag not found"));
     }
-    
+
     @Test
     void testHandleInvalidFormat_TagsField() {
         InvalidFormatException ex = InvalidFormatException.from(
@@ -286,18 +304,23 @@ class GlobalExceptionHandlerTest {
                 "invalid-uuid",
                 UUID.class
         );
-        
+
         ex.prependPath(new Reference(null, "tags"));
-        
-        ResponseEntity<MessageDto> resp = globalExceptionHandler.handleInvalidFormat(ex);
-        
+
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setMethod("GET");
+        request.setRequestURI("/any/other/endpoint");
+
+        ResponseEntity<?> resp = globalExceptionHandler.handleInvalidFormat(ex, request);
+
         assertEquals(HttpStatus.BAD_REQUEST, resp.getStatusCode());
+        assertTrue(resp.getBody() instanceof MessageDto);
         assertEquals(
                 "invalid format UUID tag: invalid-uuid",
-                Objects.requireNonNull(resp.getBody()).getMessage()
+                ((MessageDto) resp.getBody()).getMessage()
         );
     }
-    
+
     @Test
     void testHandleInvalidFormat_OtherFieldFallback() {
         InvalidFormatException ex = InvalidFormatException.from(
@@ -307,13 +330,102 @@ class GlobalExceptionHandlerTest {
                 UUID.class
         );
         ex.prependPath(new Reference(null, "otherField"));
-        
-        ResponseEntity<MessageDto> resp = globalExceptionHandler.handleInvalidFormat(ex);
-        
+
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setMethod("GET");
+        request.setRequestURI("/any/other/endpoint");
+
+        ResponseEntity<?> resp = globalExceptionHandler.handleInvalidFormat(ex, request);
+
         assertEquals(HttpStatus.BAD_REQUEST, resp.getStatusCode());
+        assertEquals(HttpStatus.BAD_REQUEST, resp.getStatusCode());
+        assertTrue(resp.getBody() instanceof MessageDto);
         assertEquals(
                 ex.getOriginalMessage(),
-                Objects.requireNonNull(resp.getBody()).getMessage()
+                ((MessageDto) resp.getBody()).getMessage()
         );
+    }
+
+    @Test
+    void testHandleChallengeNotFound_GET_ReturnsErrorResponseDto() {
+        String challengeId = "123e4567-e89b-12d3-a456-426614174000";
+        ChallengeNotFoundException ex =
+                new ChallengeNotFoundException("Challenge with id " + challengeId + " not found");
+
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getMethod()).thenReturn("GET");
+        when(request.getRequestURI()).thenReturn("/itachallenge/api/v1/challenge/challenges/" + challengeId);
+
+        ResponseEntity<?> response =
+                globalExceptionHandler.handleChallengeNotFoundException(ex, request);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertTrue(response.getBody() instanceof ErrorResponseDto);
+
+        ErrorResponseDto body = (ErrorResponseDto) response.getBody();
+        assertEquals("CHALLENGE_NOT_FOUND", body.getErrorCode());
+        assertEquals("Challenge with id " + challengeId + " not found", body.getMessage());
+        assertEquals("/itachallenge/api/v1/challenge/challenges/" + challengeId, body.getPath());
+        assertNotNull(body.getTimestamp());
+    }
+
+    @Test
+    void testHandleMethodArgumentNotValid_POST_ReturnsErrorResponseDtoWithDetails() {
+        // Arrange
+        FieldError fieldError =
+                new FieldError("challengeCreateDto", "title", "must not be blank");
+
+        BindingResult bindingResult = mock(BindingResult.class);
+        when(bindingResult.getFieldErrors()).thenReturn(List.of(fieldError));
+
+        MethodArgumentNotValidException ex = mock(MethodArgumentNotValidException.class);
+        when(ex.getBindingResult()).thenReturn(bindingResult);
+
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setMethod("POST");
+        request.setRequestURI("/itachallenge/api/v1/challenge/challenges");
+
+        // Act
+        ResponseEntity<?> response =
+                globalExceptionHandler.handleMethodArgumentNotValidException(ex, request);
+        // Assert
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertTrue(response.getBody() instanceof ErrorResponseDto);
+
+        ErrorResponseDto body = (ErrorResponseDto) response.getBody();
+        assertEquals(ErrorCode.VALIDATION_ERROR.name(), body.getErrorCode());
+        assertEquals("/itachallenge/api/v1/challenge/challenges", body.getPath());
+        assertNotNull(body.getTimestamp());
+        assertNotNull(body.getDetails());
+        assertEquals("must not be blank", body.getDetails().get("title"));
+    }
+
+    @Test
+    void testHandleInvalidFormat_PostChallenges_ReturnsErrorResponseDto() {
+        // Arrange
+        InvalidFormatException ex = InvalidFormatException.from(
+                null,
+                "cannot deserialize value of type java.util.UUID from String \"JAxxVA\"",
+                "JAxxVA",
+                UUID.class
+        );
+        ex.prependPath(new Reference(null, "tags"));
+
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setMethod("POST");
+        request.setRequestURI("/itachallenge/api/v1/challenge/challenges");
+
+        // Act
+        ResponseEntity<?> resp = globalExceptionHandler.handleInvalidFormat(ex, request);
+        // Assert
+        assertEquals(HttpStatus.BAD_REQUEST, resp.getStatusCode());
+        assertTrue(resp.getBody() instanceof ErrorResponseDto);
+
+        ErrorResponseDto body = (ErrorResponseDto) resp.getBody();
+
+        assertEquals(ErrorCode.VALIDATION_ERROR.name(), body.getErrorCode());
+        assertEquals("Validation failed", body.getMessage());
+        assertNotNull(body.getTimestamp());
+        assertEquals("/itachallenge/api/v1/challenge/challenges", body.getPath());
     }
 }

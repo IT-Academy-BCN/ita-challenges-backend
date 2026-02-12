@@ -344,4 +344,23 @@ class UserSolutionServiceImplTest {
         verify(userSolutionRepository).save(any(UserSolutionDocument.class));
         verifyNoInteractions(challengeService);
     }
+    @Test
+    @DisplayName("addSolution SUBMIT action with blank solution text throws BadRequestException")
+    void addSolution_SubmitAction_BlankText_ThrowsException() {
+        UserSolutionRequestDto request = UserSolutionRequestDto.builder()
+                .userId(userUuid.toString())
+                .challengeId(challengeUuid.toString())
+                .languageId(languageUuid.toString())
+                .action(SolutionAction.SUBMIT)
+                .solutionText("   ") 
+                .build();
+
+        StepVerifier.create(userSolutionService.addSolution(request))
+                .expectErrorMatches(throwable ->
+                        throwable instanceof BadRequestException &&
+                                throwable.getMessage().equals("Solution text is required when finalizing (SUBMIT)."))
+                .verify();
+
+        verifyNoInteractions(userSolutionRepository);
+    }
 }

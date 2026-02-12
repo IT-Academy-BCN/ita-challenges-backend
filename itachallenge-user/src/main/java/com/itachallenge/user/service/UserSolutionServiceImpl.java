@@ -34,6 +34,11 @@ public class UserSolutionServiceImpl implements IUserSolutionService {
     //TODO : to be moved to the challenge micro when we do the entire solutions refactor
     @Override
     public Mono<SubmitSolutionResponseDto> addSolution(UserSolutionRequestDto userSolutionDto) {
+        if (SolutionAction.SUBMIT.equals(userSolutionDto.getAction())) {
+            if (userSolutionDto.getSolutionText() == null || userSolutionDto.getSolutionText().isBlank()) {
+                return Mono.error(new BadRequestException("Solution text is required when finalizing (SUBMIT)."));
+            }
+        }
         UUID challengeUuid = UUID.fromString(userSolutionDto.getChallengeId());
         UUID languageUuid = UUID.fromString(userSolutionDto.getLanguageId());
         UUID userUuid = UUID.fromString(userSolutionDto.getUserId());
@@ -122,7 +127,6 @@ public class UserSolutionServiceImpl implements IUserSolutionService {
                                         .build())
                 );
     }
-
     private Mono<UUID> validateAndParseUuid(String userId) {
         if (userId == null || userId.trim().isEmpty()) {
             return Mono.error(new BadRequestException("The 'userId' parameter cannot be null or empty."));
