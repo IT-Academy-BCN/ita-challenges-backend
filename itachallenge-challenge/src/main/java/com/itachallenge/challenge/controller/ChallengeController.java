@@ -3,6 +3,7 @@ package com.itachallenge.challenge.controller;
 import com.itachallenge.challenge.annotations.ValidGenericPattern;
 import com.itachallenge.challenge.config.PropertiesConfig;
 import com.itachallenge.challenge.dto.*;
+import com.itachallenge.challenge.exception.UnauthorizedException;
 import com.itachallenge.common.exception.BadRequestException;
 import com.itachallenge.challenge.exception.JwtException;
 import com.itachallenge.challenge.service.IChallengeService;
@@ -291,7 +292,7 @@ public class ChallengeController {
             @RequestHeader(name = "Authorization", required = false) String authHeader
     ) {
         return Mono.fromCallable(() -> challengeJwtFacade.getUserUuIdFromAuthenticationHeader(authHeader))
-                .onErrorMap(io.jsonwebtoken.JwtException.class, e -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Missing or invalid authorization token", e))
+                .onErrorMap(e -> new UnauthorizedException("Missing or invalid authorization token"))
                 .flatMap(userId -> challengeService.deleteChallengeById(challengeId))
                 .map(ResponseEntity::ok)
                 .doOnError(error -> log.error("Error deleting challenge: {}", error.getMessage()));
