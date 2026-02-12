@@ -50,6 +50,6 @@ public class UserServiceImpl implements UserService {
     @Deprecated(forRemoval = true)
     @Override
     public Mono<Boolean> deleteChallengeFromBookmarks(String userId, String challengeId) {
-        return bookmarkServiceImpl.addChallengeToBookmarks(userId, challengeId);
+        return bookmarkServiceImpl.deleteChallengeFromBookmarks(userId, challengeId);
     }
 }
