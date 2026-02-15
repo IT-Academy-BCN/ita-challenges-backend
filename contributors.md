@@ -119,3 +119,4 @@
 * Lucía (Lucy) I. Castro Bertaina - https://github.com/Lucy-SD
 * Lois González Alonso - https://github.com/pantalois
 * Andrea Pan i Ubiergo - https://github.com/Apani13
+* Pol Serrano Franquesa - https://github.com/polserrano8
