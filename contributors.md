@@ -120,3 +120,4 @@
 * Lois González Alonso - https://github.com/pantalois
 * Pol Serrano Franquesa - https://github.com/polserrano8
 * Andrea Pan i Ubiergo - https://github.com/Apani13
+* Pol Serrano Franquesa - https://github.com/polserrano8
