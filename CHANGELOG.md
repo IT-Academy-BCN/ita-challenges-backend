@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The field `uuid_user` in `SubmissionDto` is now deprecated.  
   It remains functional for backward compatibility but is marked with `@Deprecated(since = "3.2.1", forRemoval = true)`.  
   The backend will remove this field once the frontend stops using it (see issue #1090).
+## [Unreleased]
+
+### Removed
+- Removed legacy GET endpoint for user solutions from User microservice.
 
 ### [itachallenge-user-3.2.1-RELEASE] - 2026-02-10
 
