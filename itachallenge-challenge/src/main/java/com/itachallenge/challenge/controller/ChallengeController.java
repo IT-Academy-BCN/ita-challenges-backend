@@ -98,7 +98,7 @@ public class ChallengeController {
         log.info("~~~~~~~~~~~~~~~~~~~~~~");
 
 
-        return "Hello from ITA Challenge!!!";
+        return "Hello from ITA Challenge!!!!";
     }
 
     @GetMapping(path = "/challenges/{challengeId}")
