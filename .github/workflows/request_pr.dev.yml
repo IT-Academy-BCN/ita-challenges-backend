@@ -45,11 +45,12 @@ jobs:
           java -version
           ./gradlew --version
 
+      # --- Docker / Testcontainers ---
       - name: Docker diagnostics
         run: |
           echo "DOCKER_HOST=$DOCKER_HOST"
-          docker version || true
-          docker info || true
+          docker version
+          docker info
           ls -l /var/run/docker.sock || true
 
       - name: Start Docker (if needed)
@@ -57,8 +58,21 @@ jobs:
           sudo systemctl start docker || true
           docker info
 
+      # --- Build & Tests ---
       - name: Build + Test
         run: ./gradlew build --info --stacktrace --no-build-cache
+
+      # If build fails, print test XMLs to see the exact failing test/error
+      - name: Print failing tests (JUnit XML)
+        if: failure()
+        run: |
+          echo "=== Test result files ==="
+          find . -path "*build/test-results/test/TEST-*.xml" -print | head -n 50 || true
+          echo "=== First failing test files (head) ==="
+          for f in $(find . -path "*build/test-results/test/TEST-*.xml" | head -n 5); do
+            echo "---- $f ----"
+            sed -n '1,220p' "$f"
+          done
 
       - name: Debug Test Reports Directory
         if: always()
@@ -71,6 +85,7 @@ jobs:
           name: test-report
           path: itachallenge-challenge/build/reports/tests/
 
+      # --- Sonar ---
       - name: Analyze (Sonar)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
