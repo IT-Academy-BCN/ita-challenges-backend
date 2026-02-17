@@ -63,41 +63,36 @@ jobs:
         run: |
           ./gradlew build --info --stacktrace --no-build-cache --continue 2>&1 | tee gradle-build.log
 
-      # ✅ Robust extraction (works even when "* What went wrong" isn't matched)
-      - name: Extract failure reason (robust)
+      # ✅ Bulletproof extraction: always prints useful context even if patterns vary
+      - name: Extract failure reason (bulletproof)
         if: always()
         run: |
-          echo "=== Showing last 250 lines (usually contains the real error) ==="
-          tail -n 250 gradle-build.log || true
+          echo "=== gradle-build.log size (lines) ==="
+          wc -l gradle-build.log || true
 
           echo
-          echo "=== Key markers (FAILURE / Task FAILED / Caused by) ==="
-          grep -nE "FAILURE:|Build failed with an exception|\\* Exception is:|\\* What went wrong:|Caused by:|> Task .* FAILED" gradle-build.log | head -n 200 || true
+          echo "=== LAST 400 LINES OF gradle-build.log ==="
+          tail -n 400 gradle-build.log || true
 
           echo
-          echo "=== Context around first FAILURE block (lines after FAILURE:) ==="
-          fail_line=$(grep -n "FAILURE:" gradle-build.log | head -n 1 | cut -d: -f1 || true)
-          if [ -n "$fail_line" ]; then
-            start=$((fail_line))
-            end=$((fail_line + 140))
-            echo "Printing lines $start..$end"
+          echo "=== FIRST occurrence of FAILURE: (line + 200 lines) ==="
+          line=$(grep -n "FAILURE:" gradle-build.log | head -n 1 | cut -d: -f1 || true)
+          if [ -n "$line" ]; then
+            start=$line
+            end=$((line + 200))
+            echo "Printing lines ${start}..${end}"
             sed -n "${start},${end}p" gradle-build.log || true
           else
-            echo "No FAILURE: line found in gradle-build.log"
+            echo "No FAILURE: found"
           fi
 
           echo
-          echo "=== Context around first Task FAILED line ==="
-          task_line=$(grep -nE "> Task .* FAILED" gradle-build.log | head -n 1 | cut -d: -f1 || true)
-          if [ -n "$task_line" ]; then
-            start=$((task_line - 40))
-            if [ $start -lt 1 ]; then start=1; fi
-            end=$((task_line + 80))
-            echo "Printing lines $start..$end"
-            sed -n "${start},${end}p" gradle-build.log || true
-          else
-            echo "No '> Task ... FAILED' line found in gradle-build.log"
-          fi
+          echo "=== FIRST 30 'Caused by:' lines ==="
+          grep -n "Caused by:" gradle-build.log | head -n 30 || true
+
+          echo
+          echo "=== FIRST 30 task FAILED lines ==="
+          grep -n "> Task .* FAILED" gradle-build.log | head -n 30 || true
 
       # Upload the Gradle log so we can inspect it even if the UI truncates output
       - name: Upload Gradle Log
