@@ -12,7 +12,7 @@ jar {
     }
 }
 
-jacoco{
+jacoco {
     toolVersion = '0.8.11'
     reportsDirectory = layout.buildDirectory.dir('jacocoXml')
 }
@@ -67,8 +67,13 @@ dependencies {
     testImplementation 'org.hamcrest:hamcrest:2.2'
     testImplementation 'org.assertj:assertj-core:3.24.2'
     testImplementation 'io.projectreactor:reactor-test:3.1.0.RELEASE'
-    testImplementation 'org.testcontainers:mongodb:1.17.6'
-    testImplementation 'org.testcontainers:junit-jupiter:1.17.6'
+
+    // --- Testcontainers (UPDATED via BOM to avoid Docker API incompatibilities in CI) ---
+    testImplementation platform("org.testcontainers:testcontainers-bom:1.20.4")
+    testImplementation "org.testcontainers:testcontainers"
+    testImplementation "org.testcontainers:junit-jupiter"
+    testImplementation "org.testcontainers:mongodb"
+
     testImplementation 'com.squareup.okhttp3:mockwebserver:4.9.3'
     testImplementation 'org.junit.platform:junit-platform-suite-engine:1.8.1'
     testImplementation group: 'io.github.hakky54', name: 'logcaptor', version: '2.9.3'
