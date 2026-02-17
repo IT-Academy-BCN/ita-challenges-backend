@@ -45,6 +45,7 @@ jobs:
           java -version
           ./gradlew --version
 
+      # --- Docker / Testcontainers ---
       - name: Docker diagnostics
         run: |
           echo "DOCKER_HOST=$DOCKER_HOST"
@@ -57,38 +58,34 @@ jobs:
           sudo systemctl start docker || true
           docker info
 
-      - name: Build + Test (capture log + print failure)
+      # --- Tests (capture log + print failure markers reliably) ---
+      - name: Run Tests (capture log + print markers)
         run: |
-          echo "########## WORKFLOW MARKER: PR Sonar Analysis vDEBUG-1 ##########"
-          pwd
-          ls -la
-
           set +e
-          ./gradlew build --console=plain --info --stacktrace --no-build-cache --continue 2>&1 | tee gradle-build.log
+          ./gradlew test --console=plain --info --stacktrace --no-build-cache 2>&1 | tee gradle-test.log
           EXIT_CODE=${PIPESTATUS[0]}
 
           echo ""
-          echo "==================== ALWAYS: LAST 250 LINES ===================="
-          tail -n 250 gradle-build.log || true
-          echo "==============================================================="
+          echo "==================== KEY MARKERS ===================="
+          grep -nE "FAILURE:|Build failed with an exception|\\* What went wrong:|Caused by:|> Task .* FAILED" gradle-test.log | head -n 200 || true
+          echo "====================================================="
 
-          if [ "$EXIT_CODE" -ne 0 ]; then
-            echo ""
-            echo "==================== BUILD FAILED: extracting reason ===================="
-            echo "=== Key markers (first matches) ==="
-            grep -nE "FAILURE:|Build failed with an exception|\\* What went wrong:|\\* Exception is:|Caused by:|> Task .* FAILED" gradle-build.log | head -n 200 || true
-            echo "======================================================================="
-          fi
+          echo ""
+          echo "==================== LAST 200 LINES ===================="
+          tail -n 200 gradle-test.log || true
+          echo "========================================================"
 
           exit $EXIT_CODE
 
-      - name: Upload Gradle Log
+      # Upload the Gradle log so we can inspect it even if the UI truncates output
+      - name: Upload Gradle Test Log
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: gradle-build-log
-          path: gradle-build.log
+          name: gradle-test-log
+          path: gradle-test.log
 
+      # Upload problems report if present (Gradle 8.11+ sometimes writes it)
       - name: Upload Gradle Problems Report
         if: always()
         uses: actions/upload-artifact@v4
@@ -96,6 +93,7 @@ jobs:
           name: gradle-problems-report
           path: build/reports/problems/
 
+      # Test artifacts (XML + HTML) for easy debugging
       - name: Upload Test Results (XML)
         if: always()
         uses: actions/upload-artifact@v4
@@ -110,6 +108,7 @@ jobs:
           name: test-report-html
           path: "**/build/reports/tests/"
 
+      # --- Sonar (only if tests passed) ---
       - name: Analyze (Sonar)
         if: success()
         env:
