@@ -3,32 +3,26 @@ name: Pull Request Sonar Analysis
 on:
   pull_request:
     types: [opened, synchronize, reopened]
-    branches:
-      - develop
+    branches: [develop]
 
 jobs:
   sonarcloud:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout sources
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Shallow clones should be disabled for better relevancy of analysis
+          fetch-depth: 0
 
       - name: Set up JDK 21
         uses: actions/setup-java@v3
         with:
-          distribution: 'temurin'
+          distribution: temurin
           java-version: 21
 
-      - name: Setup Gradle 8.8
+      - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
-        with:
-          gradle-version: 8.8
-
-      # ✅ Eliminar la caché de Gradle antes de ejecutar los tests
-      - name: Clear Gradle Cache
-        run: rm -rf ~/.gradle/caches/
 
       - name: Cache SonarCloud packages
         uses: actions/cache@v3
@@ -42,33 +36,43 @@ jobs:
         with:
           path: |
             ~/.gradle/caches
-            ~/gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties', '**/settings.gradle*') }}
           restore-keys: ${{ runner.os }}-gradle
 
-      # ✅ Verificar versión de Gradle y Java en el runner
       - name: Check Java & Gradle Version
         run: |
           java -version
           ./gradlew --version
-      # ✅ Ejecutar los tests y generar reportes, forzando que no use caché
-      - name: Run Tests
-        run: ./gradlew test --info --stacktrace --no-build-cache
 
-      # ✅ Debug: Mostrar si el directorio de reportes realmente existe
+      - name: Docker diagnostics
+        run: |
+          echo "DOCKER_HOST=$DOCKER_HOST"
+          docker version || true
+          docker info || true
+          ls -l /var/run/docker.sock || true
+
+      - name: Start Docker (if needed)
+        run: |
+          sudo systemctl start docker || true
+          docker info
+
+      - name: Build + Test
+        run: ./gradlew build --info --stacktrace --no-build-cache
+
       - name: Debug Test Reports Directory
+        if: always()
         run: ls -lR itachallenge-challenge/build/reports/tests/ || echo "⚠️ Test reports not found!"
 
-      # ✅ Subir el reporte de tests como artefacto
       - name: Upload Test Report
-        if: always()  # Se ejecuta aunque los tests fallen
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: test-report
           path: itachallenge-challenge/build/reports/tests/
 
-      - name: Analyze
+      - name: Analyze (Sonar)
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: gradle build sonar --info --no-build-cache
+        run: ./gradlew sonar --info --no-build-cache
