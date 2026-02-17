@@ -1,36 +1,33 @@
 name: Pull Request Sonar Analysis
-
 on:
   pull_request:
     types: [opened, synchronize, reopened]
     branches: [develop]
-
 jobs:
   sonarcloud:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout sources
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
+      
       - name: Set up JDK 21
         uses: actions/setup-java@v3
         with:
           distribution: temurin
           java-version: 21
-
+      
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
-
+      
       - name: Cache SonarCloud packages
         uses: actions/cache@v3
         with:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
-
+      
       - name: Cache Gradle packages
         uses: actions/cache@v3
         with:
@@ -39,79 +36,38 @@ jobs:
             ~/.gradle/wrapper
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties', '**/settings.gradle*') }}
           restore-keys: ${{ runner.os }}-gradle
-
+      
       - name: Check Java & Gradle Version
         run: |
           java -version
           ./gradlew --version
-
-      # --- Docker / Testcontainers ---
-      - name: Docker diagnostics
+      
+      # FIX: Grant permissions to Docker socket for Testcontainers
+      - name: Fix Docker permissions
         run: |
-          echo "DOCKER_HOST=$DOCKER_HOST"
+          sudo chmod 666 /var/run/docker.sock
           docker version
-          docker info
-          ls -l /var/run/docker.sock || true
-
-      - name: Start Docker (if needed)
-        run: |
-          sudo systemctl start docker || true
-          docker info
-
-      # --- Tests (capture log + print failure markers reliably) ---
-      - name: Run Tests (capture log + print markers)
-        run: |
-          set +e
-          ./gradlew test --console=plain --info --stacktrace --no-build-cache 2>&1 | tee gradle-test.log
-          EXIT_CODE=${PIPESTATUS[0]}
-
-          echo ""
-          echo "==================== KEY MARKERS ===================="
-          grep -nE "FAILURE:|Build failed with an exception|\\* What went wrong:|Caused by:|> Task .* FAILED" gradle-test.log | head -n 200 || true
-          echo "====================================================="
-
-          echo ""
-          echo "==================== LAST 200 LINES ===================="
-          tail -n 200 gradle-test.log || true
-          echo "========================================================"
-
-          exit $EXIT_CODE
-
-      # Upload the Gradle log so we can inspect it even if the UI truncates output
-      - name: Upload Gradle Test Log
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: gradle-test-log
-          path: gradle-test.log
-
-      # Upload problems report if present (Gradle 8.11+ sometimes writes it)
-      - name: Upload Gradle Problems Report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: gradle-problems-report
-          path: build/reports/problems/
-
-      # Test artifacts (XML + HTML) for easy debugging
+      
+      - name: Run Tests
+        run: ./gradlew test --console=plain --info --stacktrace
+      
       - name: Upload Test Results (XML)
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: test-results-xml
           path: "**/build/test-results/test/"
-
+      
       - name: Upload Test Report (HTML)
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: test-report-html
           path: "**/build/reports/tests/"
-
-      # --- Sonar (only if tests passed) ---
-      - name: Analyze (Sonar)
+      
+      - name: Analyze with SonarCloud
         if: success()
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: ./gradlew sonar --console=plain --info --no-build-cache
+        run: ./gradlew sonar --console=plain --info
