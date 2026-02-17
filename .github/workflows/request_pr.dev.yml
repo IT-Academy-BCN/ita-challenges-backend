@@ -45,7 +45,6 @@ jobs:
           java -version
           ./gradlew --version
 
-      # --- Docker / Testcontainers ---
       - name: Docker diagnostics
         run: |
           echo "DOCKER_HOST=$DOCKER_HOST"
@@ -58,26 +57,16 @@ jobs:
           sudo systemctl start docker || true
           docker info
 
-      # --- Build & Tests (capture full log) ---
       - name: Build + Test (capture log)
         run: |
           ./gradlew build --info --stacktrace --no-build-cache --continue 2>&1 | tee gradle-build.log
 
-      # Extract the real failure reason from the captured log
       - name: Extract failure reason
         if: always()
         run: |
-          echo "=== What went wrong / Caused by / FAILED (from gradle-build.log) ==="
+          echo "=== What went wrong / Caused by / FAILED ==="
           grep -nE "^\* What went wrong:|^Caused by:| FAILED$" gradle-build.log | head -n 250 || true
 
-      # Always show what reports exist
-      - name: Debug Test Reports Directory
-        if: always()
-        run: |
-          ls -lR itachallenge-challenge/build/reports/tests/ || true
-          ls -lR itachallenge-challenge/build/test-results/test/ || true
-
-      # Upload the Gradle log so we can inspect it even if the UI truncates output
       - name: Upload Gradle Log
         if: always()
         uses: actions/upload-artifact@v4
@@ -85,23 +74,27 @@ jobs:
           name: gradle-build-log
           path: gradle-build.log
 
-      # Upload reports (HTML)
-      - name: Upload Test Report (HTML)
+      - name: Upload Gradle Problems Report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: test-report-html
-          path: itachallenge-challenge/build/reports/tests/
+          name: gradle-problems-report
+          path: build/reports/problems/
 
-      # Upload test results (XML)
       - name: Upload Test Results (XML)
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: test-results-xml
-          path: itachallenge-challenge/build/test-results/test/
+          path: "**/build/test-results/test/"
 
-      # --- Sonar (only if build passed) ---
+      - name: Upload Test Report (HTML)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-report-html
+          path: "**/build/reports/tests/"
+
       - name: Analyze (Sonar)
         if: success()
         env:
