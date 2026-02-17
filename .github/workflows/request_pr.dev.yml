@@ -58,20 +58,21 @@ jobs:
           sudo systemctl start docker || true
           docker info
 
-      # --- Build & Tests (capture log + always print failure reason) ---
+      # --- Build & Tests (capture log + always show tail + print markers on failure) ---
       - name: Build + Test (capture log + print failure)
         run: |
           set +e
-          ./gradlew build --info --stacktrace --no-build-cache --continue 2>&1 | tee gradle-build.log
+          ./gradlew build --console=plain --info --stacktrace --no-build-cache --continue 2>&1 | tee gradle-build.log
           EXIT_CODE=${PIPESTATUS[0]}
+
+          echo ""
+          echo "==================== ALWAYS: LAST 250 LINES ===================="
+          tail -n 250 gradle-build.log || true
+          echo "==============================================================="
 
           if [ "$EXIT_CODE" -ne 0 ]; then
             echo ""
             echo "==================== BUILD FAILED: extracting reason ===================="
-            echo "=== LAST 400 LINES ==="
-            tail -n 400 gradle-build.log || true
-
-            echo ""
             echo "=== Key markers (first matches) ==="
             grep -nE "FAILURE:|Build failed with an exception|\\* What went wrong:|\\* Exception is:|Caused by:|> Task .* FAILED" gradle-build.log | head -n 200 || true
             echo "======================================================================="
@@ -116,4 +117,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: ./gradlew sonar --info --no-build-cache
+        run: ./gradlew sonar --console=plain --info --no-build-cache
