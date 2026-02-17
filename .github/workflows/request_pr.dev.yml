@@ -45,6 +45,7 @@ jobs:
           java -version
           ./gradlew --version
 
+      # --- Docker / Testcontainers ---
       - name: Docker diagnostics
         run: |
           echo "DOCKER_HOST=$DOCKER_HOST"
@@ -57,27 +58,34 @@ jobs:
           sudo systemctl start docker || true
           docker info
 
-      - name: Build + Test
-        run: ./gradlew build --info --stacktrace --no-build-cache --continue
+      # --- Build & Tests (capture full log) ---
+      - name: Build + Test (capture log)
+        run: |
+          ./gradlew build --info --stacktrace --no-build-cache --continue 2>&1 | tee gradle-build.log
 
+      # Extract the real failure reason from the captured log
+      - name: Extract failure reason
+        if: always()
+        run: |
+          echo "=== What went wrong / Caused by / FAILED (from gradle-build.log) ==="
+          grep -nE "^\* What went wrong:|^Caused by:| FAILED$" gradle-build.log | head -n 250 || true
+
+      # Always show what reports exist
       - name: Debug Test Reports Directory
         if: always()
         run: |
           ls -lR itachallenge-challenge/build/reports/tests/ || true
           ls -lR itachallenge-challenge/build/test-results/test/ || true
 
-      - name: Print failing tests (JUnit XML)
+      # Upload the Gradle log so we can inspect it even if the UI truncates output
+      - name: Upload Gradle Log
         if: always()
-        run: |
-          echo "=== JUnit XML files (first 50) ==="
-          find . -path "*build/test-results/test/TEST-*.xml" -print | head -n 50 || true
+        uses: actions/upload-artifact@v4
+        with:
+          name: gradle-build-log
+          path: gradle-build.log
 
-          echo "=== Showing first 250 lines of first 5 XMLs ==="
-          for f in $(find . -path "*build/test-results/test/TEST-*.xml" | head -n 5); do
-            echo "---- $f ----"
-            sed -n '1,250p' "$f" || true
-          done
-
+      # Upload reports (HTML)
       - name: Upload Test Report (HTML)
         if: always()
         uses: actions/upload-artifact@v4
@@ -85,6 +93,7 @@ jobs:
           name: test-report-html
           path: itachallenge-challenge/build/reports/tests/
 
+      # Upload test results (XML)
       - name: Upload Test Results (XML)
         if: always()
         uses: actions/upload-artifact@v4
@@ -92,6 +101,7 @@ jobs:
           name: test-results-xml
           path: itachallenge-challenge/build/test-results/test/
 
+      # --- Sonar (only if build passed) ---
       - name: Analyze (Sonar)
         if: success()
         env:
