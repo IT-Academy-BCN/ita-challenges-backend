@@ -45,7 +45,6 @@ jobs:
           java -version
           ./gradlew --version
 
-      # --- Docker / Testcontainers ---
       - name: Docker diagnostics
         run: |
           echo "DOCKER_HOST=$DOCKER_HOST"
@@ -58,9 +57,12 @@ jobs:
           sudo systemctl start docker || true
           docker info
 
-      # --- Build & Tests (capture log + always show tail + print markers on failure) ---
       - name: Build + Test (capture log + print failure)
         run: |
+          echo "########## WORKFLOW MARKER: PR Sonar Analysis vDEBUG-1 ##########"
+          pwd
+          ls -la
+
           set +e
           ./gradlew build --console=plain --info --stacktrace --no-build-cache --continue 2>&1 | tee gradle-build.log
           EXIT_CODE=${PIPESTATUS[0]}
@@ -80,7 +82,6 @@ jobs:
 
           exit $EXIT_CODE
 
-      # Upload the Gradle log so we can inspect it even if the UI truncates output
       - name: Upload Gradle Log
         if: always()
         uses: actions/upload-artifact@v4
@@ -88,7 +89,6 @@ jobs:
           name: gradle-build-log
           path: gradle-build.log
 
-      # Upload problems report if present (Gradle 8.11+ sometimes writes it)
       - name: Upload Gradle Problems Report
         if: always()
         uses: actions/upload-artifact@v4
@@ -96,7 +96,6 @@ jobs:
           name: gradle-problems-report
           path: build/reports/problems/
 
-      # Test artifacts (XML + HTML) for easy debugging
       - name: Upload Test Results (XML)
         if: always()
         uses: actions/upload-artifact@v4
@@ -111,7 +110,6 @@ jobs:
           name: test-report-html
           path: "**/build/reports/tests/"
 
-      # --- Sonar (only if build passed) ---
       - name: Analyze (Sonar)
         if: success()
         env:
