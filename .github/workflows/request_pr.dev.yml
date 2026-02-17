@@ -45,6 +45,7 @@ jobs:
           java -version
           ./gradlew --version
 
+      # --- Docker / Testcontainers ---
       - name: Docker diagnostics
         run: |
           echo "DOCKER_HOST=$DOCKER_HOST"
@@ -57,16 +58,48 @@ jobs:
           sudo systemctl start docker || true
           docker info
 
+      # --- Build & Tests (capture full log) ---
       - name: Build + Test (capture log)
         run: |
           ./gradlew build --info --stacktrace --no-build-cache --continue 2>&1 | tee gradle-build.log
 
-      - name: Extract failure reason
+      # ✅ Robust extraction (works even when "* What went wrong" isn't matched)
+      - name: Extract failure reason (robust)
         if: always()
         run: |
-          echo "=== What went wrong / Caused by / FAILED ==="
-          grep -nE "^\* What went wrong:|^Caused by:| FAILED$" gradle-build.log | head -n 250 || true
+          echo "=== Showing last 250 lines (usually contains the real error) ==="
+          tail -n 250 gradle-build.log || true
 
+          echo
+          echo "=== Key markers (FAILURE / Task FAILED / Caused by) ==="
+          grep -nE "FAILURE:|Build failed with an exception|\\* Exception is:|\\* What went wrong:|Caused by:|> Task .* FAILED" gradle-build.log | head -n 200 || true
+
+          echo
+          echo "=== Context around first FAILURE block (lines after FAILURE:) ==="
+          fail_line=$(grep -n "FAILURE:" gradle-build.log | head -n 1 | cut -d: -f1 || true)
+          if [ -n "$fail_line" ]; then
+            start=$((fail_line))
+            end=$((fail_line + 140))
+            echo "Printing lines $start..$end"
+            sed -n "${start},${end}p" gradle-build.log || true
+          else
+            echo "No FAILURE: line found in gradle-build.log"
+          fi
+
+          echo
+          echo "=== Context around first Task FAILED line ==="
+          task_line=$(grep -nE "> Task .* FAILED" gradle-build.log | head -n 1 | cut -d: -f1 || true)
+          if [ -n "$task_line" ]; then
+            start=$((task_line - 40))
+            if [ $start -lt 1 ]; then start=1; fi
+            end=$((task_line + 80))
+            echo "Printing lines $start..$end"
+            sed -n "${start},${end}p" gradle-build.log || true
+          else
+            echo "No '> Task ... FAILED' line found in gradle-build.log"
+          fi
+
+      # Upload the Gradle log so we can inspect it even if the UI truncates output
       - name: Upload Gradle Log
         if: always()
         uses: actions/upload-artifact@v4
@@ -74,6 +107,7 @@ jobs:
           name: gradle-build-log
           path: gradle-build.log
 
+      # Upload problems report if present (Gradle 8.11+ sometimes writes it)
       - name: Upload Gradle Problems Report
         if: always()
         uses: actions/upload-artifact@v4
@@ -81,6 +115,7 @@ jobs:
           name: gradle-problems-report
           path: build/reports/problems/
 
+      # Test artifacts (XML + HTML) for easy debugging
       - name: Upload Test Results (XML)
         if: always()
         uses: actions/upload-artifact@v4
@@ -95,6 +130,7 @@ jobs:
           name: test-report-html
           path: "**/build/reports/tests/"
 
+      # --- Sonar (only if build passed) ---
       - name: Analyze (Sonar)
         if: success()
         env:
