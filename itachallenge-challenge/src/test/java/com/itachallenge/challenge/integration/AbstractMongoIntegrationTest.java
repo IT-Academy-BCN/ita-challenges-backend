@@ -1,20 +1,13 @@
 package com.itachallenge.challenge.integration;
 
+import com.itachallenge.challenge.config.dbchangelog.MongockTestContainer;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.MongoDBContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
-@Testcontainers
 public abstract class AbstractMongoIntegrationTest {
 
-    @Container
-    protected static final MongoDBContainer mongo =
-            new MongoDBContainer("mongo:7.0.8")
-                    .withStartupAttempts(3)
-                    .withStartupTimeout(java.time.Duration.ofSeconds(60))
-                    .withReuse(false);
+    protected static final MongoDBContainer mongo = MongockTestContainer.getMongo();
 
     @DynamicPropertySource
     static void mongoProps(DynamicPropertyRegistry registry) {

@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.reactivestreams.Publisher;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import reactor.core.publisher.Mono;
@@ -33,7 +34,8 @@ class DatabaseInitializerUnitTest {
 
     @Test
     void testCreateCollection() {
-        when(mongoDatabase.createCollection(any())).thenReturn(Mono.empty());
+        Publisher<Void> emptyPublisher = Mono.empty();
+        when(mongoDatabase.createCollection(any())).thenReturn(emptyPublisher);
 
         databaseInitializer.createCollection(mongoDatabase);
 
@@ -46,7 +48,8 @@ class DatabaseInitializerUnitTest {
 
         when(mongoDatabase.getCollection(anyString())).thenReturn(mongoCollection);
 
-        when(mongoCollection.drop()).thenReturn(Mono.empty());
+        Publisher<Void> emptyPublisher = Mono.empty();
+        when(mongoCollection.drop()).thenReturn(emptyPublisher);
 
         databaseInitializer.rollbackBeforeExecution(mongoDatabase);
 
@@ -55,7 +58,8 @@ class DatabaseInitializerUnitTest {
 
     @Test
     void testExecution() {
-        when(reactiveMongoTemplate.save(any(LanguageDocument.class), any())).thenReturn(Mono.just(new LanguageDocument()));
+        when(reactiveMongoTemplate.save(any(LanguageDocument.class), any()))
+                .thenReturn(Mono.just(new LanguageDocument()));
 
         databaseInitializer.execution(reactiveMongoTemplate);
 
@@ -64,7 +68,8 @@ class DatabaseInitializerUnitTest {
 
     @Test
     void testRollback() {
-        when(reactiveMongoTemplate.remove(any(Query.class), anyString())).thenReturn(Mono.empty());
+        when(reactiveMongoTemplate.remove(any(Query.class), anyString()))
+                .thenReturn(Mono.empty());
 
         databaseInitializer.rollback(reactiveMongoTemplate);
 

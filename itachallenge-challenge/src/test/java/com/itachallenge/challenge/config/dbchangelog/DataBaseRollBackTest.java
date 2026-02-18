@@ -10,28 +10,20 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.containers.MongoDBContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
-
-import java.time.Duration;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@Testcontainers
 @SpringBootTest
+@ActiveProfiles("mongockTest")
 class DataBaseRollBackTest {
-
-    @Container
-    static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:4.0.10")
-            .withExposedPorts(27017)
-            .withStartupTimeout(Duration.ofSeconds(60));
 
     @DynamicPropertySource
     static void initMongoProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.data.mongodb.uri", () -> mongoDBContainer.getReplicaSetUrl("challenges"));
+        registry.add("spring.data.mongodb.uri",
+                () -> MongockTestContainer.getMongo().getReplicaSetUrl("challenges"));
     }
 
     @Autowired
@@ -50,23 +42,23 @@ class DataBaseRollBackTest {
         logCaptor = LogCaptor.forClass(DataBaseRollback.class);
     }
 
-    @DisplayName("Test @Execution method - Verify thrown exception to demostrate rollback feature")
+    @DisplayName("Test @Execution method - Verify thrown exception to demonstrate rollback feature")
     @Test
     void ExecutionTest() {
-
-
         assertThrows(IllegalArgumentException.class, () -> dataBaseRollback.execution(mongoClient));
-        assertTrue(logCaptor.getInfoLogs().contains("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nUpdater execution started"));
-
+        assertTrue(logCaptor.getInfoLogs().contains(
+                "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nUpdater execution started"));
     }
 
     @DisplayName("Test @RollbackExecution method - Verify the rollback of the changes made in the execution method")
     @Test
     void rollbackTest() {
         dataBaseRollback.rollBackExecution(mongoClient);
-        assertTrue(logCaptor.getInfoLogs().contains("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nRollback execution started"));
+        assertTrue(logCaptor.getInfoLogs().contains(
+                "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nRollback execution started"));
         assertTrue(logCaptor.getInfoLogs().contains("Field updated in collection rolled back"));
-        assertTrue(logCaptor.getInfoLogs().contains("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nRollback execution completed successfully"));
+        assertTrue(logCaptor.getInfoLogs().contains(
+                "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nRollback execution completed successfully"));
     }
 
     @DisplayName("Test updateFieldInCollection method - Verify thrown exception when invalid operator is used")
@@ -92,7 +84,6 @@ class DataBaseRollBackTest {
         assertNotNull(updatedDocument, "The document should be updated with the new value 'LanguageUpdated'");
     }
 
-
     @DisplayName("Test rollbackUpdateFieldInCollection method - Verify the field is renamed back to 'Language Rollbacked'")
     @Test
     void rollbackUpdateFieldInCollectionTest() {
@@ -107,8 +98,6 @@ class DataBaseRollBackTest {
 
         assertNotNull(rolledBackDocument, "The field should be renamed back to 'Language Rollbacked'");
     }
-
-
 
     @AfterEach
     void tearDown() {
