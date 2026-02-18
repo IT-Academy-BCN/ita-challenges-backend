@@ -1,18 +1,14 @@
 package com.itachallenge.challenge.repository;
 
-import com.itachallenge.challenge.integration.AbstractMongoDataTest;
-import com.itachallenge.challenge.controller.ChallengeController;
 import com.itachallenge.challenge.document.ResourceDocument;
 import com.itachallenge.challenge.enums.ResourceContentType;
 import com.itachallenge.challenge.enums.Topic;
-import com.itachallenge.challenge.service.IUserService;
+import com.itachallenge.challenge.integration.AbstractMongoDataTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.annotation.DirtiesContext;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -24,7 +20,6 @@ import java.util.UUID;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-@DataMongoTest
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 class ResourceRepositoryTest extends AbstractMongoDataTest {

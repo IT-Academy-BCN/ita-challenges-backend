@@ -1,25 +1,26 @@
 package com.itachallenge.challenge.repository;
 
-import com.itachallenge.challenge.controller.ChallengeController;
-import com.itachallenge.challenge.document.*;
+import com.itachallenge.challenge.document.ChallengeDocument;
+import com.itachallenge.challenge.document.DetailDocument;
+import com.itachallenge.challenge.document.LanguageDocument;
 import com.itachallenge.challenge.enums.Topic;
-import com.itachallenge.challenge.service.IUserService;
 import com.itachallenge.challenge.integration.AbstractMongoDataTest;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.springframework.test.util.AssertionErrors.fail;
 
-@DataMongoTest
 class ChallengeRepositoryTest extends AbstractMongoDataTest {
 
     @Autowired
