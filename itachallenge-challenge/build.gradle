@@ -86,9 +86,18 @@ test {
         events "passed", "skipped", "failed"
     }
     jvmArgs "-Xshare:off"
+
+    // 1) Excluir por tag (si están bien etiquetados)
     useJUnitPlatform {
         excludeTags "integration"
     }
+
+    // 2) Excluir por convención/ruta (por si se olvidan del @Tag)
+    exclude '**/integration/**'
+    exclude '**/*IntegrationTest*'
+    exclude '**/*TestContainer*'
+    exclude '**/*Rollback*'
+
     finalizedBy jacocoTestReport
 }
 
