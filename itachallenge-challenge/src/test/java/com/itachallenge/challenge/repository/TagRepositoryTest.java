@@ -30,12 +30,6 @@ class TagRepositoryTest extends AbstractMongoDataTest {
     @Autowired
     private TagRepository tagRepository;
 
-    @MockBean
-    private ChallengeController challengeController;
-
-    @MockBean
-    private IUserService userService;
-
     UUID uuidLang1, uuidLang2;
 
     @BeforeEach

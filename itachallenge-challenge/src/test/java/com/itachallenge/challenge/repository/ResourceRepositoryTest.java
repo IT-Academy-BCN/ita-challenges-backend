@@ -32,12 +32,6 @@ class ResourceRepositoryTest extends AbstractMongoDataTest {
     @Autowired
     private ResourceRepository resourceRepository;
 
-    @MockBean
-    private ChallengeController challengeController;
-
-    @MockBean
-    private IUserService userService;
-
     UUID uuid1 = UUID.fromString("8ecbfe54-fec8-11ed-be56-0242ac120002");
     UUID uuid2 = UUID.fromString("26977eee-89f8-11ec-a8a3-0242ac120003");
 

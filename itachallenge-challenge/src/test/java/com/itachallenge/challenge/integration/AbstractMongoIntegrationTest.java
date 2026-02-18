@@ -10,7 +10,11 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 public abstract class AbstractMongoIntegrationTest {
 
     @Container
-    protected static final MongoDBContainer mongo = new MongoDBContainer("mongo:7.0.8");
+    protected static final MongoDBContainer mongo =
+            new MongoDBContainer("mongo:7.0.8")
+                    .withStartupAttempts(3)
+                    .withStartupTimeout(java.time.Duration.ofSeconds(60))
+                    .withReuse(false);
 
     @DynamicPropertySource
     static void mongoProps(DynamicPropertyRegistry registry) {

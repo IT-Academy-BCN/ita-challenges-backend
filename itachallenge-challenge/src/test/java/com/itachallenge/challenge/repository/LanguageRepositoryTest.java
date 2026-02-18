@@ -33,7 +33,6 @@ class LanguageRepositoryTest extends AbstractMongoDataTest {
         LanguageDocument language1 =
                 new LanguageDocument(uuidLang1, "Java", "https://image-default.com/java.png");
 
-        // OJO: aquí tenías una comilla de más al inicio
         LanguageDocument language2 =
                 new LanguageDocument(uuidLang2, "Python", "https://image-default.com/python.png");
 
