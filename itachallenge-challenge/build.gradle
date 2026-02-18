@@ -12,7 +12,7 @@ jar {
     }
 }
 
-jacoco{
+jacoco {
     toolVersion = '0.8.11'
     reportsDirectory = layout.buildDirectory.dir('jacocoXml')
 }
@@ -68,41 +68,37 @@ dependencies {
     testImplementation 'org.assertj:assertj-core:3.24.2'
     testImplementation 'io.projectreactor:reactor-test:3.1.0.RELEASE'
 
-    // --- Testcontainers (UPDATED via BOM) ---
+    // Testcontainers (via BOM)
     testImplementation platform("org.testcontainers:testcontainers-bom:1.20.4")
-    testImplementation "org.testcontainers:testcontainers"      // opcional pero recomendado
+    testImplementation "org.testcontainers:testcontainers"
     testImplementation "org.testcontainers:junit-jupiter"
     testImplementation "org.testcontainers:mongodb"
 
     testImplementation 'com.squareup.okhttp3:mockwebserver:4.9.3'
     testImplementation 'org.junit.platform:junit-platform-suite-engine:1.8.1'
-    testImplementation group: 'io.github.hakky54', name: 'logcaptor', version: '2.9.3'
-    testImplementation project(':jwt-core')
+    testImplementation 'io.github.hakky54:logcaptor:2.9.3'
 
+    testImplementation project(':jwt-core')
 }
 
 test {
+
+    useJUnitPlatform()
+
     testLogging {
-        events "passed", "skipped", "failed"
+        events "PASSED", "FAILED", "SKIPPED"
+        exceptionFormat "FULL"
     }
+
     jvmArgs "-Xshare:off"
-
-    // 1) Excluir por tag (si están bien etiquetados)
-    useJUnitPlatform {
-        excludeTags "integration"
-    }
-
-    // 2) Excluir por convención/ruta (por si se olvidan del @Tag)
-    exclude '**/integration/**'
-    exclude '**/*IntegrationTest*'
-    exclude '**/*TestContainer*'
-    exclude '**/*Rollback*'
 
     finalizedBy jacocoTestReport
 }
 
 jacocoTestReport {
+
     dependsOn test
+
     reports {
         xml.required = true
         csv.required = false
@@ -110,10 +106,12 @@ jacocoTestReport {
     }
 }
 
-// JaCoCo configuration: https://docs.gradle.org/current/userguide/jacoco_plugin.html
 jacocoTestCoverageVerification {
+
     violationRules {
+
         rule {
+
             limit {
                 counter = 'LINE'
                 value = 'COVEREDRATIO'
@@ -124,7 +122,13 @@ jacocoTestCoverageVerification {
 }
 
 sonar {
+
     properties {
-        //property "sonar.jacoco.reportPaths", jacoco.reportsDirectory
+
+        property "sonar.projectKey", "IT-Academy-BCN_ita-challenges"
+        property "sonar.organization", "it-academy-bcn"
+
+        property "sonar.coverage.jacoco.xmlReportPaths",
+                "${layout.buildDirectory.get()}/jacocoXml/test/jacocoTestReport.xml"
     }
 }
