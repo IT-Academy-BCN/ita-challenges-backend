@@ -1,7 +1,10 @@
 spring:
   data:
     mongodb:
-      uri: ${MONGODB_URI:mongodb://localhost:27017/itachallenge_test?directConnection=true}
+      uri: ${MONGODB_URI:mongodb://localhost:27017/test?directConnection=true}
+      database: ${MONGO_DB:test}
 
 mongock:
   enabled: true
+  transactionEnabled: false
+  migration-scan-package: com.itachallenge.challenge.config.dbchangelog
