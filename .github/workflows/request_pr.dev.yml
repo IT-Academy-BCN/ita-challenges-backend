@@ -10,8 +10,9 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      DOCKER_HOST: unix:///var/run/docker.sock
       TESTCONTAINERS_HOST_OVERRIDE: localhost
+      TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE: /var/run/docker.sock
+      # Solo si Ryuk da problemas (puede ser útil, pero no imprescindible)
       TESTCONTAINERS_RYUK_DISABLED: true
 
     steps:
@@ -45,10 +46,11 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
           restore-keys: ${{ runner.os }}-gradle
 
-      - name: Verify Docker
+      - name: Verify Docker (must work)
         run: |
           docker version
           docker info
+          docker ps
 
       - name: Run Tests
         id: run_tests
@@ -59,7 +61,7 @@ jobs:
         if: always()
         run: |
           echo "FAILED TESTS:"
-          find . -name "*.xml" -path "*/test-results/*" -exec grep -H "<failure" {} \; || true
+          find . -path "*/build/test-results/test/*.xml" -print -exec grep -H "<failure" {} \; || true
 
       - name: Fail job if tests failed
         if: steps.run_tests.outcome == 'failure'
