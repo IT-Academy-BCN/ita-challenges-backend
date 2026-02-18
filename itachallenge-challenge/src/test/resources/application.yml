@@ -2,6 +2,9 @@ spring:
   application:
     name: itachallenge-challenge
     version: 1.2.0-RELEASE
+  data:
+    mongodb:
+      uri: ${MONGODB_URI:mongodb://localhost:27017/itachallenge_test?directConnection=true}
   jmx:
     enabled: true
 
@@ -10,10 +13,10 @@ mongock:
   transactionEnabled: false
   migration-scan-package: com.itachallenge.challenge.config.dbchangelog
   lock:
-    collectionName: "mongockLocks" # Name of the collection used to lock the execution of the migration
+    collectionName: "mongockLocks"
     maxWaitingForLockMinutes: 5
-    maxTries: 3 # Number of times to try to acquire a lock
-    maxTriesInterval: 1000 # Interval in milliseconds between tries to acquire a lock
+    maxTries: 3
+    maxTriesInterval: 1000
 
 server:
   port: 8762
@@ -32,7 +35,6 @@ logging:
     "[org.springframework]": ERROR
     "[com.itachallenge]": INFO
   pattern:
-    # console: Spring's default
     file: "%date %5level %-40.40logger{39} [%thread] %msg%n"
 #  file:
 #    name: itachallenge-challenge.log
@@ -44,8 +46,8 @@ url:
   ds_test: https://swapi.py4e.com/api/vehicles/
 
 validation:
-  number: "^\\d{1,9}$"                           # Integers up to 9 digits
-  maxLimit200: "^-1$|^([1-9]\\d?|1\\d{2}|200)$"  # Integer in range [1, 200] or -1 for all.
+  number: "^\\d{1,9}$"
+  maxLimit200: "^-1$|^([1-9]\\d?|1\\d{2}|200)$"
   defaultLimit: 200
 
 messages:
