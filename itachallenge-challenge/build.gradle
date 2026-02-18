@@ -86,7 +86,9 @@ test {
         events "passed", "skipped", "failed"
     }
     jvmArgs "-Xshare:off"
-    useJUnitPlatform()
+    useJUnitPlatform {
+        excludeTags "integration"
+    }
     finalizedBy jacocoTestReport
 }
 

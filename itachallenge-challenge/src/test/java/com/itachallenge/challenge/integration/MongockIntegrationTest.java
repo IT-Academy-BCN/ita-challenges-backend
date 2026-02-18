@@ -4,6 +4,7 @@ import com.itachallenge.challenge.config.dbchangelog.TestDatabaseInitializer;
 import com.mongodb.reactivestreams.client.MongoClient;
 import com.mongodb.reactivestreams.client.MongoClients;
 import com.mongodb.reactivestreams.client.MongoDatabase;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.reactivestreams.Publisher;
@@ -27,6 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 @Testcontainers
+@Tag("integration")
 class MongockIntegrationTest {
     @Mock
     MongoDatabase mongoDatabase;

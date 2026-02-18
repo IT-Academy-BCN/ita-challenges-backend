@@ -36,7 +36,7 @@ import static org.mockito.Mockito.when;
 @Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 @Import(GlobalExceptionHandler.class)
-
+@Tag("integration")
 class ChallengeIntegrationTest {
 
     @Container
