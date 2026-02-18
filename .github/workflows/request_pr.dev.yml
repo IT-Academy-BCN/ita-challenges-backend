@@ -45,14 +45,20 @@ jobs:
           java -version
           ./gradlew --version
 
+      # FIX: Grant permissions to Docker socket (helps some environments)
       - name: Fix Docker permissions
         run: |
           sudo chmod 666 /var/run/docker.sock
           docker version
+          docker info
 
       - name: Run Tests
         id: run_tests
         continue-on-error: true
+        env:
+          DOCKER_HOST: unix:///var/run/docker.sock
+          TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE: /var/run/docker.sock
+          TESTCONTAINERS_RYUK_DISABLED: "true"
         run: ./gradlew test --console=plain --info --stacktrace
 
       - name: List failed tests (from XML)
