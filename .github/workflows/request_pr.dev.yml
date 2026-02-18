@@ -10,7 +10,8 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      TESTCONTAINERS_RYUK_DISABLED: true
+      TESTCONTAINERS_HOST_OVERRIDE: localhost
+      TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE: /var/run/docker.sock
 
     steps:
       - name: Checkout sources
@@ -43,7 +44,7 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
           restore-keys: ${{ runner.os }}-gradle
 
-      - name: Verify Docker (must work)
+      - name: Verify Docker
         run: |
           docker version
           docker info
@@ -51,18 +52,7 @@ jobs:
 
       - name: Run Tests
         id: run_tests
-        continue-on-error: true
         run: ./gradlew test --console=plain --info --stacktrace
-
-      - name: List failed tests
-        if: always()
-        run: |
-          echo "FAILED TESTS:"
-          find . -path "*/build/test-results/test/*.xml" -print -exec grep -H "<failure" {} \; || true
-
-      - name: Fail job if tests failed
-        if: steps.run_tests.outcome == 'failure'
-        run: exit 1
 
       - name: Upload Test Results
         if: always()
