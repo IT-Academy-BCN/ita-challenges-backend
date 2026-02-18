@@ -27,8 +27,11 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import org.junit.jupiter.api.Tag;
+
 @SpringBootTest(  webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
+@Tag("integration")
 @AutoConfigureWebTestClient
 @Testcontainers
 class FavoriteControllerIntegrationTest {
