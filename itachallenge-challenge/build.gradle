@@ -12,7 +12,7 @@ jar {
     }
 }
 
-jacoco {
+jacoco{
     toolVersion = '0.8.11'
     reportsDirectory = layout.buildDirectory.dir('jacocoXml')
 }
@@ -68,9 +68,9 @@ dependencies {
     testImplementation 'org.assertj:assertj-core:3.24.2'
     testImplementation 'io.projectreactor:reactor-test:3.1.0.RELEASE'
 
-    // --- Testcontainers (UPDATED via BOM to avoid Docker API incompatibilities in CI) ---
+    // --- Testcontainers (UPDATED via BOM) ---
     testImplementation platform("org.testcontainers:testcontainers-bom:1.20.4")
-    testImplementation "org.testcontainers:testcontainers"
+    testImplementation "org.testcontainers:testcontainers"      // opcional pero recomendado
     testImplementation "org.testcontainers:junit-jupiter"
     testImplementation "org.testcontainers:mongodb"
 
