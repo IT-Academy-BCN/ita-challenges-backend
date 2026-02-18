@@ -10,8 +10,8 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      # Logs de testcontainers
       TESTCONTAINERS_LOG_LEVEL: DEBUG
+      DOCKER_API_VERSION: "1.44"
 
     steps:
       - name: Checkout sources
@@ -31,6 +31,7 @@ jobs:
       - name: Verify Docker
         run: |
           set -euxo pipefail
+          echo "DOCKER_API_VERSION=$DOCKER_API_VERSION"
           docker version
           docker info
           docker ps
@@ -39,13 +40,6 @@ jobs:
       - name: Debug docker-related env
         run: |
           env | sort | grep -E '^(DOCKER|TESTCONTAINERS)_' || true
-
-      - name: Clear conflicting Docker env (fix API v1.32)
-        run: |
-          echo "DOCKER_API_VERSION=" >> $GITHUB_ENV
-          echo "DOCKER_HOST=" >> $GITHUB_ENV
-          echo "DOCKER_TLS_VERIFY=" >> $GITHUB_ENV
-          echo "DOCKER_CERT_PATH=" >> $GITHUB_ENV
 
       - name: Run Tests (with extra logs)
         run: |
