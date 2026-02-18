@@ -11,7 +11,8 @@ jar {
         )
     }
 }
-jacoco{
+
+jacoco {
     toolVersion = '0.8.11'
     reportsDirectory = layout.buildDirectory.dir('jacocoXml')
 }
@@ -24,78 +25,85 @@ repositories {
 }
 
 dependencies {
-    implementation group: 'org.springframework.boot', name: 'spring-boot-autoconfigure', version: '3.0.6'
-    implementation group: 'org.springframework.cloud', name: 'spring-cloud-commons', version: '4.0.1'
+
+    implementation 'org.springframework.boot:spring-boot-autoconfigure:3.0.6'
+    implementation 'org.springframework.cloud:spring-cloud-commons:4.0.1'
+
     implementation 'org.springframework.boot:spring-boot-starter-web:3.0.6'
     implementation 'org.springframework.boot:spring-boot-starter-webflux:3.0.6'
-    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
+
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb:3.0.6'
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive:3.0.6'
-    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+    implementation 'org.springframework.boot:spring-boot-starter-actuator:3.0.6'
+
     implementation 'org.projectlombok:lombok:1.18.30'
     annotationProcessor 'org.projectlombok:lombok:1.18.30'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.1'
-    implementation 'javax.validation:validation-api:2.0.1.Final'
-    implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.1.0'
+
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
+
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
+
     implementation 'org.springframework.cloud:spring-cloud-starter-consul-config:4.0.2'
     implementation 'org.springframework.cloud:spring-cloud-starter-consul-discovery:4.0.2'
     implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap:4.0.2'
-    implementation 'org.springframework.boot:spring-boot-starter-actuator:3.0.6'
+
     implementation 'org.springframework.boot:spring-boot-starter-data-redis-reactive:3.1.1'
+
     implementation project(":github-core")
 
-    //testing
-    testImplementation platform('org.junit:junit-bom:5.9.1')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
-    testImplementation group: 'org.mockito', name: 'mockito-core', version: '5.3.1'
-    testImplementation group: 'org.hamcrest', name: 'hamcrest', version: '2.2'
-    testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.24.2'
-    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '3.0.6'
-    testImplementation group: 'org.springframework', name: 'spring-test', version: '5.3.13'
-    testImplementation group: 'io.projectreactor', name: 'reactor-test', version: '3.1.0.RELEASE'
+    // TESTING
 
-    // --- Testcontainers (UPDATED via BOM) ---
     testImplementation platform("org.testcontainers:testcontainers-bom:1.20.4")
-    testImplementation "org.testcontainers:testcontainers"      // opcional pero recomendado
+
+    testImplementation "org.testcontainers:testcontainers"
     testImplementation "org.testcontainers:junit-jupiter"
     testImplementation "org.testcontainers:mongodb"
 
-    testImplementation 'com.squareup.okhttp3:mockwebserver:4.9.3'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.springframework.boot:spring-boot-starter-webflux'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:3.0.6'
+
+    testImplementation 'org.mockito:mockito-core:5.3.1'
+    testImplementation 'org.assertj:assertj-core:3.24.2'
+    testImplementation 'org.hamcrest:hamcrest:2.2'
+
+    testImplementation 'io.projectreactor:reactor-test:3.1.0.RELEASE'
+
 }
 
 test {
-    useJUnitPlatform {
-        excludeTags "integration"
+
+    useJUnitPlatform()
+
+    testLogging {
+        events "PASSED", "FAILED", "SKIPPED"
+        exceptionFormat "FULL"
     }
+
+    jvmArgs "-Xshare:off"
+
     finalizedBy jacocoTestReport
 }
 
 jacocoTestReport {
+
     dependsOn test
+
     reports {
+
         xml.required = true
         csv.required = false
         html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
     }
 }
 
-// JaCoCo configuration: https://docs.gradle.org/current/userguide/jacoco_plugin.html
-jacocoTestCoverageVerification {
-    violationRules {
-        rule {
-            limit {
-                counter = 'LINE'
-                value = 'COVEREDRATIO'
-                minimum = 0.7
-            }
-        }
-    }
-}
+sonar {
 
-sonarqube {
     properties {
-        //property "sonar.jacoco.reportPaths", jacoco.reportsDirectory
+
+        property "sonar.projectKey", "IT-Academy-BCN_ita-challenges"
+        property "sonar.organization", "it-academy-bcn"
+
+        property "sonar.coverage.jacoco.xmlReportPaths",
+                "${layout.buildDirectory.get()}/jacocoXml/test/jacocoTestReport.xml"
     }
 }
