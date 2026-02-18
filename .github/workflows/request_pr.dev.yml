@@ -40,7 +40,7 @@ jobs:
 
       - name: Run Tests
         env:
-          MONGODB_URI: mongodb://localhost:27017/itachallenge_test
+          MONGODB_URI: mongodb://localhost:27017/test?directConnection=true
         run: |
           set -euxo pipefail
           ./gradlew clean test \
