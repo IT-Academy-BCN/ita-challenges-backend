@@ -45,13 +45,14 @@ jobs:
           java -version
           ./gradlew --version
 
-      # FIX: Grant permissions to Docker socket for Testcontainers
       - name: Fix Docker permissions
         run: |
           sudo chmod 666 /var/run/docker.sock
           docker version
 
       - name: Run Tests
+        id: run_tests
+        continue-on-error: true
         run: ./gradlew test --console=plain --info --stacktrace
 
       - name: List failed tests (from XML)
@@ -59,20 +60,17 @@ jobs:
         run: |
           echo "===== FAILED TESTS (classname + name) ====="
           shopt -s globstar nullglob
-          FAIL=0
           for f in **/build/test-results/test/*.xml; do
             if grep -q "<failure" "$f"; then
-              FAIL=1
               echo ""
               echo "--- $f ---"
-              # Print testcase lines and failure lines (kept short)
               grep -nE "<testcase |<failure" "$f" | head -n 200
             fi
           done
 
-          if [ "$FAIL" -eq 0 ]; then
-            echo "No failing tests found in XML."
-          fi
+      - name: Fail job if tests failed
+        if: steps.run_tests.outcome == 'failure'
+        run: exit 1
 
       - name: Upload Test Results (XML)
         if: always()
