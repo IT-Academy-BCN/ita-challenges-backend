@@ -1,5 +1,6 @@
 package com.itachallenge.challenge.integration;
 
+import com.itachallenge.challenge.config.dbchangelog.MongockTestContainer;
 import com.itachallenge.challenge.config.dbchangelog.TestDatabaseInitializer;
 import com.mongodb.reactivestreams.client.MongoClient;
 import com.mongodb.reactivestreams.client.MongoClients;
@@ -27,8 +28,8 @@ class MongockIntegrationTest extends AbstractMongoIntegrationTest {
 
     @Test
     void testExecutionAndRollback() {
-        MongoClient mongoClient = MongoClients.create(mongo.getReplicaSetUrl());
-        MongoDatabase mongoDatabase = mongoClient.getDatabase("test");
+        MongoClient mongoClient = MongoClients.create(MongockTestContainer.getMongoUri());
+        MongoDatabase mongoDatabase = mongoClient.getDatabase("itachallenge_test");
 
         testDatabaseInitializer.createCollection(mongoDatabase);
 
