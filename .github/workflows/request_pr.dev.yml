@@ -10,8 +10,10 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
+      DOCKER_HOST: unix:///var/run/docker.sock
       TESTCONTAINERS_HOST_OVERRIDE: localhost
       TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE: /var/run/docker.sock
+      TESTCONTAINERS_RYUK_DISABLED: true
 
     steps:
       - name: Checkout sources
@@ -48,11 +50,12 @@ jobs:
         run: |
           docker version
           docker info
+          ls -la /var/run/docker.sock
           docker ps
 
       - name: Run Tests
         id: run_tests
-        run: ./gradlew test --console=plain --info --stacktrace
+        run: ./gradlew clean test --console=plain --info --stacktrace
 
       - name: Upload Test Results
         if: always()
