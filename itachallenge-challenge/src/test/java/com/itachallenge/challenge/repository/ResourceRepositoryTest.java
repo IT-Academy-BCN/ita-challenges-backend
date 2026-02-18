@@ -1,5 +1,6 @@
 package com.itachallenge.challenge.repository;
 
+import com.itachallenge.challenge.integration.AbstractMongoDataTest;
 import com.itachallenge.challenge.controller.ChallengeController;
 import com.itachallenge.challenge.document.ResourceDocument;
 import com.itachallenge.challenge.enums.ResourceContentType;
@@ -13,16 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.containers.MongoDBContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import java.time.Duration;
 import java.util.List;
 import java.util.UUID;
 
@@ -30,25 +25,16 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 @DataMongoTest
-@Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-
-class ResourceRepositoryTest {
-
-    @Container
-    static MongoDBContainer container = new MongoDBContainer("mongo")
-            .withStartupTimeout(Duration.ofSeconds(60));
-
-    @DynamicPropertySource
-    static void initMongoProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.data.mongodb.uri", () -> container.getReplicaSetUrl("resources"));
-    }
+class ResourceRepositoryTest extends AbstractMongoDataTest {
 
     @Autowired
     private ResourceRepository resourceRepository;
+
     @MockBean
     private ChallengeController challengeController;
+
     @MockBean
     private IUserService userService;
 
@@ -115,7 +101,6 @@ class ResourceRepositoryTest {
                 .verify();
     }
 
-
     @DisplayName("Find by Content Type Test")
     @Test
     void findByContentTypeTest() {
@@ -126,7 +111,6 @@ class ResourceRepositoryTest {
                 .thenCancel()
                 .verify();
     }
-
 
     @DisplayName("Delete by UUID Test")
     @Test
@@ -164,9 +148,7 @@ class ResourceRepositoryTest {
                 .challengeIds(List.of(UUID.randomUUID()))
                 .build();
 
-
         Mono<ResourceDocument> savedResource = resourceRepository.save(newResource);
-
 
         StepVerifier.create(savedResource)
                 .assertNext(resource -> {
@@ -233,6 +215,7 @@ class ResourceRepositoryTest {
                 .build();
 
         resourceRepository.save(resource).block();
+
         Mono<Long> countAfterSave = resourceRepository.count();
         StepVerifier.create(countAfterSave)
                 .expectNext(3L)
@@ -260,12 +243,10 @@ class ResourceRepositoryTest {
                 .verifyComplete();
     }
 
-
     @Test
     void findByChallengeIdsContaining_WhenChallengeIdExists_ReturnsResources() {
 
         UUID targetChallengeId = UUID.fromString("8ecbfe54-fec8-11ed-be56-0242ac120002");
-
 
         ResourceDocument resourceWithTargetChallenge = ResourceDocument.builder()
                 .resourceId(uuid1)
@@ -287,13 +268,10 @@ class ResourceRepositoryTest {
                 .challengeIds(List.of(UUID.randomUUID()))
                 .build();
 
-
         resourceRepository.deleteAll().block();
         resourceRepository.saveAll(Flux.just(resourceWithTargetChallenge, resourceWithoutTargetChallenge)).blockLast();
 
-
         Flux<ResourceDocument> result = resourceRepository.findByChallengeIdsContaining(targetChallengeId);
-
 
         StepVerifier.create(result)
                 .expectNextMatches(resource ->

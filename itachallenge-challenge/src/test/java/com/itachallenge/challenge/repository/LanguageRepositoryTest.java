@@ -1,148 +1,88 @@
 package com.itachallenge.challenge.repository;
 
-import com.itachallenge.challenge.controller.ChallengeController;
-import com.itachallenge.challenge.document.*;
-import com.itachallenge.challenge.service.IUserService;
-import org.junit.jupiter.api.*;
+import com.itachallenge.challenge.document.LanguageDocument;
+import com.itachallenge.challenge.integration.AbstractMongoDataTest;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.containers.MongoDBContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-import java.time.Duration;
-import java.util.*;
+
+import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.springframework.test.util.AssertionErrors.fail;
 
 @DataMongoTest
-@Testcontainers
-@TestInstance(TestInstance.Lifecycle.PER_METHOD)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-class LanguageRepositoryTest {
-
-    @Container
-    static MongoDBContainer container = new MongoDBContainer("mongo")
-            .withStartupTimeout(Duration.ofSeconds(60));
-
-    @DynamicPropertySource
-    static void initMongoProperties(DynamicPropertyRegistry registry) {
-        System.out.println("container url: {}" + container.getReplicaSetUrl("languages"));
-        System.out.println("container host/port: {}/{}" + container.getHost() + " - " + container.getFirstMappedPort());
-
-        registry.add("spring.data.mongodb.uri", () -> container.getReplicaSetUrl("languages"));
-    }
+class LanguageRepositoryTest extends AbstractMongoDataTest {
 
     @Autowired
     private LanguageRepository languageRepository;
-    @MockBean
-    private ChallengeController challengeController;
-    @MockBean
-    private IUserService userService;
 
-    UUID uuid_1 = UUID.fromString("8ecbfe54-fec8-11ed-be56-0242ac120002");
-    UUID uuid_2 = UUID.fromString("26977eee-89f8-11ec-a8a3-0242ac120003");
-
-    UUID uuidLang1, uuidLang2;
+    UUID uuidLang1;
+    UUID uuidLang2;
 
     @BeforeEach
-    public void setUp() {
-
+    void setUp() {
         uuidLang1 = UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f");
         uuidLang2 = UUID.fromString("409c9fe8-74de-4db3-81a1-a55280cf92ef");
 
         languageRepository.deleteAll().block();
 
-        LanguageDocument language = new LanguageDocument(uuidLang1, "Java", "https://image-default.com/java.png");
-        LanguageDocument language2 = new LanguageDocument(uuidLang2, "Python", "\"https://image-default.com/python.png");
-        Set<LanguageDocument> languageSet = new HashSet<>(Arrays.asList(language2, language));
+        LanguageDocument language1 =
+                new LanguageDocument(uuidLang1, "Java", "https://image-default.com/java.png");
 
-        languageRepository.saveAll(Flux.just(language, language2)).blockLast();
+        // OJO: aquí tenías una comilla de más al inicio
+        LanguageDocument language2 =
+                new LanguageDocument(uuidLang2, "Python", "https://image-default.com/python.png");
+
+        languageRepository.saveAll(Flux.just(language1, language2)).blockLast();
     }
 
-    @DisplayName("Repository not null Test")
     @Test
     void testDB() {
-
         assertNotNull(languageRepository);
-
     }
 
-    @DisplayName("Find All Test")
     @Test
     void findAllTest() {
-
-        Flux<LanguageDocument> languages = languageRepository.findAll();
-
-        StepVerifier.create(languages)
+        StepVerifier.create(languageRepository.findAll())
                 .expectNextCount(2)
                 .verifyComplete();
     }
 
-    @DisplayName("Exists by Id Test")
     @Test
     void existsByIdTest() {
         Boolean exists = languageRepository.existsById(uuidLang1).block();
-        assertEquals(exists, true);
+        assertEquals(true, exists);
     }
 
-    @DisplayName("Find by Id Test")
     @Test
     void findByIdTest() {
+        StepVerifier.create(languageRepository.findByIdLanguage(uuidLang1))
+                .assertNext(l -> assertEquals(uuidLang1, l.getIdLanguage()))
+                .verifyComplete();
 
-        Mono<LanguageDocument> firstLanguage = languageRepository.findByIdLanguage(uuidLang1);
-        firstLanguage.blockOptional().ifPresentOrElse(
-                u -> assertEquals(u.getIdLanguage(), uuidLang1),
-                () -> fail("Language with id " + uuidLang1 + " not found"));
-
-        Mono<LanguageDocument> secondLanguage = languageRepository.findByIdLanguage(uuidLang2);
-        secondLanguage.blockOptional().ifPresentOrElse(
-                u -> assertEquals(u.getIdLanguage(), uuidLang2),
-                () -> fail("Language with id " + uuidLang2 + " not found"));
+        StepVerifier.create(languageRepository.findByIdLanguage(uuidLang2))
+                .assertNext(l -> assertEquals(uuidLang2, l.getIdLanguage()))
+                .verifyComplete();
     }
 
-    @DisplayName("Delete by Id Test")
     @Test
     void deleteByIdTest() {
+        StepVerifier.create(languageRepository.deleteByIdLanguage(uuidLang1)).verifyComplete();
+        StepVerifier.create(languageRepository.deleteByIdLanguage(uuidLang2)).verifyComplete();
 
-        Mono<LanguageDocument> firstLanguage = languageRepository.findByIdLanguage(uuidLang1);
-        firstLanguage.blockOptional().ifPresentOrElse(
-                u -> {
-                    Mono<Void> deletion = languageRepository.deleteByIdLanguage(uuidLang1);
-                    StepVerifier.create(deletion)
-                            .expectComplete()
-                            .verify();
-                },
-                () -> fail("Language with id " + uuidLang1 + " not found")
-        );
-
-        Mono<LanguageDocument> secondLanguage = languageRepository.findByIdLanguage(uuidLang2);
-        secondLanguage.blockOptional().ifPresentOrElse(
-                u -> {
-                    Mono<Void> deletion = languageRepository.deleteByIdLanguage(uuidLang2);
-                    StepVerifier.create(deletion)
-                            .expectComplete()
-                            .verify();
-                },
-                () -> fail("Language with id " + uuidLang2 + " not found")
-        );
+        StepVerifier.create(languageRepository.findAll())
+                .expectNextCount(0)
+                .verifyComplete();
     }
 
-    @DisplayName("Find by language name")
     @Test
     void findFirstByLanguageName_test() {
         LanguageDocument language = languageRepository.findFirstByLanguageName("Java").block();
-
-        assert language != null;
-        Assertions.assertEquals(language.getIdLanguage(), UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f"));
+        assertNotNull(language);
+        assertEquals(uuidLang1, language.getIdLanguage());
     }
-
 }

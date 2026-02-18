@@ -1,5 +1,6 @@
 package com.itachallenge.challenge.repository;
 
+import com.itachallenge.challenge.integration.AbstractMongoDataTest;
 import com.itachallenge.challenge.controller.ChallengeController;
 import com.itachallenge.challenge.document.TagDocument;
 import com.itachallenge.challenge.service.IUserService;
@@ -11,49 +12,29 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.containers.MongoDBContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 
-import java.time.Duration;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
 
 @DataMongoTest
-@Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-class TagRepositoryTest {
-
-    @Container
-    static MongoDBContainer container = new MongoDBContainer("mongo")
-            .withStartupTimeout(Duration.ofSeconds(60));
-
-    @DynamicPropertySource
-    static void initMongoProperties(DynamicPropertyRegistry registry) {
-        System.out.println("container url: {}" + container.getReplicaSetUrl("languages"));
-        System.out.println("container host/port: {}/{}" + container.getHost() + " - " + container.getFirstMappedPort());
-
-        registry.add("spring.data.mongodb.uri", () -> container.getReplicaSetUrl("tags"));
-    }
+class TagRepositoryTest extends AbstractMongoDataTest {
 
     @Autowired
     private TagRepository tagRepository;
+
     @MockBean
     private ChallengeController challengeController;
+
     @MockBean
     private IUserService userService;
-
-    UUID uuid_1 = UUID.fromString("8ecbfe54-fec8-11ed-be56-0242ac120002");
-    UUID uuid_2 = UUID.fromString("26977eee-89f8-11ec-a8a3-0242ac120003");
 
     UUID uuidLang1, uuidLang2;
 
@@ -79,15 +60,12 @@ class TagRepositoryTest {
     @DisplayName("Repository not null Test")
     @Test
     void testDB() {
-
         assertNotNull(tagRepository);
-
     }
 
     @DisplayName("Find All Test")
     @Test
     void findAllTagsTest() {
-
         Flux<TagDocument> tags = tagRepository.findAll();
 
         StepVerifier.create(tags)
@@ -101,9 +79,9 @@ class TagRepositoryTest {
         Flux<TagDocument> tagsByLanguage = tagRepository.findByLanguageId(uuidLang1);
 
         StepVerifier.create(tagsByLanguage)
-                .expectNextMatches(tag -> tag.getTagName().equals("POO") && tag.getLanguageId().equals(uuidLang1))
+                .expectNextMatches(tag ->
+                        tag.getTagName().equals("POO") &&
+                                tag.getLanguageId().equals(uuidLang1))
                 .verifyComplete();
     }
-
-
 }

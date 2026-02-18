@@ -1,5 +1,6 @@
 package com.itachallenge.challenge.repository;
 
+import com.itachallenge.challenge.integration.AbstractMongoDataTest;
 import com.itachallenge.challenge.controller.ChallengeController;
 import com.itachallenge.challenge.document.SolutionDocument;
 import com.itachallenge.challenge.service.IUserService;
@@ -11,15 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.containers.MongoDBContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-import java.time.Duration;
+
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
@@ -27,28 +23,16 @@ import static org.junit.Assert.assertNotNull;
 import static org.springframework.test.util.AssertionErrors.fail;
 
 @DataMongoTest
-@Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-class SolutionRepositoryTest {
-
-
-    @Container
-    static MongoDBContainer container = new MongoDBContainer("mongo")
-            .withStartupTimeout(Duration.ofSeconds(60));
-
-    @DynamicPropertySource
-    static void initMongoProperties(DynamicPropertyRegistry registry) {
-        System.out.println("container url: {}" + container.getReplicaSetUrl("solutions"));
-        System.out.println("container host/port: {}/{}" + container.getHost() + " - " + container.getFirstMappedPort());
-
-        registry.add("spring.data.mongodb.uri", () -> container.getReplicaSetUrl("solutions"));
-    }
+class SolutionRepositoryTest extends AbstractMongoDataTest {
 
     @Autowired
     private SolutionRepository solutionRepository;
+
     @MockBean
     private ChallengeController challengeController;
+
     @MockBean
     private IUserService userService;
 
@@ -56,7 +40,7 @@ class SolutionRepositoryTest {
     UUID uuid_2 = UUID.fromString("26977eee-89f8-11ec-a8a3-0242ac120003");
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
 
         UUID uuidLang1 = UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f");
         UUID uuidLang2 = UUID.fromString("409c9fe8-74de-4db3-81a1-a55280cf92ef");
@@ -67,21 +51,17 @@ class SolutionRepositoryTest {
         SolutionDocument solution2 = new SolutionDocument(uuid_2, "Solution Text 2", uuidLang2);
 
         solutionRepository.saveAll(Flux.just(solution, solution2)).blockLast();
-
     }
 
     @DisplayName("Repository not null Test")
     @Test
     void testDB() {
-
         assertNotNull(solutionRepository);
-
     }
 
     @DisplayName("Find All Test")
     @Test
     void findAllTest() {
-
         Flux<SolutionDocument> solutions = solutionRepository.findAll();
 
         StepVerifier.create(solutions)
@@ -137,5 +117,4 @@ class SolutionRepositoryTest {
                 () -> fail("Solution to delete not found: " + uuid_2)
         );
     }
-
 }

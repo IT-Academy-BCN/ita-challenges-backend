@@ -14,15 +14,9 @@ import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWeb
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.testcontainers.containers.MongoDBContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 import reactor.core.publisher.Flux;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -33,21 +27,10 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
-@Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 @Import(GlobalExceptionHandler.class)
 @Tag("integration")
-class ChallengeIntegrationTest {
-
-    @Container
-    static MongoDBContainer container = new MongoDBContainer("mongo")
-            .withExposedPorts(27017)
-            .withStartupTimeout(Duration.ofSeconds(60));
-
-    @DynamicPropertySource
-    static void initMongoProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.data.mongodb.uri", () -> container.getReplicaSetUrl("challenges"));
-    }
+class ChallengeIntegrationTest extends AbstractMongoIntegrationTest {
 
     @Autowired
     private WebTestClient webTestClient;
@@ -63,37 +46,41 @@ class ChallengeIntegrationTest {
     UUID uuid_2 = UUID.fromString("26977eee-89f8-11ec-a8a3-0242ac120003");
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
+
+        // clave para que los tests no se contaminen entre sí
+        challengeRepository.deleteAll().block();
 
         UUID uuidLang1 = UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f");
         UUID uuidLang2 = UUID.fromString("409c9fe8-74de-4db3-81a1-a55280cf92ef");
+
         UUID[] idsLanguages = new UUID[]{uuidLang1, uuidLang2};
         String[] languageNames = new String[]{"name1", "name2"};
-        List<UUID> tags = List.of(UUID.randomUUID());
         String languageImage = "https://image-default.com/default.png";
+
         LanguageDocument language1 = getLanguageMocked(idsLanguages[0], languageNames[0], languageImage);
         LanguageDocument language2 = getLanguageMocked(idsLanguages[1], languageNames[1], languageImage);
         Set<LanguageDocument> languageSet = Set.of(language1, language2);
 
+        List<UUID> tags = List.of(UUID.randomUUID());
         List<UUID> solutionList = List.of(UUID.randomUUID(), UUID.randomUUID());
-        String description = "Description";
 
-        DetailDocument detail = new DetailDocument(description);
+        DetailDocument detail = new DetailDocument("Description");
 
-        String title1 = "Loops";
-        String title2 = "If";
+        ChallengeDocument challenge = new ChallengeDocument(
+                uuid_1, "Loops", "Level 1", LocalDateTime.now(), detail, languageSet,
+                solutionList, Topic.LISTS, 20, 5, 2, tags
+        );
 
-        ChallengeDocument challenge = new ChallengeDocument
-                (uuid_1, title1, "Level 1", LocalDateTime.now(), detail, languageSet,
-                        solutionList, Topic.LISTS, 20, 5,2, tags);
-        ChallengeDocument challenge2 = new ChallengeDocument
-                (uuid_2, title2, "Level 2", LocalDateTime.now(), detail, languageSet,
-                        solutionList, Topic.COMPONENTS, 20, 30,2, tags);
+        ChallengeDocument challenge2 = new ChallengeDocument(
+                uuid_2, "If", "Level 2", LocalDateTime.now(), detail, languageSet,
+                solutionList, Topic.COMPONENTS, 20, 30, 2, tags
+        );
 
         challengeRepository.saveAll(Flux.just(challenge, challenge2)).blockLast();
     }
 
-    //TODO - Refactor this method, getLanguages endpoint already available
+    // TODO - Refactor this method, getLanguages endpoint already available
     private LanguageDocument getLanguageMocked(UUID idLanguage, String languageName, String languageImage) {
         LanguageDocument languageIMocked = Mockito.mock(LanguageDocument.class);
         when(languageIMocked.getIdLanguage()).thenReturn(idLanguage);
@@ -139,7 +126,6 @@ class ChallengeIntegrationTest {
                 .expectStatus().isOk()
                 .expectBody(ChallengeDto.class)
                 .value(Assertions::assertNotNull);
-
     }
 
     @Test
@@ -161,7 +147,6 @@ class ChallengeIntegrationTest {
                 .exchange()
                 .expectStatus().isOk()
                 .expectBodyList(ChallengeDto.class)
-                .contains(new ChallengeDto[]{})
                 .hasSize(1);
     }
 }
