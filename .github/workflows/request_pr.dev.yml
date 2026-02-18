@@ -1,33 +1,36 @@
 name: Pull Request Sonar Analysis
+
 on:
   pull_request:
     types: [opened, synchronize, reopened]
     branches: [develop]
+
 jobs:
   sonarcloud:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout sources
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      
+
       - name: Set up JDK 21
         uses: actions/setup-java@v3
         with:
           distribution: temurin
           java-version: 21
-      
+
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
-      
+
       - name: Cache SonarCloud packages
         uses: actions/cache@v3
         with:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
-      
+
       - name: Cache Gradle packages
         uses: actions/cache@v3
         with:
@@ -36,35 +39,55 @@ jobs:
             ~/.gradle/wrapper
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties', '**/settings.gradle*') }}
           restore-keys: ${{ runner.os }}-gradle
-      
+
       - name: Check Java & Gradle Version
         run: |
           java -version
           ./gradlew --version
-      
+
       # FIX: Grant permissions to Docker socket for Testcontainers
       - name: Fix Docker permissions
         run: |
           sudo chmod 666 /var/run/docker.sock
           docker version
-      
+
       - name: Run Tests
         run: ./gradlew test --console=plain --info --stacktrace
-      
+
+      - name: List failed tests (from XML)
+        if: always()
+        run: |
+          echo "===== FAILED TESTS (classname + name) ====="
+          shopt -s globstar nullglob
+          FAIL=0
+          for f in **/build/test-results/test/*.xml; do
+            if grep -q "<failure" "$f"; then
+              FAIL=1
+              echo ""
+              echo "--- $f ---"
+              # Print testcase lines and failure lines (kept short)
+              grep -nE "<testcase |<failure" "$f" | head -n 200
+            fi
+          done
+
+          if [ "$FAIL" -eq 0 ]; then
+            echo "No failing tests found in XML."
+          fi
+
       - name: Upload Test Results (XML)
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: test-results-xml
           path: "**/build/test-results/test/"
-      
+
       - name: Upload Test Report (HTML)
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: test-report-html
           path: "**/build/reports/tests/"
-      
+
       - name: Analyze with SonarCloud
         if: success()
         env:
