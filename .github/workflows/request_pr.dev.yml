@@ -36,6 +36,17 @@ jobs:
           docker ps
           ls -la /var/run/docker.sock || true
 
+      - name: Debug docker-related env
+        run: |
+          env | sort | grep -E '^(DOCKER|TESTCONTAINERS)_' || true
+
+      - name: Clear conflicting Docker env (fix API v1.32)
+        run: |
+          echo "DOCKER_API_VERSION=" >> $GITHUB_ENV
+          echo "DOCKER_HOST=" >> $GITHUB_ENV
+          echo "DOCKER_TLS_VERIFY=" >> $GITHUB_ENV
+          echo "DOCKER_CERT_PATH=" >> $GITHUB_ENV
+
       - name: Run Tests (with extra logs)
         run: |
           set -euxo pipefail
