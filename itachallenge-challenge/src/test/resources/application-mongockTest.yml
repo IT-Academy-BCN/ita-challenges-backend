@@ -1,0 +1,7 @@
+spring:
+  data:
+    mongodb:
+      uri: ${MONGODB_URI:mongodb://localhost:27017/itachallenge_test?directConnection=true}
+
+mongock:
+  enabled: true
