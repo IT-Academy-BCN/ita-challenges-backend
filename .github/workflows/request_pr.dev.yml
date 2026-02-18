@@ -9,9 +9,19 @@ jobs:
   sonarcloud:
     runs-on: ubuntu-latest
 
+    services:
+      mongo:
+        image: mongo:7
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd="mongosh --eval 'db.adminCommand({ ping: 1 })'"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
     env:
       TESTCONTAINERS_LOG_LEVEL: DEBUG
-      DOCKER_API_VERSION: "1.44"
 
     steps:
       - name: Checkout sources
@@ -28,42 +38,16 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
 
-      - name: Verify Docker
-        run: |
-          set -euxo pipefail
-          echo "DOCKER_API_VERSION=$DOCKER_API_VERSION"
-          docker version
-          docker info
-          docker ps
-          ls -la /var/run/docker.sock || true
-
-      - name: Debug docker-related env
-        run: |
-          env | sort | grep -E '^(DOCKER|TESTCONTAINERS)_' || true
-
-      - name: Run Tests (with extra logs)
+      - name: Run Tests
+        env:
+          MONGODB_URI: mongodb://localhost:27017/itachallenge_test
         run: |
           set -euxo pipefail
           ./gradlew clean test \
             --no-daemon \
             --console=plain \
             --info \
-            --stacktrace \
-            -Dorg.gradle.logging.level=info \
-            -Dtestcontainers.reuse.enable=false
-
-      - name: Dump Testcontainers logs
-        if: always()
-        run: |
-          set -euxo pipefail
-          echo "== ~/.testcontainers.properties (if any) =="
-          cat ~/.testcontainers.properties || true
-          echo "== Docker containers (all) =="
-          docker ps -a || true
-          echo "== Docker logs of ryuk (if exists) =="
-          docker ps -a --format '{{.ID}} {{.Names}}' | grep -i ryuk || true
-          RYUK_ID=$(docker ps -a --format '{{.ID}} {{.Names}}' | awk 'tolower($2) ~ /ryuk/ {print $1; exit}')
-          if [ -n "${RYUK_ID:-}" ]; then docker logs "$RYUK_ID" || true; fi
+            --stacktrace
 
       - name: Upload Test Results
         if: always()
