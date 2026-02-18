@@ -10,9 +10,6 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      TESTCONTAINERS_HOST_OVERRIDE: localhost
-      TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE: /var/run/docker.sock
-      # Solo si Ryuk da problemas (puede ser útil, pero no imprescindible)
       TESTCONTAINERS_RYUK_DISABLED: true
 
     steps:
