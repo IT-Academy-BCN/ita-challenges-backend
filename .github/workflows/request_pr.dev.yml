@@ -9,6 +9,11 @@ jobs:
   sonarcloud:
     runs-on: ubuntu-latest
 
+    env:
+      DOCKER_HOST: unix:///var/run/docker.sock
+      TESTCONTAINERS_HOST_OVERRIDE: localhost
+      TESTCONTAINERS_RYUK_DISABLED: true
+
     steps:
       - name: Checkout sources
         uses: actions/checkout@v4
@@ -37,64 +42,46 @@ jobs:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties', '**/settings.gradle*') }}
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
           restore-keys: ${{ runner.os }}-gradle
 
-      - name: Check Java & Gradle Version
+      - name: Verify Docker
         run: |
-          java -version
-          ./gradlew --version
-
-      # FIX: Grant permissions to Docker socket (helps some environments)
-      - name: Fix Docker permissions
-        run: |
-          sudo chmod 666 /var/run/docker.sock
           docker version
           docker info
 
       - name: Run Tests
         id: run_tests
         continue-on-error: true
-        env:
-          DOCKER_HOST: unix:///var/run/docker.sock
-          TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE: /var/run/docker.sock
-          TESTCONTAINERS_RYUK_DISABLED: "true"
         run: ./gradlew test --console=plain --info --stacktrace
 
-      - name: List failed tests (from XML)
+      - name: List failed tests
         if: always()
         run: |
-          echo "===== FAILED TESTS (classname + name) ====="
-          shopt -s globstar nullglob
-          for f in **/build/test-results/test/*.xml; do
-            if grep -q "<failure" "$f"; then
-              echo ""
-              echo "--- $f ---"
-              grep -nE "<testcase |<failure" "$f" | head -n 200
-            fi
-          done
+          echo "FAILED TESTS:"
+          find . -name "*.xml" -path "*/test-results/*" -exec grep -H "<failure" {} \; || true
 
       - name: Fail job if tests failed
         if: steps.run_tests.outcome == 'failure'
         run: exit 1
 
-      - name: Upload Test Results (XML)
+      - name: Upload Test Results
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: test-results-xml
+          name: test-results
           path: "**/build/test-results/test/"
 
-      - name: Upload Test Report (HTML)
+      - name: Upload Test Report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: test-report-html
+          name: test-report
           path: "**/build/reports/tests/"
 
-      - name: Analyze with SonarCloud
+      - name: SonarCloud Analysis
         if: success()
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: ./gradlew sonar --console=plain --info
+        run: ./gradlew sonar --info
