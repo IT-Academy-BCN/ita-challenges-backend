@@ -23,7 +23,7 @@ class DataBaseRollBackTest {
     @DynamicPropertySource
     static void initMongoProperties(DynamicPropertyRegistry registry) {
         registry.add("spring.data.mongodb.uri",
-                () -> MongockTestContainer.getMongo().getReplicaSetUrl("challenges"));
+                () -> MongockTestContainer.getMongoUri("challenges"));
     }
 
     @Autowired

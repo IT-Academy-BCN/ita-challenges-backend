@@ -11,28 +11,35 @@ public final class MongockTestContainer {
 
     private MongockTestContainer() {}
 
-    /**
-     * Returns an external MongoDB URI if provided (CI), otherwise starts/returns a Testcontainers Mongo.
-     */
     public static String getMongoUri() {
         String external = System.getenv(ENV_MONGODB_URI);
         if (external != null && !external.isBlank()) {
             return external;
         }
+        // ensures container is started before asking for the url
         return getMongo().getReplicaSetUrl();
     }
 
-    /**
-     * Lazy-start MongoDBContainer only when actually needed (local).
-     */
+    public static String getMongoUri(String dbName) {
+        String uri = getMongoUri();
+        if (dbName == null || dbName.isBlank()) {
+            return uri;
+        }
+        return uri.endsWith("/") ? uri + dbName : uri + "/" + dbName;
+    }
+
     public static synchronized MongoDBContainer getMongo() {
         if (mongo == null) {
             mongo = new MongoDBContainer("mongo:7.0.8")
                     .withStartupAttempts(1)
                     .withStartupTimeout(Duration.ofSeconds(180))
                     .withReuse(false);
+        }
+
+        if (!mongo.isRunning()) {
             mongo.start();
         }
+
         return mongo;
     }
 }
