@@ -7,6 +7,8 @@ import java.time.Duration;
 public final class MongockTestContainer {
 
     private static final String ENV_MONGODB_URI = "MONGODB_URI";
+    private static final String ENV_CI = "CI";
+
     private static MongoDBContainer mongo; // lazy
 
     private MongockTestContainer() {}
@@ -16,15 +18,21 @@ public final class MongockTestContainer {
         if (external != null && !external.isBlank()) {
             return external;
         }
-        // ensures container is started before asking for the url
+
+        String ci = System.getenv(ENV_CI);
+        if ("true".equalsIgnoreCase(ci)) {
+            throw new IllegalStateException(
+                    "CI detected but MONGODB_URI is not set. " +
+                            "Set MONGODB_URI to the mongo service, e.g. mongodb://mongo:27017/test"
+            );
+        }
+
         return getMongo().getReplicaSetUrl();
     }
 
     public static String getMongoUri(String dbName) {
         String uri = getMongoUri();
-        if (dbName == null || dbName.isBlank()) {
-            return uri;
-        }
+        if (dbName == null || dbName.isBlank()) return uri;
         return uri.endsWith("/") ? uri + dbName : uri + "/" + dbName;
     }
 
@@ -35,11 +43,9 @@ public final class MongockTestContainer {
                     .withStartupTimeout(Duration.ofSeconds(180))
                     .withReuse(false);
         }
-
         if (!mongo.isRunning()) {
             mongo.start();
         }
-
         return mongo;
     }
 }
