@@ -8,6 +8,7 @@ import com.itachallenge.submission.document.SubmissionDocument;
 import com.itachallenge.submission.enums.SubmissionAction;
 import com.itachallenge.submission.enums.SubmissionStatus;
 import com.itachallenge.submission.repository.SubmissionRepository;
+import com.itachallenge.gamification.service.PointsService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,15 +19,18 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import com.itachallenge.challenge.dto.SolvedDto;
 import com.itachallenge.submission.exception.UnmodifiableSubmissionException;
 
 import static org.mockito.ArgumentMatchers.anyString;
 
 import java.util.UUID;
-import static org.mockito.Mockito.when;
+
 
 @ExtendWith(MockitoExtension.class)
 class SubmissionServiceImplTest {
@@ -35,8 +39,8 @@ class SubmissionServiceImplTest {
     private SubmissionRepository submissionRepository;
     @Mock
     private IChallengeService challengeService;
-
-
+    @Mock
+    private PointsService pointsService;
 
     @InjectMocks
     private SubmissionServiceImpl submissionService;
@@ -135,6 +139,7 @@ class SubmissionServiceImplTest {
                 .verifyComplete();
 
         verify(challengeService, never()).addChallengeToSolved(anyString());
+        verify(pointsService, never()).recordPoints(any(), any(), anyInt());
     }
 
     @Test
@@ -167,6 +172,8 @@ class SubmissionServiceImplTest {
 
         when(challengeService.addChallengeToSolved(challengeUuid.toString()))
                 .thenReturn(Mono.just(new SolvedDto(true, 3)));
+        when(pointsService.recordPoints(any(UUID.class), any(UUID.class), anyInt()))
+                .thenReturn(Mono.empty());
 
         StepVerifier.create(submissionService.processSubmissionAction(userUuid.toString(), request))
                 .assertNext(response -> {
@@ -177,6 +184,7 @@ class SubmissionServiceImplTest {
                 .verifyComplete();
 
         verify(challengeService).addChallengeToSolved(challengeUuid.toString());
+        verify(pointsService).recordPoints(eq(userUuid), eq(challengeUuid), eq(10));
     }
 
     @Test
@@ -233,6 +241,7 @@ class SubmissionServiceImplTest {
         StepVerifier.create(submissionService.processSubmissionAction(userUuid.toString(), request))
                 .assertNext(response -> Assertions.assertEquals(SubmissionStatus.IN_PROGRESS.name(), response.getStatus()))
                 .verifyComplete();
+        verify(pointsService, never()).recordPoints(any(), any(), anyInt());
     }
 
 }
