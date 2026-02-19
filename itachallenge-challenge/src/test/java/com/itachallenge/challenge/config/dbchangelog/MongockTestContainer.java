@@ -22,10 +22,13 @@ public final class MongockTestContainer {
     /**
      * Returns the same URI but forcing the database name, keeping query params intact.
      *
-     * Example:
-     *   mongodb://host:27017/test?directConnection=true
-     * becomes:
-     *   mongodb://host:27017/challenges?directConnection=true
+     * Works with:
+     * - mongodb://host:27017/test?directConnection=true
+     * - mongodb://host:27017/?directConnection=true
+     * - mongodb://host:27017 (no db)
+     *
+     * and produces:
+     * - mongodb://host:27017/<dbName>?directConnection=true
      */
     public static String getMongoUri(String dbName) {
         String uri = getMongoUri();
@@ -35,11 +38,15 @@ public final class MongockTestContainer {
         String base = (q >= 0) ? uri.substring(0, q) : uri;
         String query = (q >= 0) ? uri.substring(q) : "";
 
-        int lastSlash = base.lastIndexOf('/');
-        if (lastSlash > "mongodb://".length() + 2) {
-            base = base.substring(0, lastSlash + 1) + dbName;
-        } else {
+        int schemeIdx = base.indexOf("://");
+        int afterScheme = schemeIdx >= 0 ? schemeIdx + 3 : 0;
+
+        int pathSlash = base.indexOf('/', afterScheme);
+
+        if (pathSlash < 0) {
             base = base + "/" + dbName;
+        } else {
+            base = base.substring(0, pathSlash + 1) + dbName;
         }
 
         return base + query;
