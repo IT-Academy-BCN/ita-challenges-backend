@@ -22,7 +22,6 @@ class UserScoreRepositoryTest {
     @Test
     void givenExistingScores_whenFindByUsername_thenReturnsSortedByDescendingDates() {
         UUID userId = UUID.randomUUID();
-
         UserScoreDocument score1 = UserScoreDocument.builder()
                 .id(UUID.randomUUID())
                 .userId(userId)
