@@ -60,6 +60,27 @@ jobs:
             --info \
             --stacktrace
 
+      - name: Show failing tests (JUnit XML)
+        if: always()
+        run: |
+          echo "=== Failing tests (from XML) ==="
+          grep -R "<failure" -n **/build/test-results/test/*.xml || true
+          grep -R "<error" -n **/build/test-results/test/*.xml || true
+
+      - name: Upload Test Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: "**/build/test-results/test/"
+
+      - name: Upload Test Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-report
+          path: "**/build/reports/tests/"
+
       - name: SonarCloud Analysis
         if: success()
         env:
