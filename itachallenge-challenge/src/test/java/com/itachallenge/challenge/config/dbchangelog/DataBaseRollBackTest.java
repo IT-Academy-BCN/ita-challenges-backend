@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(
         properties = {
-                "mongock.enabled=false",
+                "mongock.runner-type=NONE",
                 "spring.data.mongodb.uri=${MONGODB_URI}"
         }
 )
