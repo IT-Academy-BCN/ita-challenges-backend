@@ -1,14 +1,12 @@
 package com.itachallenge.gamification.document;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DataMongoTest
 class UserScoreDocumentTest {
 
     @Test

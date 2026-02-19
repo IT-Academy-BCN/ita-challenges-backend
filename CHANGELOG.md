@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [UNRELEASED]
 
 ### Added
-- New MongoDB collection `user_score_history` for gamification tracking.
+- New MongoDB collection `user_score_history` with compound indexing for efficient retrieval for gamification tracking.
 - Reactive Repository for user score transactions.
 
 ## [Unreleased]

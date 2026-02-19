@@ -2,6 +2,8 @@ package com.itachallenge.gamification.document;
 
 import lombok.*;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -14,6 +16,7 @@ import java.util.UUID;
 @Setter
 @Builder
 @Document(collection = "user_score_history")
+@CompoundIndex(def = "{'user_id': 1, 'created_at': 1}", name = "user_scores_idx")
 public class UserScoreDocument {
 
     @Id
@@ -27,7 +30,7 @@ public class UserScoreDocument {
     private UUID challengeId;
 
     @Field("points")
-    private int points;
+    private Integer points;
 
     @Field("created_at")
     private LocalDateTime createdAt;
