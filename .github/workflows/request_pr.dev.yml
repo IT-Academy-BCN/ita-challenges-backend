@@ -45,7 +45,7 @@ jobs:
 
       - name: Run Tests
         env:
-          MONGODB_URI: mongodb://mongo:27017/test?directConnection=true
+          MONGODB_URI: mongodb://127.0.0.1:${{ job.services.mongo.ports['27017'] }}/test?directConnection=true
         run: |
           set -euxo pipefail
           ./gradlew clean test \
@@ -73,6 +73,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          # keep Sonar step consistent too (so any tests triggered there also use service mongo)
-          MONGODB_URI: mongodb://mongo:27017/test?directConnection=true
+          # keep same DB for any tests executed during sonar task
+          MONGODB_URI: mongodb://127.0.0.1:${{ job.services.mongo.ports['27017'] }}/test?directConnection=true
         run: ./gradlew sonar --no-daemon --info
