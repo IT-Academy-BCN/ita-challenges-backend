@@ -9,7 +9,6 @@ import org.springframework.test.context.DynamicPropertySource;
 
 @DataMongoTest(properties = "mongock.enabled=false")
 @EnableReactiveMongoRepositories(basePackages = "com.itachallenge.challenge.repository")
-@ComponentScan(basePackages = "com.itachallenge.challenge")
 public abstract class AbstractMongoDataTest {
 
     @DynamicPropertySource
