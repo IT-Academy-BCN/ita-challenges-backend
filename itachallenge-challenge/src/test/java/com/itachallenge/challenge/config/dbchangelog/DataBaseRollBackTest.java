@@ -11,19 +11,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest(properties = "mongock.enabled=false")
+@SpringBootTest(
+        properties = {
+                "mongock.enabled=false",
+                "spring.data.mongodb.uri=${MONGODB_URI}"
+        }
+)
 @ActiveProfiles("mongockTest")
 class DataBaseRollBackTest {
-
-    @DynamicPropertySource
-    static void initMongoProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.data.mongodb.uri", MongockTestContainer::getMongoUri);
-    }
 
     @Autowired
     private ReactiveMongoTemplate reactiveMongoTemplate;
