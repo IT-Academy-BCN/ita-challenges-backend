@@ -25,7 +25,7 @@ jobs:
           --health-retries=10
 
     env:
-      MONGODB_URI: mongodb://127.0.0.1:${{ job.services.mongo.ports['27017'] }}/test?directConnection=true
+      MONGODB_URI: mongodb://127.0.0.1:27017/test?directConnection=true
 
     steps:
       - name: Checkout sources
@@ -42,44 +42,23 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
 
-      - name: Docker sanity check
-        run: |
-          docker version
-          docker info
-
       - name: Wait for MongoDB
         run: |
           echo "Waiting for MongoDB..."
           for i in {1..30}; do
-            nc -z 127.0.0.1 ${{ job.services.mongo.ports['27017'] }} && echo "MongoDB is ready" && exit 0
+            nc -z 127.0.0.1 27017 && echo "MongoDB is ready" && exit 0
             sleep 2
           done
           echo "MongoDB did not become ready in time"
-          docker logs ${{ job.services.mongo.id }} || true
           exit 1
 
       - name: Run Tests
         run: |
-          set -euxo pipefail
           ./gradlew clean test \
             --no-daemon \
             --console=plain \
             --info \
             --stacktrace
-
-      - name: Upload Test Results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-results
-          path: "**/build/test-results/test/"
-
-      - name: Upload Test Report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-report
-          path: "**/build/reports/tests/"
 
       - name: SonarCloud Analysis
         if: success()
