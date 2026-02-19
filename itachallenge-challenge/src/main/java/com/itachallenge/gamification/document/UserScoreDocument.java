@@ -17,6 +17,7 @@ import java.util.UUID;
 @Builder
 @Document(collection = "user_score_history")
 @CompoundIndex(def = "{'user_id': 1, 'created_at': 1}", name = "user_scores_idx")
+@CompoundIndex(def = "{'user_id': 1, 'challenge_id': 1}", unique = true, name = "user_challenge_unique_idx")
 public class UserScoreDocument {
 
     @Id

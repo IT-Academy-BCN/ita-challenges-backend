@@ -1,53 +1,103 @@
 package com.itachallenge.gamification.repository;
 
 import com.itachallenge.gamification.document.UserScoreDocument;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.testcontainers.containers.MongoDBContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@ExtendWith(MockitoExtension.class)
+@DataMongoTest
+@ExtendWith(SpringExtension.class)
+@Testcontainers(disabledWithoutDocker = true)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 class UserScoreRepositoryTest {
 
-    @Mock
+    @Container
+    static MongoDBContainer container = new MongoDBContainer("mongo")
+            .withStartupTimeout(Duration.ofSeconds(60));
+
+    @DynamicPropertySource
+    static void initMongoProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.data.mongodb.uri", () -> container.getReplicaSetUrl("challenges"));
+    }
+
+    @Autowired
     private UserScoreRepository userScoreRepository;
 
+    @BeforeEach
+    void setUp() {
+        userScoreRepository.deleteAll().block();
+    }
+
     @Test
-    void givenExistingScores_whenFindByUsername_thenReturnsSortedByDescendingDates() {
+    @DisplayName("Repository is not null")
+    void repositoryShouldNotBeNull() {
+        assertNotNull(userScoreRepository);
+    }
+
+    @Test
+    @DisplayName("Given existing scores, when findByUserIdOrderByCreatedAtDesc then returns sorted by descending dates")
+    void givenExistingScores_whenFindByUserId_thenReturnsSortedByDescendingDates() {
         UUID userId = UUID.randomUUID();
+<<<<<<< HEAD
+=======
+        UUID challenge1 = UUID.randomUUID();
+        UUID challenge2 = UUID.randomUUID();
+        LocalDateTime older = LocalDateTime.now().minusDays(3);
+        LocalDateTime newer = LocalDateTime.now();
+
+>>>>>>> 24225070c (creation of userScore Doc & ReÃpo and tests)
         UserScoreDocument score1 = UserScoreDocument.builder()
                 .id(UUID.randomUUID())
                 .userId(userId)
-                .pointsEarned(3)
-                .createdAt(LocalDateTime.now())
+                .username("test-user")
+                .challengeId(challenge1)
+                .pointsEarned(5)
+                .createdAt(older)
                 .build();
         UserScoreDocument score2 = UserScoreDocument.builder()
                 .id(UUID.randomUUID())
                 .userId(userId)
-                .pointsEarned(1)
-                .createdAt(LocalDateTime.now().minusDays(3))
-                .build();
-        UserScoreDocument score3 = UserScoreDocument.builder()
-                .id(UUID.randomUUID())
-                .userId(userId)
-                .pointsEarned(2)
-                .createdAt(LocalDateTime.now().minusDays(1))
+                .username("test-user")
+                .challengeId(challenge2)
+                .pointsEarned(10)
+                .createdAt(newer)
                 .build();
 
-        when(userScoreRepository.findByUserIdOrderByCreatedAtDesc(userId))
-                .thenReturn(Flux.just(score1, score3, score2));
+        userScoreRepository.saveAll(List.of(score1, score2)).blockLast();
 
-        StepVerifier.create(userScoreRepository.findByUserIdOrderByCreatedAtDesc(userId))
-                .expectNextMatches(s -> s.getPointsEarned() == 3)
-                .expectNextMatches(s -> s.getPointsEarned() == 2)
-                .expectNextMatches(s -> s.getPointsEarned() == 1)
+        Flux<UserScoreDocument> scoresDesc = userScoreRepository.findByUserIdOrderByCreatedAtDesc(userId);
+        StepVerifier.create(scoresDesc)
+                .expectNextMatches((UserScoreDocument s) -> s.getPointsEarned() == 10)
+                .expectNextMatches((UserScoreDocument s) -> s.getPointsEarned() == 5)
+                .verifyComplete();
+    }
+
+    @Test
+    @DisplayName("Given no scores, when findByUserIdOrderByCreatedAtDesc then returns empty")
+    void givenNoScores_whenFindByUserId_thenReturnsEmpty() {
+        UUID userId = UUID.randomUUID();
+
+        Flux<UserScoreDocument> scoresDesc = userScoreRepository.findByUserIdOrderByCreatedAtDesc(userId);
+        StepVerifier.create(scoresDesc)
                 .verifyComplete();
     }
 }
