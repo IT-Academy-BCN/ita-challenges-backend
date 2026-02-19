@@ -5,6 +5,10 @@ on:
     types: [opened, synchronize, reopened]
     branches: [develop]
 
+concurrency:
+  group: pr-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
 jobs:
   sonarcloud:
     runs-on: ubuntu-latest
@@ -42,6 +46,17 @@ jobs:
         run: |
           docker version
           docker info
+
+      - name: Wait for MongoDB
+        run: |
+          echo "Waiting for MongoDB..."
+          for i in {1..30}; do
+            nc -z 127.0.0.1 ${{ job.services.mongo.ports['27017'] }} && echo "MongoDB is ready" && exit 0
+            sleep 2
+          done
+          echo "MongoDB did not become ready in time"
+          docker logs ${{ job.services.mongo.id }} || true
+          exit 1
 
       - name: Run Tests
         env:
