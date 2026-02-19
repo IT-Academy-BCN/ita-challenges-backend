@@ -38,9 +38,14 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
 
+      - name: Docker sanity check
+        run: |
+          docker version
+          docker info
+
       - name: Run Tests
         env:
-          MONGODB_URI: mongodb://localhost:27017/test?directConnection=true
+          MONGODB_URI: mongodb://mongo:27017/test?directConnection=true
         run: |
           set -euxo pipefail
           ./gradlew clean test \
@@ -68,4 +73,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          # keep Sonar step consistent too (so any tests triggered there also use service mongo)
+          MONGODB_URI: mongodb://mongo:27017/test?directConnection=true
         run: ./gradlew sonar --no-daemon --info
