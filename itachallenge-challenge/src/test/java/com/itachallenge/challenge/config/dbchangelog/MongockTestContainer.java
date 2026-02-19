@@ -7,26 +7,15 @@ import java.time.Duration;
 public final class MongockTestContainer {
 
     private static final String ENV_MONGODB_URI = "MONGODB_URI";
-    private static final String ENV_CI = "CI";
-
     private static MongoDBContainer mongo; // lazy
 
     private MongockTestContainer() {}
 
-    public static String getMongoUri() {
+     public static String getMongoUri() {
         String external = System.getenv(ENV_MONGODB_URI);
         if (external != null && !external.isBlank()) {
             return external;
         }
-
-        String ci = System.getenv(ENV_CI);
-        if ("true".equalsIgnoreCase(ci)) {
-            throw new IllegalStateException(
-                    "CI detected but MONGODB_URI is not set. " +
-                            "Set MONGODB_URI to the mongo service, e.g. mongodb://mongo:27017/test"
-            );
-        }
-
         return getMongo().getReplicaSetUrl();
     }
 

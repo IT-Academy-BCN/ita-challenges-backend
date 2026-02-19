@@ -16,7 +16,7 @@ import org.springframework.test.context.DynamicPropertySource;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest(properties = "mongock.enabled=false") 
+@SpringBootTest(properties = "mongock.enabled=false")
 @ActiveProfiles("mongockTest")
 class DataBaseRollBackTest {
 
