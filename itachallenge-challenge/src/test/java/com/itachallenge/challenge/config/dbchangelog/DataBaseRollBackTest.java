@@ -22,8 +22,7 @@ class DataBaseRollBackTest {
 
     @DynamicPropertySource
     static void initMongoProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.data.mongodb.uri",
-                () -> MongockTestContainer.getMongoUri("challenges"));
+        registry.add("spring.data.mongodb.uri", MongockTestContainer::getMongoUri);
     }
 
     @Autowired
@@ -72,7 +71,6 @@ class DataBaseRollBackTest {
     @DisplayName("Test updateTextInField method - Verify the field is updated with the new value")
     @Test
     void updateTextInFieldTest() {
-
         reactiveMongoTemplate.save(new Document("Language Rollbacked", "LanguageDemo"), "mongockDemo").block();
         dataBaseRollback.updateTextInField(mongoClient);
 
@@ -87,7 +85,6 @@ class DataBaseRollBackTest {
     @DisplayName("Test rollbackUpdateFieldInCollection method - Verify the field is renamed back to 'Language Rollbacked'")
     @Test
     void rollbackUpdateFieldInCollectionTest() {
-
         reactiveMongoTemplate.save(new Document("Language Name Updated", "someValue"), "mongockDemo").block();
         dataBaseRollback.rollbackUpdateFieldInCollection(mongoClient);
 
