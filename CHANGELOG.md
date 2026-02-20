@@ -5,6 +5,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [UNRELEASED] 2026-02-19
 ### Added
+<<<<<<< HEAD
 - PointsHistoryResponseDto: New DTO to encapsulate the response structure, including total points and the collection of user activities.
 - PointHistoryEntryDto: New DTO for individual score entries, including points and formatted date strings.
 - UserScoreService: Core interface definition for gamification point-related business operations.
@@ -15,6 +16,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 - Removed deprecated legacy Bookmarks routes previously served by BookmarkLegacyController. (GitHub Task [#186], PR [#1106])
+=======
+- PointsHistoryDto: New DTO to encapsulate the response structure, including total points and the collection of user activities.
+- PointEntryDto: New DTO for individual score entries, including points and formatted date strings.
+- GamificationMapper: Implementation of a dedicated mapper component to transform UserScoreDocument entities into PointEntryDto with null-safety logic.
+- PointsService: Core interface definition for gamification point-related business operations.
+- PointsServiceImpl: Implementation of the points history logic, featuring reactive stream processing and score aggregation.
+- PointsServiceImplTest: Comprehensive unit test suite for PointsServiceImpl covering all business requirements.
+
+>>>>>>> 8a093b9a8 (updated changelog 2/3)
 ## [UNRELEASED]
 
 ### Added
