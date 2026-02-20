@@ -112,7 +112,7 @@ class PointsServiceImplTest {
         UserScoreDocument olderScore = UserScoreDocument.builder().points(5).createdAt(now.minusDays(3)).build();
 
         when(userScoreRepository.findByUserIdOrderByCreatedAtAsc(userId))
-                .thenReturn(Flux.just( olderScore, latestScore));
+                .thenReturn(Flux.just(olderScore, latestScore));
 
         when(gamificationMapper.toPointEntryDto(latestScore))
                 .thenReturn(PointEntryDto.builder().points(10).createdAt(now.toString()).build());
