@@ -7,6 +7,6 @@ import java.util.UUID;
 
 public interface PointsService {
 
-  Mono<PointsHistoryDto> getUserPointsHistory(UUID uuid);
+  Mono<PointsHistoryDto> getUserPointsHistory(UUID userId);
 }
 
