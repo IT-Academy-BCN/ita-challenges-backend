@@ -3,6 +3,15 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [UNRELEASED] 2026-02-19
+### Added
+- PointsHistoryDto: New DTO to encapsulate the response structure, including total points and the collection of user activities.
+- PointEntryDto: New DTO for individual score entries, including points and formatted date strings.
+- GamificationMapper: Implementation of a dedicated mapper component to transform UserScoreDocument entities into PointEntryDto with null-safety logic.
+- PointsService: Core interface definition for gamification point-related business operations.
+- PointsServiceImpl: Implementation of the points history logic, featuring reactive stream processing and score aggregation.
+- PointsServiceImplTest: Comprehensive unit test suite for PointsServiceImpl covering all business requirements.
+
 ## [UNRELEASED]
 
 ### Added
