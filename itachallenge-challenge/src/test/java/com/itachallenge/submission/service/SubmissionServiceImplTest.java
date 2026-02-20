@@ -10,9 +10,9 @@ import com.itachallenge.submission.enums.SubmissionStatus;
 import com.itachallenge.submission.repository.SubmissionRepository;
 import com.itachallenge.gamification.service.PointsService;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Flux;
@@ -42,9 +42,16 @@ class SubmissionServiceImplTest {
     @Mock
     private PointsService pointsService;
 
-    @InjectMocks
     private SubmissionServiceImpl submissionService;
-
+    @BeforeEach
+    void setUp() {
+        submissionService = new SubmissionServiceImpl(
+                submissionRepository,
+                challengeService,
+                pointsService,
+                10
+        );
+    }
     @Test
     void getAllSubmissionsByUser_shouldReturnSubmissionDocuments() {
         UUID userUuid = UUID.randomUUID();
@@ -186,6 +193,51 @@ class SubmissionServiceImplTest {
         verify(challengeService).addChallengeToSolved(challengeUuid.toString());
         verify(pointsService).recordPoints(eq(userUuid), eq(challengeUuid), eq(10));
     }
+    @Test
+    void createOrUpdateSubmission_shouldReturnSuccess_whenRecordPointsFails() {
+        UUID userUuid = UUID.randomUUID();
+        UUID challengeUuid = UUID.randomUUID();
+        UUID languageUuid = UUID.randomUUID();
+
+        SubmissionDocument existing = SubmissionDocument.builder()
+                .submissionId(UUID.randomUUID())
+                .userId(userUuid)
+                .challengeId(challengeUuid)
+                .languageId(languageUuid)
+                .status(SubmissionStatus.IN_PROGRESS)
+                .submissionText("draft")
+                .build();
+
+        SubmissionActionRequestDto request = SubmissionActionRequestDto.builder()
+                .challengeId(challengeUuid)
+                .languageId(languageUuid)
+                .action(SubmissionAction.SUBMIT)
+                .submissionText("final")
+                .build();
+
+        when(submissionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid))
+                .thenReturn(Mono.just(existing));
+
+        when(submissionRepository.save(any(SubmissionDocument.class)))
+                .thenAnswer(invocation -> Mono.just(invocation.getArgument(0)));
+
+        when(challengeService.addChallengeToSolved(challengeUuid.toString()))
+                .thenReturn(Mono.just(new SolvedDto(true, 3)));
+
+        when(pointsService.recordPoints(any(UUID.class), any(UUID.class), anyInt()))
+                .thenReturn(Mono.error(new RuntimeException("mongo down")));
+
+        StepVerifier.create(submissionService.processSubmissionAction(userUuid.toString(), request))
+                .assertNext(response -> {
+                    Assertions.assertEquals(SubmissionStatus.SUBMITTED_COMPLETE.name(), response.getStatus());
+                    Assertions.assertTrue(response.getIsSolved());
+                    Assertions.assertEquals(3, response.getTimesSolved());
+                })
+                .verifyComplete();
+
+        verify(challengeService).addChallengeToSolved(challengeUuid.toString());
+        verify(pointsService).recordPoints(eq(userUuid), eq(challengeUuid), eq(10));
+    }
 
     @Test
     void createOrUpdateSubmission_shouldThrow_whenAlreadySubmitted() {
@@ -217,6 +269,7 @@ class SubmissionServiceImplTest {
                 .verify();
 
         verify(challengeService, never()).addChallengeToSolved(anyString());
+        verify(pointsService, never()).recordPoints(any(), any(), anyInt());
     }
 
     @Test

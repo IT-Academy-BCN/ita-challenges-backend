@@ -12,6 +12,9 @@ import com.itachallenge.submission.exception.UnmodifiableSubmissionException;
 import com.itachallenge.submission.mapper.SubmissionMapper;
 import com.itachallenge.submission.repository.SubmissionRepository;
 import com.itachallenge.gamification.service.PointsService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -20,17 +23,22 @@ import java.util.UUID;
 
 @Service
 public class SubmissionServiceImpl implements SubmissionService {
-    private static final int POINTS_ON_SUBMISSION_COMPLETE = 10;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SubmissionServiceImpl.class);
+
+    private final int pointsOnSubmissionComplete;
     private final SubmissionRepository submissionRepository;
     private final IChallengeService challengeService;
     private final PointsService pointsService;
 
     public SubmissionServiceImpl(SubmissionRepository submissionRepository,
                                  IChallengeService challengeService,
-                                 PointsService pointsService) {
+                                 PointsService pointsService,
+                                 @Value("${gamification.points.submission-complete:10}") int pointsOnSubmissionComplete) {
         this.submissionRepository = submissionRepository;
         this.challengeService = challengeService;
         this.pointsService = pointsService;
+        this.pointsOnSubmissionComplete = pointsOnSubmissionComplete;
     }
 
     @Override
@@ -97,8 +105,13 @@ public class SubmissionServiceImpl implements SubmissionService {
                             .flatMap(saved -> {
                                 if (saved.getStatus() == SubmissionStatus.SUBMITTED_COMPLETE) {
                                     return challengeService.addChallengeToSolved(challengeUuid.toString())
-                                            .flatMap(solvedDto -> pointsService.recordPoints(userUuid, challengeUuid, POINTS_ON_SUBMISSION_COMPLETE)
-                                                    .thenReturn(solvedDto))
+                                            .flatMap(solvedDto -> pointsService.recordPoints(userUuid, challengeUuid, pointsOnSubmissionComplete)
+                                                            .onErrorResume(ex -> {
+                                                                LOGGER.warn("Gamification recordPoints failed for userId={} challengeId={}: {}",
+                                                                        userUuid, challengeUuid, ex.getMessage());
+                                                                return Mono.empty();
+                                                            })
+                                                            .thenReturn(solvedDto))
                                             .map(solvedDto -> SubmissionActionResponseDto.builder()
                                                     .submissionText(saved.getSubmissionText())
                                                     .status(saved.getStatus().name())

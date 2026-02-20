@@ -63,3 +63,7 @@ token:
     key: someRandomStringToProtectThisAppFromAttacks
   expiration:
     minutes: 600
+
+gamification:
+  points:
+  submission-complete: 10

@@ -46,6 +46,23 @@ public class PointsServiceImplTest {
         assertThat(saved.getChallengeId()).isEqualTo(challengeId);
         assertThat(saved.getPoints()).isEqualTo(points);
         assertThat(saved.getCreatedAt()).isNotNull();
-        assertThat(saved.getId()).isNotNull();
+        assertThat(saved.getId()).isNull();
+    }
+
+    @Test
+    void recordPoints_shouldPropagateErrorWhenRepositoryFails() {
+        UUID userId = UUID.randomUUID();
+        UUID challengeId = UUID.randomUUID();
+
+        when(userScoreRepository.save(any(UserScoreDocument.class)))
+                .thenReturn(Mono.error(new RuntimeException("mongo down")));
+
+        StepVerifier.create(pointsService.recordPoints(userId, challengeId, 10))
+                .expectErrorMatches(ex ->
+                        ex instanceof RuntimeException &&
+                                ex.getMessage().contains("mongo down"))
+                .verify();
+
+        verify(userScoreRepository).save(any(UserScoreDocument.class));
     }
 }
