@@ -15,8 +15,7 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class PointsServiceImplTest {
@@ -32,6 +31,8 @@ public class PointsServiceImplTest {
         UUID challengeId = UUID.randomUUID();
         int points = 10;
 
+        when(userScoreRepository.existsByUserIdAndChallengeId(userId, challengeId))
+                .thenReturn(Mono.just(false));
         when(userScoreRepository.save(any(UserScoreDocument.class)))
                 .thenAnswer(invocation -> Mono.just(invocation.getArgument(0)));
 
@@ -50,10 +51,25 @@ public class PointsServiceImplTest {
     }
 
     @Test
+    void recordPoints_shouldNotSaveWhenAlreadyExists() {
+        UUID userId = UUID.randomUUID();
+        UUID challengeId = UUID.randomUUID();
+
+        when(userScoreRepository.existsByUserIdAndChallengeId(userId, challengeId))
+                .thenReturn(Mono.just(true));
+
+        StepVerifier.create(pointsService.recordPoints(userId, challengeId, 10))
+                .verifyComplete();
+
+        verify(userScoreRepository, never()).save(any(UserScoreDocument.class));
+    }
+    @Test
     void recordPoints_shouldPropagateErrorWhenRepositoryFails() {
         UUID userId = UUID.randomUUID();
         UUID challengeId = UUID.randomUUID();
 
+        when(userScoreRepository.existsByUserIdAndChallengeId(userId, challengeId))
+                .thenReturn(Mono.just(false));
         when(userScoreRepository.save(any(UserScoreDocument.class)))
                 .thenReturn(Mono.error(new RuntimeException("mongo down")));
 

@@ -5,13 +5,15 @@ import com.itachallenge.challenge.dto.submission.SubmissionActionResponseDto;
 import com.itachallenge.challenge.dto.submission.SubmissionDto;
 import com.itachallenge.challenge.exception.BadUUIDException;
 import com.itachallenge.common.exception.GlobalExceptionHandler;
+import com.itachallenge.gamification.service.PointsService;
 import com.itachallenge.submission.enums.SubmissionAction;
 import com.itachallenge.submission.exception.UnmodifiableSubmissionException;
 import com.itachallenge.submission.service.SubmissionService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import static org.mockito.ArgumentMatchers.anyInt;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
@@ -29,9 +31,15 @@ class SubmissionControllerTest {
     @Mock
     SubmissionService submissionService;
 
-    @InjectMocks
-    SubmissionController submissionController;
+    @Mock
+    PointsService pointsService;
 
+    private  SubmissionController submissionController;
+
+    @BeforeEach
+    void setUp() {
+        submissionController = new SubmissionController(submissionService, pointsService, 10);
+    }
     private WebTestClient client() {
         return WebTestClient.bindToController(submissionController)
                 .controllerAdvice(new GlobalExceptionHandler())
@@ -152,6 +160,7 @@ class SubmissionControllerTest {
                 .jsonPath("$.status").isEqualTo("IN_PROGRESS");
 
         verify(submissionService).processSubmissionAction(eq(userId), any(SubmissionActionRequestDto.class));
+        verify(pointsService, never()).recordPoints(any(), any(), anyInt());
     }
 
     @Test
@@ -226,6 +235,43 @@ class SubmissionControllerTest {
 
         verify(submissionService, never())
                 .processSubmissionAction(any(), any());
+    }
+    @Test
+    void postSubmission_returns200_whenGamificationFailsOnComplete() {
+        String userId = UUID.randomUUID().toString();
+        UUID challengeId = UUID.randomUUID();
+
+        SubmissionActionRequestDto request = SubmissionActionRequestDto.builder()
+                .challengeId(challengeId)
+                .languageId(UUID.randomUUID())
+                .action(SubmissionAction.SUBMIT)
+                .submissionText("final text")
+                .build();
+
+        SubmissionActionResponseDto response = SubmissionActionResponseDto.builder()
+                .submissionText("final text")
+                .isSolved(true)
+                .timesSolved(3)
+                .status("SUBMITTED_COMPLETE")
+                .build();
+
+        when(submissionService.processSubmissionAction(eq(userId), any(SubmissionActionRequestDto.class)))
+                .thenReturn(Mono.just(response));
+        when(pointsService.recordPoints(any(), any(), anyInt()))
+                .thenReturn(Mono.error(new RuntimeException("mongo down")));
+
+        client().post()
+                .uri("/itachallenge/api/v1/users/{userId}/submissions", userId)
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .bodyValue(request)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.status").isEqualTo("SUBMITTED_COMPLETE")
+                .jsonPath("$.is_solved").isEqualTo(true);
+
+        verify(pointsService).recordPoints(any(), any(), anyInt());
     }
 
 }
