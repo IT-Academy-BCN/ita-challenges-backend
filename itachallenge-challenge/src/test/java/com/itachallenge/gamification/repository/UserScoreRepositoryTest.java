@@ -26,31 +26,31 @@ class UserScoreRepositoryTest {
     }
 
     @Test
-    void givenExistingScores_whenFindByUserId_thenReturnsSortedByAscendingDates() {
+    void givenExistingScores_whenFindByUsername_thenReturnsSortedByAscendingDates() {
 
-        UUID userId = UUID.randomUUID();
+        String username = "Pepito";
         UserScoreDocument score1 = UserScoreDocument.builder()
                 .id(UUID.randomUUID())
-                .userId(userId)
+                .username(username)
                 .points(3)
                 .createdAt(LocalDateTime.now())
                 .build();
         UserScoreDocument score2 = UserScoreDocument.builder()
                 .id(UUID.randomUUID())
-                .userId(userId)
+                .username(username)
                 .points(1)
                 .createdAt(LocalDateTime.now().minusDays(3))
                 .build();
         UserScoreDocument score3 = UserScoreDocument.builder()
                 .id(UUID.randomUUID())
-                .userId(userId)
+                .username(username)
                 .points(2)
                 .createdAt(LocalDateTime.now().minusDays(1))
                 .build();
 
         userScoreRepository.saveAll(List.of(score1, score2, score3)).blockLast();
 
-        StepVerifier.create(userScoreRepository.findByUserIdOrderByCreatedAtAsc(userId))
+        StepVerifier.create(userScoreRepository.findByUsernameOrderByCreatedAtAsc(username))
                 .expectNextMatches(s -> s.getPoints() == 1)
                 .expectNextMatches(s -> s.getPoints() == 2)
                 .expectNextMatches(s -> s.getPoints() == 3)

@@ -25,6 +25,9 @@ public class UserScoreDocument {
     @Field("user_id")
     private UUID userId;
 
+    @Field("username")
+    private String username;
+
     @Field("challenge_id")
     private UUID challengeId;
 

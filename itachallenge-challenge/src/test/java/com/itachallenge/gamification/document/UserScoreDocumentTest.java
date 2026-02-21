@@ -13,6 +13,7 @@ class UserScoreDocumentTest {
     void givenValidData_whenUserDocIsBuild_thenUserDocIsCorrectlyCreated() {
         UUID id = UUID.randomUUID();
         UUID userId = UUID.randomUUID();
+        String username = "Pepito";
         UUID challengeId = UUID.randomUUID();
         int points = 10;
         LocalDateTime createdAt = LocalDateTime.now();
@@ -20,6 +21,7 @@ class UserScoreDocumentTest {
         UserScoreDocument document = UserScoreDocument.builder()
                 .id(id)
                 .userId(userId)
+                .username(username)
                 .challengeId(challengeId)
                 .points(points)
                 .createdAt(createdAt)
@@ -27,6 +29,7 @@ class UserScoreDocumentTest {
 
         assertThat(document.getId()).isEqualTo(id);
         assertThat(document.getUserId()).isEqualTo(userId);
+        assertThat(document.getUsername()).isEqualTo(username);
         assertThat(document.getChallengeId()).isEqualTo(challengeId);
         assertThat(document.getPoints()).isEqualTo(points);
         assertThat(document.getCreatedAt()).isEqualTo(createdAt);
