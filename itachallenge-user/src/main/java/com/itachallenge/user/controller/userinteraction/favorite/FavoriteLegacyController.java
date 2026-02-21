@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,17 +19,29 @@ import java.util.UUID;
 
 
 @RestController
-@RequestMapping({"/itachallenge/api/v1/users"})
-public class FavoriteController {
+@RequestMapping("/itachallenge/api/v1/userinteraction/favorites")
+public class FavoriteLegacyController {
 
-    private static final Logger log = LoggerFactory.getLogger(FavoriteController.class);
+    private static  final String DEPRECATION = "deprecation";
+    @Value("${app.api.favorites.successor-version.post-path}")
+    private String postPath;
+
+    @Value("${app.api.favorites.successor-version.get-path}")
+    private String getPath;
+
+    @Value("${app.api.favorites.successor-version.delete-path}")
+    private String deletePath;
+
+    private static final Logger log = LoggerFactory.getLogger(FavoriteLegacyController.class);
 
     private final FavoriteService favoriteService;
 
-    public FavoriteController(FavoriteService favoriteService) {
+    public FavoriteLegacyController(FavoriteService favoriteService) {
         this.favoriteService = favoriteService;
     }
-
+    /**
+     * @deprecated
+     */
     @Operation(
             summary = "Add Challenge to User Favorite Challenges",
             description = "Adds challenge to user favorites",
@@ -74,20 +87,29 @@ public class FavoriteController {
                     )
             }
     )
-    @PostMapping("/{userId}/favorites/{challengeId}")
-    public Mono<ResponseEntity<Boolean>> addToFavorites(@PathVariable String userId, @PathVariable String challengeId) {
+    @PostMapping("/users/{userId}/favorites/{challengeId}")
+    @Deprecated(since="3.2.2", forRemoval = true)
+    public Mono<ResponseEntity<Boolean>> addToFavoritesLegacy(@PathVariable String userId, @PathVariable String challengeId) {
         return favoriteService.addChallengeToFavorites(userId, challengeId)
                 .map(added -> {
                     if (Boolean.TRUE.equals(added)) {
                         log.info("Challenge '{}' added to user '{}' favorites", challengeId, userId);
-                        return ResponseEntity.status(HttpStatus.CREATED).body(true);
+                        return ResponseEntity.status(HttpStatus.CREATED)
+                                .header(DEPRECATION,"true")
+                                .header("Link", postPath)
+                                .body(true);
                     } else {
                         log.info("User's '{}' favorites already contain Challenge '{}'", userId, challengeId);
-                        return ResponseEntity.ok().body(false);
+                        return ResponseEntity.ok()
+                                .header(DEPRECATION,"true")
+                                .header("Link", postPath)
+                                .body(false);
                     }
                 });
     }
-
+    /**
+     * @deprecated
+     */
     @Operation(
             summary = "Gets challenges marked as favorites by a user",
             description = "Returns all favorites that the specified user has marked.",
@@ -107,14 +129,20 @@ public class FavoriteController {
             }
     )
     @GetMapping("/{userId}")
-    public Mono<ResponseEntity<Set<UUID>>> getUserFavorites(@PathVariable String userId) {
+    @Deprecated(since="3.2.2", forRemoval = true)
+    public Mono<ResponseEntity<Set<UUID>>> getUserFavoritesLegacy(@PathVariable String userId) {
         return favoriteService.getUserFavorites(userId)
                 .map(favorites -> {
                     log.info("Retrieved {} favorite challenges for user {}", favorites.size(), userId);
-                    return ResponseEntity.ok(favorites);
+                    return ResponseEntity.ok()
+                            .header(DEPRECATION,"true")
+                            .header("Link", getPath)
+                            .body(favorites);
                 });
     }
-
+    /**
+     * @deprecated
+     */
     @Operation(
             summary = "Delete Challenge from User Favorite Challenges",
             description = "Deletes challenge from user favorites",
@@ -155,18 +183,24 @@ public class FavoriteController {
                     )
             }
     )
-    @DeleteMapping("/{userId}/favorites/{challengeId}")
-    public Mono<ResponseEntity<Boolean>> deleteFromFavorites(@PathVariable String userId, @PathVariable String challengeId) {
+    @DeleteMapping("/users/{userId}/favorites/{challengeId}")
+    @Deprecated(since="3.2.2", forRemoval = true)
+    public Mono<ResponseEntity<Boolean>> deleteFromFavoritesLegacy(@PathVariable String userId, @PathVariable String challengeId) {
         return favoriteService.deleteChallengeFromFavorites(userId, challengeId)
                 .map(deleted -> {
                     if (Boolean.TRUE.equals(deleted)) {
                         log.info("Challenge '{}' deleted from user '{}' favorites", challengeId, userId);
-                        return ResponseEntity.ok().body(true);
+                        return ResponseEntity.ok()
+                                .header(DEPRECATION,"true")
+                                .header("Link", deletePath)
+                                .body(true);
                     } else {
                         log.info("No change, User's '{}' favorites doesn't contain Challenge '{}'", userId, challengeId);
-                        return ResponseEntity.ok().body(false);
+                        return ResponseEntity.ok()
+                                .header(DEPRECATION,"true")
+                                .header("Link", deletePath)
+                                .body(false);
                     }
                 });
     }
-
 }

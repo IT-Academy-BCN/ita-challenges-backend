@@ -64,3 +64,10 @@ challenge:
   service:
     url: http://apisix-gateway:9080 # IN PRODUCTION
     #url: http://172.17.0.2:8762 # LOCAL IP
+app:
+  api:
+    favorites:
+      successor-version:
+        post-path: "/itachallenge/api/v1/users/{userId}/favorites/{challengeId}"
+        get-path: "/itachallenge/api/v1/users/{userId}/favorites"
+        delete-path: "/itachallenge/api/v1/users/{userId}/favorites/{challengeId}"
