@@ -106,7 +106,7 @@ public class FavoriteController {
                     @ApiResponse(responseCode = "500", description = "Unexpected error")
             }
     )
-    @GetMapping("/{userId}")
+    @GetMapping("/{userId}/favorites")
     public Mono<ResponseEntity<Set<UUID>>> getUserFavorites(@PathVariable String userId) {
         return favoriteService.getUserFavorites(userId)
                 .map(favorites -> {
