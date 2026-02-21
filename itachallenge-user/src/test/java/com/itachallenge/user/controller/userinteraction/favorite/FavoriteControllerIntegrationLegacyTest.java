@@ -5,8 +5,10 @@ import com.itachallenge.user.dto.AdminCreateUserRequestDto;
 import com.itachallenge.user.dto.AdminCreateUserResponseDto;
 import com.itachallenge.user.repository.UserRepository;
 import com.itachallenge.userinteraction.repository.favorite.FavoriteRepository;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+
+import java.util.Set;
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,13 +18,12 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-
-import java.util.Set;
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -30,7 +31,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ActiveProfiles("test")
 @AutoConfigureWebTestClient
 @Testcontainers
-class FavoriteControllerIntegrationTest {
+class FavoriteControllerIntegrationLegacyTest {
 
     @Container
     static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:5.0.9")
@@ -69,7 +70,7 @@ class FavoriteControllerIntegrationTest {
         addFavorite(userId, challengeId3);
 
         webTestClient.get()
-                .uri("/itachallenge/api/v1/users/{userId}/favorites", userId)
+                .uri("/itachallenge/api/v1/userinteraction/favorites/{userId}", userId)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
@@ -88,7 +89,7 @@ class FavoriteControllerIntegrationTest {
         String userId = createUser("user");
 
         webTestClient.get()
-                .uri("/itachallenge/api/v1/users/{userId}/favorites", userId)
+                .uri("/itachallenge/api/v1/userinteraction/favorites/{userId}", userId)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
@@ -100,7 +101,7 @@ class FavoriteControllerIntegrationTest {
     }
 
     @Test
-    void getUserFavorites_WithMultipleFavoritesFromDifferentUsers_ReturnsOnlyUserFavorites(){
+    void getUserFavorites_WithMultipleFavoritesFromDifferentUsers_ReturnsOnlyUserFavoritesLegacy(){
         String user1 = createUser("user1");
         String user2 = createUser("user2");
 
@@ -113,7 +114,7 @@ class FavoriteControllerIntegrationTest {
         addFavorite(user2, challengeId3);
 
         webTestClient.get()
-                .uri("/itachallenge/api/v1/users/{userId}/favorites", user1)
+                .uri("/itachallenge/api/v1/userinteraction/favorites/{userId}", user1)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
@@ -128,9 +129,9 @@ class FavoriteControllerIntegrationTest {
     }
 
     @Test
-    void getUserFavorites_WithInvalidUUID_Returns400(){
+    void getUserFavorites_WithInvalidUUID_Returns400Legacy(){
         webTestClient.get()
-                .uri("/itachallenge/api/v1/users/{userId}/favorites", 321)
+                .uri("/itachallenge/api/v1/userinteraction/favorites/{userId}", 321)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isBadRequest()
@@ -150,11 +151,11 @@ class FavoriteControllerIntegrationTest {
     }
 
     @Test
-    void getUserFavorites_WhenUserDoesntExist_Returns404(){
+    void getUserFavorites_WhenUserDoesntExist_Returns404Legacy(){
         String nonExistentUserId = UUID.randomUUID().toString();
 
         webTestClient.get()
-                .uri("/itachallenge/api/v1/users/{userId}/favorites", nonExistentUserId)
+                .uri("/itachallenge/api/v1/userinteraction/favorites/{userId}", nonExistentUserId)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isNotFound()
@@ -196,7 +197,7 @@ class FavoriteControllerIntegrationTest {
 
     private void addFavorite(String userId, String challengeId){
         webTestClient.post()
-                .uri("/itachallenge/api/v1/users/{userId}/favorites/{challengeId}", userId, challengeId)
+                .uri("/itachallenge/api/v1/userinteraction/favorites/users/{userId}/favorites/{challengeId}", userId, challengeId)
                 .exchange()
                 .expectStatus().isCreated();
     }
