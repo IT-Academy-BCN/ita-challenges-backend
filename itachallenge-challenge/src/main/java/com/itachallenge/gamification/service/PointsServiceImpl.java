@@ -5,7 +5,6 @@ import com.itachallenge.gamification.repository.UserScoreRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 
 @Service
@@ -14,10 +13,8 @@ public class PointsServiceImpl implements PointsService {
 
 
     private final UserScoreRepository  userScoreRepository;
-    Mono<RankingResponseDto> responseDto;
 
-
-    public Flux<RankingResponseDto> getRankingAscOrder(){
+    public Flux<RankingResponseDto> getRankingDescOrder(){
 
         return userScoreRepository.findUsersRanking();
     }

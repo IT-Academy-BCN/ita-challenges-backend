@@ -1,6 +1,7 @@
 package com.itachallenge.gamification.repository;
 
 import com.itachallenge.gamification.document.UserScoreDocument;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -9,6 +10,7 @@ import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 import static org.mockito.Mockito.when;
@@ -48,6 +50,37 @@ class UserScoreRepositoryTest {
                 .expectNextMatches(s -> s.getPointsEarned() == 3)
                 .expectNextMatches(s -> s.getPointsEarned() == 2)
                 .expectNextMatches(s -> s.getPointsEarned() == 1)
+                .verifyComplete();
+    }
+
+    @Test
+    @DisplayName("Should aggregate points correctly per user")
+    void givenUserWithMultipleScores_whenFindUsersRanking_thenAggregatesPointsCorrectly() {
+        UserScoreDocument score1 = UserScoreDocument.builder()
+                .id(UUID.randomUUID())
+                .username("Pepito")
+                .pointsEarned(30)
+                .createdAt(LocalDateTime.now().minusDays(2))
+                .build();
+        UserScoreDocument score2 = UserScoreDocument.builder()
+                .id(UUID.randomUUID())
+                .username("Pepito")
+                .pointsEarned(70)
+                .createdAt(LocalDateTime.now())
+                .build();
+
+        userScoreRepository.saveAll(List.of(score1, score2)).blockLast();
+
+        StepVerifier.create(userScoreRepository.findUsersRanking())
+                .expectNextMatches(r -> r.getUsername().equals("Pepito") && r.getPoints() == 100)
+                .verifyComplete();
+    }
+
+    @Test
+    @DisplayName("Should return empty ranking when no scores exist")
+    void givenNoScores_whenFindUsersRanking_thenReturnsEmpty() {
+        StepVerifier.create(userScoreRepository.findUsersRanking())
+                .expectNextCount(0)
                 .verifyComplete();
     }
 }

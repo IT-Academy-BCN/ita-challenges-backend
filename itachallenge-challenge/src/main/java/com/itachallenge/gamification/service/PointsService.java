@@ -7,5 +7,5 @@ import reactor.core.publisher.Mono;
 
 public interface PointsService {
 
-    Flux<RankingResponseDto> getRankingAscOrder();
+    Flux<RankingResponseDto> getRankingDescOrder();
 }

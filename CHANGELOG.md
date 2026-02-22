@@ -15,6 +15,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 - Removed deprecated legacy Bookmarks routes previously served by BookmarkLegacyController. (GitHub Task [#186], PR [#1106])
+
+## [UNRELEASED] 2026-02-22
+
+### Added
+- RankingResponseDto: New DTO to encapsulate the ranking response structure, including the user's username and points.
+- PointsService: Added to the contract the method Flux<RankingResponseDto> getRankingDescOrder();.
+- PointsServiceImpl: In this case, the bridge between the controller and the repository was added, since all the logic is handled through Mongo aggregate.
+- Tests: Each of these new implementations has its associated tests.
+
 ## [UNRELEASED]
 
 ### Added

@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("/itachallenge/api/v1/users/ranking")
@@ -20,8 +19,6 @@ public class RankingController {
 
     @GetMapping
     public Flux<RankingResponseDto> getRanking(){
-        return pointsService.getRankingAscOrder();
+        return pointsService.getRankingDescOrder();
     }
-
-
 }
