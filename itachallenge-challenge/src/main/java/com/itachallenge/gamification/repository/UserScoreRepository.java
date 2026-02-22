@@ -8,5 +8,5 @@ import java.util.UUID;
 
 public interface UserScoreRepository extends ReactiveMongoRepository<UserScoreDocument, UUID> {
 
-    Flux<UserScoreDocument> findByUsernameOrderByCreatedAtAsc(String username);
+    Flux<UserScoreDocument> findByUserIdOrderByCreatedAtAsc(UUID userId);
 }
