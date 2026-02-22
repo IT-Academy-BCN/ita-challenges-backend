@@ -39,7 +39,7 @@ class FavoriteControllerLegacyTest {
     }
 
     @Test
-    void addToFavorites_WhenAdded_Returns201_Legacy() {
+    void addToFavorites_WhenAdded_Returns201() {
         String userId = UUID.randomUUID().toString();
         String challengeId = UUID.randomUUID().toString();
         when(favoriteService.addChallengeToFavorites(userId, challengeId))
@@ -55,7 +55,7 @@ class FavoriteControllerLegacyTest {
     }
 
     @Test
-    void addToFavorites_WhenAlreadyInFavorites_Returns200_Legacy() {
+    void addToFavorites_WhenAlreadyInFavorites_Returns200() {
         String userId = UUID.randomUUID().toString();
         String challengeId = UUID.randomUUID().toString();
         when(favoriteService.addChallengeToFavorites(userId, challengeId))
@@ -71,7 +71,7 @@ class FavoriteControllerLegacyTest {
     }
 
     @Test
-    void addToFavorites_WhenUserNotExists_Returns404_Legacy() {
+    void addToFavorites_WhenUserNotExists_Returns404() {
         String userId = UUID.randomUUID().toString();
         String challengeId = UUID.randomUUID().toString();
         when(favoriteService.addChallengeToFavorites(userId, challengeId))
@@ -87,7 +87,7 @@ class FavoriteControllerLegacyTest {
     }
 
     @Test
-    void addToFavorites_WhenBadFormattedId_Returns400_Legacy() {
+    void addToFavorites_WhenBadFormattedId_Returns400() {
         String userId = "invalidUuid";
         String challengeId = "invalidUUid";
         when(favoriteService.addChallengeToFavorites(userId, challengeId))
@@ -103,7 +103,7 @@ class FavoriteControllerLegacyTest {
     }
 
     @Test
-    void addToFavorites_WhenUnexpectedError_Returns500_Legacy() {
+    void addToFavorites_WhenUnexpectedError_Returns500() {
         String userId = UUID.randomUUID().toString();
         String challengeId = UUID.randomUUID().toString();
         when(favoriteService.addChallengeToFavorites(userId, challengeId))
@@ -173,7 +173,7 @@ class FavoriteControllerLegacyTest {
     }
 
     @Test
-    void deleteFromFavorites_WhenDeleted_Returns200_Legacy() {
+    void deleteFromFavorites_WhenDeleted_Returns200() {
         String userId = UUID.randomUUID().toString();
         String challengeId = UUID.randomUUID().toString();
         when(favoriteService.deleteChallengeFromFavorites(userId, challengeId))
@@ -189,7 +189,7 @@ class FavoriteControllerLegacyTest {
     }
 
     @Test
-    void deleteFromFavorites_WhenNotInFavorites_Returns200_Legacy() {
+    void deleteFromFavorites_WhenNotInFavorites_Returns200() {
         String userId = UUID.randomUUID().toString();
         String challengeId = UUID.randomUUID().toString();
         when(favoriteService.deleteChallengeFromFavorites(userId, challengeId))
@@ -221,7 +221,7 @@ class FavoriteControllerLegacyTest {
     }
 
     @Test
-    void deleteFromFavorites_WhenBadFormattedId_Returns404_Legacy() {
+    void deleteFromFavorites_WhenBadFormattedId_Returns404() {
         String userId = "invalidUuid";
         String challengeId = "invalidUUid";
         when(favoriteService.deleteChallengeFromFavorites(userId, challengeId))
@@ -237,7 +237,7 @@ class FavoriteControllerLegacyTest {
     }
 
     @Test
-    void deleteFromFavorites_WhenUnexpectedError_Returns500_Legacy() {
+    void deleteFromFavorites_WhenUnexpectedError_Returns500() {
         String userId = UUID.randomUUID().toString();
         String challengeId = UUID.randomUUID().toString();
         when(favoriteService.deleteChallengeFromFavorites(userId, challengeId))
