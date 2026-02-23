@@ -1,6 +1,6 @@
 package com.itachallenge.gamification.service;
 
-import com.itachallenge.challenge.dto.gamification.PointEntryDto;
+import com.itachallenge.challenge.dto.gamification.PointHistoryEntryDto;
 import com.itachallenge.gamification.document.UserScoreDocument;
 import com.itachallenge.gamification.mapper.GamificationMapper;
 import com.itachallenge.gamification.repository.UserScoreRepository;
@@ -55,7 +55,7 @@ class PointsServiceImplTest {
         String expectedDate = fixedDate.toString();
 
         UserScoreDocument score = UserScoreDocument.builder().points(10).createdAt(fixedDate).build();
-        PointEntryDto expectedDto = PointEntryDto.builder().points(10).createdAt(expectedDate).build();
+        PointHistoryEntryDto expectedDto = PointHistoryEntryDto.builder().points(10).createdAt(expectedDate).build();
 
         when(userScoreRepository.findByUserIdOrderByCreatedAtAsc(userId))
                 .thenReturn(Flux.just(score));
@@ -115,9 +115,9 @@ class PointsServiceImplTest {
                 .thenReturn(Flux.just(olderScore, latestScore));
 
         when(gamificationMapper.toPointEntryDto(latestScore))
-                .thenReturn(PointEntryDto.builder().points(10).createdAt(now.toString()).build());
+                .thenReturn(PointHistoryEntryDto.builder().points(10).createdAt(now.toString()).build());
         when(gamificationMapper.toPointEntryDto(olderScore))
-                .thenReturn(PointEntryDto.builder().points(5).createdAt(now.minusDays(3).toString()).build());
+                .thenReturn(PointHistoryEntryDto.builder().points(5).createdAt(now.minusDays(3).toString()).build());
 
         var result = pointsServiceImpl.getUserPointsHistory(userId);
 
