@@ -13,7 +13,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import static org.mockito.ArgumentMatchers.anyInt;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
@@ -22,11 +21,14 @@ import reactor.core.publisher.Mono;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 @ExtendWith(MockitoExtension.class)
 class SubmissionControllerTest {
+
+    private static final int POINTS_ON_SUBMISSION_COMPLETE = 10;
 
     @Mock
     SubmissionService submissionService;
@@ -34,11 +36,11 @@ class SubmissionControllerTest {
     @Mock
     PointsService pointsService;
 
-    private  SubmissionController submissionController;
+    private SubmissionController submissionController;
 
     @BeforeEach
     void setUp() {
-        submissionController = new SubmissionController(submissionService, pointsService, 10);
+        submissionController = new SubmissionController(submissionService, pointsService, POINTS_ON_SUBMISSION_COMPLETE);
     }
     private WebTestClient client() {
         return WebTestClient.bindToController(submissionController)
@@ -257,9 +259,8 @@ class SubmissionControllerTest {
 
         when(submissionService.processSubmissionAction(eq(userId), any(SubmissionActionRequestDto.class)))
                 .thenReturn(Mono.just(response));
-        when(pointsService.recordPoints(any(), any(), anyInt()))
+        when(pointsService.recordPoints(eq(UUID.fromString(userId)), eq(challengeId), eq(POINTS_ON_SUBMISSION_COMPLETE)))
                 .thenReturn(Mono.error(new RuntimeException("mongo down")));
-
         client().post()
                 .uri("/itachallenge/api/v1/users/{userId}/submissions", userId)
                 .contentType(APPLICATION_JSON)
@@ -271,7 +272,7 @@ class SubmissionControllerTest {
                 .jsonPath("$.status").isEqualTo("SUBMITTED_COMPLETE")
                 .jsonPath("$.is_solved").isEqualTo(true);
 
-        verify(pointsService).recordPoints(any(), any(), anyInt());
+        verify(pointsService).recordPoints(eq(UUID.fromString(userId)), eq(challengeId), eq(POINTS_ON_SUBMISSION_COMPLETE));
     }
 
 }
