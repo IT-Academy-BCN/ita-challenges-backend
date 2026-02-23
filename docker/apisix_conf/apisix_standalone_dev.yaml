@@ -37,7 +37,7 @@ routes:
       - GET
     upstream_id: 6
   -
-      uri: /itachallenge/api/v1/userinteraction/favorites/**
+      uri: /itachallenge/api/v1/user/users/**
       methods:
         - GET, POST, DELETE
       upstream_id: 6
