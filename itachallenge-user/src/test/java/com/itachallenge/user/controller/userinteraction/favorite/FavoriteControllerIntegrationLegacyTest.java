@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.ParameterizedTypeReference;
@@ -43,6 +44,7 @@ class FavoriteControllerIntegrationLegacyTest {
     }
 
     @Autowired
+    @Qualifier("legacyWebClientBuilder")
     private WebTestClient webTestClient;
 
     @Autowired
