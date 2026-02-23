@@ -44,7 +44,6 @@ class FavoriteControllerIntegrationLegacyTest {
     }
 
     @Autowired
-    @Qualifier("legacyWebClientBuilder")
     private WebTestClient webTestClient;
 
     @Autowired
