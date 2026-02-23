@@ -26,7 +26,7 @@ class UserScoreRepositoryTest {
     }
 
     @Test
-    void givenExistingScores_whenFindByUsername_thenReturnsSortedByAscendingDates() {
+    void givenExistingScores_whenFindByUsername_thenReturnsSortedByDescendingDates() {
 
         UUID userId = UUID.randomUUID();
         UserScoreDocument score1 = UserScoreDocument.builder()
@@ -50,10 +50,10 @@ class UserScoreRepositoryTest {
 
         userScoreRepository.saveAll(List.of(score1, score2, score3)).blockLast();
 
-        StepVerifier.create(userScoreRepository.findByUserIdOrderByCreatedAtAsc(userId))
-                .expectNextMatches(s -> s.getPoints() == 1)
-                .expectNextMatches(s -> s.getPoints() == 2)
+        StepVerifier.create(userScoreRepository.findByUserIdOrderByCreatedAtDesc(userId))
                 .expectNextMatches(s -> s.getPoints() == 3)
+                .expectNextMatches(s -> s.getPoints() == 2)
+                .expectNextMatches(s -> s.getPoints() == 1)
                 .verifyComplete();
     }
 }
