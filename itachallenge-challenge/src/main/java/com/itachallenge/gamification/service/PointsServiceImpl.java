@@ -23,7 +23,7 @@ public class PointsServiceImpl implements PointsService {
 
     @Override
     public Mono<PointsHistoryResponseDto> getUserPointsHistory(UUID userId) {
-        return userScoreRepository.findByUserIdOrderByCreatedAtAsc(userId)
+        return userScoreRepository.findByUserIdOrderByCreatedAtDesc(userId)
                 .collectList()
                 .map(this::buildHistoryResponse);
     }
