@@ -24,6 +24,7 @@ public class PointsServiceImpl implements PointsService {
     @Override
     public Mono<PointsHistoryResponseDto> getUserPointsHistory(UUID userId) {
         return userScoreRepository.findByUserIdOrderByCreatedAtDesc(userId)
+                .distinct(UserScoreDocument::getChallengeId)
                 .collectList()
                 .map(this::buildHistoryResponse);
     }
