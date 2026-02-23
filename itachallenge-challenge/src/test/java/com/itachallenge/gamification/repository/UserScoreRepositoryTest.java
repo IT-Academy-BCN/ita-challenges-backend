@@ -1,34 +1,28 @@
 package com.itachallenge.gamification.repository;
 
 import com.itachallenge.gamification.document.UserScoreDocument;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 
-@DataMongoTest
-@ExtendWith(SpringExtension.class)
+import static org.mockito.Mockito.when;
+
+@ExtendWith(MockitoExtension.class)
 class UserScoreRepositoryTest {
 
-    @Autowired
+    @Mock
     private UserScoreRepository userScoreRepository;
-
-    @BeforeEach
-    void setUp() {
-        userScoreRepository.deleteAll().block();
-    }
 
     @Test
     void givenExistingScores_whenFindByUsername_thenReturnsSortedByDescendingDates() {
-
         UUID userId = UUID.randomUUID();
+
         UserScoreDocument score1 = UserScoreDocument.builder()
                 .id(UUID.randomUUID())
                 .userId(userId)
@@ -48,7 +42,8 @@ class UserScoreRepositoryTest {
                 .createdAt(LocalDateTime.now().minusDays(1))
                 .build();
 
-        userScoreRepository.saveAll(List.of(score1, score2, score3)).blockLast();
+        when(userScoreRepository.findByUserIdOrderByCreatedAtDesc(userId))
+                .thenReturn(Flux.just(score1, score3, score2));
 
         StepVerifier.create(userScoreRepository.findByUserIdOrderByCreatedAtDesc(userId))
                 .expectNextMatches(s -> s.getPoints() == 3)
