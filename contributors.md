@@ -118,4 +118,5 @@
 * Carlos de Cozar Ruiz-Salinas - https://github.com/carlosPc1987
 * Lucía (Lucy) I. Castro Bertaina - https://github.com/Lucy-SD
 * Lois González Alonso - https://github.com/pantalois
+* Pol Serrano Franquesa - https://github.com/polserrano8
 * Andrea Pan i Ubiergo - https://github.com/Apani13
