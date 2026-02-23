@@ -1,6 +1,7 @@
 package com.itachallenge.gamification.document;
 
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -34,6 +35,7 @@ public class UserScoreDocument {
     @Field("points")
     private Integer points;
 
+    @CreatedDate
     @Field("created_at")
     private LocalDateTime createdAt;
 }
