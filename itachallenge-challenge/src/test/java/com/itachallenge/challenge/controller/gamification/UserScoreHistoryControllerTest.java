@@ -1,7 +1,7 @@
 package com.itachallenge.challenge.controller.gamification;
 
-import com.itachallenge.challenge.dto.gamification.PointEntryDto;
-import com.itachallenge.challenge.dto.gamification.PointsHistoryDto;
+import com.itachallenge.challenge.dto.gamification.PointHistoryEntryDto;
+import com.itachallenge.challenge.dto.gamification.PointsHistoryResponseDto;
 import com.itachallenge.challenge.service.IChallengeJwtFacade;
 import com.itachallenge.gamification.service.PointsService;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,11 +42,11 @@ class UserScoreHistoryControllerTest {
 
     @Test
     void getUserPointsHistory_whenUserHasPoints_thenReturns200AndHistory() {
-        PointsHistoryDto expectedResponse = PointsHistoryDto.builder()
+        PointsHistoryResponseDto expectedResponse = PointsHistoryResponseDto.builder()
                 .totalPoints(15)
                 .history(List.of(
-                        PointEntryDto.builder().points(10).createdAt("2026-02-23T11:11:11").build(),
-                        PointEntryDto.builder().points(5).createdAt("2026-01-23T11:11:11").build()
+                        PointHistoryEntryDto.builder().points(10).createdAt("2026-02-23T11:11:11").build(),
+                        PointHistoryEntryDto.builder().points(5).createdAt("2026-01-23T11:11:11").build()
                 ))
                 .build();
 
@@ -70,7 +70,7 @@ class UserScoreHistoryControllerTest {
 
     @Test
     void getUserPointsHistory_WhenUserHasNoPoints_Returns200AndEmptyList() {
-        PointsHistoryDto emptyResponse = PointsHistoryDto.builder()
+        PointsHistoryResponseDto emptyResponse = PointsHistoryResponseDto.builder()
                 .totalPoints(0)
                 .history(List.of())
                 .build();
