@@ -6,7 +6,6 @@ import com.itachallenge.userinteraction.service.favorite.FavoriteService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -28,7 +27,6 @@ class FavoriteControllerLegacyTest {
     private FavoriteService favoriteService;  // << Mocked service
 
     @Autowired
-    @Qualifier("legacyWebClientBuilder")
     private WebTestClient webTestClient;
 
     @TestConfiguration
