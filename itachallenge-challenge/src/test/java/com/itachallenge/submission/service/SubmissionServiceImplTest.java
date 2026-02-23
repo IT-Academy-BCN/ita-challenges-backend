@@ -232,5 +232,4 @@ class SubmissionServiceImplTest {
                 .assertNext(response -> Assertions.assertEquals(SubmissionStatus.IN_PROGRESS.name(), response.getStatus()))
                 .verifyComplete();
     }
-
 }
