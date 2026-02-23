@@ -16,21 +16,21 @@ public class PointsServiceImpl implements PointsService {
 
     @Override
     public Mono<Void> recordPoints(UUID userId, UUID challengeId, int points) {
-        return userScoreRepository.existsByUserIdAndChallengeId(userId, challengeId)
-                .flatMap(exists -> {
-                    if (exists) {
-                        return Mono.empty();
-                    }
+        return userScoreRepository.findByUserIdOrderByCreatedAtAsc(userId)
+                .any(doc -> doc.getChallengeId().equals(challengeId))
+                .flatMap(alreadyAwarded -> Boolean.TRUE.equals(alreadyAwarded)
+                        ? Mono.<Void>empty()
+                        : persistScore(userId, challengeId, points));
+    }
 
-                    UserScoreDocument doc = UserScoreDocument.builder()
-                            .userId(userId)
-                            .challengeId(challengeId)
-                            .points(points)
-                            .createdAt(LocalDateTime.now())
-                            .build();
-
-                    return userScoreRepository.save(doc).then();
-                });
+    private Mono<Void> persistScore(UUID userId, UUID challengeId, int points) {
+        UserScoreDocument doc = UserScoreDocument.builder()
+                .userId(userId)
+                .challengeId(challengeId)
+                .points(points)
+                .createdAt(LocalDateTime.now())
+                .build();
+        return userScoreRepository.save(doc).then();
     }
 }
 

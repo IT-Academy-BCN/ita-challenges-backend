@@ -8,6 +8,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -31,8 +32,7 @@ class PointsServiceImplTest {
         UUID challengeId = UUID.randomUUID();
         int points = 10;
 
-        when(userScoreRepository.existsByUserIdAndChallengeId(userId, challengeId))
-                .thenReturn(Mono.just(false));
+        when(userScoreRepository.findByUserIdOrderByCreatedAtAsc(userId)).thenReturn(Flux.empty());
         when(userScoreRepository.save(any(UserScoreDocument.class)))
                 .thenAnswer(invocation -> Mono.just(invocation.getArgument(0)));
 
@@ -55,8 +55,13 @@ class PointsServiceImplTest {
         UUID userId = UUID.randomUUID();
         UUID challengeId = UUID.randomUUID();
 
-        when(userScoreRepository.existsByUserIdAndChallengeId(userId, challengeId))
-                .thenReturn(Mono.just(true));
+        UserScoreDocument existing = UserScoreDocument.builder()
+                .userId(userId)
+                .challengeId(challengeId)
+                .points(10)
+                .build();
+        when(userScoreRepository.findByUserIdOrderByCreatedAtAsc(userId))
+                .thenReturn(Flux.just(existing));
 
         StepVerifier.create(pointsService.recordPoints(userId, challengeId, 10))
                 .verifyComplete();
@@ -68,8 +73,7 @@ class PointsServiceImplTest {
         UUID userId = UUID.randomUUID();
         UUID challengeId = UUID.randomUUID();
 
-        when(userScoreRepository.existsByUserIdAndChallengeId(userId, challengeId))
-                .thenReturn(Mono.just(false));
+        when(userScoreRepository.findByUserIdOrderByCreatedAtAsc(userId)).thenReturn(Flux.empty());
         when(userScoreRepository.save(any(UserScoreDocument.class)))
                 .thenReturn(Mono.error(new RuntimeException("mongo down")));
 
