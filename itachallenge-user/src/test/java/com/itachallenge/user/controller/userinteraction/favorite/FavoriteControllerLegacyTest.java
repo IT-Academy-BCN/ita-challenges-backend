@@ -20,7 +20,7 @@ import java.util.UUID;
 
 import static org.mockito.Mockito.*;
 
-@WebFluxTest(controllers = FavoriteController.class)
+@WebFluxTest(controllers = FavoriteLegacyController.class)
 class FavoriteControllerLegacyTest {
 
     @MockBean
