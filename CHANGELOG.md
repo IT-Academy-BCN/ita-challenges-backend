@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [UNRELEASED]
 
 ### Added
+- **Gamification – Integrity validation (service layer):** Pre-persistence validation in `PointsServiceImpl` to avoid duplicate score events for the same `userId` and `challengeId`. If points were already awarded for that user–challenge pair (e.g. challenge already completed), the service does not persist again, keeping the gamification collection as a single, accurate record of activity. (Task #188 / #228, PR #1108)
 - New MongoDB collection `user_score_history` with compound indexing for efficient retrieval for gamification tracking.
 - Reactive Repository for user score transactions.
 
