@@ -242,6 +242,7 @@ class SubmissionControllerTest {
     void postSubmission_returns200_whenGamificationFailsOnComplete() {
         String userId = UUID.randomUUID().toString();
         UUID challengeId = UUID.randomUUID();
+        UUID userUUID = UUID.fromString(userId);
 
         SubmissionActionRequestDto request = SubmissionActionRequestDto.builder()
                 .challengeId(challengeId)
@@ -259,8 +260,9 @@ class SubmissionControllerTest {
 
         when(submissionService.processSubmissionAction(eq(userId), any(SubmissionActionRequestDto.class)))
                 .thenReturn(Mono.just(response));
-        when(pointsService.recordPoints(eq(UUID.fromString(userId)), eq(challengeId), eq(POINTS_ON_SUBMISSION_COMPLETE)))
+        when(pointsService.recordPoints(userUUID, challengeId, POINTS_ON_SUBMISSION_COMPLETE))
                 .thenReturn(Mono.error(new RuntimeException("mongo down")));
+
         client().post()
                 .uri("/itachallenge/api/v1/users/{userId}/submissions", userId)
                 .contentType(APPLICATION_JSON)
@@ -272,7 +274,7 @@ class SubmissionControllerTest {
                 .jsonPath("$.status").isEqualTo("SUBMITTED_COMPLETE")
                 .jsonPath("$.is_solved").isEqualTo(true);
 
-        verify(pointsService).recordPoints(eq(UUID.fromString(userId)), eq(challengeId), eq(POINTS_ON_SUBMISSION_COMPLETE));
+        verify(pointsService).recordPoints(userUUID, challengeId, POINTS_ON_SUBMISSION_COMPLETE);
     }
 
 }
