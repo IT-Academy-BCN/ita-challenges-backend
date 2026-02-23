@@ -40,6 +40,7 @@ public class PointsServiceImpl implements PointsService {
                 .collect(Collectors.toList());
 
         return PointsHistoryDto.builder()
+                .username(docs.isEmpty() ? "" : docs.getFirst().getUsername())
                 .totalPoints(totalPoints)
                 .history(history)
                 .build();
