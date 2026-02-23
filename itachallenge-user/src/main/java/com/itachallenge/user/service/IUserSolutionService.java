@@ -8,5 +8,4 @@ import reactor.core.publisher.Mono;
 
 public interface IUserSolutionService {
     Mono<SubmitSolutionResponseDto> addSolution(UserSolutionRequestDto userSolutionDto);
-    Flux<UserSolutionResponseDto> getAllSolutionsByUser(String userId);
 }

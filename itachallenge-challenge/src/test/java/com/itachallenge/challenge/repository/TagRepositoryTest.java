@@ -28,7 +28,7 @@ import java.util.UUID;
 import static org.junit.Assert.*;
 
 @DataMongoTest
-@Testcontainers
+@Testcontainers(disabledWithoutDocker = true)
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 class TagRepositoryTest {
