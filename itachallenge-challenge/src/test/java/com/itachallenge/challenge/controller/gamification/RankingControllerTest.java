@@ -53,9 +53,11 @@ class RankingControllerTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBodyList(RankingResponseDto.class)
-                .hasSize(2)
-                .contains(rankingResponseDto1, rankingResponseDto2);
+                .expectBody()
+                .jsonPath("$[0].username").isEqualTo("user1")
+                .jsonPath("$[0].points").isEqualTo(100)
+                .jsonPath("$[1].username").isEqualTo("user2")
+                .jsonPath("$[1].points").isEqualTo(50);
 
         verify(pointsService, times(1)).getRankingDescOrder();
     }
