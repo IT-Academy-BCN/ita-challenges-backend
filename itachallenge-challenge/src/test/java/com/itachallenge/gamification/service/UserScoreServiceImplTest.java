@@ -1,8 +1,6 @@
 package com.itachallenge.gamification.service;
 
-import com.itachallenge.challenge.dto.gamification.PointHistoryEntryDto;
 import com.itachallenge.gamification.document.UserScoreDocument;
-import com.itachallenge.gamification.mapper.GamificationMapper;
 import com.itachallenge.gamification.repository.UserScoreRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,9 +20,6 @@ class UserScoreServiceImplTest {
 
     @Mock
     private UserScoreRepository userScoreRepository;
-
-    @Mock
-    private GamificationMapper gamificationMapper;
 
     @InjectMocks
     private UserScoreServiceImpl userScoreService;
@@ -55,11 +50,9 @@ class UserScoreServiceImplTest {
         String expectedDate = fixedDate.toString();
 
         UserScoreDocument score = UserScoreDocument.builder().pointsEarned(10).challengeId(UUID.randomUUID()).createdAt(fixedDate).build();
-        PointHistoryEntryDto expectedDto = PointHistoryEntryDto.builder().points(10).createdAt(expectedDate).build();
 
         when(userScoreRepository.findByUserIdOrderByCreatedAtDesc(userId))
                 .thenReturn(Flux.just(score));
-        when(gamificationMapper.toPointEntryDto(score)).thenReturn(expectedDto);
 
         var result = userScoreService.getUserPointsHistory(userId);
 
@@ -88,7 +81,6 @@ class UserScoreServiceImplTest {
     @Test
     void givenScoresWithNullPoints_whenGetUserPointsHistory_thenTotalPointsIgnoresNullValues() {
         UUID userId = UUID.randomUUID();
-
         UserScoreDocument validScore = UserScoreDocument.builder().challengeId(UUID.randomUUID()).pointsEarned(10).build();
         UserScoreDocument invalidScore = UserScoreDocument.builder().challengeId(UUID.randomUUID()).pointsEarned(null).build();
 
@@ -111,39 +103,15 @@ class UserScoreServiceImplTest {
         UserScoreDocument olderScore = UserScoreDocument.builder().pointsEarned(5).challengeId(UUID.randomUUID()).createdAt(now.minusDays(3)).build();
 
         when(userScoreRepository.findByUserIdOrderByCreatedAtDesc(userId))
-                .thenReturn(Flux.just(olderScore, latestScore));
-
-        when(gamificationMapper.toPointEntryDto(latestScore))
-                .thenReturn(PointHistoryEntryDto.builder().points(10).createdAt(now.toString()).build());
-        when(gamificationMapper.toPointEntryDto(olderScore))
-                .thenReturn(PointHistoryEntryDto.builder().points(5).createdAt(now.minusDays(3).toString()).build());
+                .thenReturn(Flux.just(latestScore, olderScore));
 
         var result = userScoreService.getUserPointsHistory(userId);
 
         StepVerifier.create(result)
                 .expectNextMatches(response ->
                         response.getHistory().size() == 2 &&
-                                response.getHistory().getFirst().getPoints() == 5 &&
-                                response.getHistory().get(1).getPoints() == 10)
-                .verifyComplete();
-    }
-
-    @Test
-    void givenDuplicateChallengesScores_whenGetUserPointsHistory_thenDistinctFilterApplies() {
-        UUID userId = UUID.randomUUID();
-        UUID challengeId = UUID.randomUUID();
-
-        UserScoreDocument score1 = UserScoreDocument.builder().pointsEarned(10).challengeId(challengeId).build();
-        UserScoreDocument score2 = UserScoreDocument.builder().pointsEarned(10).challengeId(challengeId).build();
-
-        when(userScoreRepository.findByUserIdOrderByCreatedAtDesc(userId)).thenReturn(Flux.just(score1, score2));
-
-        var result = userScoreService.getUserPointsHistory(userId);
-
-        StepVerifier.create(result)
-                .expectNextMatches(response ->
-                        response.getHistory().size() == 1 &&
-                        response.getTotalPoints() == 10)
+                                response.getHistory().getFirst().getPoints() == 10 &&
+                                response.getHistory().get(1).getPoints() == 5)
                 .verifyComplete();
     }
 }

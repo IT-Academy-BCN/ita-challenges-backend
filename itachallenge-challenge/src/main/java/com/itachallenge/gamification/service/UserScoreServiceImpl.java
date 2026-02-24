@@ -3,7 +3,6 @@ package com.itachallenge.gamification.service;
 import com.itachallenge.challenge.dto.gamification.PointHistoryEntryDto;
 import com.itachallenge.challenge.dto.gamification.PointsHistoryResponseDto;
 import com.itachallenge.gamification.document.UserScoreDocument;
-import com.itachallenge.gamification.mapper.GamificationMapper;
 import com.itachallenge.gamification.repository.UserScoreRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,7 +18,6 @@ import java.util.stream.Collectors;
 public class UserScoreServiceImpl implements UserScoreService {
 
     private final UserScoreRepository userScoreRepository;
-    private final GamificationMapper gamificationMapper;
 
     @Override
     public Mono<PointsHistoryResponseDto> getUserPointsHistory(UUID userId) {
@@ -36,7 +34,10 @@ public class UserScoreServiceImpl implements UserScoreService {
                 .sum();
 
         List<PointHistoryEntryDto> history = docs.stream()
-                .map(gamificationMapper::toPointEntryDto)
+                .map(doc -> PointHistoryEntryDto.builder()
+                        .createdAt(doc.getCreatedAt() != null ? doc.getCreatedAt().toString() : "")
+                        .points(doc.getPointsEarned() != null ? doc.getPointsEarned() : 0)
+                        .build())
                 .collect(Collectors.toList());
 
         return PointsHistoryResponseDto.builder()
