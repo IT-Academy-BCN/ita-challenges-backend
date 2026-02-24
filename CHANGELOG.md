@@ -19,7 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Refactored Favorites API endpoints to a more REST-style subresource path under users.
 - Updated challenge service test configuration and UserServiceImplTest path templates to match the new Favorites endpoint path.
-- - Updated the challenge microservice favorites integration path to use the new User Favorites endpoint: /itachallenge/api/v1/user/users/{userId}/favorites/{challengeId}.
+- Updated the challenge microservice favorites integration path to use the new User Favorites endpoint: /itachallenge/api/v1/user/users/{userId}/favorites/{challengeId}.
 - Updated APISIX routes (dev and pro configs) to proxy Favorites requests through /itachallenge/api/v1/user/users/**.
 ### Removed
 - Removed legacy GET endpoint for user solutions from User microservice.
