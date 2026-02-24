@@ -8,6 +8,7 @@ import com.itachallenge.challenge.repository.*;
 import com.itachallenge.challenge.service.*;
 import com.itachallenge.common.exception.dto.ErrorResponseDto;
 import com.itachallenge.common.exception.enums.ErrorCode;
+import com.itachallenge.gamification.exception.ServiceException;
 import com.itachallenge.jwtcore.service.IJwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolation;
@@ -427,5 +428,19 @@ class GlobalExceptionHandlerTest {
         assertEquals("Validation failed", body.getMessage());
         assertNotNull(body.getTimestamp());
         assertEquals("/itachallenge/api/v1/challenge/challenges", body.getPath());
+    }
+
+    @Test
+    void testHandleServiceException() {
+        // Arrange
+        ServiceException exception = new ServiceException("Could not retrieve ranking");
+
+        // Act
+        ResponseEntity<MessageDto> responseEntity = globalExceptionHandler.handleServiceException(exception);
+
+        // Assert
+        assertEquals(HttpStatus.SERVICE_UNAVAILABLE, responseEntity.getStatusCode());
+        String responseBody = Objects.requireNonNull(responseEntity.getBody()).getMessage();
+        assertTrue(responseBody.contains("Could not retrieve ranking"));
     }
 }

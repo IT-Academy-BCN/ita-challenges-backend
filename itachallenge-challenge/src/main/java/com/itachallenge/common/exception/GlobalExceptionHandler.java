@@ -6,6 +6,7 @@ import com.itachallenge.challenge.dto.MessageDto;
 import com.itachallenge.challenge.exception.*;
 import com.itachallenge.common.exception.dto.ErrorResponseDto;
 import com.itachallenge.common.exception.enums.ErrorCode;
+import com.itachallenge.gamification.exception.ServiceException;
 import com.itachallenge.submission.exception.SubmissionNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolation;
@@ -16,6 +17,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -191,5 +193,13 @@ public class GlobalExceptionHandler {
     public ResponseEntity<MessageDto> handleUnmodifiableSubmission(UnmodifiableSubmissionException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageDto(ex.getMessage()));
     }
+
+    @ExceptionHandler(ServiceException.class)
+    public ResponseEntity<MessageDto> handleServiceException(ServiceException ex) {
+        return ResponseEntity
+                .status(HttpStatus.SERVICE_UNAVAILABLE)
+                .body(new MessageDto(ex.getMessage()));
+    }
+
 
 }
