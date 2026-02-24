@@ -101,8 +101,18 @@ class UserScoreServiceImplTest {
     @Test
     void givenScoresWithNullPoints_whenGetUserPointsHistory_thenTotalPointsIgnoresNullValues() {
         UUID userId = UUID.randomUUID();
-        UserScoreDocument validScore = UserScoreDocument.builder().challengeId(UUID.randomUUID()).pointsEarned(10).build();
-        UserScoreDocument invalidScore = UserScoreDocument.builder().challengeId(UUID.randomUUID()).pointsEarned(null).build();
+        LocalDateTime now = LocalDateTime.now();
+
+        UserScoreDocument validScore = UserScoreDocument.builder()
+                .challengeId(UUID.randomUUID())
+                .pointsEarned(10)
+                .createdAt(now)
+                .build();
+        UserScoreDocument invalidScore = UserScoreDocument.builder()
+                .challengeId(UUID.randomUUID())
+                .pointsEarned(null)
+                .createdAt(now.minusDays(3))
+                .build();
 
         when(userScoreRepository.findByUserIdOrderByCreatedAtDesc(userId))
                 .thenReturn(Flux.just(validScore, invalidScore));
