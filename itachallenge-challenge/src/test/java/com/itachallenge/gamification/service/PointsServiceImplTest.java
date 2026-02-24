@@ -34,9 +34,9 @@ class PointsServiceImplTest {
         UUID userId = UUID.randomUUID();
         LocalDateTime now = LocalDateTime.now();
 
-        UserScoreDocument score1 = UserScoreDocument.builder().points(10).challengeId(UUID.randomUUID()).createdAt(now).build();
-        UserScoreDocument score2 = UserScoreDocument.builder().points(5).challengeId(UUID.randomUUID()).createdAt(now.minusDays(3)).build();
-        UserScoreDocument score3 = UserScoreDocument.builder().points(20).challengeId(UUID.randomUUID()).createdAt(now.minusDays(1)).build();
+        UserScoreDocument score1 = UserScoreDocument.builder().pointsEarned(10).challengeId(UUID.randomUUID()).createdAt(now).build();
+        UserScoreDocument score2 = UserScoreDocument.builder().pointsEarned(5).challengeId(UUID.randomUUID()).createdAt(now.minusDays(3)).build();
+        UserScoreDocument score3 = UserScoreDocument.builder().pointsEarned(20).challengeId(UUID.randomUUID()).createdAt(now.minusDays(1)).build();
 
         when(userScoreRepository.findByUserIdOrderByCreatedAtDesc(userId)).thenReturn(Flux.just(score1, score2, score3));
 
@@ -54,7 +54,7 @@ class PointsServiceImplTest {
         LocalDateTime fixedDate = LocalDateTime.of(2015, 3, 26, 7, 33, 21);
         String expectedDate = fixedDate.toString();
 
-        UserScoreDocument score = UserScoreDocument.builder().points(10).challengeId(UUID.randomUUID()).createdAt(fixedDate).build();
+        UserScoreDocument score = UserScoreDocument.builder().pointsEarned(10).challengeId(UUID.randomUUID()).createdAt(fixedDate).build();
         PointHistoryEntryDto expectedDto = PointHistoryEntryDto.builder().points(10).createdAt(expectedDate).build();
 
         when(userScoreRepository.findByUserIdOrderByCreatedAtDesc(userId))
@@ -89,8 +89,8 @@ class PointsServiceImplTest {
     void givenScoresWithNullPoints_whenGetUserPointsHistory_thenTotalPointsIgnoresNullValues() {
         UUID userId = UUID.randomUUID();
 
-        UserScoreDocument validScore = UserScoreDocument.builder().challengeId(UUID.randomUUID()).points(10).build();
-        UserScoreDocument invalidScore = UserScoreDocument.builder().challengeId(UUID.randomUUID()).points(null).build();
+        UserScoreDocument validScore = UserScoreDocument.builder().challengeId(UUID.randomUUID()).pointsEarned(10).build();
+        UserScoreDocument invalidScore = UserScoreDocument.builder().challengeId(UUID.randomUUID()).pointsEarned(null).build();
 
         when(userScoreRepository.findByUserIdOrderByCreatedAtDesc(userId))
                 .thenReturn(Flux.just(validScore, invalidScore));
@@ -107,8 +107,8 @@ class PointsServiceImplTest {
         UUID userId = UUID.randomUUID();
         LocalDateTime now = LocalDateTime.now();
 
-        UserScoreDocument latestScore = UserScoreDocument.builder().points(10).challengeId(UUID.randomUUID()).createdAt(now).build();
-        UserScoreDocument olderScore = UserScoreDocument.builder().points(5).challengeId(UUID.randomUUID()).createdAt(now.minusDays(3)).build();
+        UserScoreDocument latestScore = UserScoreDocument.builder().pointsEarned(10).challengeId(UUID.randomUUID()).createdAt(now).build();
+        UserScoreDocument olderScore = UserScoreDocument.builder().pointsEarned(5).challengeId(UUID.randomUUID()).createdAt(now.minusDays(3)).build();
 
         when(userScoreRepository.findByUserIdOrderByCreatedAtDesc(userId))
                 .thenReturn(Flux.just(olderScore, latestScore));
@@ -133,8 +133,8 @@ class PointsServiceImplTest {
         UUID userId = UUID.randomUUID();
         UUID challengeId = UUID.randomUUID();
 
-        UserScoreDocument score1 = UserScoreDocument.builder().points(10).challengeId(challengeId).build();
-        UserScoreDocument score2 = UserScoreDocument.builder().points(10).challengeId(challengeId).build();
+        UserScoreDocument score1 = UserScoreDocument.builder().pointsEarned(10).challengeId(challengeId).build();
+        UserScoreDocument score2 = UserScoreDocument.builder().pointsEarned(10).challengeId(challengeId).build();
 
         when(userScoreRepository.findByUserIdOrderByCreatedAtDesc(userId)).thenReturn(Flux.just(score1, score2));
 

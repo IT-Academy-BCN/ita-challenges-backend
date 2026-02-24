@@ -31,7 +31,7 @@ public class PointsServiceImpl implements PointsService {
 
     private PointsHistoryResponseDto buildHistoryResponse(List<UserScoreDocument> docs) {
         int totalPoints = docs.stream()
-                .map(UserScoreDocument::getPoints)
+                .map(UserScoreDocument::getPointsEarned)
                 .filter(Objects::nonNull)
                 .mapToInt(Integer::intValue)
                 .sum();

@@ -17,7 +17,7 @@ class GamificationMapperTest {
         LocalDateTime now = LocalDateTime.now();
 
         UserScoreDocument doc = UserScoreDocument.builder()
-                .points(10)
+                .pointsEarned(10)
                 .createdAt(now)
                 .build();
 
@@ -36,7 +36,7 @@ class GamificationMapperTest {
     @Test
     void givenDocWithNullFields_whenToPointEntryDto_thenReturnsDefaultValues() {
         UserScoreDocument doc = UserScoreDocument.builder()
-                .points(null)
+                .pointsEarned(null)
                 .createdAt(null)
                 .build();
 

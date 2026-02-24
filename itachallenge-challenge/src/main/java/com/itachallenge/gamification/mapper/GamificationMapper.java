@@ -12,7 +12,7 @@ public class GamificationMapper {
 
         return PointHistoryEntryDto.builder()
                 .createdAt(document.getCreatedAt() != null ? document.getCreatedAt().toString() : "")
-                .points(document.getPoints() != null ? document.getPoints() : 0)
+                .points(document.getPointsEarned() != null ? document.getPointsEarned() : 0)
                 .build();
     }
 }
