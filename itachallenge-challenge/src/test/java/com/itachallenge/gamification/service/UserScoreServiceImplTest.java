@@ -133,4 +133,52 @@ class UserScoreServiceImplTest {
                 .expectNextMatches(response -> response.getTotalPoints() == 10)
                 .verifyComplete();
     }
+<<<<<<< HEAD
+=======
+
+    @Test
+    void givenValidScores_whenGetUserPointsHistory_thenHistoryIsReturnedInCorrectOrder() {
+        UUID userId = UUID.randomUUID();
+        LocalDateTime now = LocalDateTime.now();
+
+        UserScoreDocument latestScore = UserScoreDocument.builder().pointsEarned(10).challengeId(UUID.randomUUID()).createdAt(now).build();
+        UserScoreDocument olderScore = UserScoreDocument.builder().pointsEarned(5).challengeId(UUID.randomUUID()).createdAt(now.minusDays(3)).build();
+
+        when(userScoreRepository.findByUserIdOrderByCreatedAtDesc(userId))
+                .thenReturn(Flux.just(olderScore, latestScore));
+
+        when(gamificationMapper.toPointEntryDto(latestScore))
+                .thenReturn(PointHistoryEntryDto.builder().points(10).createdAt(now.toString()).build());
+        when(gamificationMapper.toPointEntryDto(olderScore))
+                .thenReturn(PointHistoryEntryDto.builder().points(5).createdAt(now.minusDays(3).toString()).build());
+
+        var result = userScoreService.getUserPointsHistory(userId);
+
+        StepVerifier.create(result)
+                .expectNextMatches(response ->
+                        response.getHistory().size() == 2 &&
+                                response.getHistory().getFirst().getPoints() == 5 &&
+                                response.getHistory().get(1).getPoints() == 10)
+                .verifyComplete();
+    }
+
+    @Test
+    void givenDuplicateChallengesScores_whenGetUserPointsHistory_thenDistinctFilterApplies() {
+        UUID userId = UUID.randomUUID();
+        UUID challengeId = UUID.randomUUID();
+
+        UserScoreDocument score1 = UserScoreDocument.builder().pointsEarned(10).challengeId(challengeId).build();
+        UserScoreDocument score2 = UserScoreDocument.builder().pointsEarned(10).challengeId(challengeId).build();
+
+        when(userScoreRepository.findByUserIdOrderByCreatedAtDesc(userId)).thenReturn(Flux.just(score1, score2));
+
+        var result = userScoreService.getUserPointsHistory(userId);
+
+        StepVerifier.create(result)
+                .expectNextMatches(response ->
+                        response.getHistory().size() == 1 &&
+                        response.getTotalPoints() == 10)
+                .verifyComplete();
+    }
+>>>>>>> 965cb44cd (updated PointsService-Impl-Test to UserScoreService)
 }
