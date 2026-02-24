@@ -13,6 +13,4 @@ public interface UserScoreRepository extends ReactiveMongoRepository<UserScoreDo
 
     Flux<UserScoreDocument> findByUserIdOrderByCreatedAtDesc(UUID userId);
     Mono<Boolean> existsByUserIdAndChallengeId(UUID userId, UUID challengeId);
-
-    Flux<UserScoreDocument> findByUserIdOrderByCreatedAtAsc(UUID userId);
 }
