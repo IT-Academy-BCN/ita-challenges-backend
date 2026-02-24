@@ -13,7 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### [itachallenge-user-3.2.2-RELEASE] - 2026-02-23
 
 ### Removed
-- Removed legacy GET endpoint for user solutions from User microservice.
+- Removed legacy solution domain from User microservice (documents, DTOs, services, repositories and tests).
+- Solution/submission workflow is now fully handled by Challenge microservice.
 
 ### [itachallenge-user-3.2.1-RELEASE] - 2026-02-10
 
