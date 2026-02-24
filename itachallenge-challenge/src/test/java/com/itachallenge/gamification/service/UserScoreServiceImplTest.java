@@ -48,8 +48,14 @@ class UserScoreServiceImplTest {
         UUID userId = UUID.randomUUID();
         LocalDateTime now = LocalDateTime.now();
 
-        UserScoreDocument latest = UserScoreDocument.builder().pointsEarned(10).createdAt(now).build();
-        UserScoreDocument older = UserScoreDocument.builder().pointsEarned(5).createdAt(now.minusDays(3)).build();
+        UserScoreDocument latest = UserScoreDocument.builder()
+                .pointsEarned(10)
+                .createdAt(now)
+                .build();
+        UserScoreDocument older = UserScoreDocument.builder()
+                .pointsEarned(5)
+                .createdAt(now.minusDays(3))
+                .build();
 
         when(userScoreRepository.findByUserIdOrderByCreatedAtDesc(userId)).thenReturn(Flux.just(latest, older));
 
@@ -64,12 +70,16 @@ class UserScoreServiceImplTest {
     }
 
     @Test
-    void givenMultipleScores_whenGetUserPointsHistory_thenHistoryListIsCorrectlyMapped() {
+    void givenScoreDocument_whenGetUserPointsHistory_thenDateIsCorrectlyMapped() {
         UUID userId = UUID.randomUUID();
         LocalDateTime fixedDate = LocalDateTime.of(2015, 3, 26, 7, 33, 21);
         String expectedDate = fixedDate.toString();
 
-        UserScoreDocument score = UserScoreDocument.builder().pointsEarned(10).challengeId(UUID.randomUUID()).createdAt(fixedDate).build();
+        UserScoreDocument score = UserScoreDocument.builder()
+                .pointsEarned(10)
+                .challengeId(UUID.randomUUID())
+                .createdAt(fixedDate)
+                .build();
 
         when(userScoreRepository.findByUserIdOrderByCreatedAtDesc(userId))
                 .thenReturn(Flux.just(score));
