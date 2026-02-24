@@ -11,7 +11,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.springframework.stereotype.Service;
 
-import com.itachallenge.user.document.enums.ChallengeStatus;
 import com.itachallenge.user.exception.BadRequestException;
 import com.itachallenge.user.exception.InternalServerErrorException;
 

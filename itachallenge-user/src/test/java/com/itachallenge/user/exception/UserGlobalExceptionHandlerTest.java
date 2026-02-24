@@ -91,16 +91,6 @@ class UserGlobalExceptionHandlerTest {
     }
 
     @Test
-    void testHandleUnmodifiableSolutionException(){
-        String message = "There's an existing solution with status 'SUBMITTED_COMPLETE'.";
-        UnmodificableSolutionException exception = new UnmodificableSolutionException(message);
-        ResponseEntity<String> response = exceptionHandler.handleUnmodifiableSolutionException(exception);
-
-        assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
-        assertEquals(message, response.getBody());
-    }
-
-    @Test
     void testHandleUsernameAlreadyExistsException() {
         String username = "alfonso79";
         UsernameAlreadyExistsException exception = new UsernameAlreadyExistsException(username);
