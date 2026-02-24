@@ -10,7 +10,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PointsHistoryDto {
-    private String username;
     private int totalPoints;
     private List<PointEntryDto> history;
 }
