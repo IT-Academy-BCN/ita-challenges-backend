@@ -45,7 +45,7 @@ class PointsServiceImplTest {
         UserScoreDocument saved = captor.getValue();
         assertThat(saved.getUserId()).isEqualTo(userId);
         assertThat(saved.getChallengeId()).isEqualTo(challengeId);
-        assertThat(saved.getPoints()).isEqualTo(points);
+        assertThat(saved.getPointsEarned()).isEqualTo(points);
         assertThat(saved.getCreatedAt()).isNotNull();
         assertThat(saved.getId()).isNull();
     }
@@ -58,7 +58,7 @@ class PointsServiceImplTest {
         UserScoreDocument existing = UserScoreDocument.builder()
                 .userId(userId)
                 .challengeId(challengeId)
-                .points(10)
+                .pointsEarned(10)
                 .build();
         when(userScoreRepository.findByUserIdOrderByCreatedAtAsc(userId))
                 .thenReturn(Flux.just(existing));

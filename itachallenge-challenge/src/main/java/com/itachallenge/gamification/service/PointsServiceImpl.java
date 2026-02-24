@@ -27,7 +27,7 @@ public class PointsServiceImpl implements PointsService {
         UserScoreDocument doc = UserScoreDocument.builder()
                 .userId(userId)
                 .challengeId(challengeId)
-                .points(points)
+                .pointsEarned(points)
                 .createdAt(LocalDateTime.now())
                 .build();
         return userScoreRepository.save(doc).then();
