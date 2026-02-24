@@ -1,7 +1,7 @@
 package com.itachallenge.gamification.service;
 
-import com.itachallenge.challenge.dto.gamification.PointHistoryEntryDto;
-import com.itachallenge.challenge.dto.gamification.PointsHistoryResponseDto;
+import com.itachallenge.challenge.dto.gamification.PointEntryDto;
+import com.itachallenge.challenge.dto.gamification.PointsHistoryDto;
 import com.itachallenge.gamification.document.UserScoreDocument;
 import com.itachallenge.gamification.mapper.GamificationMapper;
 import com.itachallenge.gamification.repository.UserScoreRepository;
@@ -22,24 +22,24 @@ public class PointsServiceImpl implements PointsService {
     private final GamificationMapper gamificationMapper;
 
     @Override
-    public Mono<PointsHistoryResponseDto> getUserPointsHistory(UUID userId) {
+    public Mono<PointsHistoryDto> getUserPointsHistory(UUID userId) {
         return userScoreRepository.findByUserIdOrderByCreatedAtAsc(userId)
                 .collectList()
                 .map(this::buildHistoryResponse);
     }
 
-    private PointsHistoryResponseDto buildHistoryResponse(List<UserScoreDocument> docs) {
+    private PointsHistoryDto buildHistoryResponse(List<UserScoreDocument> docs) {
         int totalPoints = docs.stream()
                 .map(UserScoreDocument::getPoints)
                 .filter(Objects::nonNull)
                 .mapToInt(Integer::intValue)
                 .sum();
 
-        List<PointHistoryEntryDto> history = docs.stream()
+        List<PointEntryDto> history = docs.stream()
                 .map(gamificationMapper::toPointEntryDto)
                 .collect(Collectors.toList());
 
-        return PointsHistoryResponseDto.builder()
+        return PointsHistoryDto.builder()
                 .username(docs.isEmpty() ? "" : docs.getFirst().getUsername())
                 .totalPoints(totalPoints)
                 .history(history)

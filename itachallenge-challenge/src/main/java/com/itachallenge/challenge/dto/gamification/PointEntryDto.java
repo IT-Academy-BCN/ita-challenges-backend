@@ -8,7 +8,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PointHistoryEntryDto {
+public class PointEntryDto {
     @JsonProperty("date")
     private String createdAt;
     private int points;

@@ -9,8 +9,8 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PointsHistoryResponseDto {
+public class PointsHistoryDto {
     private String username;
     private int totalPoints;
-    private List<PointHistoryEntryDto> history;
+    private List<PointEntryDto> history;
 }

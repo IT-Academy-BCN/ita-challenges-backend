@@ -1,12 +1,12 @@
 package com.itachallenge.gamification.service;
 
-import com.itachallenge.challenge.dto.gamification.PointsHistoryResponseDto;
+import com.itachallenge.challenge.dto.gamification.PointsHistoryDto;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 
 public interface PointsService {
 
-    Mono<PointsHistoryResponseDto> getUserPointsHistory(UUID userId);
+    Mono<PointsHistoryDto> getUserPointsHistory(UUID userId);
 }
 
