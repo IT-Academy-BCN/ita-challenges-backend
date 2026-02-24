@@ -8,11 +8,9 @@ import com.itachallenge.common.exception.GlobalExceptionHandler;
 import com.itachallenge.submission.enums.SubmissionAction;
 import com.itachallenge.submission.exception.UnmodifiableSubmissionException;
 import com.itachallenge.submission.service.SubmissionService;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -21,7 +19,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 
-import static org.mockito.ArgumentMatchers.eq;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
@@ -31,12 +29,9 @@ class SubmissionControllerTest {
     @Mock
     SubmissionService submissionService;
 
-    private SubmissionController submissionController;
+    @InjectMocks
+    SubmissionController submissionController;
 
-    @BeforeEach
-    void setUp() {
-        submissionController = new SubmissionController(submissionService);
-    }
     private WebTestClient client() {
         return WebTestClient.bindToController(submissionController)
                 .controllerAdvice(new GlobalExceptionHandler())
@@ -73,8 +68,8 @@ class SubmissionControllerTest {
                 .expectBodyList(SubmissionDto.class)
                 .hasSize(2)
                 .value(list -> {
-                    Assertions.assertEquals(s1.getChallengeId(), list.get(0).getChallengeId());
-                    Assertions.assertEquals(s2.getChallengeId(), list.get(1).getChallengeId());
+                    assertEquals(s1.getChallengeId(), list.get(0).getChallengeId());
+                    assertEquals(s2.getChallengeId(), list.get(1).getChallengeId());
                 });
 
         verify(submissionService).getAllSubmissionsByUser(userId);
@@ -232,4 +227,5 @@ class SubmissionControllerTest {
         verify(submissionService, never())
                 .processSubmissionAction(any(), any());
     }
+
 }
