@@ -20,14 +20,13 @@ import reactor.test.StepVerifier;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import com.itachallenge.challenge.dto.SolvedDto;
 import com.itachallenge.submission.exception.UnmodifiableSubmissionException;
 
 import static org.mockito.ArgumentMatchers.anyString;
 
 import java.util.UUID;
-
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class SubmissionServiceImplTest {
@@ -36,6 +35,9 @@ class SubmissionServiceImplTest {
     private SubmissionRepository submissionRepository;
     @Mock
     private IChallengeService challengeService;
+
+
+
     @InjectMocks
     private SubmissionServiceImpl submissionService;
 
@@ -232,4 +234,5 @@ class SubmissionServiceImplTest {
                 .assertNext(response -> Assertions.assertEquals(SubmissionStatus.IN_PROGRESS.name(), response.getStatus()))
                 .verifyComplete();
     }
+
 }

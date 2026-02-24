@@ -11,7 +11,6 @@ import com.itachallenge.submission.enums.SubmissionStatus;
 import com.itachallenge.submission.exception.UnmodifiableSubmissionException;
 import com.itachallenge.submission.mapper.SubmissionMapper;
 import com.itachallenge.submission.repository.SubmissionRepository;
-
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -20,12 +19,11 @@ import java.util.UUID;
 
 @Service
 public class SubmissionServiceImpl implements SubmissionService {
-
     private final SubmissionRepository submissionRepository;
     private final IChallengeService challengeService;
 
-    public SubmissionServiceImpl(SubmissionRepository submissionRepository,
-                                 IChallengeService challengeService) {
+
+    public SubmissionServiceImpl(SubmissionRepository submissionRepository, IChallengeService challengeService) {
         this.submissionRepository = submissionRepository;
         this.challengeService = challengeService;
     }
