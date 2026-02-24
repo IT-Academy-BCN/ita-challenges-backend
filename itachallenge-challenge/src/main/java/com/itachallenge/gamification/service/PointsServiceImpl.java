@@ -11,6 +11,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,8 +22,8 @@ public class PointsServiceImpl implements PointsService {
     private final GamificationMapper gamificationMapper;
 
     @Override
-    public Mono<PointsHistoryDto> getUserPointsHistory(String username) {
-        return userScoreRepository.findByUsernameOrderByCreatedAtAsc(username)
+    public Mono<PointsHistoryDto> getUserPointsHistory(UUID userId) {
+        return userScoreRepository.findByUserIdOrderByCreatedAtAsc(userId)
                 .collectList()
                 .map(this::buildHistoryResponse);
     }

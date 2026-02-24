@@ -13,6 +13,7 @@ import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import static org.mockito.Mockito.when;
 
@@ -30,16 +31,16 @@ class PointsServiceImplTest {
 
     @Test
     void givenMultipleScores_whenGetUserPointsHistory_thenTotalPointsIsCorrectlySummed() {
-        String username = "Pepito";
+        UUID userId = UUID.randomUUID();
         LocalDateTime now = LocalDateTime.now();
 
         UserScoreDocument score1 = UserScoreDocument.builder().points(10).createdAt(now).build();
         UserScoreDocument score2 = UserScoreDocument.builder().points(5).createdAt(now.minusDays(3)).build();
         UserScoreDocument score3 = UserScoreDocument.builder().points(20).createdAt(now.minusDays(1)).build();
 
-        when(userScoreRepository.findByUsernameOrderByCreatedAtAsc(username)).thenReturn(Flux.just(score1, score2, score3));
+        when(userScoreRepository.findByUserIdOrderByCreatedAtAsc(userId)).thenReturn(Flux.just(score1, score2, score3));
 
-        var result = pointsServiceImpl.getUserPointsHistory(username);
+        var result = pointsServiceImpl.getUserPointsHistory(userId);
 
         StepVerifier.create(result)
                 .expectNextMatches(response ->
@@ -49,19 +50,19 @@ class PointsServiceImplTest {
 
     @Test
     void givenMultipleScores_whenGetUserPointsHistory_thenHistoryListIsCorrectlyMapped() {
-        String username = "Pepito";
+        UUID userId = UUID.randomUUID();
         LocalDateTime fixedDate = LocalDateTime.of(2015, 3, 26, 7, 33, 21);
         String expectedDate = fixedDate.toString();
 
         UserScoreDocument score = UserScoreDocument.builder().points(10).createdAt(fixedDate).build();
         PointEntryDto expectedDto = PointEntryDto.builder().points(10).createdAt(expectedDate).build();
 
-        when(userScoreRepository.findByUsernameOrderByCreatedAtAsc(username))
+        when(userScoreRepository.findByUserIdOrderByCreatedAtAsc(userId))
                 .thenReturn(Flux.just(score));
 
         when(gamificationMapper.toPointEntryDto(score)).thenReturn(expectedDto);
 
-        var result = pointsServiceImpl.getUserPointsHistory(username);
+        var result = pointsServiceImpl.getUserPointsHistory(userId);
 
         StepVerifier.create(result)
                 .expectNextMatches(response ->
@@ -72,11 +73,11 @@ class PointsServiceImplTest {
 
     @Test
     void givenNoScores_whenGetUserPointsHistory_thenReturnsEmptyHistoryAndZeroPoints() {
-        String username = "Pepito";
+        UUID userId = UUID.randomUUID();
 
-        when(userScoreRepository.findByUsernameOrderByCreatedAtAsc(username)).thenReturn(Flux.empty());
+        when(userScoreRepository.findByUserIdOrderByCreatedAtAsc(userId)).thenReturn(Flux.empty());
 
-        var result = pointsServiceImpl.getUserPointsHistory(username);
+        var result = pointsServiceImpl.getUserPointsHistory(userId);
 
         StepVerifier.create(result)
                 .expectNextMatches(response ->
@@ -87,15 +88,15 @@ class PointsServiceImplTest {
 
     @Test
     void givenScoresWithNullPoints_whenGetUserPointsHistory_thenTotalPointsIgnoresNullValues() {
-        String username = "Pepito";
+        UUID userId = UUID.randomUUID();
 
         UserScoreDocument validScore = UserScoreDocument.builder().points(10).build();
         UserScoreDocument invalidScore = UserScoreDocument.builder().points(null).build();
 
-        when(userScoreRepository.findByUsernameOrderByCreatedAtAsc(username))
+        when(userScoreRepository.findByUserIdOrderByCreatedAtAsc(userId))
                 .thenReturn(Flux.just(validScore, invalidScore));
 
-        var result = pointsServiceImpl.getUserPointsHistory(username);
+        var result = pointsServiceImpl.getUserPointsHistory(userId);
 
         StepVerifier.create(result)
                 .expectNextMatches(response -> response.getTotalPoints() == 10)
@@ -104,13 +105,13 @@ class PointsServiceImplTest {
 
     @Test
     void givenValidScores_whenGetUserPointsHistory_thenHistoryIsReturnedInCorrectOrder() {
-        String username = "Pepito";
+        UUID userId = UUID.randomUUID();
         LocalDateTime now = LocalDateTime.now();
 
         UserScoreDocument latestScore = UserScoreDocument.builder().points(10).createdAt(now).build();
         UserScoreDocument olderScore = UserScoreDocument.builder().points(5).createdAt(now.minusDays(3)).build();
 
-        when(userScoreRepository.findByUsernameOrderByCreatedAtAsc(username))
+        when(userScoreRepository.findByUserIdOrderByCreatedAtAsc(userId))
                 .thenReturn(Flux.just(olderScore, latestScore));
 
         when(gamificationMapper.toPointEntryDto(latestScore))
@@ -118,7 +119,7 @@ class PointsServiceImplTest {
         when(gamificationMapper.toPointEntryDto(olderScore))
                 .thenReturn(PointEntryDto.builder().points(5).createdAt(now.minusDays(3).toString()).build());
 
-        var result = pointsServiceImpl.getUserPointsHistory(username);
+        var result = pointsServiceImpl.getUserPointsHistory(userId);
 
         StepVerifier.create(result)
                 .expectNextMatches(response ->
