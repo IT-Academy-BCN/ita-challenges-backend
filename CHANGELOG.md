@@ -15,15 +15,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Reactive Repository for user score transactions.
 
 ## [Unreleased]
-### Refactored
+
+### Changed
 - Refactored Favorites API endpoints to a more REST-style subresource path under users.
+- Updated challenge service test configuration and UserServiceImplTest path templates to match the new Favorites endpoint path.
+- - Updated the challenge microservice favorites integration path to use the new User Favorites endpoint: /itachallenge/api/v1/user/users/{userId}/favorites/{challengeId}.
+- Updated APISIX routes (dev and pro configs) to proxy Favorites requests through /itachallenge/api/v1/user/users/**.
 ### Removed
 - Removed legacy GET endpoint for user solutions from User microservice.
 ### Added
-- Added new Favorites routes:
-GET /itachallenge/api/v1/user/users/{userId}/favorites
-POST /itachallenge/api/v1/user/users/{userId}/favorites/{challengeId}
-DELETE /itachallenge/api/v1/user/users/{userId}/favorites/{challengeId}
+  - Added new Favorites routes:
+  GET /itachallenge/api/v1/user/users/{userId}/favorites
+  POST /itachallenge/api/v1/user/users/{userId}/favorites/{challengeId}
+  DELETE /itachallenge/api/v1/user/users/{userId}/favorites/{challengeId}
 - Added config properties in application.yml for successor endpoint paths used by legacy deprecation headers.
 - Added/updated unit and integration tests to cover both the new Favorites endpoints and the legacy deprecated endpoints.
 ### Deprecated
