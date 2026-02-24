@@ -3,6 +3,13 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [UNRELEASED]
+
+### Added
+- New MongoDB collection `user_score_history` with compound indexing for efficient retrieval for gamification tracking.
+- Reactive Repository for user score transactions.
+
+## [Unreleased]
 ### [itachallenge-user-3.2.2-RELEASE] - 2026-02-23
 
 ### Removed
