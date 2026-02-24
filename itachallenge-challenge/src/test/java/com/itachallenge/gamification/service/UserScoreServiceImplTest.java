@@ -44,6 +44,26 @@ class UserScoreServiceImplTest {
     }
 
     @Test
+    void givenDescendingRepoData_whenGetUserPointsHistory_thenReturnsAscendingForFrontend() {
+        UUID userId = UUID.randomUUID();
+        LocalDateTime now = LocalDateTime.now();
+
+        UserScoreDocument latest = UserScoreDocument.builder().pointsEarned(10).createdAt(now).build();
+        UserScoreDocument older = UserScoreDocument.builder().pointsEarned(5).createdAt(now.minusDays(3)).build();
+
+        when(userScoreRepository.findByUserIdOrderByCreatedAtDesc(userId)).thenReturn(Flux.just(latest, older));
+
+        var result = userScoreService.getUserPointsHistory(userId);
+
+        StepVerifier.create(result)
+                .expectNextMatches(response ->
+                        response.getHistory().size() == 2 &&
+                        response.getHistory().getFirst().getPoints() == 5 &&
+                        response.getHistory().get(1).getPoints() == 10)
+                .verifyComplete();
+    }
+
+    @Test
     void givenMultipleScores_whenGetUserPointsHistory_thenHistoryListIsCorrectlyMapped() {
         UUID userId = UUID.randomUUID();
         LocalDateTime fixedDate = LocalDateTime.of(2015, 3, 26, 7, 33, 21);
@@ -91,27 +111,6 @@ class UserScoreServiceImplTest {
 
         StepVerifier.create(result)
                 .expectNextMatches(response -> response.getTotalPoints() == 10)
-                .verifyComplete();
-    }
-
-    @Test
-    void givenValidScores_whenGetUserPointsHistory_thenHistoryIsReturnedInCorrectOrder() {
-        UUID userId = UUID.randomUUID();
-        LocalDateTime now = LocalDateTime.now();
-
-        UserScoreDocument latestScore = UserScoreDocument.builder().pointsEarned(10).challengeId(UUID.randomUUID()).createdAt(now).build();
-        UserScoreDocument olderScore = UserScoreDocument.builder().pointsEarned(5).challengeId(UUID.randomUUID()).createdAt(now.minusDays(3)).build();
-
-        when(userScoreRepository.findByUserIdOrderByCreatedAtDesc(userId))
-                .thenReturn(Flux.just(latestScore, olderScore));
-
-        var result = userScoreService.getUserPointsHistory(userId);
-
-        StepVerifier.create(result)
-                .expectNextMatches(response ->
-                        response.getHistory().size() == 2 &&
-                                response.getHistory().getFirst().getPoints() == 10 &&
-                                response.getHistory().get(1).getPoints() == 5)
                 .verifyComplete();
     }
 }

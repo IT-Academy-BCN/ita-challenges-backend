@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -34,6 +35,8 @@ public class UserScoreServiceImpl implements UserScoreService {
                 .sum();
 
         List<PointHistoryEntryDto> history = docs.stream()
+                .sorted(Comparator.comparing(UserScoreDocument::getCreatedAt,
+                        Comparator.nullsLast(Comparator.naturalOrder())))
                 .map(doc -> PointHistoryEntryDto.builder()
                         .createdAt(doc.getCreatedAt() != null ? doc.getCreatedAt().toString() : "")
                         .points(doc.getPointsEarned() != null ? doc.getPointsEarned() : 0)
