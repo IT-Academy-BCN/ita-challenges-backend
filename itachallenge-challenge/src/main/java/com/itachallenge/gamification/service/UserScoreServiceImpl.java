@@ -12,7 +12,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -41,7 +40,7 @@ public class UserScoreServiceImpl implements UserScoreService {
                         .createdAt(doc.getCreatedAt() != null ? doc.getCreatedAt().toString() : "")
                         .points(doc.getPointsEarned() != null ? doc.getPointsEarned() : 0)
                         .build())
-                .collect(Collectors.toList());
+                .toList();
 
         return PointsHistoryResponseDto.builder()
                 .username(docs.isEmpty() ? "" : docs.getFirst().getUsername())
