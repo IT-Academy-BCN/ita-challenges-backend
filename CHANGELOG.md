@@ -32,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added/updated unit and integration tests to cover both the new Favorites endpoints and the legacy deprecated endpoints.
 ### Deprecated
 - Deprecated legacy Favorites routes while keeping them available during a staged rollout.
+- 
 ### [itachallenge-user-3.2.2-RELEASE] - 2026-02-23
 
 ### Removed
