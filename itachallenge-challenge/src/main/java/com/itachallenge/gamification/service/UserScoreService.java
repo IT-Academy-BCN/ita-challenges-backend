@@ -5,7 +5,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 
-public interface PointsService {
+public interface UserScoreService {
 
     Mono<PointsHistoryResponseDto> getUserPointsHistory(UUID userId);
 }

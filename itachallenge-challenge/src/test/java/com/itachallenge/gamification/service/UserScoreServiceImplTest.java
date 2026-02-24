@@ -18,7 +18,7 @@ import java.util.UUID;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class PointsServiceImplTest {
+class UserScoreServiceImplTest {
 
     @Mock
     private UserScoreRepository userScoreRepository;
@@ -27,7 +27,7 @@ class PointsServiceImplTest {
     private GamificationMapper gamificationMapper;
 
     @InjectMocks
-    private PointsServiceImpl pointsServiceImpl;
+    private UserScoreServiceImpl userScoreService;
 
     @Test
     void givenMultipleScores_whenGetUserPointsHistory_thenTotalPointsIsCorrectlySummed() {
@@ -40,7 +40,7 @@ class PointsServiceImplTest {
 
         when(userScoreRepository.findByUserIdOrderByCreatedAtDesc(userId)).thenReturn(Flux.just(score1, score2, score3));
 
-        var result = pointsServiceImpl.getUserPointsHistory(userId);
+        var result = userScoreService.getUserPointsHistory(userId);
 
         StepVerifier.create(result)
                 .expectNextMatches(response ->
@@ -61,7 +61,7 @@ class PointsServiceImplTest {
                 .thenReturn(Flux.just(score));
         when(gamificationMapper.toPointEntryDto(score)).thenReturn(expectedDto);
 
-        var result = pointsServiceImpl.getUserPointsHistory(userId);
+        var result = userScoreService.getUserPointsHistory(userId);
 
         StepVerifier.create(result)
                 .expectNextMatches(response ->
@@ -76,7 +76,7 @@ class PointsServiceImplTest {
 
         when(userScoreRepository.findByUserIdOrderByCreatedAtDesc(userId)).thenReturn(Flux.empty());
 
-        var result = pointsServiceImpl.getUserPointsHistory(userId);
+        var result = userScoreService.getUserPointsHistory(userId);
 
         StepVerifier.create(result)
                 .expectNextMatches(response ->
@@ -95,7 +95,7 @@ class PointsServiceImplTest {
         when(userScoreRepository.findByUserIdOrderByCreatedAtDesc(userId))
                 .thenReturn(Flux.just(validScore, invalidScore));
 
-        var result = pointsServiceImpl.getUserPointsHistory(userId);
+        var result = userScoreService.getUserPointsHistory(userId);
 
         StepVerifier.create(result)
                 .expectNextMatches(response -> response.getTotalPoints() == 10)
@@ -118,7 +118,7 @@ class PointsServiceImplTest {
         when(gamificationMapper.toPointEntryDto(olderScore))
                 .thenReturn(PointHistoryEntryDto.builder().points(5).createdAt(now.minusDays(3).toString()).build());
 
-        var result = pointsServiceImpl.getUserPointsHistory(userId);
+        var result = userScoreService.getUserPointsHistory(userId);
 
         StepVerifier.create(result)
                 .expectNextMatches(response ->
@@ -138,7 +138,7 @@ class PointsServiceImplTest {
 
         when(userScoreRepository.findByUserIdOrderByCreatedAtDesc(userId)).thenReturn(Flux.just(score1, score2));
 
-        var result = pointsServiceImpl.getUserPointsHistory(userId);
+        var result = userScoreService.getUserPointsHistory(userId);
 
         StepVerifier.create(result)
                 .expectNextMatches(response ->

@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class PointsServiceImpl implements PointsService {
+public class UserScoreServiceImpl implements UserScoreService {
 
     private final UserScoreRepository userScoreRepository;
     private final GamificationMapper gamificationMapper;
@@ -24,7 +24,6 @@ public class PointsServiceImpl implements PointsService {
     @Override
     public Mono<PointsHistoryResponseDto> getUserPointsHistory(UUID userId) {
         return userScoreRepository.findByUserIdOrderByCreatedAtDesc(userId)
-                .distinct(UserScoreDocument::getChallengeId)
                 .collectList()
                 .map(this::buildHistoryResponse);
     }
