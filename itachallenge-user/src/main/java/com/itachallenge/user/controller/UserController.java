@@ -2,9 +2,6 @@ package com.itachallenge.user.controller;
 
 import com.itachallenge.user.annotations.ValidGithubUsername;
 import com.itachallenge.user.document.UserDocument;
-import com.itachallenge.user.dto.SubmitSolutionResponseDto;
-import com.itachallenge.user.dto.UserSolutionRequestDto;
-import com.itachallenge.user.service.IUserSolutionService;
 import com.itachallenge.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -12,13 +9,11 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
@@ -32,11 +27,9 @@ public class UserController {
     public static final String X_GITHUB_USERNAME ="X-Github-Username";
 
     private final UserService userService;
-    private final IUserSolutionService userSolutionService;
 
-    public UserController(UserService userService, IUserSolutionService userSolutionService) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.userSolutionService = userSolutionService;
     }
 
     @GetMapping(value = "/test")
@@ -91,31 +84,6 @@ public class UserController {
                 });
     }
 
-    @PutMapping(path = "/solution")
-    @Operation(
-            summary = "Submit a solution using action-based workflow",
-            description = "Perform solution submission using actions (SAVE, GIVE_UP, SUBMIT) instead of direct status updates",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Solution successfully processed",
-                            content = {@Content(schema = @Schema(implementation = UserSolutionRequestDto.class),
-                                    mediaType = "application/json")}),
-                    @ApiResponse(responseCode = "400", description = "Invalid action or bad request",
-                            content = {@Content(schema = @Schema())}),
-                    @ApiResponse(
-                            responseCode = "409", description = "Solution already submitted and cannot be modified",
-                            content = @Content(schema = @Schema(implementation = ErrorResponse.class), mediaType = "application/json")),
-                    @ApiResponse(responseCode = "500", description = "Internal server error",
-                            content = @Content(schema = @Schema(implementation = ErrorResponse.class), mediaType = "application/json"))
-            }
-    )
-    public Mono<ResponseEntity<SubmitSolutionResponseDto>> addSolution(
-            @Valid @RequestBody UserSolutionRequestDto userSolutionDto) {
-
-        return userSolutionService.addSolution(userSolutionDto)
-                .map(savedUserSolutionDto ->
-                        ResponseEntity.status(HttpStatus.OK).body(savedUserSolutionDto)
-                );
-    }
 
     @Operation(
             summary = "Add Challenge to User Bookmark Challenges",

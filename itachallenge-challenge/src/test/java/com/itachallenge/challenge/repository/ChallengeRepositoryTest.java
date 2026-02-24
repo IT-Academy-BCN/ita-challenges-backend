@@ -26,7 +26,7 @@ import static org.junit.Assert.*;
 import static org.springframework.test.util.AssertionErrors.fail;
 
 @DataMongoTest
-@Testcontainers
+@Testcontainers(disabledWithoutDocker = true)
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 class ChallengeRepositoryTest {

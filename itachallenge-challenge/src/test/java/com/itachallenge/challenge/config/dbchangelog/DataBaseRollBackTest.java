@@ -20,7 +20,7 @@ import java.time.Duration;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@Testcontainers
+@Testcontainers(disabledWithoutDocker = true)
 @SpringBootTest
 class DataBaseRollBackTest {
 
