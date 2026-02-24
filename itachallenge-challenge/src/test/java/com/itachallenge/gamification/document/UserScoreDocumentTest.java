@@ -23,7 +23,7 @@ class UserScoreDocumentTest {
                 .userId(userId)
                 .username(username)
                 .challengeId(challengeId)
-                .points(points)
+                .pointsEarned(points)
                 .createdAt(createdAt)
                 .build();
 
@@ -31,7 +31,7 @@ class UserScoreDocumentTest {
         assertThat(document.getUserId()).isEqualTo(userId);
         assertThat(document.getUsername()).isEqualTo(username);
         assertThat(document.getChallengeId()).isEqualTo(challengeId);
-        assertThat(document.getPoints()).isEqualTo(points);
+        assertThat(document.getPointsEarned()).isEqualTo(points);
         assertThat(document.getCreatedAt()).isEqualTo(createdAt);
     }
 }

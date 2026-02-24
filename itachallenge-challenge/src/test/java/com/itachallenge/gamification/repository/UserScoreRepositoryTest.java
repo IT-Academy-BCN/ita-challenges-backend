@@ -26,19 +26,19 @@ class UserScoreRepositoryTest {
         UserScoreDocument score1 = UserScoreDocument.builder()
                 .id(UUID.randomUUID())
                 .userId(userId)
-                .points(3)
+                .pointsEarned(3)
                 .createdAt(LocalDateTime.now())
                 .build();
         UserScoreDocument score2 = UserScoreDocument.builder()
                 .id(UUID.randomUUID())
                 .userId(userId)
-                .points(1)
+                .pointsEarned(1)
                 .createdAt(LocalDateTime.now().minusDays(3))
                 .build();
         UserScoreDocument score3 = UserScoreDocument.builder()
                 .id(UUID.randomUUID())
                 .userId(userId)
-                .points(2)
+                .pointsEarned(2)
                 .createdAt(LocalDateTime.now().minusDays(1))
                 .build();
 
@@ -46,9 +46,9 @@ class UserScoreRepositoryTest {
                 .thenReturn(Flux.just(score1, score3, score2));
 
         StepVerifier.create(userScoreRepository.findByUserIdOrderByCreatedAtDesc(userId))
-                .expectNextMatches(s -> s.getPoints() == 3)
-                .expectNextMatches(s -> s.getPoints() == 2)
-                .expectNextMatches(s -> s.getPoints() == 1)
+                .expectNextMatches(s -> s.getPointsEarned() == 3)
+                .expectNextMatches(s -> s.getPointsEarned() == 2)
+                .expectNextMatches(s -> s.getPointsEarned() == 1)
                 .verifyComplete();
     }
 }
