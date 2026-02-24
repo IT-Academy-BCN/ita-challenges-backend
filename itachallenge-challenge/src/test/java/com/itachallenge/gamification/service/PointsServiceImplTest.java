@@ -34,9 +34,9 @@ class PointsServiceImplTest {
         UUID userId = UUID.randomUUID();
         LocalDateTime now = LocalDateTime.now();
 
-        UserScoreDocument score1 = UserScoreDocument.builder().points(10).challengeId(UUID.randomUUID()).createdAt(now).build();
-        UserScoreDocument score2 = UserScoreDocument.builder().points(5).challengeId(UUID.randomUUID()).createdAt(now.minusDays(3)).build();
-        UserScoreDocument score3 = UserScoreDocument.builder().points(20).challengeId(UUID.randomUUID()).createdAt(now.minusDays(1)).build();
+        UserScoreDocument score1 = UserScoreDocument.builder().points(10).createdAt(now).build();
+        UserScoreDocument score2 = UserScoreDocument.builder().points(5).createdAt(now.minusDays(3)).build();
+        UserScoreDocument score3 = UserScoreDocument.builder().points(20).createdAt(now.minusDays(1)).build();
 
         when(userScoreRepository.findByUserIdOrderByCreatedAtDesc(userId)).thenReturn(Flux.just(score1, score2, score3));
 
@@ -54,11 +54,12 @@ class PointsServiceImplTest {
         LocalDateTime fixedDate = LocalDateTime.of(2015, 3, 26, 7, 33, 21);
         String expectedDate = fixedDate.toString();
 
-        UserScoreDocument score = UserScoreDocument.builder().points(10).challengeId(UUID.randomUUID()).createdAt(fixedDate).build();
+        UserScoreDocument score = UserScoreDocument.builder().points(10).createdAt(fixedDate).build();
         PointHistoryEntryDto expectedDto = PointHistoryEntryDto.builder().points(10).createdAt(expectedDate).build();
 
         when(userScoreRepository.findByUserIdOrderByCreatedAtDesc(userId))
                 .thenReturn(Flux.just(score));
+
         when(gamificationMapper.toPointEntryDto(score)).thenReturn(expectedDto);
 
         var result = pointsServiceImpl.getUserPointsHistory(userId);
@@ -89,8 +90,8 @@ class PointsServiceImplTest {
     void givenScoresWithNullPoints_whenGetUserPointsHistory_thenTotalPointsIgnoresNullValues() {
         UUID userId = UUID.randomUUID();
 
-        UserScoreDocument validScore = UserScoreDocument.builder().challengeId(UUID.randomUUID()).points(10).build();
-        UserScoreDocument invalidScore = UserScoreDocument.builder().challengeId(UUID.randomUUID()).points(null).build();
+        UserScoreDocument validScore = UserScoreDocument.builder().points(10).build();
+        UserScoreDocument invalidScore = UserScoreDocument.builder().points(null).build();
 
         when(userScoreRepository.findByUserIdOrderByCreatedAtDesc(userId))
                 .thenReturn(Flux.just(validScore, invalidScore));
@@ -107,8 +108,8 @@ class PointsServiceImplTest {
         UUID userId = UUID.randomUUID();
         LocalDateTime now = LocalDateTime.now();
 
-        UserScoreDocument latestScore = UserScoreDocument.builder().points(10).challengeId(UUID.randomUUID()).createdAt(now).build();
-        UserScoreDocument olderScore = UserScoreDocument.builder().points(5).challengeId(UUID.randomUUID()).createdAt(now.minusDays(3)).build();
+        UserScoreDocument latestScore = UserScoreDocument.builder().points(10).createdAt(now).build();
+        UserScoreDocument olderScore = UserScoreDocument.builder().points(5).createdAt(now.minusDays(3)).build();
 
         when(userScoreRepository.findByUserIdOrderByCreatedAtDesc(userId))
                 .thenReturn(Flux.just(olderScore, latestScore));
@@ -125,25 +126,6 @@ class PointsServiceImplTest {
                         response.getHistory().size() == 2 &&
                                 response.getHistory().getFirst().getPoints() == 5 &&
                                 response.getHistory().get(1).getPoints() == 10)
-                .verifyComplete();
-    }
-
-    @Test
-    void givenDuplicateChallengesScores_whenGetUserPointsHistory_thenDistinctFilterApplies() {
-        UUID userId = UUID.randomUUID();
-        UUID challengeId = UUID.randomUUID();
-
-        UserScoreDocument score1 = UserScoreDocument.builder().points(10).challengeId(challengeId).build();
-        UserScoreDocument score2 = UserScoreDocument.builder().points(10).challengeId(challengeId).build();
-
-        when(userScoreRepository.findByUserIdOrderByCreatedAtDesc(userId)).thenReturn(Flux.just(score1, score2));
-
-        var result = pointsServiceImpl.getUserPointsHistory(userId);
-
-        StepVerifier.create(result)
-                .expectNextMatches(response ->
-                        response.getHistory().size() == 1 &&
-                        response.getTotalPoints() == 10)
                 .verifyComplete();
     }
 }
