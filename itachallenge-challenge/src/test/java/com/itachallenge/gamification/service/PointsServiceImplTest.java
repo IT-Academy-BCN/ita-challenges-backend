@@ -38,7 +38,7 @@ class PointsServiceImplTest {
         UserScoreDocument score2 = UserScoreDocument.builder().points(5).createdAt(now.minusDays(3)).build();
         UserScoreDocument score3 = UserScoreDocument.builder().points(20).createdAt(now.minusDays(1)).build();
 
-        when(userScoreRepository.findByUserIdOrderByCreatedAtDesc(userId)).thenReturn(Flux.just(score1, score2, score3));
+        when(userScoreRepository.findByUserIdOrderByCreatedAtAsc(userId)).thenReturn(Flux.just(score1, score2, score3));
 
         var result = pointsServiceImpl.getUserPointsHistory(userId);
 
@@ -57,7 +57,7 @@ class PointsServiceImplTest {
         UserScoreDocument score = UserScoreDocument.builder().points(10).createdAt(fixedDate).build();
         PointHistoryEntryDto expectedDto = PointHistoryEntryDto.builder().points(10).createdAt(expectedDate).build();
 
-        when(userScoreRepository.findByUserIdOrderByCreatedAtDesc(userId))
+        when(userScoreRepository.findByUserIdOrderByCreatedAtAsc(userId))
                 .thenReturn(Flux.just(score));
 
         when(gamificationMapper.toPointEntryDto(score)).thenReturn(expectedDto);
@@ -75,7 +75,7 @@ class PointsServiceImplTest {
     void givenNoScores_whenGetUserPointsHistory_thenReturnsEmptyHistoryAndZeroPoints() {
         UUID userId = UUID.randomUUID();
 
-        when(userScoreRepository.findByUserIdOrderByCreatedAtDesc(userId)).thenReturn(Flux.empty());
+        when(userScoreRepository.findByUserIdOrderByCreatedAtAsc(userId)).thenReturn(Flux.empty());
 
         var result = pointsServiceImpl.getUserPointsHistory(userId);
 
@@ -93,7 +93,7 @@ class PointsServiceImplTest {
         UserScoreDocument validScore = UserScoreDocument.builder().points(10).build();
         UserScoreDocument invalidScore = UserScoreDocument.builder().points(null).build();
 
-        when(userScoreRepository.findByUserIdOrderByCreatedAtDesc(userId))
+        when(userScoreRepository.findByUserIdOrderByCreatedAtAsc(userId))
                 .thenReturn(Flux.just(validScore, invalidScore));
 
         var result = pointsServiceImpl.getUserPointsHistory(userId);
@@ -111,7 +111,7 @@ class PointsServiceImplTest {
         UserScoreDocument latestScore = UserScoreDocument.builder().points(10).createdAt(now).build();
         UserScoreDocument olderScore = UserScoreDocument.builder().points(5).createdAt(now.minusDays(3)).build();
 
-        when(userScoreRepository.findByUserIdOrderByCreatedAtDesc(userId))
+        when(userScoreRepository.findByUserIdOrderByCreatedAtAsc(userId))
                 .thenReturn(Flux.just(olderScore, latestScore));
 
         when(gamificationMapper.toPointEntryDto(latestScore))
