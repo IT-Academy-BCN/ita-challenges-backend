@@ -4,7 +4,7 @@ import com.itachallenge.challenge.dto.gamification.PointHistoryEntryDto;
 import com.itachallenge.challenge.dto.gamification.PointsHistoryResponseDto;
 import com.itachallenge.challenge.dto.gamification.RankingResponseDto;
 import com.itachallenge.gamification.document.UserScoreDocument;
-import com.itachallenge.gamification.exception.ServiceException;
+import com.itachallenge.gamification.exception.ServiceUnavailableException;
 import com.itachallenge.gamification.repository.UserScoreRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -62,7 +62,7 @@ public class UserScoreServiceImpl implements UserScoreService {
         return userScoreRepository.findUsersRanking()
                 .onErrorResume(DataAccessException.class, ex -> {
                     log.error("DB error fetching ranking: {}", ex.getMessage());
-                    return Flux.error(new ServiceException("Could not retrieve ranking"));
+                    return Flux.error(new ServiceUnavailableException("Could not retrieve ranking"));
                 });
     }
 }
