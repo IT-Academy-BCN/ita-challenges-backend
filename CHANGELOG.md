@@ -5,10 +5,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [itachallenge-challenge-3.3.0-RELEASED] 2026-02-23
 ### Added
-- UserScoreHistoryController: New REST endpoint `/itachallenge/api/v1/me/points/history` to retrieve authenticated student progress.
-- Integration with IChallengeJwtFacade: Secure extraction of UserID from JWT for private data access.
+- UserScoreHistoryController: New REST endpoint `/itachallenge/api/v1/gamification/users/{userId}/history` to retrieve users progress.
 - UserScoreService: Business logic to aggregate total points and format historical entries in chronological order.
-- Controller Integration Tests: Comprehensive testing with WebTestClient to verify JSON schema, status codes, and security context.
+- Controller Integration Tests: Comprehensive testing with WebTestClient to verify JSON schema, status codes, and error response.
 
 ## [UNRELEASED] 2026-02-19
 ### Added
