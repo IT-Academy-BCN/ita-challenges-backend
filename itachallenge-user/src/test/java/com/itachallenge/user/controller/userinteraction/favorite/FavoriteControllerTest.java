@@ -156,7 +156,7 @@ class FavoriteControllerTest {
     }
 
     @Test
-    @DisplayName("GET /itachallenge/api/v1/user/users/{userId}/favorites returns 400 if UUID is invalid")
+    @DisplayName("GET /itachallenge/api/v1/users/{userId}/favorites returns 400 if UUID is invalid")
     void getUserFavorites_returns400IfInvalidUUID() {
         String invalidUserId = "invalid-uuid";
 
