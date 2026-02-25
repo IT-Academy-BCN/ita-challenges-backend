@@ -8,7 +8,7 @@ import com.itachallenge.challenge.repository.*;
 import com.itachallenge.challenge.service.*;
 import com.itachallenge.common.exception.dto.ErrorResponseDto;
 import com.itachallenge.common.exception.enums.ErrorCode;
-import com.itachallenge.gamification.exception.ServiceException;
+import com.itachallenge.gamification.exception.ServiceUnavailableException;
 import com.itachallenge.jwtcore.service.IJwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolation;
@@ -431,12 +431,12 @@ class GlobalExceptionHandlerTest {
     }
 
     @Test
-    void testHandleServiceException() {
+    void testHandleServiceUnavailableException() {
         // Arrange
-        ServiceException exception = new ServiceException("Could not retrieve ranking");
+        ServiceUnavailableException exception = new ServiceUnavailableException("Could not retrieve ranking");
 
         // Act
-        ResponseEntity<MessageDto> responseEntity = globalExceptionHandler.handleServiceException(exception);
+        ResponseEntity<MessageDto> responseEntity = globalExceptionHandler.handleServiceUnavailableException(exception);
 
         // Assert
         assertEquals(HttpStatus.SERVICE_UNAVAILABLE, responseEntity.getStatusCode());
