@@ -3,6 +3,12 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+### [itachallenge-user-3.2.3-RELEASE] - 2026-02-18
+
+### Removed
+- Removed deprecated legacy Bookmarks routes previously served by BookmarkLegacyController. (GitHub Task [#186], PR [#1106])
+
+
 ## [UNRELEASED]
 
 ### Added
@@ -10,17 +16,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Reactive Repository for user score transactions.
 
 ## [Unreleased]
-### [itachallenge-user-3.2.2-RELEASE] - 2026-02-23
+### [itachallenge-user-3.2.3-RELEASE] - 2026-02-23
 
 ### Removed
 - Removed legacy solution domain from User microservice (documents, DTOs, services, repositories and tests).
 - Solution/submission workflow is now fully handled by Challenge microservice.
-
-### [itachallenge-user-3.2.2-RELEASE] - 2026-02-18
-
-### Removed
-- Removed deprecated legacy Bookmarks routes previously served by BookmarkLegacyController. (GitHub Task [#186], PR [#1106])
-
 
 ### [itachallenge-user-3.2.1-RELEASE] - 2026-02-10
 
