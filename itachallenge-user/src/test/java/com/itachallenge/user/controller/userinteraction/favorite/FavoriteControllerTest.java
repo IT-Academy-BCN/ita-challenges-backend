@@ -46,7 +46,7 @@ class FavoriteControllerTest {
                 .thenReturn(Mono.just(true));
 
         webTestClient.post()
-                .uri("/itachallenge/api/v1/user/users/" + userId + "/favorites/" + challengeId)
+                .uri("/itachallenge/api/v1/users/" + userId + "/favorites/" + challengeId)
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.CREATED)
                 .expectBody(Boolean.class).isEqualTo(true);
@@ -62,7 +62,7 @@ class FavoriteControllerTest {
                 .thenReturn(Mono.just(false));
 
         webTestClient.post()
-                .uri("/itachallenge/api/v1/user/users/" + userId + "/favorites/" + challengeId)
+                .uri("/itachallenge/api/v1/users/" + userId + "/favorites/" + challengeId)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(Boolean.class).isEqualTo(false);
@@ -78,7 +78,7 @@ class FavoriteControllerTest {
                 .thenReturn(Mono.error(new NotFoundException("User not found")));
 
         webTestClient.post()
-                .uri("/itachallenge/api/v1/user/users/" + userId + "/favorites/" + challengeId)
+                .uri("/itachallenge/api/v1/users/" + userId + "/favorites/" + challengeId)
                 .exchange()
                 .expectStatus().isNotFound()
                 .expectBody(String.class).isEqualTo("User not found");
@@ -94,7 +94,7 @@ class FavoriteControllerTest {
                 .thenReturn(Mono.error(new BadUUIDException("Error message")));
 
         webTestClient.post()
-                .uri("/itachallenge/api/v1/user/users/" + userId + "/favorites/" + challengeId)
+                .uri("/itachallenge/api/v1/users/" + userId + "/favorites/" + challengeId)
                 .exchange()
                 .expectStatus().isBadRequest()
                 .expectBody(String.class).isEqualTo("The provided IDs are not valid.");
@@ -110,7 +110,7 @@ class FavoriteControllerTest {
                 .thenReturn(Mono.error(new Exception()));
 
         webTestClient.post()
-                .uri("/itachallenge/api/v1/user/users/" + userId + "/favorites/" + challengeId)
+                .uri("/itachallenge/api/v1/users/" + userId + "/favorites/" + challengeId)
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR)
                 .expectBody(String.class).isEqualTo("Unexpected error happened.");
@@ -119,7 +119,7 @@ class FavoriteControllerTest {
     }
 
     @Test
-    @DisplayName("GET /itachallenge/api/v1/user/users/{userId}/favorites returns favorite challenges")
+    @DisplayName("GET /itachallenge/api/v1/users/{userId}/favorites returns favorite challenges")
     void getUserFavorites_returnsFavorites() {
         UUID userId = UUID.randomUUID();
         Set<UUID> expectedFavorites = Set.of(UUID.randomUUID(), UUID.randomUUID());
@@ -128,7 +128,7 @@ class FavoriteControllerTest {
                 .thenReturn(Mono.just(expectedFavorites));
 
         webTestClient.get()
-                .uri("/itachallenge/api/v1/user/users/{userId}/favorites", userId)
+                .uri("/itachallenge/api/v1/users/{userId}/favorites", userId)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBodyList(UUID.class)
@@ -139,7 +139,7 @@ class FavoriteControllerTest {
     }
 
     @Test
-    @DisplayName("GET /itachallenge/api/v1/user/users/{userId}/favorites returns 404 if user not found")
+    @DisplayName("GET /itachallenge/api/v1/users/{userId}/favorites returns 404 if user not found")
     void getUserFavorites_returns404IfUserNotFound() {
         UUID userId = UUID.randomUUID();
 
@@ -147,7 +147,7 @@ class FavoriteControllerTest {
                 .thenReturn(Mono.error(new NotFoundException("User not found")));
 
         webTestClient.get()
-                .uri("/itachallenge/api/v1/user/users/{userId}/favorites", userId)
+                .uri("/itachallenge/api/v1/users/{userId}/favorites", userId)
                 .exchange()
                 .expectStatus().isNotFound()
                 .expectBody(String.class).isEqualTo("User not found");
@@ -156,7 +156,7 @@ class FavoriteControllerTest {
     }
 
     @Test
-    @DisplayName("GET /itachallenge/api/v1/user/users/{userId}/favorites returns 400 if UUID is invalid")
+    @DisplayName("GET /itachallenge/api/v1/users/{userId}/favorites returns 400 if UUID is invalid")
     void getUserFavorites_returns400IfInvalidUUID() {
         String invalidUserId = "invalid-uuid";
 
@@ -164,7 +164,7 @@ class FavoriteControllerTest {
                 .thenReturn(Mono.error(new BadUUIDException("The provided IDs are not valid.")));
 
         webTestClient.get()
-                .uri("/itachallenge/api/v1/user/users/{userId}/favorites", invalidUserId)
+                .uri("/itachallenge/api/v1/users/{userId}/favorites", invalidUserId)
                 .exchange()
                 .expectStatus().isBadRequest()
                 .expectBody(String.class).isEqualTo("The provided IDs are not valid.");
@@ -180,7 +180,7 @@ class FavoriteControllerTest {
                 .thenReturn(Mono.just(true));
 
         webTestClient.delete()
-                .uri("/itachallenge/api/v1/user/users/" + userId + "/favorites/" + challengeId)
+                .uri("/itachallenge/api/v1/users/" + userId + "/favorites/" + challengeId)
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.OK)
                 .expectBody(Boolean.class).isEqualTo(true);
@@ -196,7 +196,7 @@ class FavoriteControllerTest {
                 .thenReturn(Mono.just(false));
 
         webTestClient.delete()
-                .uri("/itachallenge/api/v1/user/users/" + userId + "/favorites/" + challengeId)
+                .uri("/itachallenge/api/v1/users/" + userId + "/favorites/" + challengeId)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(Boolean.class).isEqualTo(false);
@@ -212,7 +212,7 @@ class FavoriteControllerTest {
                 .thenReturn(Mono.error(new NotFoundException("User not found")));
 
         webTestClient.delete()
-                .uri("/itachallenge/api/v1/user/users/" + userId + "/favorites/" + challengeId)
+                .uri("/itachallenge/api/v1/users/" + userId + "/favorites/" + challengeId)
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.NOT_FOUND)
                 .expectBody(String.class).isEqualTo("User not found");
@@ -228,7 +228,7 @@ class FavoriteControllerTest {
                 .thenReturn(Mono.error(new BadUUIDException("Error message")));
 
         webTestClient.delete()
-                .uri("/itachallenge/api/v1/user/users/" + userId + "/favorites/" + challengeId)
+                .uri("/itachallenge/api/v1/users/" + userId + "/favorites/" + challengeId)
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.BAD_REQUEST)
                 .expectBody(String.class).isEqualTo("The provided IDs are not valid.");
@@ -244,7 +244,7 @@ class FavoriteControllerTest {
                 .thenReturn(Mono.error(new Exception()));
 
         webTestClient.delete()
-                .uri("/itachallenge/api/v1/user/users/" + userId + "/favorites/" + challengeId)
+                .uri("/itachallenge/api/v1/users/" + userId + "/favorites/" + challengeId)
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR)
                 .expectBody(String.class).isEqualTo("Unexpected error happened.");

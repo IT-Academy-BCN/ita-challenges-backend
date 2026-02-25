@@ -18,7 +18,7 @@ import java.util.UUID;
 
 
 @RestController
-@RequestMapping({"/itachallenge/api/v1/user/users"})
+@RequestMapping({"/itachallenge/api/v1/users"})
 public class FavoriteController {
 
     private static final Logger log = LoggerFactory.getLogger(FavoriteController.class);
