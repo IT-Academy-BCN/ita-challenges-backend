@@ -28,7 +28,7 @@ routes:
     upstream_id: 2
 
   -
-    uri: /itachallenge/api/v1/user/users/**
+    uri: /itachallenge/api/v1/users/**
     methods:
       - GET, POST, DELETE
     upstream_id: 2

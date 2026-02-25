@@ -71,8 +71,8 @@ user:
     url: http://apisix-gateway:9080 # IN PRODUCTION
     #url: http://172.17.0.2:8764 # LOCAL IP
   endpoints:
-    favorites: /itachallenge/api/v1/user/users/{userId}/favorites/{challengeId}
-    bookmarks: /itachallenge/api/v1/user/users/{userId}/bookmarks/{challengeId}
+    favorites: /itachallenge/api/v1/users/{userId}/favorites/{challengeId}
+    bookmarks: /itachallenge/api/v1/users/{userId}/bookmarks/{challengeId}
 
 token:
   signing:

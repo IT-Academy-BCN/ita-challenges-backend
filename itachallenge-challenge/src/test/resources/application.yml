@@ -55,8 +55,8 @@ user:
   service:
     url: http://notreallymatters
   endpoints:
-    favorites: /itachallenge/api/v1/user/users/{userId}/favorites/{challengeId}
-    bookmarks: /itachallenge/api/v1/user/users/{userId}/bookmarks/{challengeId}
+    favorites: /itachallenge/api/v1/users/{userId}/favorites/{challengeId}
+    bookmarks: /itachallenge/api/v1/users/{userId}/bookmarks/{challengeId}
 
 token:
   signing:
