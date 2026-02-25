@@ -26,19 +26,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed deprecated Favorites endpoints from Challenge microservice that pointed to the old User microservice paths.
 - Removed the legacy FavoriteController and related test classes that handled the old Favorites endpoints in the User microservice.
 ### Added
-<<<<<<< HEAD
-  - Added new Favorites routes:
-  GET /itachallenge/api/v1/users/{userId}/favorites
-  POST /itachallenge/api/v1/users/{userId}/favorites/{challengeId}
-  DELETE /itachallenge/api/v1/users/{userId}/favorites/{challengeId}
-- Added config properties in application.yml for successor endpoint paths used by legacy deprecation headers.
-=======
 - Added new Favorites routes:
-GET /itachallenge/api/v1/user/users/{userId}/favorites
-POST /itachallenge/api/v1/user/users/{userId}/favorites/{challengeId}
-DELETE /itachallenge/api/v1/user/users/{userId}/favorites/{challengeId}
->>>>>>> a6758fdf (chore(user): remove legacy favorites controller and deprecation config)
-- Added/updated unit and integration tests to cover both the new Favorites endpoints and the legacy deprecated endpoints.
+GET /itachallenge/api/v1/users/{userId}/favorites
+POST /itachallenge/api/v1/users/{userId}/favorites/{challengeId}
+DELETE /itachallenge/api/v1/users/{userId}/favorites/{challengeId}
+- Added/updated unit and integration tests to cover the new Favorites endpoints.
  
 ### [itachallenge-user-3.2.2-RELEASE] - 2026-02-23
 
