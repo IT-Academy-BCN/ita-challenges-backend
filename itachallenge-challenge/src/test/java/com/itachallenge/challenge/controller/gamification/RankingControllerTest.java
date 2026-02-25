@@ -1,8 +1,8 @@
 package com.itachallenge.challenge.controller.gamification;
 
 import com.itachallenge.challenge.dto.gamification.RankingResponseDto;
-import com.itachallenge.gamification.service.PointsService;
 import com.itachallenge.common.exception.GlobalExceptionHandler;
+import com.itachallenge.gamification.service.UserScoreService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,7 +29,7 @@ class RankingControllerTest {
     private WebTestClient webTestClient;
 
     @MockBean
-    private PointsService pointsService;
+    private UserScoreService pointsService;
 
     private RankingResponseDto rankingResponseDto1;
     private RankingResponseDto rankingResponseDto2;
@@ -43,28 +43,8 @@ class RankingControllerTest {
     }
 
     @Test
-    @DisplayName("GET /ranking - should return ranking list with correct data")
-    void getRanking_RankingFound_ReturnsCorrectData() {
-        when(pointsService.getRankingDescOrder())
-                .thenReturn(Flux.just(rankingResponseDto1, rankingResponseDto2));
-
-        webTestClient.get()
-                .uri(RANKING_URL)
-                .accept(MediaType.APPLICATION_JSON)
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody()
-                .jsonPath("$[0].username").isEqualTo("user1")
-                .jsonPath("$[0].points").isEqualTo(100)
-                .jsonPath("$[1].username").isEqualTo("user2")
-                .jsonPath("$[1].points").isEqualTo(50);
-
-        verify(pointsService, times(1)).getRankingDescOrder();
-    }
-
-    @Test
-    @DisplayName("GET /ranking - should return users ordered by points ascending")
-    void getRanking_ReturnsUsersInAscendingOrder() {
+    @DisplayName("GET /ranking - should return users ordered by points descending")
+    void getRanking_ReturnsUsersInDescendingOrder() {
         when(pointsService.getRankingDescOrder())
                 .thenReturn(Flux.just(rankingResponseDto1 ,rankingResponseDto2)); // 50 before 100
 

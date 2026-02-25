@@ -1,7 +1,9 @@
 package com.itachallenge.gamification.service;
 
+import com.itachallenge.challenge.dto.gamification.RankingResponseDto;
 import com.itachallenge.gamification.document.UserScoreDocument;
 import com.itachallenge.gamification.repository.UserScoreRepository;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -13,7 +15,9 @@ import reactor.test.StepVerifier;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class UserScoreServiceImplTest {
@@ -132,5 +136,33 @@ class UserScoreServiceImplTest {
         StepVerifier.create(result)
                 .expectNextMatches(response -> response.getTotalPoints() == 10)
                 .verifyComplete();
+    }
+
+    @Test
+    @DisplayName("Should return ranking in descending order")
+    void givenExistingScores_whenGetRankingDescOrder_thenReturnsRankingDescending() {
+        RankingResponseDto first = new RankingResponseDto("Juanito", 200);
+        RankingResponseDto second = new RankingResponseDto("Pepito", 150);
+
+        when(userScoreRepository.findUsersRanking()).thenReturn(Flux.just(first, second));
+
+        StepVerifier.create(userScoreService.getRankingDescOrder())
+                .expectNextMatches(r -> r.getUsername().equals("Juanito") && r.getPoints() == 200)
+                .expectNextMatches(r -> r.getUsername().equals("Pepito") && r.getPoints() == 150)
+                .verifyComplete();
+
+        verify(userScoreRepository, times(1)).findUsersRanking();
+    }
+
+    @Test
+    @DisplayName("Should return empty when no scores exist")
+    void givenNoScores_whenGetRankingDescOrder_thenReturnsEmpty() {
+        when(userScoreRepository.findUsersRanking()).thenReturn(Flux.empty());
+
+        StepVerifier.create(userScoreService.getRankingDescOrder())
+                .expectNextCount(0)
+                .verifyComplete();
+
+        verify(userScoreRepository, times(1)).findUsersRanking();
     }
 }
