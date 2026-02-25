@@ -6,7 +6,7 @@ import com.itachallenge.challenge.dto.MessageDto;
 import com.itachallenge.challenge.exception.*;
 import com.itachallenge.common.exception.dto.ErrorResponseDto;
 import com.itachallenge.common.exception.enums.ErrorCode;
-import com.itachallenge.gamification.exception.ServiceException;
+import com.itachallenge.gamification.exception.ServiceUnavailableException;
 import com.itachallenge.submission.exception.SubmissionNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolation;
@@ -195,7 +195,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ServiceException.class)
-    public ResponseEntity<MessageDto> handleServiceException(ServiceException ex) {
+    public ResponseEntity<MessageDto> handleServiceUnavailableException(ServiceException ex) {
         return ResponseEntity
                 .status(HttpStatus.SERVICE_UNAVAILABLE)
                 .body(new MessageDto(ex.getMessage()));
