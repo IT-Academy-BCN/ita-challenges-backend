@@ -194,7 +194,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new MessageDto(ex.getMessage()));
     }
 
-    @ExceptionHandler(ServiceException.class)
+    @ExceptionHandler(ServiceUnavailableException.class)
     public ResponseEntity<MessageDto> handleServiceUnavailableException(ServiceException ex) {
         return ResponseEntity
                 .status(HttpStatus.SERVICE_UNAVAILABLE)
