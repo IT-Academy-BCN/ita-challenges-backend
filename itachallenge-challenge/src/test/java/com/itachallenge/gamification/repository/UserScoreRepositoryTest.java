@@ -57,14 +57,10 @@ class UserScoreRepositoryTest {
     @DisplayName("Given existing scores, when findByUserIdOrderByCreatedAtDesc then returns sorted by descending dates")
     void givenExistingScores_whenFindByUserId_thenReturnsSortedByDescendingDates() {
         UUID userId = UUID.randomUUID();
-<<<<<<< HEAD
-=======
         UUID challenge1 = UUID.randomUUID();
         UUID challenge2 = UUID.randomUUID();
         LocalDateTime older = LocalDateTime.now().minusDays(3);
         LocalDateTime newer = LocalDateTime.now();
-
->>>>>>> 24225070c (creation of userScore Doc & ReÃpo and tests)
         UserScoreDocument score1 = UserScoreDocument.builder()
                 .id(UUID.randomUUID())
                 .userId(userId)
