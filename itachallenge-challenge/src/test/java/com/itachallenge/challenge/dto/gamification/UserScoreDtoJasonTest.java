@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.fail;
 
 @JsonTest
-class UserScoreDtoJasonTest {
+class PointsHistoryResponseDtoTest {
 
     @Autowired
     private JacksonTester<PointsHistoryResponseDto> json;
