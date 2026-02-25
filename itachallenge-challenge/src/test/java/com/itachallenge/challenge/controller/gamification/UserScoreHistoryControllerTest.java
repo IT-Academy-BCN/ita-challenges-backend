@@ -2,9 +2,7 @@ package com.itachallenge.challenge.controller.gamification;
 
 import com.itachallenge.challenge.dto.gamification.PointHistoryEntryDto;
 import com.itachallenge.challenge.dto.gamification.PointsHistoryResponseDto;
-import com.itachallenge.challenge.service.IChallengeJwtFacade;
-import com.itachallenge.gamification.service.PointsService;
-import org.junit.jupiter.api.BeforeEach;
+import com.itachallenge.gamification.service.UserScoreService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
@@ -17,7 +15,6 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 import java.util.UUID;
 
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @WebFluxTest(controllers = UserScoreHistoryController.class)
@@ -27,75 +24,67 @@ class UserScoreHistoryControllerTest {
     private WebTestClient webTestClient;
 
     @MockBean
-    private PointsService pointsService;
+    private UserScoreService userScoreService;
 
-    @MockBean
-    private IChallengeJwtFacade jwtFacade;
-
-    private final String VALID_TOKEN = "Bearer valid.token";
-    private final UUID VALID_USER_ID = UUID.randomUUID();
-
-    @BeforeEach
-    void setUp() {
-        when(jwtFacade.getUserUuIdFromAuthenticationHeader(anyString())).thenReturn(VALID_USER_ID.toString());
-    }
+    private final UUID validUserId = UUID.randomUUID();
+    private final String BASE_URL = "/itachallenge/api/v1/gamification/users/{userId}/history";
 
     @Test
-    void getUserPointsHistory_whenUserHasPoints_thenReturns200AndHistory() {
-        PointsHistoryResponseDto expectedResponse = PointsHistoryResponseDto.builder()
-                .totalPoints(15)
-                .history(List.of(
-                        PointHistoryEntryDto.builder().points(10).createdAt("2026-02-23T11:11:11").build(),
-                        PointHistoryEntryDto.builder().points(5).createdAt("2026-01-23T11:11:11").build()
-                ))
+    void getUserPointsHistory_givenValidUserId_thenReturns200AndHistory() {
+        PointHistoryEntryDto entry = PointHistoryEntryDto.builder()
+                .createdAt("2026-03-06T11:11:11")
+                .points(10)
                 .build();
 
-        when(jwtFacade.getUserUuIdFromAuthenticationHeader(VALID_TOKEN)).thenReturn(VALID_USER_ID.toString());
-        when(pointsService.getUserPointsHistory(VALID_USER_ID)).thenReturn(Mono.just(expectedResponse));
+        PointsHistoryResponseDto responseDto = PointsHistoryResponseDto.builder()
+                .username("testUser")
+                .totalPoints(10)
+                .history(List.of(entry))
+                .build();
 
-        WebTestClient.ResponseSpec response = webTestClient.get()
-                .uri("/itachallenge/api/v1/me/points/history")
-                .header("Authorization", VALID_TOKEN)
+        when(userScoreService.getUserPointsHistory(validUserId)).thenReturn(Mono.just(responseDto));
+
+        webTestClient.get()
+                .uri(BASE_URL, validUserId)
                 .accept(MediaType.APPLICATION_JSON)
-                .exchange();
-
-        response.expectStatus().isOk()
+                .exchange()
+                .expectStatus().isOk()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON)
                 .expectBody()
-                .jsonPath("$.totalPoints").isEqualTo(15)
-                .jsonPath("$.history.length()").isEqualTo(2)
+                .jsonPath("$.username").isEqualTo("testUser")
+                .jsonPath("$.totalPoints").isEqualTo(10)
+                .jsonPath("$.history.length()").isEqualTo(1)
                 .jsonPath("$.history[0].points").isEqualTo(10)
                 .jsonPath("$.history[0].date").exists();
     }
 
     @Test
-    void getUserPointsHistory_WhenUserHasNoPoints_Returns200AndEmptyList() {
+    void getUserPointsHistory_givenValidUserId_whenUserHasNoPoints_thenReturns200AndEmptyList() {
         PointsHistoryResponseDto emptyResponse = PointsHistoryResponseDto.builder()
+                .username("testUser")
                 .totalPoints(0)
                 .history(List.of())
                 .build();
 
-        when(jwtFacade.getUserUuIdFromAuthenticationHeader(VALID_TOKEN)).thenReturn(VALID_USER_ID.toString());
-        when(pointsService.getUserPointsHistory(VALID_USER_ID)).thenReturn(Mono.just(emptyResponse));
+        when(userScoreService.getUserPointsHistory(validUserId)).thenReturn(Mono.just(emptyResponse));
 
-        WebTestClient.ResponseSpec response = webTestClient.get()
-                .uri("/itachallenge/api/v1/me/points/history")
-                .header("Authorization", VALID_TOKEN)
-                .exchange();
-
-        response.expectStatus().isOk()
+        webTestClient.get()
+                .uri(BASE_URL, validUserId)
+                .exchange()
+                .expectStatus().isOk()
                 .expectBody()
+                .jsonPath("$.username").isEqualTo("testUser")
                 .jsonPath("$.totalPoints").isEqualTo(0)
                 .jsonPath("$.history").isEmpty();
     }
 
     @Test
-    void getUserPointsHistory_WhenNoTokenProvided_Returns400BadRequest() {
+    void getUserPointsHistory_givenMalformedUUID_whenRequested_thenReturns400BadRequest() {
+        String notAnId = "notValidId";
 
-        WebTestClient.ResponseSpec response = webTestClient.get()
-                .uri("/itachallenge/api/v1/me/points/history")
-                .exchange();
-
-        response.expectStatus().isBadRequest();
+        webTestClient.get()
+                .uri(BASE_URL, notAnId)
+                .exchange()
+                .expectStatus().isBadRequest();
     }
 }
