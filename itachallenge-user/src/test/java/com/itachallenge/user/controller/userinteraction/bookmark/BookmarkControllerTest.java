@@ -20,7 +20,7 @@ import java.util.UUID;
 
 import static org.mockito.Mockito.*;
 
-@WebFluxTest(controllers = {BookmarkController.class, BookmarkLegacyController.class})
+@WebFluxTest(controllers = {BookmarkController.class})
 class BookmarkControllerTest {
 
     @MockBean
@@ -58,26 +58,6 @@ class BookmarkControllerTest {
         verify(bookmarkService, times(1)).getUserBookmarks(userId.toString());
     }
 
-    @Test
-    @DisplayName("GET /user/users/{userId}/bookmarks returns bookmarked challenges - LEGACY")
-    void getUserBookmarks_returnsBookmarks() {
-        UUID userId = UUID.randomUUID();
-        Set<UUID> expectedBookmarks = Set.of(UUID.randomUUID(), UUID.randomUUID());
-
-        when(bookmarkService.getUserBookmarks(userId.toString()))
-                .thenReturn(Mono.just(expectedBookmarks));
-
-        webTestClient.get()
-                .uri("/itachallenge/api/v1/user/users/{userId}/bookmarks", userId)
-                .exchange()
-                .expectStatus().isOk()
-                .expectHeader().valueEquals("Deprecation", "true")
-                .expectBodyList(UUID.class)
-                .hasSize(expectedBookmarks.size())
-                .contains(expectedBookmarks.toArray(new UUID[0]));
-
-        verify(bookmarkService, times(1)).getUserBookmarks(userId.toString());
-    }
 
     @Test
     @DisplayName("GET /users/{userId}/bookmarks returns 404 if user not found")
@@ -88,7 +68,7 @@ class BookmarkControllerTest {
                 .thenReturn(Mono.error(new NotFoundException("User not found")));
 
         webTestClient.get()
-                .uri("/itachallenge/api/v1/user/users/{userId}/bookmarks", userId)
+                .uri("/itachallenge/api/v1/users/{userId}/bookmarks", userId)
                 .exchange()
                 .expectStatus().isNotFound()
                 .expectBody(String.class).isEqualTo("User not found");
@@ -105,7 +85,7 @@ class BookmarkControllerTest {
                 .thenReturn(Mono.error(new BadUUIDException("The provided IDs are not valid.")));
 
         webTestClient.get()
-                .uri("/itachallenge/api/v1/user/users/{userId}/bookmarks", invalidUserId)
+                .uri("/itachallenge/api/v1/users/{userId}/bookmarks", invalidUserId)
                 .exchange()
                 .expectStatus().isBadRequest()
                 .expectBody(String.class).isEqualTo("The provided IDs are not valid.");
@@ -121,7 +101,7 @@ class BookmarkControllerTest {
                 .thenReturn(Mono.error(new RuntimeException("Unexpected error")));
 
         webTestClient.get()
-                .uri("/itachallenge/api/v1/user/users/{userId}/bookmarks", userId)
+                .uri("/itachallenge/api/v1/users/{userId}/bookmarks", userId)
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR)
                 .expectBody(String.class).isEqualTo("Unexpected error happened.");
