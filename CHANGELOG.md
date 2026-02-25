@@ -14,6 +14,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New MongoDB collection `user_score_history` with compound indexing for efficient retrieval for gamification tracking.
 - Reactive Repository for user score transactions.
 
+## [Unreleased]
+### Refactored
+- Refactored Favorites API endpoints to a more REST-style subresource path under users.
+### Removed
+- Removed legacy GET endpoint for user solutions from User microservice.
+### Added
+- Added new Favorites routes:
+GET /itachallenge/api/v1/user/users/{userId}/favorites
+POST /itachallenge/api/v1/user/users/{userId}/favorites/{challengeId}
+DELETE /itachallenge/api/v1/user/users/{userId}/favorites/{challengeId}
+- Added config properties in application.yml for successor endpoint paths used by legacy deprecation headers.
+- Added/updated unit and integration tests to cover both the new Favorites endpoints and the legacy deprecated endpoints.
+### Deprecated
+- Deprecated legacy Favorites routes while keeping them available during a staged rollout.
 ### [itachallenge-user-3.2.2-RELEASE] - 2026-02-23
 
 ### Removed
