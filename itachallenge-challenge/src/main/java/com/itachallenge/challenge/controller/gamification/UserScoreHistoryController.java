@@ -49,10 +49,6 @@ import java.util.UUID;
                         @ApiResponse(
                                 responseCode = "400",
                                 description = "Invalid UUID format."
-                        ),
-                        @ApiResponse(
-                                responseCode = "404",
-                                description = "User not found."
                         )
                 }
         )
