@@ -27,7 +27,7 @@ class UserScoreHistoryControllerTest {
     private UserScoreService userScoreService;
 
     private final UUID validUserId = UUID.randomUUID();
-    private final String BASE_URL = "/itachallenge/api/v1/gamification/users/{userId}/history";
+    private static final String BASE_URL = "/itachallenge/api/v1/gamification/users/{userId}/history";
 
     @Test
     void getUserPointsHistory_givenValidUserId_thenReturns200AndHistory() {
