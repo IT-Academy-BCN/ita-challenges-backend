@@ -33,7 +33,7 @@ public class UserScoreDocument {
     @Field("challenge_id")
     private UUID challengeId;
 
-    @Field("points")
+    @Field("pointsEarned")
     private Integer pointsEarned;
 
     @CreatedDate
