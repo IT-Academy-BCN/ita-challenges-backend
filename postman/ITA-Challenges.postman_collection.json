@@ -26,15 +26,8 @@
             "url": {
               "raw": "https://{{dns}}/api/v1/auth/register",
               "protocol": "https",
-              "host": [
-                "{{dns}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "auth",
-                "register"
-              ]
+              "host": ["{{dns}}"],
+              "path": ["api", "v1", "auth", "register"]
             }
           },
           "response": []
@@ -56,15 +49,8 @@
             "url": {
               "raw": "https://{{dns}}/api/v1/auth/login",
               "protocol": "https",
-              "host": [
-                "{{dns}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "auth",
-                "login"
-              ]
+              "host": ["{{dns}}"],
+              "path": ["api", "v1", "auth", "login"]
             }
           },
           "response": []
@@ -86,15 +72,8 @@
             "url": {
               "raw": "https://{{dns}}/api/v1/users/cal27150td2y8n30vbjbmm7b",
               "protocol": "https",
-              "host": [
-                "{{dns}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "users",
-                "cal27150td2y8n30vbjbmm7b"
-              ]
+              "host": ["{{dns}}"],
+              "path": ["api", "v1", "users", "cal27150td2y8n30vbjbmm7b"]
             }
           },
           "response": []
@@ -116,15 +95,8 @@
             "url": {
               "raw": "https://{{dns}}/api/v1/auth/login",
               "protocol": "https",
-              "host": [
-                "{{dns}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "auth",
-                "login"
-              ]
+              "host": ["{{dns}}"],
+              "path": ["api", "v1", "auth", "login"]
             }
           },
           "response": []
@@ -146,15 +118,8 @@
             "url": {
               "raw": "https://{{dns}}/api/v1/tokens/validate",
               "protocol": "https",
-              "host": [
-                "{{dns}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "tokens",
-                "validate"
-              ]
+              "host": ["{{dns}}"],
+              "path": ["api", "v1", "tokens", "validate"]
             }
           },
           "response": []
@@ -177,14 +142,8 @@
             "url": {
               "raw": "https://{{dns}}/api/v1/users",
               "protocol": "https",
-              "host": [
-                "{{dns}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "users"
-              ]
+              "host": ["{{dns}}"],
+              "path": ["api", "v1", "users"]
             }
           },
           "response": []
@@ -206,15 +165,8 @@
             "url": {
               "raw": "https://{{dns}}/api/v1/users/me",
               "protocol": "https",
-              "host": [
-                "{{dns}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "users",
-                "me"
-              ]
+              "host": ["{{dns}}"],
+              "path": ["api", "v1", "users", "me"]
             }
           },
           "response": []
@@ -232,14 +184,8 @@
             "url": {
               "raw": "https://{{dns}}/api/v1/types",
               "protocol": "https",
-              "host": [
-                "{{dns}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "types"
-              ]
+              "host": ["{{dns}}"],
+              "path": ["api", "v1", "types"]
             }
           },
           "response": []
@@ -252,14 +198,8 @@
             "url": {
               "raw": "https://{{dns}}/api/v1/topics?slug=react",
               "protocol": "https",
-              "host": [
-                "{{dns}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "topics"
-              ],
+              "host": ["{{dns}}"],
+              "path": ["api", "v1", "topics"],
               "query": [
                 {
                   "key": "slug",
@@ -278,14 +218,8 @@
             "url": {
               "raw": "https://{{dns}}/api/v1/itinerary",
               "protocol": "https",
-              "host": [
-                "{{dns}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "itinerary"
-              ]
+              "host": ["{{dns}}"],
+              "path": ["api", "v1", "itinerary"]
             }
           },
           "response": []
@@ -298,14 +232,8 @@
             "url": {
               "raw": "https://{{dns}}/api/v1/categories",
               "protocol": "https",
-              "host": [
-                "{{dns}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "categories"
-              ]
+              "host": ["{{dns}}"],
+              "path": ["api", "v1", "categories"]
             }
           },
           "response": []
@@ -318,14 +246,8 @@
             "url": {
               "raw": "https://{{dns}}/api/v1/resources",
               "protocol": "https",
-              "host": [
-                "{{dns}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "resources"
-              ]
+              "host": ["{{dns}}"],
+              "path": ["api", "v1", "resources"]
             }
           },
           "response": []
@@ -338,14 +260,8 @@
             "url": {
               "raw": "https://{{dns}}/api/v1/resources?categorySlug=react",
               "protocol": "https",
-              "host": [
-                "{{dns}}"
-              ],
-              "path": [
-                "api",
-                "v1",
-                "resources"
-              ],
+              "host": ["{{dns}}"],
+              "path": ["api", "v1", "resources"],
               "query": [
                 {
                   "key": "categorySlug",
@@ -369,13 +285,8 @@
             "url": {
               "raw": "http://httpbin.org/get",
               "protocol": "http",
-              "host": [
-                "httpbin",
-                "org"
-              ],
-              "path": [
-                "get"
-              ]
+              "host": ["httpbin", "org"],
+              "path": ["get"]
             }
           },
           "response": []
@@ -393,16 +304,9 @@
             "url": {
               "raw": "http://172.18.0.9:8762/test",
               "protocol": "http",
-              "host": [
-                "172",
-                "18",
-                "0",
-                "9"
-              ],
+              "host": ["172", "18", "0", "9"],
               "port": "8762",
-              "path": [
-                "test"
-              ]
+              "path": ["test"]
             }
           },
           "response": []
@@ -415,13 +319,9 @@
             "url": {
               "raw": "http://{{ip}}:{{port}}/test",
               "protocol": "http",
-              "host": [
-                "{{ip}}"
-              ],
+              "host": ["{{ip}}"],
               "port": "{{port}}",
-              "path": [
-                "test"
-              ]
+              "path": ["test"]
             }
           },
           "response": []
@@ -439,13 +339,9 @@
             "url": {
               "raw": "http://{{ip}}:{{port}}/test",
               "protocol": "http",
-              "host": [
-                "{{ip}}"
-              ],
+              "host": ["{{ip}}"],
               "port": "{{port}}",
-              "path": [
-                "test"
-              ]
+              "path": ["test"]
             }
           },
           "response": []
@@ -458,13 +354,9 @@
             "url": {
               "raw": "http://{{dns}}:{{port}}/test",
               "protocol": "http",
-              "host": [
-                "{{dns}}"
-              ],
+              "host": ["{{dns}}"],
               "port": "{{port}}",
-              "path": [
-                "test"
-              ]
+              "path": ["test"]
             }
           },
           "response": []
@@ -477,16 +369,9 @@
             "url": {
               "raw": "http://172.18.0.8:9080/test",
               "protocol": "http",
-              "host": [
-                "172",
-                "18",
-                "0",
-                "8"
-              ],
+              "host": ["172", "18", "0", "8"],
               "port": "9080",
-              "path": [
-                "test"
-              ]
+              "path": ["test"]
             }
           },
           "response": []
@@ -511,17 +396,9 @@
             "url": {
               "raw": "http://{{ip}}:{{challenge_port}}/itachallenge/api/v1/challenge/challenges",
               "protocol": "http",
-              "host": [
-                "{{ip}}"
-              ],
+              "host": ["{{ip}}"],
               "port": "{{challenge_port}}",
-              "path": [
-                "itachallenge",
-                "api",
-                "v1",
-                "challenge",
-                "challenges"
-              ]
+              "path": ["itachallenge", "api", "v1", "challenge", "challenges"]
             }
           },
           "response": []
@@ -534,35 +411,14 @@
             "url": {
               "raw": "http://{{ip}}:{{challenge_port}}/itachallenge/api/v1/challenge/challenges/?idLanguage=660e1b18-0c0a-4262-a28a-85de9df6ac5f&offset=1&limit=1",
               "protocol": "http",
-              "host": [
-                "{{ip}}"
-              ],
+              "host": ["{{ip}}"],
               "port": "{{challenge_port}}",
-              "path": [
-                "itachallenge",
-                "api",
-                "v1",
-                "challenge",
-                "challenges",
-                ""
-              ],
+              "path": ["itachallenge", "api", "v1", "challenge", "challenges", ""],
               "query": [
-                {
-                  "key": "idLanguage",
-                  "value": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
-                },
-                {
-                  "key": "status",
-                  "value": "SUBMITTED_COMPLETE"
-                },
-                {
-                  "key": "offset",
-                  "value": "1"
-                },
-                {
-                  "key": "limit",
-                  "value": "1"
-                }
+                { "key": "idLanguage", "value": "660e1b18-0c0a-4262-a28a-85de9df6ac5f" },
+                { "key": "status", "value": "SUBMITTED_COMPLETE" },
+                { "key": "offset", "value": "1" },
+                { "key": "limit", "value": "1" }
               ]
             }
           },
@@ -576,18 +432,9 @@
             "url": {
               "raw": "http://{{ip}}:{{challenge_port}}/itachallenge/api/v1/challenge/challenges/2bfc1a9e-30e3-40b2-9e97-8db7c5a4e9e4",
               "protocol": "http",
-              "host": [
-                "{{ip}}"
-              ],
+              "host": ["{{ip}}"],
               "port": "{{challenge_port}}",
-              "path": [
-                "itachallenge",
-                "api",
-                "v1",
-                "challenge",
-                "challenges",
-                "2bfc1a9e-30e3-40b2-9e97-8db7c5a4e9e4"
-              ]
+              "path": ["itachallenge", "api", "v1", "challenge", "challenges", "2bfc1a9e-30e3-40b2-9e97-8db7c5a4e9e4"]
             }
           },
           "response": []
@@ -600,17 +447,9 @@
             "url": {
               "raw": "http://{{ip}}:{{challenge_port}}/itachallenge/api/v1/challenges/2bfc1a9e-30e3-40b2-9e97-8db7c5a4e9e4",
               "protocol": "http",
-              "host": [
-                "{{ip}}"
-              ],
+              "host": ["{{ip}}"],
               "port": "{{challenge_port}}",
-              "path": [
-                "itachallenge",
-                "api",
-                "v1",
-                "challenges",
-                "2bfc1a9e-30e3-40b2-9e97-8db7c5a4e9e4"
-              ]
+              "path": ["itachallenge", "api", "v1", "challenges", "2bfc1a9e-30e3-40b2-9e97-8db7c5a4e9e4"]
             }
           },
           "response": []
@@ -623,29 +462,14 @@
             "body": {
               "mode": "raw",
               "raw": "{\n\"challengeTitle\": \"New challenge Title\",\n\"description\": \"This is the new description of this challenge\",\n\"level\": \"EASY\",\n\"language\": \"Java\",\n\"solution\": \"This is the new solution of this challenge.\",\n\"topic\": \"STYLES\",\n\"tags\": [\"08208208-2082-0820-8208-208208208207\"]\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
+              "options": { "raw": { "language": "json" } }
             },
             "url": {
               "raw": "http://{{ip}}:{{challenge_port}}/itachallenge/api/v1/challenge/challenges/challenge/c13d4f5a-3cf5-46f8-acea-f0db63088863/update",
               "protocol": "http",
-              "host": [
-                "{{ip}}"
-              ],
+              "host": ["{{ip}}"],
               "port": "{{challenge_port}}",
-              "path": [
-                "itachallenge",
-                "api",
-                "v1",
-                "challenge",
-                "challenges",
-                "challenge",
-                "c13d4f5a-3cf5-46f8-acea-f0db63088863",
-                "update"
-              ]
+              "path": ["itachallenge", "api", "v1", "challenge", "challenges", "challenge", "c13d4f5a-3cf5-46f8-acea-f0db63088863", "update"]
             }
           },
           "response": []
@@ -658,19 +482,9 @@
             "url": {
               "raw": "http://{{ip}}:{{challenge_port}}/itachallenge/api/v1/challenge/challenges/2bfc1a9e-30e3-40b2-9e97-8db7c5a4e9e4/related",
               "protocol": "http",
-              "host": [
-                "{{ip}}"
-              ],
+              "host": ["{{ip}}"],
               "port": "{{challenge_port}}",
-              "path": [
-                "itachallenge",
-                "api",
-                "v1",
-                "challenge",
-                "challenges",
-                "2bfc1a9e-30e3-40b2-9e97-8db7c5a4e9e4",
-                "related"
-              ]
+              "path": ["itachallenge", "api", "v1", "challenge", "challenges", "2bfc1a9e-30e3-40b2-9e97-8db7c5a4e9e4", "related"]
             }
           },
           "response": []
@@ -683,17 +497,9 @@
             "url": {
               "raw": "http://{{ip}}:{{challenge_port}}/itachallenge/api/v1/challenge/version",
               "protocol": "http",
-              "host": [
-                "{{ip}}"
-              ],
+              "host": ["{{ip}}"],
               "port": "{{challenge_port}}",
-              "path": [
-                "itachallenge",
-                "api",
-                "v1",
-                "challenge",
-                "version"
-              ]
+              "path": ["itachallenge", "api", "v1", "challenge", "version"]
             }
           },
           "response": []
@@ -706,17 +512,9 @@
             "url": {
               "raw": "http://{{ip}}:{{challenge_port}}/itachallenge/api/v1/challenge/test",
               "protocol": "http",
-              "host": [
-                "{{ip}}"
-              ],
+              "host": ["{{ip}}"],
               "port": "{{challenge_port}}",
-              "path": [
-                "itachallenge",
-                "api",
-                "v1",
-                "challenge",
-                "test"
-              ]
+              "path": ["itachallenge", "api", "v1", "challenge", "test"]
             }
           },
           "response": []
@@ -729,23 +527,10 @@
             "url": {
               "raw": "http://{{ip}}:{{challenge_port}}/itachallenge/api/v1/challenge/language?offset=2",
               "protocol": "http",
-              "host": [
-                "{{ip}}"
-              ],
+              "host": ["{{ip}}"],
               "port": "{{challenge_port}}",
-              "path": [
-                "itachallenge",
-                "api",
-                "v1",
-                "challenge",
-                "language"
-              ],
-              "query": [
-                {
-                  "key": "offset",
-                  "value": "2"
-                }
-              ]
+              "path": ["itachallenge", "api", "v1", "challenge", "language"],
+              "query": [{ "key": "offset", "value": "2" }]
             }
           },
           "response": []
@@ -758,20 +543,9 @@
             "url": {
               "raw": "http://{{ip}}:{{challenge_port}}/itachallenge/api/v1/challenge/solution/dcacb291-b4aa-4029-8e9b-284c8ca80296/language/660e1b18-0c0a-4262-a28a-85de9df6ac5f",
               "protocol": "http",
-              "host": [
-                "{{ip}}"
-              ],
+              "host": ["{{ip}}"],
               "port": "{{challenge_port}}",
-              "path": [
-                "itachallenge",
-                "api",
-                "v1",
-                "challenge",
-                "solution",
-                "dcacb291-b4aa-4029-8e9b-284c8ca80296",
-                "language",
-                "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
-              ]
+              "path": ["itachallenge", "api", "v1", "challenge", "solution", "dcacb291-b4aa-4029-8e9b-284c8ca80296", "language", "660e1b18-0c0a-4262-a28a-85de9df6ac5f"]
             }
           },
           "response": []
@@ -786,7 +560,22 @@
               "protocol": "http",
               "host": ["{{ip}}"],
               "port": "{{challenge_port}}",
-              "path": ["itachallenge","api","v1","users","{{user_id}}","submissions"]
+              "path": ["itachallenge", "api", "v1", "users", "{{user_id}}", "submissions"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Challenge / user scores history",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://{{ip}}:{{challenge_port}}/itachallenge/api/v1/users/{{user_id}}/scores/history",
+              "protocol": "http",
+              "host": ["{{ip}}"],
+              "port": "{{challenge_port}}",
+              "path": ["itachallenge", "api", "v1", "users", "{{user_id}}", "scores", "history"]
             }
           },
           "response": []
@@ -798,27 +587,15 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"challengeTitle\": \"t\u00edtol\",\r\n    \"description\": \"descripci\u00f3\",\r\n    \"level\": \"EASY\",\r\n    \"language\": \"Java\",\r\n    \"solution\": \"soluci\u00f3\",\r\n    \"topic\": \"ALL\",\r\n    \"tags\": []\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
+              "raw": "{\r\n    \"challengeTitle\": \"títol\",\r\n    \"description\": \"descripció\",\r\n    \"level\": \"EASY\",\r\n    \"language\": \"Java\",\r\n    \"solution\": \"solució\",\r\n    \"topic\": \"ALL\",\r\n    \"tags\": []\r\n}",
+              "options": { "raw": { "language": "json" } }
             },
             "url": {
               "raw": "http://{{ip}}:{{challenge_port}}/itachallenge/api/v1/challenge/challenges",
               "protocol": "http",
-              "host": [
-                "{{ip}}"
-              ],
+              "host": ["{{ip}}"],
               "port": "{{challenge_port}}",
-              "path": [
-                "itachallenge",
-                "api",
-                "v1",
-                "challenge",
-                "challenges"
-              ]
+              "path": ["itachallenge", "api", "v1", "challenge", "challenges"]
             }
           },
           "response": []
@@ -837,19 +614,9 @@
             "url": {
               "raw": "http://{{ip}}:{{challenge_port}}/itachallenge/api/v1/challenge/challenges/9ebfef53-9520-4f9f-abbb-d43353700865/favorites",
               "protocol": "http",
-              "host": [
-                "{{ip}}"
-              ],
+              "host": ["{{ip}}"],
               "port": "{{challenge_port}}",
-              "path": [
-                "itachallenge",
-                "api",
-                "v1",
-                "challenge",
-                "challenges",
-                "9ebfef53-9520-4f9f-abbb-d43353700865",
-                "favorites"
-              ]
+              "path": ["itachallenge", "api", "v1", "challenge", "challenges", "9ebfef53-9520-4f9f-abbb-d43353700865", "favorites"]
             }
           },
           "response": []
@@ -862,17 +629,9 @@
             "url": {
               "raw": "http://{{ip}}:{{challenge_port}}/itachallenge/api/v1/challenge/tags",
               "protocol": "http",
-              "host": [
-                "{{ip}}"
-              ],
+              "host": ["{{ip}}"],
               "port": "{{challenge_port}}",
-              "path": [
-                "itachallenge",
-                "api",
-                "v1",
-                "challenge",
-                "tags"
-              ]
+              "path": ["itachallenge", "api", "v1", "challenge", "tags"]
             }
           },
           "response": []
@@ -885,18 +644,9 @@
             "url": {
               "raw": "http://{{ip}}:{{challenge_port}}/itachallenge/api/v1/challenge/challenges/byFilter?idLanguage=660e1b18-0c0a-4262-a28a-85de9df6ac5f&level=EASY&offset=0&limit=10&tags=tag1,tag2",
               "protocol": "http",
-              "host": [
-                "{{ip}}"
-              ],
+              "host": ["{{ip}}"],
               "port": "{{challenge_port}}",
-              "path": [
-                "itachallenge",
-                "api",
-                "v1",
-                "challenge",
-                "challenges",
-                "byFilter"
-              ]
+              "path": ["itachallenge", "api", "v1", "challenge", "challenges", "byFilter"]
             }
           },
           "response": []
@@ -915,19 +665,9 @@
             "url": {
               "raw": "http://{{ip}}:{{challenge_port}}/itachallenge/api/v1/challenge/challenges/9ebfef53-9520-4f9f-abbb-d43353700865/favorites",
               "protocol": "http",
-              "host": [
-                "{{ip}}"
-              ],
+              "host": ["{{ip}}"],
               "port": "{{challenge_port}}",
-              "path": [
-                "itachallenge",
-                "api",
-                "v1",
-                "challenge",
-                "challenges",
-                "9ebfef53-9520-4f9f-abbb-d43353700865",
-                "favorites"
-              ]
+              "path": ["itachallenge", "api", "v1", "challenge", "challenges", "9ebfef53-9520-4f9f-abbb-d43353700865", "favorites"]
             }
           },
           "response": []
@@ -940,29 +680,14 @@
             "body": {
               "mode": "raw",
               "raw": "{\n\"challengeTitle\": \"New challenge Title\",\n\"description\": \"This is the new description of this challenge\",\n\"level\": \"EASY\",\n\"language\": \"Java\",\n\"solution\": \"This is the new solution of this challenge.\",\n\"topic\": \"STYLES\",\n\"tags\": [\"08208208-2082-0820-8208-208208208207\"]\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
+              "options": { "raw": { "language": "json" } }
             },
             "url": {
               "raw": "http://{{ip}}:{{challenge_port}}/itachallenge/api/v1/challenge/challenges/challenge/c13d4f5a-3cf5-46f8-acea-f0db63088863/update",
               "protocol": "http",
-              "host": [
-                "{{ip}}"
-              ],
+              "host": ["{{ip}}"],
               "port": "{{challenge_port}}",
-              "path": [
-                "itachallenge",
-                "api",
-                "v1",
-                "challenge",
-                "challenges",
-                "challenge",
-                "c13d4f5a-3cf5-46f8-acea-f0db63088863",
-                "update"
-              ]
+              "path": ["itachallenge", "api", "v1", "challenge", "challenges", "challenge", "c13d4f5a-3cf5-46f8-acea-f0db63088863", "update"]
             }
           },
           "response": []
@@ -980,26 +705,14 @@
             "body": {
               "mode": "raw",
               "raw": "{\n\"uuid_challenge\": \"866853b8-ae7d-4daf-8c82-5e6f653e0fc1\",\n\"uuid_language\": \"09fabe32-7362-4bfb-ac05-b7bf854c6e0f\",\n\"uuid_user\": \"76f906d8-8d02-4a61-892e-83744b685fd2\",\n\"bookmarked\": \"true\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
+              "options": { "raw": { "language": "json" } }
             },
             "url": {
               "raw": "http://{{ip}}:{{user_port}}/itachallenge/api/v1/user/bookmark",
               "protocol": "http",
-              "host": [
-                "{{ip}}"
-              ],
+              "host": ["{{ip}}"],
               "port": "{{user_port}}",
-              "path": [
-                "itachallenge",
-                "api",
-                "v1",
-                "user",
-                "bookmark"
-              ]
+              "path": ["itachallenge", "api", "v1", "user", "bookmark"]
             }
           },
           "response": []
@@ -1012,17 +725,9 @@
             "url": {
               "raw": "http://{{ip}}:{{user_port}}/itachallenge/api/v1/user/test",
               "protocol": "http",
-              "host": [
-                "{{ip}}"
-              ],
+              "host": ["{{ip}}"],
               "port": "{{user_port}}",
-              "path": [
-                "itachallenge",
-                "api",
-                "v1",
-                "user",
-                "test"
-              ]
+              "path": ["itachallenge", "api", "v1", "user", "test"]
             }
           },
           "response": []
@@ -1035,17 +740,9 @@
             "url": {
               "raw": "http://{{ip}}:{{user_port}}/itachallenge/api/v1/user/version",
               "protocol": "http",
-              "host": [
-                "{{ip}}"
-              ],
+              "host": ["{{ip}}"],
               "port": "{{user_port}}",
-              "path": [
-                "itachallenge",
-                "api",
-                "v1",
-                "user",
-                "version"
-              ]
+              "path": ["itachallenge", "api", "v1", "user", "version"]
             }
           },
           "response": []
@@ -1058,19 +755,9 @@
             "url": {
               "raw": "http://{{ip}}:{{user_port}}/itachallenge/api/v1/user/statistics/percent/3fbd4eac-53e7-49a5-8ac1-5e6d75d66e68",
               "protocol": "http",
-              "host": [
-                "{{ip}}"
-              ],
+              "host": ["{{ip}}"],
               "port": "{{user_port}}",
-              "path": [
-                "itachallenge",
-                "api",
-                "v1",
-                "user",
-                "statistics",
-                "percent",
-                "3fbd4eac-53e7-49a5-8ac1-5e6d75d66e68"
-              ]
+              "path": ["itachallenge", "api", "v1", "user", "statistics", "percent", "3fbd4eac-53e7-49a5-8ac1-5e6d75d66e68"]
             }
           },
           "response": []
@@ -1083,18 +770,9 @@
             "url": {
               "raw": "http://{{ip}}:{{user_port}}/itachallenge/api/v1/user/users/shakira",
               "protocol": "http",
-              "host": [
-                "{{ip}}"
-              ],
+              "host": ["{{ip}}"],
               "port": "{{user_port}}",
-              "path": [
-                "itachallenge",
-                "api",
-                "v1",
-                "user",
-                "users",
-                "shakira"
-              ]
+              "path": ["itachallenge", "api", "v1", "user", "users", "shakira"]
             }
           },
           "response": []
@@ -1107,18 +785,9 @@
             "url": {
               "raw": "http://{{ip}}:{{user_port}}/itachallenge/api/v1/user/bookmarks/a75fa943-6bc9-4e62-b1db-d43d15b149c7",
               "protocol": "http",
-              "host": [
-                "{{ip}}"
-              ],
+              "host": ["{{ip}}"],
               "port": "{{user_port}}",
-              "path": [
-                "itachallenge",
-                "api",
-                "v1",
-                "user",
-                "bookmarks",
-                "a75fa943-6bc9-4e62-b1db-d43d15b149c7"
-              ]
+              "path": ["itachallenge", "api", "v1", "user", "bookmarks", "a75fa943-6bc9-4e62-b1db-d43d15b149c7"]
             }
           },
           "response": []
@@ -1131,117 +800,9 @@
             "url": {
               "raw": "http://{{ip}}:{{user_port}}/itachallenge/api/v1/user/solution/user/c3a92f9d-5d10-4f76-8c0b-6d884c549b1c/challenges/solutions",
               "protocol": "http",
-              "host": [
-                "{{ip}}"
-              ],
+              "host": ["{{ip}}"],
               "port": "{{user_port}}",
-              "path": [
-                "itachallenge",
-                "api",
-                "v1",
-                "user",
-                "solution",
-                "user",
-                "c3a92f9d-5d10-4f76-8c0b-6d884c549b1c",
-                "challenges",
-                "solutions"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "User/solution - SUBMIT",
-          "request": {
-            "method": "PUT",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n\"uuid_challenge\": \"8cd0fbc2-d940-4d41-ab95-7749f0382f6a\",\n\"uuid_language\": \"660e1b18-0c0a-4262-a28a-85de9df6ac5f\",\n\"uuid_user\": \"c3a92f9d-5d10-4f76-8c0b-6d884c549b1c\",\n\"action\": \"SUBMIT\",\n\"solution_text\": \"MY SOLUTION\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "http://{{ip}}:{{user_port}}/itachallenge/api/v1/user/solution",
-              "protocol": "http",
-              "host": [
-                "{{ip}}"
-              ],
-              "port": "{{user_port}}",
-              "path": [
-                "itachallenge",
-                "api",
-                "v1",
-                "user",
-                "solution"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "User/solution - SAVE",
-          "request": {
-            "method": "PUT",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"uuid_challenge\": \"2044f0b7-ccef-429b-a8d3-7a2168a5dafe\",\n  \"uuid_language\": \"660e1b18-0c0a-4262-a28a-85de9df6ac5f\",\n  \"uuid_user\": \"c3a92f9d-5d10-4f76-8c0b-6d884c549b1c\",\n  \"action\": \"SAVE\",\n  \"solution_text\": \"This is a solution still in progress.\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "http://{{ip}}:{{user_port}}/itachallenge/api/v1/user/solution",
-              "protocol": "http",
-              "host": [
-                "{{ip}}"
-              ],
-              "port": "{{user_port}}",
-              "path": [
-                "itachallenge",
-                "api",
-                "v1",
-                "user",
-                "solution"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "User/solution - GIVE_UP",
-          "request": {
-            "method": "PUT",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"uuid_challenge\": \"6e237137-3567-4585-9a21-5a6d4f5f037b\",\n  \"uuid_language\": \"660e1b18-0c0a-4262-a28a-85de9df6ac5f\",\n  \"uuid_user\": \"7a8d03f6-5489-417d-a736-777be159eab5\",\n  \"action\": \"GIVE_UP\",\n  \"solution_text\": \"I won't get it. Let me see the solution\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "http://{{ip}}:{{user_port}}/itachallenge/api/v1/user/solution",
-              "protocol": "http",
-              "host": [
-                "{{ip}}"
-              ],
-              "port": "{{user_port}}",
-              "path": [
-                "itachallenge",
-                "api",
-                "v1",
-                "user",
-                "solution"
-              ]
+              "path": ["itachallenge", "api", "v1", "user", "solution", "user", "c3a92f9d-5d10-4f76-8c0b-6d884c549b1c", "challenges", "solutions"]
             }
           },
           "response": []
@@ -1254,19 +815,9 @@
             "url": {
               "raw": "http://{{ip}}:{{user_port}}/itachallenge/api/v1/user/c3a92f9d-5d10-4f76-8c0b-6d884c549b1c/challenges/solutions",
               "protocol": "http",
-              "host": [
-                "{{ip}}"
-              ],
+              "host": ["{{ip}}"],
               "port": "{{user_port}}",
-              "path": [
-                "itachallenge",
-                "api",
-                "v1",
-                "user",
-                "c3a92f9d-5d10-4f76-8c0b-6d884c549b1c",
-                "challenges",
-                "solutions"
-              ]
+              "path": ["itachallenge", "api", "v1", "user", "c3a92f9d-5d10-4f76-8c0b-6d884c549b1c", "challenges", "solutions"]
             }
           },
           "response": []
@@ -1279,22 +830,9 @@
             "url": {
               "raw": "http://{{ip}}:{{user_port}}/itachallenge/api/v1/user/c3a92f9d-5d10-4f76-8c0b-6d884c549b1c/challenge/7fc6a737-dc36-4e1b-87f3-120d81c548aa/solution/dcacb291-b4aa-4029-8e9b-284c8ca80296/score",
               "protocol": "http",
-              "host": [
-                "{{ip}}"
-              ],
+              "host": ["{{ip}}"],
               "port": "{{user_port}}",
-              "path": [
-                "itachallenge",
-                "api",
-                "v1",
-                "user",
-                "c3a92f9d-5d10-4f76-8c0b-6d884c549b1c",
-                "challenge",
-                "7fc6a737-dc36-4e1b-87f3-120d81c548aa",
-                "solution",
-                "dcacb291-b4aa-4029-8e9b-284c8ca80296",
-                "score"
-              ]
+              "path": ["itachallenge", "api", "v1", "user", "c3a92f9d-5d10-4f76-8c0b-6d884c549b1c", "challenge", "7fc6a737-dc36-4e1b-87f3-120d81c548aa", "solution", "dcacb291-b4aa-4029-8e9b-284c8ca80296", "score"]
             }
           },
           "response": []
@@ -1307,19 +845,9 @@
             "url": {
               "raw": "http://{{ip}}:{{user_port}}/itachallenge/api/v1/userinteraction/favorites/c85b9430-f5a8-48ea-a1b5-28e018c77d61",
               "protocol": "http",
-              "host": [
-                "{{ip}}"
-              ],
+              "host": ["{{ip}}"],
               "port": "{{user_port}}",
-              "path": [
-                "itachallenge",
-                "api",
-                "v1",
-
-                "userinteraction",
-                "favorites",
-                "c85b9430-f5a8-48ea-a1b5-28e018c77d61"
-              ]
+              "path": ["itachallenge", "api", "v1", "userinteraction", "favorites", "c85b9430-f5a8-48ea-a1b5-28e018c77d61"]
             }
           },
           "response": []
@@ -1332,21 +860,9 @@
             "url": {
               "raw": "http://{{ip}}:{{user_port}}/itachallenge/api/v1/userinteraction/favorites/users/997a1dca-70f6-478a-b382-6e3173e34491/favorites/9ebfef53-9520-4f9f-abbb-d43353700865",
               "protocol": "http",
-              "host": [
-                "{{ip}}"
-              ],
+              "host": ["{{ip}}"],
               "port": "{{user_port}}",
-              "path": [
-                "itachallenge",
-                "api",
-                "v1",
-                "userinteraction",
-                "favorites",
-                "users",
-                "997a1dca-70f6-478a-b382-6e3173e34491",
-                "favorites",
-                "9ebfef53-9520-4f9f-abbb-d43353700865"
-              ]
+              "path": ["itachallenge", "api", "v1", "userinteraction", "favorites", "users", "997a1dca-70f6-478a-b382-6e3173e34491", "favorites", "9ebfef53-9520-4f9f-abbb-d43353700865"]
             }
           },
           "response": []
@@ -1359,21 +875,9 @@
             "url": {
               "raw": "http://{{ip}}:{{user_port}}/itachallenge/api/v1/userinteraction/favorites/users/997a1dca-70f6-478a-b382-6e3173e34491/favorites/9ebfef53-9520-4f9f-abbb-d43353700865",
               "protocol": "http",
-              "host": [
-                "{{ip}}"
-              ],
+              "host": ["{{ip}}"],
               "port": "{{user_port}}",
-              "path": [
-                "itachallenge",
-                "api",
-                "v1",
-                "userinteraction",
-                "favorites",
-                "users",
-                "997a1dca-70f6-478a-b382-6e3173e34491",
-                "favorites",
-                "9ebfef53-9520-4f9f-abbb-d43353700865"
-              ]
+              "path": ["itachallenge", "api", "v1", "userinteraction", "favorites", "users", "997a1dca-70f6-478a-b382-6e3173e34491", "favorites", "9ebfef53-9520-4f9f-abbb-d43353700865"]
             }
           },
           "response": []
@@ -1388,27 +892,14 @@
         "body": {
           "mode": "raw",
           "raw": "{\n    \"username\": \"UsuarioDePrueba10\"\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
+          "options": { "raw": { "language": "json" } }
         },
         "url": {
           "raw": "http://{{ip}}:{{user_port}}/itachallenge/api/v1/admin/users/create",
           "protocol": "http",
-          "host": [
-            "{{ip}}"
-          ],
+          "host": ["{{ip}}"],
           "port": "{{user_port}}",
-          "path": [
-            "itachallenge",
-            "api",
-            "v1",
-            "admin",
-            "users",
-            "create"
-          ]
+          "path": ["itachallenge", "api", "v1", "admin", "users", "create"]
         }
       },
       "response": []
@@ -1424,17 +915,9 @@
             "url": {
               "raw": "http://{{ip}}:{{mock_port}}/itachallenge/api/v1/mock/test",
               "protocol": "http",
-              "host": [
-                "{{ip}}"
-              ],
+              "host": ["{{ip}}"],
               "port": "{{mock_port}}",
-              "path": [
-                "itachallenge",
-                "api",
-                "v1",
-                "mock",
-                "test"
-              ]
+              "path": ["itachallenge", "api", "v1", "mock", "test"]
             }
           },
           "response": []
@@ -1447,17 +930,9 @@
             "url": {
               "raw": "http://{{ip}}:{{mock_port}}/itachallenge/api/v1/mock/version",
               "protocol": "http",
-              "host": [
-                "{{ip}}"
-              ],
+              "host": ["{{ip}}"],
               "port": "{{mock_port}}",
-              "path": [
-                "itachallenge",
-                "api",
-                "v1",
-                "mock",
-                "version"
-              ]
+              "path": ["itachallenge", "api", "v1", "mock", "version"]
             }
           },
           "response": []
@@ -1475,17 +950,9 @@
             "url": {
               "raw": "http://{{ip}}:{{auth_port}}/itachallenge/api/v1/auth/version",
               "protocol": "http",
-              "host": [
-                "{{ip}}"
-              ],
+              "host": ["{{ip}}"],
               "port": "{{auth_port}}",
-              "path": [
-                "itachallenge",
-                "api",
-                "v1",
-                "auth",
-                "version"
-              ]
+              "path": ["itachallenge", "api", "v1", "auth", "version"]
             }
           },
           "response": []
@@ -1498,26 +965,14 @@
             "body": {
               "mode": "raw",
               "raw": "{\n    \"authToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InZjd2ZxOXE3ZWg2d3o1YW5ybnVxMDlrMiIsImlhdCI6MTcwNjYwNTc2MSwiZXhwIjoxNzA2NjA2NjYxfQ.ARE0nekkXr5mvffo8l1xt1jyvszWH5Ahz09JvIKEEIg\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
+              "options": { "raw": { "language": "json" } }
             },
             "url": {
               "raw": "http://{{ip}}:{{auth_port}}/itachallenge/api/v1/auth/validate",
               "protocol": "http",
-              "host": [
-                "{{ip}}"
-              ],
+              "host": ["{{ip}}"],
               "port": "{{auth_port}}",
-              "path": [
-                "itachallenge",
-                "api",
-                "v1",
-                "auth",
-                "validate"
-              ]
+              "path": ["itachallenge", "api", "v1", "auth", "validate"]
             }
           },
           "response": []
@@ -1532,27 +987,14 @@
         "body": {
           "mode": "raw",
           "raw": "",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
+          "options": { "raw": { "language": "json" } }
         },
         "url": {
           "raw": "http://localhost:8761/itachallenge/api/v1/auth/github/authenticate",
           "protocol": "http",
-          "host": [
-            "{{ip}}"
-          ],
+          "host": ["{{ip}}"],
           "port": "{{auth_port}}",
-          "path": [
-            "itachallenge",
-            "api",
-            "v1",
-            "auth",
-            "github",
-            "authenticate"
-          ]
+          "path": ["itachallenge", "api", "v1", "auth", "github", "authenticate"]
         }
       },
       "response": []
@@ -1571,17 +1013,9 @@
         "url": {
           "raw": "http://{{ip}}:{{auth_port}}/itachallenge/api/v1/auth/logout",
           "protocol": "http",
-          "host": [
-            "{{ip}}"
-          ],
+          "host": ["{{ip}}"],
           "port": "{{auth_port}}",
-          "path": [
-            "itachallenge",
-            "api",
-            "v1",
-            "auth",
-            "logout"
-          ]
+          "path": ["itachallenge", "api", "v1", "auth", "logout"]
         }
       },
       "response": []
@@ -1597,13 +1031,9 @@
             "url": {
               "raw": "http://{{ip}}:{{document_port}}/api-docs",
               "protocol": "http",
-              "host": [
-                "{{ip}}"
-              ],
+              "host": ["{{ip}}"],
               "port": "{{document_port}}",
-              "path": [
-                "api-docs"
-              ]
+              "path": ["api-docs"]
             }
           },
           "response": []
@@ -1616,13 +1046,9 @@
             "url": {
               "raw": "http://{{ip}}:{{document_port}}/version",
               "protocol": "http",
-              "host": [
-                "{{ip}}"
-              ],
+              "host": ["{{ip}}"],
               "port": "{{document_port}}",
-              "path": [
-                "version"
-              ]
+              "path": ["version"]
             }
           },
           "response": []
@@ -1640,17 +1066,9 @@
             "url": {
               "raw": "http://{{dns}}:{{challenge_port}}/itachallenge/api/v1/tags/660e1b18-0c0a-4262-a28a-85de9df6ac5f",
               "protocol": "http",
-              "host": [
-                "{{dns}}"
-              ],
+              "host": ["{{dns}}"],
               "port": "{{challenge_port}}",
-              "path": [
-                "itachallenge",
-                "api",
-                "v1",
-                "tags",
-                "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
-              ]
+              "path": ["itachallenge", "api", "v1", "tags", "660e1b18-0c0a-4262-a28a-85de9df6ac5f"]
             }
           },
           "response": []

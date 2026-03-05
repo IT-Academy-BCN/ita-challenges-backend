@@ -8,6 +8,59 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - Error Response module (error-response-core) removed as it is no longer needed.
 - Remove from settings.gradle
+
+## [itachallenge-challenge-3.3.0] - 2026-03-05
+
+### Added
+
+#### Gamification Persistence Infrastructure
+- MongoDB persistence infrastructure for gamification features.
+- `UserScoreDocument` to store user score history entries.
+- `UserScoreRepository` for querying user score history.
+- Supporting infrastructure to enable future gamification features (ranking, achievements, etc.).
+
+#### Points History Domain Logic
+- `UserScoreService` to encapsulate business logic related to score history retrieval.
+- `UserScoreServiceImpl` implementing:
+  - aggregation of total user points
+  - chronological ordering of score history entries
+  - reactive stream processing for history retrieval.
+- `UserScoreServiceImplTest` unit tests validating calculation and ordering logic.
+
+#### User Points History API
+- `UserScoreHistoryController` with a new **GET endpoint** to retrieve the authenticated user’s points history.
+- Validation of the authenticated user identifier (UUID).
+- Response formatted for frontend visualization of user progress over time.
+
+#### DTOs
+- `PointsHistoryResponseDto` containing:
+  - total accumulated points
+  - chronological list of user activities.
+- `PointHistoryEntryDto` representing individual score history entries (points + formatted date).
+
+#### Tests
+- Controller integration tests using `WebTestClient` to validate:
+  - HTTP status codes
+  - JSON response schema
+  - error responses.
+  
+### [itachallenge-user-3.2.3-RELEASE] - 2026-02-18
+
+### Removed
+- Removed deprecated legacy Bookmarks routes previously served by BookmarkLegacyController. (GitHub Task [#186], PR [#1106])
+## [UNRELEASED]
+
+### Added
+- New MongoDB collection `user_score_history` with compound indexing for efficient retrieval for gamification tracking.
+- Reactive Repository for user score transactions.
+
+## [Unreleased]
+### [itachallenge-user-3.2.2-RELEASE] - 2026-02-23
+
+### Removed
+- Removed legacy solution domain from User microservice (documents, DTOs, services, repositories and tests).
+- Solution/submission workflow is now fully handled by Challenge microservice.
+
 ### [itachallenge-user-3.2.1-RELEASE] - 2026-02-10
 
 ### Changed
