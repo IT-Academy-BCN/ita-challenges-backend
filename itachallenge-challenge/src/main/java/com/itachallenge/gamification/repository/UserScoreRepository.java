@@ -15,7 +15,7 @@ public interface UserScoreRepository extends ReactiveMongoRepository<UserScoreDo
     Flux<UserScoreDocument> findByUserIdOrderByCreatedAtDesc(UUID userId);
 
     @Aggregation(pipeline = {
-            "{ $group: { _id: '$user_id', username: { $first: '$username' }, points: { $sum: '$points_earned' } } }",
+            "{ $group: { _id: '$user_id', username: { $last: '$username' }, points: { $sum: '$points_earned' } } }",
             "{ $sort: { points: -1 } }",
             "{ $project: { username: 1, points: 1, _id: 0 } }"
     })
