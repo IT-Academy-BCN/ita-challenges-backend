@@ -17,8 +17,8 @@ import java.util.UUID;
 
 import static org.mockito.Mockito.when;
 
-@WebFluxTest(controllers = UserScoreHistoryController.class)
-class UserScoreHistoryControllerTest {
+@WebFluxTest(controllers = UserScoreController.class)
+class UserScoreControllerTest {
 
     @Autowired
     private WebTestClient webTestClient;
@@ -27,7 +27,8 @@ class UserScoreHistoryControllerTest {
     private UserScoreService userScoreService;
 
     private final UUID validUserId = UUID.randomUUID();
-    private static final String BASE_URL = "/itachallenge/api/v1/gamification/users/{userId}/history";
+    private static final String BASE_URL = "/itachallenge/api/v1/users/{userId}/scores";
+    private static final String HISTORY_URL = BASE_URL + "/history";
 
     @Test
     void getUserPointsHistory_givenValidUserId_thenReturns200AndHistory() {
@@ -45,7 +46,7 @@ class UserScoreHistoryControllerTest {
         when(userScoreService.getUserPointsHistory(validUserId)).thenReturn(Mono.just(responseDto));
 
         webTestClient.get()
-                .uri(BASE_URL, validUserId)
+                .uri(HISTORY_URL, validUserId)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
@@ -55,7 +56,7 @@ class UserScoreHistoryControllerTest {
                 .jsonPath("$.totalPoints").isEqualTo(10)
                 .jsonPath("$.history.length()").isEqualTo(1)
                 .jsonPath("$.history[0].points").isEqualTo(10)
-                .jsonPath("$.history[0].date").exists();
+                .jsonPath("$.history[0].date").isEqualTo("2026-03-06T11:11:11");
     }
 
     @Test
@@ -69,9 +70,11 @@ class UserScoreHistoryControllerTest {
         when(userScoreService.getUserPointsHistory(validUserId)).thenReturn(Mono.just(emptyResponse));
 
         webTestClient.get()
-                .uri(BASE_URL, validUserId)
+                .uri(HISTORY_URL, validUserId)
+                .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
                 .expectBody()
                 .jsonPath("$.username").isEqualTo("testUser")
                 .jsonPath("$.totalPoints").isEqualTo(0)
@@ -83,7 +86,7 @@ class UserScoreHistoryControllerTest {
         String notAnId = "notValidId";
 
         webTestClient.get()
-                .uri(BASE_URL, notAnId)
+                .uri(HISTORY_URL, notAnId)
                 .exchange()
                 .expectStatus().isBadRequest();
     }

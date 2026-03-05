@@ -3,20 +3,41 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [itachallenge-challenge-3.3.0-RELEASED] 2026-02-23
-### Added
-- UserScoreHistoryController: New REST endpoint `/itachallenge/api/v1/gamification/users/{userId}/history` to retrieve users progress.
-- UserScoreService: Business logic to aggregate total points and format historical entries in chronological order.
-- Controller Integration Tests: Comprehensive testing with WebTestClient to verify JSON schema, status codes, and error response.
+## [itachallenge-challenge-3.3.0] - 2026-03-05
 
-## [UNRELEASED] 2026-02-19
 ### Added
-- PointsHistoryResponseDto: New DTO to encapsulate the response structure, including total points and the collection of user activities.
-- PointHistoryEntryDto: New DTO for individual score entries, including points and formatted date strings.
-- UserScoreService: Core interface definition for gamification point-related business operations.
-- UserScoreServiceImpl: Implementation of the points history logic, featuring reactive stream processing and score aggregation.
-- UserScoreServiceImplTest: Comprehensive unit test suite for PointsServiceImpl covering all business requirements.
 
+#### Gamification Persistence Infrastructure
+- MongoDB persistence infrastructure for gamification features.
+- `UserScoreDocument` to store user score history entries.
+- `UserScoreRepository` for querying user score history.
+- Supporting infrastructure to enable future gamification features (ranking, achievements, etc.).
+
+#### Points History Domain Logic
+- `UserScoreService` to encapsulate business logic related to score history retrieval.
+- `UserScoreServiceImpl` implementing:
+  - aggregation of total user points
+  - chronological ordering of score history entries
+  - reactive stream processing for history retrieval.
+- `UserScoreServiceImplTest` unit tests validating calculation and ordering logic.
+
+#### User Points History API
+- `UserScoreHistoryController` with a new **GET endpoint** to retrieve the authenticated user’s points history.
+- Validation of the authenticated user identifier (UUID).
+- Response formatted for frontend visualization of user progress over time.
+
+#### DTOs
+- `PointsHistoryResponseDto` containing:
+  - total accumulated points
+  - chronological list of user activities.
+- `PointHistoryEntryDto` representing individual score history entries (points + formatted date).
+
+#### Tests
+- Controller integration tests using `WebTestClient` to validate:
+  - HTTP status codes
+  - JSON response schema
+  - error responses.
+  
 ### [itachallenge-user-3.2.3-RELEASE] - 2026-02-18
 
 ### Removed
