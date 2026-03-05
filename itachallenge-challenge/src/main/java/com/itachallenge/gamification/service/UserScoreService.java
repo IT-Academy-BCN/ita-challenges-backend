@@ -8,5 +8,7 @@ import java.util.UUID;
 public interface UserScoreService {
 
     Mono<PointsHistoryResponseDto> getUserPointsHistory(UUID userId);
+    Mono<Void> recordPoints(UUID userId, UUID challengeId, int points);
+
 }
 

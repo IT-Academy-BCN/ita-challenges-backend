@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -24,6 +25,21 @@ public class UserScoreServiceImpl implements UserScoreService {
         return userScoreRepository.findByUserIdOrderByCreatedAtDesc(userId)
                 .collectList()
                 .map(this::buildHistoryResponse);
+    }
+    @Override
+    public Mono<Void> recordPoints(UUID userId, UUID challengeId, int points) {
+        return userScoreRepository.existsByUserIdAndChallengeId(userId, challengeId)
+                .flatMap(alreadyAwarded -> Boolean.TRUE.equals(alreadyAwarded)
+                        ? Mono.<Void>empty()
+                        : userScoreRepository.save(
+                        UserScoreDocument.builder()
+                                .id(UUID.randomUUID())
+                                .userId(userId)
+                                .challengeId(challengeId)
+                                .pointsEarned(points)
+                                .createdAt(LocalDateTime.now())
+                                .build()
+                ).then());
     }
 
     private PointsHistoryResponseDto buildHistoryResponse(List<UserScoreDocument> docs) {
