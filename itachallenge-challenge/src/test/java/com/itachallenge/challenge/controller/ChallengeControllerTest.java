@@ -927,7 +927,7 @@ class ChallengeControllerTest {
     }
     @Test
     void getPeerSolutions_whenUserHasSubmitted_returns200WithList() {
-        String challengeId = UUID.randomUUID().toString();
+        String challengeIdStr = UUID.randomUUID().toString();
         String userId = UUID.randomUUID().toString();
         String authHeader = "Bearer token";
 
@@ -957,7 +957,7 @@ class ChallengeControllerTest {
 
     @Test
     void getPeerSolutions_whenUserHasNotSubmitted_returns403() {
-        String challengeId = UUID.randomUUID().toString();
+        String challengeIdStr = UUID.randomUUID().toString();
         String userId = UUID.randomUUID().toString();
         String authHeader = "Bearer token";
 
