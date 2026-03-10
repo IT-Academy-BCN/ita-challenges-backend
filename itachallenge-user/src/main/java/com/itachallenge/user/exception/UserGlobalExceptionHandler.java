@@ -18,6 +18,7 @@ import java.util.Map;
 
 @Slf4j
 @RestControllerAdvice
+// Global exception handler for the entire User microservice (user + userinteraction)
 public class UserGlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
