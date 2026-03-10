@@ -6,6 +6,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @NoArgsConstructor
@@ -34,4 +35,7 @@ public class SubmissionDocument {
 
     @Field("submission")
     private String submissionText;
+
+    @Field("created_at")
+    private LocalDateTime createdAt;
 }

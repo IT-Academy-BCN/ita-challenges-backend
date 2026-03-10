@@ -1,5 +1,6 @@
 package com.itachallenge.submission.service;
 
+import com.itachallenge.challenge.dto.submission.PeerSolutionItemDto;
 import com.itachallenge.challenge.dto.submission.SubmissionDto;
 import com.itachallenge.challenge.dto.submission.SubmissionActionRequestDto;
 import com.itachallenge.challenge.service.IChallengeService;
@@ -14,17 +15,18 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-import static org.mockito.ArgumentMatchers.any;
+
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import com.itachallenge.challenge.dto.SolvedDto;
 import com.itachallenge.submission.exception.UnmodifiableSubmissionException;
 
-import static org.mockito.ArgumentMatchers.anyString;
-
+import java.time.LocalDateTime;
 import java.util.UUID;
 import static org.mockito.Mockito.when;
 
@@ -233,6 +235,64 @@ class SubmissionServiceImplTest {
         StepVerifier.create(submissionService.processSubmissionAction(userUuid.toString(), request))
                 .assertNext(response -> Assertions.assertEquals(SubmissionStatus.IN_PROGRESS.name(), response.getStatus()))
                 .verifyComplete();
+    }
+    @Test
+    void getPeerSolutions_whenUserHasSubmitted_returnsPeerSolutionsOrderedByDateDesc() {
+        UUID challengeId = UUID.randomUUID();
+        UUID userId = UUID.randomUUID();
+        UUID otherUserId = UUID.randomUUID();
+
+        when(submissionRepository.existsByUserIdAndChallengeIdAndStatusIn(eq(userId), eq(challengeId), anyList()))
+                .thenReturn(Mono.just(true));
+
+        SubmissionDocument doc = SubmissionDocument.builder()
+                .submissionId(UUID.randomUUID())
+                .userId(otherUserId)
+                .challengeId(challengeId)
+                .languageId(UUID.randomUUID())
+                .status(SubmissionStatus.SUBMITTED_COMPLETE)
+                .submissionText("solution code")
+                .createdAt(LocalDateTime.now().minusDays(1))
+                .build();
+
+        when(submissionRepository.findTop10ByChallengeIdAndUserIdNotAndStatusInOrderByCreatedAtDesc(
+                eq(challengeId), eq(userId), anyList()))
+                .thenReturn(Flux.just(doc));
+
+        Flux<PeerSolutionItemDto> result = submissionService.getPeerSolutions(challengeId, userId);
+
+        StepVerifier.create(result)
+                .expectNextMatches(dto ->
+                        dto.getChallengeId().equals(challengeId.toString())
+                                && dto.getUserId().equals(otherUserId.toString())
+                                && "solution code".equals(dto.getSubmissionText())
+                                && dto.getStatus().equals(SubmissionStatus.SUBMITTED_COMPLETE.name()))
+                .verifyComplete();
+
+        verify(submissionRepository).existsByUserIdAndChallengeIdAndStatusIn(eq(userId), eq(challengeId), anyList());
+        verify(submissionRepository).findTop10ByChallengeIdAndUserIdNotAndStatusInOrderByCreatedAtDesc(
+                eq(challengeId), eq(userId), anyList());
+    }
+
+    @Test
+    void getPeerSolutions_whenUserHasNotSubmitted_returns403() {
+        UUID challengeId = UUID.randomUUID();
+        UUID userId = UUID.randomUUID();
+
+        when(submissionRepository.existsByUserIdAndChallengeIdAndStatusIn(eq(userId), eq(challengeId), anyList()))
+                .thenReturn(Mono.just(false));
+
+        Flux<PeerSolutionItemDto> result = submissionService.getPeerSolutions(challengeId, userId);
+
+        StepVerifier.create(result)
+                .expectErrorMatches(throwable ->
+                        throwable instanceof ResponseStatusException
+                                && ((ResponseStatusException) throwable).getStatusCode().value() == 403)
+                .verify();
+
+        verify(submissionRepository).existsByUserIdAndChallengeIdAndStatusIn(eq(userId), eq(challengeId), anyList());
+        verify(submissionRepository, never())
+                .findTop10ByChallengeIdAndUserIdNotAndStatusInOrderByCreatedAtDesc(any(), any(), anyList());
     }
 
 }

@@ -49,6 +49,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Reactive Repository for user score transactions.
 
 ## [Unreleased]
+
+### Added (Story #191 – Peer solutions, card #253)
+- **GET /itachallenge/api/v1/challenge/challenges/{challengeId}/peer-solutions:** Endpoint to retrieve up to 10 most recent peer solutions for a challenge. Access allowed only if the requesting user has already submitted the challenge (SUBMITTED_COMPLETE or SUBMITTED_INCOMPLETE). Returns 403 Forbidden otherwise. Results ordered by submission date descending. Response DTO: solution_id, challenge_id, user_id, language_id, submitted_at, submission_text, status. Implementation uses `SubmissionService.getPeerSolutions` (no dedicated PeerSolutionsService, YAGNI). Author display name/alias to be added in a follow-up card (#254).
+
 ### [itachallenge-user-3.2.2-RELEASE] - 2026-02-23
 
 ### Removed

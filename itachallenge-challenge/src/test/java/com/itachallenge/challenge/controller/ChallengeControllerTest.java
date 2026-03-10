@@ -3,6 +3,7 @@ package com.itachallenge.challenge.controller;
 import com.itachallenge.challenge.config.PropertiesConfig;
 import com.itachallenge.challenge.document.DetailDocument;
 import com.itachallenge.challenge.dto.*;
+import com.itachallenge.challenge.dto.submission.PeerSolutionItemDto;
 import com.itachallenge.challenge.enums.DifficultyLevel;
 import com.itachallenge.challenge.enums.Topic;
 import com.itachallenge.challenge.exception.*;
@@ -10,6 +11,7 @@ import com.itachallenge.challenge.repository.ChallengeRepository;
 import com.itachallenge.challenge.service.*;
 import com.itachallenge.common.exception.BadRequestException;
 import com.itachallenge.common.exception.GlobalExceptionHandler;
+import com.itachallenge.submission.service.SubmissionService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -85,6 +87,9 @@ class ChallengeControllerTest {
 
     @MockBean
     private MappingMongoConverter mappingMongoConverter;
+
+    @MockBean
+    private SubmissionService submissionService;
 
     private List<UUID> tags;
     private String challengeId;
@@ -919,5 +924,69 @@ class ChallengeControllerTest {
                 .uri("/itachallenge/api/v1/challenge/challenges/" + challengeId)
                 .exchange()
                 .expectStatus().isOk();  // ← 200 OK, no 204
+    }
+    @Test
+    void getPeerSolutions_whenUserHasSubmitted_returns200WithList() {
+        String challengeId = UUID.randomUUID().toString();
+        String userId = UUID.randomUUID().toString();
+        String authHeader = "Bearer token";
+
+        PeerSolutionItemDto item = PeerSolutionItemDto.builder()
+                .solutionId(UUID.randomUUID().toString())
+                .challengeId(challengeId)
+                .userId(UUID.randomUUID().toString())
+                .submissionText("code")
+                .status("SUBMITTED_COMPLETE")
+                .build();
+
+        when(challengeJwtFacade.getUserUuIdFromAuthenticationHeader(authHeader)).thenReturn(userId);
+        when(submissionService.getPeerSolutions(any(UUID.class), any(UUID.class)))
+                .thenReturn(Flux.just(item));
+
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/challenge/challenges/" + challengeId + "/peer-solutions")
+                .header("Authorization", authHeader)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(PeerSolutionItemDto.class)
+                .hasSize(1)
+                .value(list -> Assertions.assertEquals("code", list.get(0).getSubmissionText()));
+
+        verify(submissionService, times(1)).getPeerSolutions(any(UUID.class), any(UUID.class));
+    }
+
+    @Test
+    void getPeerSolutions_whenUserHasNotSubmitted_returns403() {
+        String challengeId = UUID.randomUUID().toString();
+        String userId = UUID.randomUUID().toString();
+        String authHeader = "Bearer token";
+
+        when(challengeJwtFacade.getUserUuIdFromAuthenticationHeader(authHeader)).thenReturn(userId);
+        when(submissionService.getPeerSolutions(any(UUID.class), any(UUID.class)))
+                .thenReturn(Flux.error(new org.springframework.web.server.ResponseStatusException(
+                        org.springframework.http.HttpStatus.FORBIDDEN,
+                        "User must have submitted the challenge before viewing peer solutions.")));
+
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/challenge/challenges/" + challengeId + "/peer-solutions")
+                .header("Authorization", authHeader)
+                .exchange()
+                .expectStatus().isForbidden();
+
+        verify(submissionService, times(1)).getPeerSolutions(any(UUID.class), any(UUID.class));
+    }
+
+    @Test
+    void getPeerSolutions_invalidChallengeId_returns400() {
+        String authHeader = "Bearer token";
+        when(challengeJwtFacade.getUserUuIdFromAuthenticationHeader(authHeader)).thenReturn(UUID.randomUUID().toString());
+
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/challenge/challenges/not-a-uuid/peer-solutions")
+                .header("Authorization", authHeader)
+                .exchange()
+                .expectStatus().isBadRequest();
+
+        verify(submissionService, never()).getPeerSolutions(any(), any());
     }
 }

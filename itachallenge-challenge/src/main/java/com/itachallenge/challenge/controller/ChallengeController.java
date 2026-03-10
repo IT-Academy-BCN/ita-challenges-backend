@@ -26,6 +26,12 @@ import reactor.core.publisher.Mono;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import com.itachallenge.challenge.dto.submission.PeerSolutionItemDto;
+import com.itachallenge.submission.service.SubmissionService;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+
+import java.util.List;
+import java.util.UUID;
 
 @RestController
 @Validated
@@ -51,6 +57,8 @@ public class ChallengeController {
     private final IChallengeService challengeService;
 
     private final IChallengeJwtFacade challengeJwtFacade;
+
+    private final SubmissionService submissionService;
 
     @Value("${spring.application.version}")
     private String version;
@@ -358,5 +366,47 @@ public class ChallengeController {
                 .doOnError(error -> log.error("Error removing challenge with id {} from bookmarks: {}", challengeId, error.getMessage()))
                 .map(ResponseEntity::ok);
     }
+    @GetMapping("/challenges/{challengeId}/peer-solutions")
+    @Operation(
+            operationId = "getPeerSolutions",
+            summary = "Get peer solutions for a challenge",
+            description = "Returns up to 10 most recent submissions from other students for the given challenge. " +
+                    "The requesting user must have already submitted the challenge (with or without solution). " +
+                    "Otherwise returns 403 Forbidden.",
+            parameters = {
+                    @io.swagger.v3.oas.annotations.Parameter(name = "challengeId", required = true, description = "Challenge UUID"),
+                    @io.swagger.v3.oas.annotations.Parameter(name = "Authorization", in = io.swagger.v3.oas.annotations.enums.ParameterIn.HEADER, required = true, description = "Bearer token")
+            },
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "List of up to 10 peer solutions, ordered by date descending",
+                            content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = PeerSolutionItemDto.class)))
+                    ),
+                    @ApiResponse(responseCode = "400", description = "Missing/invalid authorization or invalid challengeId"),
+                    @ApiResponse(responseCode = "403", description = "User has not submitted the challenge yet"),
+                    @ApiResponse(responseCode = "500", description = "Internal Server Error")
+            }
+    )
+    public Mono<ResponseEntity<List<PeerSolutionItemDto>>> getPeerSolutions(
+            @PathVariable String challengeId,
+            @RequestHeader(name = "Authorization", required = false) String authHeader) {
+        UUID challengeUuid = parseUuid(challengeId, "challengeId");
+        return Mono.fromCallable(() -> challengeJwtFacade.getUserUuIdFromAuthenticationHeader(authHeader))
+                .onErrorMap(JwtException.class, e -> new BadRequestException(e.getMessage()))
+                .flatMap(userIdStr -> {
+                    UUID userUuid = parseUuid(userIdStr, "userId");
+                    return submissionService.getPeerSolutions(challengeUuid, userUuid)
+                            .collectList()
+                            .map(ResponseEntity::ok);
+                });
+    }
 
+    private UUID parseUuid(String value, String paramName) {
+        try {
+            return UUID.fromString(value != null ? value.trim() : "");
+        } catch (IllegalArgumentException e) {
+            throw new BadRequestException("Invalid UUID for " + paramName + ".");
+        }
+    }
 }

@@ -1,5 +1,6 @@
 package com.itachallenge.submission.service;
 
+import com.itachallenge.challenge.dto.submission.PeerSolutionItemDto;
 import com.itachallenge.challenge.dto.submission.SubmissionActionResponseDto;
 import com.itachallenge.challenge.dto.submission.SubmissionDto;
 import com.itachallenge.challenge.dto.submission.SubmissionActionRequestDto;
@@ -11,17 +12,26 @@ import com.itachallenge.submission.enums.SubmissionStatus;
 import com.itachallenge.submission.exception.UnmodifiableSubmissionException;
 import com.itachallenge.submission.mapper.SubmissionMapper;
 import com.itachallenge.submission.repository.SubmissionRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Service
 public class SubmissionServiceImpl implements SubmissionService {
+
+    private static final List<SubmissionStatus> SUBMITTED_STATUSES = List.of(
+            SubmissionStatus.SUBMITTED_COMPLETE,
+            SubmissionStatus.SUBMITTED_INCOMPLETE
+    );
+
     private final SubmissionRepository submissionRepository;
     private final IChallengeService challengeService;
-
 
     public SubmissionServiceImpl(SubmissionRepository submissionRepository, IChallengeService challengeService) {
         this.submissionRepository = submissionRepository;
@@ -75,6 +85,9 @@ public class SubmissionServiceImpl implements SubmissionService {
 
                                 existing.setStatus(targetStatus);
                                 existing.setSubmissionText(request.getSubmissionText());
+                                if (existing.getCreatedAt() == null) {
+                                    existing.setCreatedAt(LocalDateTime.now());
+                                }
                                 return submissionRepository.save(existing);
                             })
                             .switchIfEmpty(Mono.defer(() -> {
@@ -85,6 +98,7 @@ public class SubmissionServiceImpl implements SubmissionService {
                                         .languageId(languageUuid)
                                         .status(targetStatus)
                                         .submissionText(request.getSubmissionText())
+                                        .createdAt(LocalDateTime.now())
                                         .build();
 
                                 return submissionRepository.save(created);
@@ -118,6 +132,28 @@ public class SubmissionServiceImpl implements SubmissionService {
         return Mono.fromCallable(() -> UUID.fromString(userId.trim()))
                 .onErrorMap(IllegalArgumentException.class,
                         ex -> new BadRequestException("The 'userId' parameter must be a valid UUID."));
+    }
+    @Override
+    public Flux<PeerSolutionItemDto> getPeerSolutions(UUID challengeId, UUID userId) {
+        return submissionRepository.existsByUserIdAndChallengeIdAndStatusIn(userId, challengeId, SUBMITTED_STATUSES)
+                .flatMapMany(hasSubmitted -> Boolean.TRUE.equals(hasSubmitted)
+                        ? submissionRepository.findTop10ByChallengeIdAndUserIdNotAndStatusInOrderByCreatedAtDesc(
+                                challengeId, userId, SUBMITTED_STATUSES)
+                        .map(this::toPeerSolutionItemDto)
+                        : Flux.error(new ResponseStatusException(HttpStatus.FORBIDDEN,
+                        "User must have submitted the challenge before viewing peer solutions.")));
+    }
+
+    private PeerSolutionItemDto toPeerSolutionItemDto(SubmissionDocument doc) {
+        return PeerSolutionItemDto.builder()
+                .solutionId(doc.getSubmissionId() != null ? doc.getSubmissionId().toString() : null)
+                .challengeId(doc.getChallengeId() != null ? doc.getChallengeId().toString() : null)
+                .userId(doc.getUserId() != null ? doc.getUserId().toString() : null)
+                .languageId(doc.getLanguageId() != null ? doc.getLanguageId().toString() : null)
+                .submittedAt(doc.getCreatedAt())
+                .submissionText(doc.getSubmissionText())
+                .status(doc.getStatus() != null ? doc.getStatus().name() : null)
+                .build();
     }
 
 }
