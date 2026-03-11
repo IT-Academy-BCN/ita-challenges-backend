@@ -35,8 +35,9 @@ class LeaderboardEntryDtoTest {
             return;
         }
 
-        assertThat(result).hasJsonPathStringValue("@.username", TEST_USERNAME);
-        assertThat(result).hasJsonPathNumberValue("@.total_points", TEST_POINTS);
+        assertThat(result)
+                .hasJsonPathStringValue("@.username", TEST_USERNAME)
+                .hasJsonPathNumberValue("@.total_points", TEST_POINTS);
     }
 
     @Test
@@ -105,10 +106,10 @@ class LeaderboardEntryDtoTest {
         dto.setTotalPoints(newPoints);
 
         assertThat(dto.getUsername())
-                .as("Username should be updated to: %s",  newUsername)
+                .as("Username should be updated to: %s", newUsername)
                 .isEqualTo(newUsername);
         assertThat(dto.getTotalPoints())
-                .as("Total points should be updated to: %d",  newPoints)
+                .as("Total points should be updated to: %d", newPoints)
                 .isEqualTo(newPoints);
 
         assertThat(dto.getUsername()).isNotEqualTo(TEST_USERNAME);
@@ -123,7 +124,7 @@ class LeaderboardEntryDtoTest {
                 .build();
 
         assertThat(dto.getUsername()).isEqualTo(TEST_USERNAME);
-        assertThat(dto.getTotalPoints()).isEqualTo(0);
+        assertThat(dto.getTotalPoints()).isZero();
     }
 
     @Test
@@ -132,8 +133,9 @@ class LeaderboardEntryDtoTest {
         LeaderboardEntryDto dto2 = new LeaderboardEntryDto(TEST_USERNAME, TEST_POINTS);
         LeaderboardEntryDto dto3 = new LeaderboardEntryDto("newUser", 111);
 
-        assertThat(dto1).isEqualTo(dto2);
-        assertThat(dto1.hashCode()).isEqualTo(dto2.hashCode());
+        assertThat(dto1)
+                .isEqualTo(dto2)
+                .hasSameHashCodeAs(dto2);
         assertThat(dto1).isNotSameAs(dto2);
         assertThat(dto1).isNotEqualTo(dto3);
     }

@@ -57,16 +57,15 @@ class LeaderboardResponseDtoTest {
             return;
         }
 
-        assertThat(result).hasJsonPathNumberValue("@.page", PAGE);
-        assertThat(result).hasJsonPathNumberValue("@.size", SIZE);
-        assertThat(result).hasJsonPathNumberValue("@.totalElements", TOTAL_ELEMENTS);
-        assertThat(result).hasJsonPathNumberValue("@.totalPages", TOTAL_PAGES);
-
-        assertThat(result).hasJsonPathArrayValue("@.leaderboard");
-        assertThat(result).hasJsonPathStringValue("@.leaderboard[0].username", "user1");
-        assertThat(result).hasJsonPathNumberValue("@.leaderboard[0].total_points", 200);
-        assertThat(result).hasJsonPathStringValue("@.leaderboard[1].username", "user2");
-        assertThat(result).hasJsonPathNumberValue("@.leaderboard[1].total_points", 300);
+        assertThat(result).hasJsonPathNumberValue("@.page", PAGE)
+                .hasJsonPathNumberValue("@.size", SIZE)
+                .hasJsonPathNumberValue("@.totalElements", TOTAL_ELEMENTS)
+                .hasJsonPathNumberValue("@.totalPages", TOTAL_PAGES)
+                .hasJsonPathArrayValue("@.leaderboard")
+                .hasJsonPathStringValue("@.leaderboard[0].username", "user1")
+                .hasJsonPathNumberValue("@.leaderboard[0].total_points", 200)
+                .hasJsonPathStringValue("@.leaderboard[1].username", "user2")
+                .hasJsonPathNumberValue("@.leaderboard[1].total_points", 300);
     }
 
     @Test
@@ -198,9 +197,10 @@ class LeaderboardResponseDtoTest {
         LeaderboardResponseDto dto2 = new LeaderboardResponseDto(leaderboard, PAGE, SIZE, TOTAL_ELEMENTS, TOTAL_PAGES);
         LeaderboardResponseDto dto3 = new LeaderboardResponseDto(leaderboard, NEW_PAGE, NEW_SIZE, NEW_TOTAL_ELEMENTS, NEW_TOTAL_PAGES);
 
-        assertThat(dto1).isEqualTo(dto2);
+        assertThat(dto1)
+                .isEqualTo(dto2)
+                .hasSameHashCodeAs(dto2)
+                .isNotSameAs(dto2);
         assertThat(dto1).isNotEqualTo(dto3);
-        assertThat(dto1.hashCode()).isEqualTo(dto2.hashCode());
-        assertThat(dto1).isNotSameAs(dto2);
     }
 }
