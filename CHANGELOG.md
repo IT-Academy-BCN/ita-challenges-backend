@@ -3,32 +3,38 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-### [itachallenge-user-3.2.4-RELEASE] - 2026-03-16
+## [itachallenge-challenge-3.4.0 - RELEASED] 2026-03-19
 
-### Changed
-
-- Introduced `common.exception` package to centralize cross-cutting exceptions in the User microservice.
-- Refactor: Moved `UserGlobalExceptionHandler`, `BadUUIDException`, and `NotFoundException` to the new package.
-- Updated imports across `user` and `userinteraction` modules to use the unified exceptions.
-- Refactored `UserGlobalExceptionHandlerTest` to align with the new package structure.
-
-## [Unreleased] - 2026-03-13
+[Gamification]
 
 ### Added
-- Implemented `LeaderboardService` with reactive business logic to generate leaderboard rankings from aggregated scores. (Closes #1123)
-- Added mapping from aggregation results to DTOs with null-safety (`username` → "Anonymous", `totalPoints` → 0).
-- Implemented error handling: repository failures are logged and propagated as `InternalServerErrorException` (500).
-- Added unit tests for mapping, null handling, empty results, and error propagation.
 
-## [Unreleased] - 2026-03-11
+#### Gamification Persistence Infrastructure
+- MongoDB persistence infrastructure for leaderboard features.
+- `UserScoreRepository` with `aggregateUserScores()` method for global ranking generation.
+- `LeaderboardAggregationResult` as internal support class for MongoDB aggregation results.
+- Support Infrastructure for future gamification features.
 
-### Added
-- New DTOs for leaderboard feature: `LeaderboardEntryDto` and `LeaderboardResponseDto`.
-- `aggregateUserScores()` method in `UserScoreRepository` for efficient leaderboard generation.
-- Internal `LeaderboardAggregationResult` (`repository.projection` package) helper class for MongoDB aggregation results.
-- Integration tests for repository aggregation methods using Testcontainers.
-- Unit tests for DTO serialization/deserialization.
+#### Leaderboard Domain Logic
+- `LeaderboardService` and `LeaderboardServiceImpl` to encapsulate the ranking business logic.
+- Reactive processing using Project Reactor for data mapping and transformation.
+- Privacy logic with automatic fallback to "Anonymous" for users with incomplete profiles.
+- Robust error handling: Database errors are logged and propagated as `InternalServerErrorException` (500).
 
+#### Leaderboard API
+- `LeaderboardController` with REST endpoint `GET /itachallenge/api/v1/leaderboard`.
+- Complete OpenAPI/Swagger documentation detailing response schemes and status codes.
+- Structured logging (SLF4J) for request traceability in Controller and Service layers.
+
+#### DTOs
+- `LeaderboardResponseDto` and `LeaderboardEntryDto` for API responses.
+-  Use of `Integer` types and `@Jacksoniez` builders to ensure null safety and correct JSON serialization.
+
+#### Tests
+- **Unit Tests** for `LeaderboardServiceImpl` for mapping logic and DTO serialization.
+- **Controller Tests** for HTTP layer validation using `@WebFluxTest` and `WebTestClient`.
+- **Integration Tests** for full end-to-end flow validation using Testcontainers (MongoDB),
+  ensuring data consistency with blocking setup/teardown.
 
 ## [itachallenge-challenge-3.3.0] - 2026-03-05
 
