@@ -68,104 +68,100 @@ public class SubmissionServiceImpl implements SubmissionService {
 
     @Override
     public Mono<SubmissionActionResponseDto> processSubmissionAction(String userId, SubmissionActionRequestDto request, String authHeader) {
-
         String submittedByUsername = challengeJwtFacade.getUsernameFromAuthenticationHeader(authHeader);
-
         Mono<UUID> userUuidMono = validateAndParseUuid(userId);
-
         Mono<UUID> challengeUuidMono = Mono.justOrEmpty(request.getChallengeId())
                 .switchIfEmpty(Mono.error(new BadRequestException("The 'challengeId' parameter cannot be null.")));
-
         Mono<UUID> languageUuidMono = Mono.justOrEmpty(request.getLanguageId())
                 .switchIfEmpty(Mono.error(new BadRequestException("The 'languageId' parameter cannot be null.")));
 
-
         return Mono.zip(userUuidMono, challengeUuidMono, languageUuidMono)
                 .flatMap(tuple -> {
-                    UUID userUuid = tuple.getT1();
-                    UUID challengeUuid = tuple.getT2();
-                    UUID languageUuid = tuple.getT3();
-
-                    SubmissionAction action = request.getAction();
-                    if (action == SubmissionAction.SUBMIT &&
-                            (request.getSubmissionText() == null || request.getSubmissionText().isBlank())) {
-                        return Mono.error(new BadRequestException("The 'submissionText' parameter cannot be blank when action is SUBMIT."));
-                    }
-
-                    SubmissionStatus targetStatus = action.toStatus();
-
-
-                    return submissionRepository
-                            .findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid)
-                            .flatMap(existing -> {
-                                if (existing.getStatus() == SubmissionStatus.SUBMITTED_COMPLETE
-                                        || existing.getStatus() == SubmissionStatus.SUBMITTED_INCOMPLETE) {
-                                    return Mono.error(new UnmodifiableSubmissionException(
-                                            "Submission cannot be modified once submitted."));
-                                }
-
-                                existing.setStatus(targetStatus);
-                                existing.setSubmissionText(request.getSubmissionText());
-                                if (existing.getCreatedAt() == null) {
-                                    existing.setCreatedAt(LocalDateTime.now());
-                                }
-                                if (submittedByUsername != null) {
-                                    existing.setSubmittedByUsername(submittedByUsername);
-                                }
-                                return submissionRepository.save(existing);
-                            })
-                            .switchIfEmpty(Mono.defer(() -> {
-                                SubmissionDocument created = SubmissionDocument.builder()
-                                        .submissionId(UUID.randomUUID())
-                                        .userId(userUuid)
-                                        .challengeId(challengeUuid)
-                                        .languageId(languageUuid)
-                                        .status(targetStatus)
-                                        .submissionText(request.getSubmissionText())
-                                        .createdAt(LocalDateTime.now())
-                                        .submittedByUsername(submittedByUsername)
-                                        .build();
-
-                                return submissionRepository.save(created);
-                            }))
-                            .flatMap(saved -> {
-                                if (saved.getStatus() == SubmissionStatus.SUBMITTED_COMPLETE) {
-                                    return challengeService.addChallengeToSolved(challengeUuid.toString())
-                                            .map(solvedDto -> SubmissionActionResponseDto.builder()
-                                                    .submissionText(saved.getSubmissionText())
-                                                    .status(saved.getStatus().name())
-                                                    .isSolved(true)
-                                                    .timesSolved(solvedDto.getTimesSolved())
-                                                    .build())
-                                            .flatMap(responseDto ->
-                                                    userScoreService.recordPoints(userUuid, challengeUuid, pointsOnSubmissionComplete)
-                                                            .onErrorResume(ex -> {
-                                                                log.warn("Gamification recordPoints failed for userId={} challengeId={}: {}",
-                                                                        userUuid, challengeUuid, ex.getMessage());
-                                                                return Mono.empty();
-                                                            })
-                                                            .then(Mono.just(responseDto)));
-                                }
-
-                                return Mono.just(SubmissionActionResponseDto.builder()
-                                        .submissionText(saved.getSubmissionText())
-                                        .status(saved.getStatus().name())
-                                        .isSolved(false)
-                                        .timesSolved(null)
-                                        .build());
-                            });
+                    Mono<SubmissionDocument> savedMono = validateSubmitText(request)
+                            .then(Mono.defer(() -> saveOrUpdateSubmission(
+                                    tuple.getT1(), tuple.getT2(), tuple.getT3(), request, submittedByUsername)));
+                    return savedMono.flatMap(saved -> buildResponse(saved, tuple.getT2(), tuple.getT1()));
                 });
     }
-
-
-    private Mono<UUID> validateAndParseUuid(String userId) {
-        if (userId == null || userId.trim().isEmpty()) {
-            return Mono.error(new BadRequestException("The 'userId' parameter cannot be null or empty."));
+    private Mono<Void> validateSubmitText(SubmissionActionRequestDto request) {
+        if (request.getAction() == SubmissionAction.SUBMIT
+                && (request.getSubmissionText() == null || request.getSubmissionText().isBlank())) {
+            return Mono.error(new BadRequestException("The 'submissionText' parameter cannot be blank when action is SUBMIT."));
         }
-        return Mono.fromCallable(() -> UUID.fromString(userId.trim()))
-                .onErrorMap(IllegalArgumentException.class,
-                        ex -> new BadRequestException("The 'userId' parameter must be a valid UUID."));
+        return Mono.empty();
     }
+
+    private boolean isSubmitted(SubmissionStatus status) {
+        return status == SubmissionStatus.SUBMITTED_COMPLETE || status == SubmissionStatus.SUBMITTED_INCOMPLETE;
+    }
+    private Mono<SubmissionDocument> saveOrUpdateSubmission(UUID userUuid, UUID challengeUuid, UUID languageUuid,
+                                                            SubmissionActionRequestDto request, String submittedByUsername) {
+        SubmissionStatus targetStatus = request.getAction().toStatus();
+        return submissionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid)
+                .flatMap(existing -> updateExistingAndSave(existing, targetStatus, request, submittedByUsername))
+                .switchIfEmpty(Mono.defer(() -> createAndSave(userUuid, challengeUuid, languageUuid, targetStatus, request, submittedByUsername)));
+    }
+
+    private Mono<SubmissionDocument> updateExistingAndSave(SubmissionDocument existing, SubmissionStatus targetStatus,
+                                                           SubmissionActionRequestDto request, String submittedByUsername) {
+        if (isSubmitted(existing.getStatus())) {
+            return Mono.error(new UnmodifiableSubmissionException("Submission cannot be modified once submitted."));
+        }
+        existing.setStatus(targetStatus);
+        existing.setSubmissionText(request.getSubmissionText());
+        if (existing.getCreatedAt() == null) {
+            existing.setCreatedAt(LocalDateTime.now());
+        }
+        if (submittedByUsername != null) {
+            existing.setSubmittedByUsername(submittedByUsername);
+        }
+        return submissionRepository.save(existing);
+    }
+
+    private Mono<SubmissionDocument> createAndSave(UUID userUuid, UUID challengeUuid, UUID languageUuid,
+                                                   SubmissionStatus targetStatus, SubmissionActionRequestDto request, String submittedByUsername) {
+        SubmissionDocument created = SubmissionDocument.builder()
+                .submissionId(UUID.randomUUID())
+                .userId(userUuid)
+                .challengeId(challengeUuid)
+                .languageId(languageUuid)
+                .status(targetStatus)
+                .submissionText(request.getSubmissionText())
+                .createdAt(LocalDateTime.now())
+                .submittedByUsername(submittedByUsername)
+                .build();
+        return submissionRepository.save(created);
+    }
+
+    private Mono<SubmissionActionResponseDto> buildResponse(SubmissionDocument saved, UUID challengeUuid, UUID userUuid) {
+        if (saved.getStatus() == SubmissionStatus.SUBMITTED_COMPLETE) {
+            return challengeService.addChallengeToSolved(challengeUuid.toString())
+                    .map(solvedDto -> SubmissionActionResponseDto.builder()
+                            .submissionText(saved.getSubmissionText())
+                            .status(saved.getStatus().name())
+                            .isSolved(true)
+                            .timesSolved(solvedDto.getTimesSolved())
+                            .build())
+                    .flatMap(responseDto -> recordPointsAndReturn(userUuid, challengeUuid, responseDto));
+        }
+        return Mono.just(SubmissionActionResponseDto.builder()
+                .submissionText(saved.getSubmissionText())
+                .status(saved.getStatus().name())
+                .isSolved(false)
+                .timesSolved(null)
+                .build());
+    }
+
+    private Mono<SubmissionActionResponseDto> recordPointsAndReturn(UUID userUuid, UUID challengeUuid, SubmissionActionResponseDto responseDto) {
+        return userScoreService.recordPoints(userUuid, challengeUuid, pointsOnSubmissionComplete)
+                .onErrorResume(ex -> {
+                    log.warn("Gamification recordPoints failed for userId={} challengeId={}: {}",
+                            userUuid, challengeUuid, ex.getMessage());
+                    return Mono.empty();
+                })
+                .then(Mono.just(responseDto));
+    }
+
     @Override
     public Flux<PeerSolutionItemDto> getPeerSolutions(UUID challengeId, UUID userId) {
         return submissionRepository.existsByUserIdAndChallengeIdAndStatusIn(userId, challengeId, SUBMITTED_STATUSES)
@@ -188,6 +184,14 @@ public class SubmissionServiceImpl implements SubmissionService {
                 .status(doc.getStatus() != null ? doc.getStatus().name() : null)
                 .author(doc.getSubmittedByUsername())
                 .build();
+    }
+    private Mono<UUID> validateAndParseUuid(String userId) {
+        if (userId == null || userId.trim().isEmpty()) {
+            return Mono.error(new BadRequestException("The 'userId' parameter cannot be null or empty."));
+        }
+        return Mono.fromCallable(() -> UUID.fromString(userId.trim()))
+                .onErrorMap(IllegalArgumentException.class,
+                        ex -> new BadRequestException("The 'userId' parameter must be a valid UUID."));
     }
 
 }
