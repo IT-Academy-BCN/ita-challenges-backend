@@ -6,6 +6,7 @@ import com.itachallenge.gamification.document.UserScoreDocument;
 import com.itachallenge.gamification.repository.UserScoreRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.Comparator;
@@ -24,6 +25,11 @@ public class UserScoreServiceImpl implements UserScoreService {
         return userScoreRepository.findByUserIdOrderByCreatedAtDesc(userId)
                 .collectList()
                 .map(this::buildHistoryResponse);
+    }
+
+    @Override
+    public Flux<Object> recordPoints(UUID userUuid, UUID challengeUuid, int pointsOnSubmissionComplete) {
+        return null;
     }
 
     private PointsHistoryResponseDto buildHistoryResponse(List<UserScoreDocument> docs) {

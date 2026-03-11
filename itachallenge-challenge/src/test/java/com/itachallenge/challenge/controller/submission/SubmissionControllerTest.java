@@ -137,7 +137,7 @@ class SubmissionControllerTest {
                 .status("IN_PROGRESS")
                 .build();
 
-        when(submissionService.processSubmissionAction(eq(userId), any(SubmissionActionRequestDto.class)))
+        when(submissionService.processSubmissionAction(eq(userId), any(SubmissionActionRequestDto.class),any()))
                 .thenReturn(Mono.just(response));
 
         client().post()
@@ -151,7 +151,7 @@ class SubmissionControllerTest {
                 .jsonPath("$.submission_text").isEqualTo("draft text")
                 .jsonPath("$.status").isEqualTo("IN_PROGRESS");
 
-        verify(submissionService).processSubmissionAction(eq(userId), any(SubmissionActionRequestDto.class));
+        verify(submissionService).processSubmissionAction(eq(userId), any(SubmissionActionRequestDto.class), any());
     }
 
     @Test
@@ -174,7 +174,7 @@ class SubmissionControllerTest {
                 .expectStatus().isBadRequest();
 
         verify(submissionService, never())
-                .processSubmissionAction(any(), any());
+                .processSubmissionAction(any(), any(), any());
     }
 
 
@@ -190,7 +190,7 @@ class SubmissionControllerTest {
                 .build();
 
 
-        when(submissionService.processSubmissionAction(eq(userId), any(SubmissionActionRequestDto.class)))
+        when(submissionService.processSubmissionAction(eq(userId), any(SubmissionActionRequestDto.class), any()))
                 .thenReturn(Mono.error(new UnmodifiableSubmissionException("Submission already completed")));
 
         client().post()
@@ -201,7 +201,7 @@ class SubmissionControllerTest {
                 .exchange()
                 .expectStatus().isEqualTo(409);
 
-        verify(submissionService).processSubmissionAction(eq(userId), any(SubmissionActionRequestDto.class));
+        verify(submissionService).processSubmissionAction(eq(userId), any(SubmissionActionRequestDto.class), any());
     }
 
     @Test
@@ -225,7 +225,7 @@ class SubmissionControllerTest {
                 .expectStatus().isBadRequest();
 
         verify(submissionService, never())
-                .processSubmissionAction(any(), any());
+                .processSubmissionAction(any(), any(), any());
     }
 
 }

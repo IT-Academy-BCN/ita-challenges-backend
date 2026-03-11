@@ -3,23 +3,24 @@ package com.itachallenge.submission.service;
 import com.itachallenge.challenge.dto.submission.PeerSolutionItemDto;
 import com.itachallenge.challenge.dto.submission.SubmissionDto;
 import com.itachallenge.challenge.dto.submission.SubmissionActionRequestDto;
+import com.itachallenge.challenge.service.IChallengeJwtFacade;
 import com.itachallenge.challenge.service.IChallengeService;
 import com.itachallenge.common.exception.BadRequestException;
+import com.itachallenge.gamification.service.UserScoreService;
 import com.itachallenge.submission.document.SubmissionDocument;
 import com.itachallenge.submission.enums.SubmissionAction;
 import com.itachallenge.submission.enums.SubmissionStatus;
 import com.itachallenge.submission.repository.SubmissionRepository;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -37,11 +38,23 @@ class SubmissionServiceImplTest {
     private SubmissionRepository submissionRepository;
     @Mock
     private IChallengeService challengeService;
+    @Mock
+    private IChallengeJwtFacade challengeJwtFacade;
+    @Mock
+    private UserScoreService userScoreService;
 
-
-
-    @InjectMocks
     private SubmissionServiceImpl submissionService;
+
+    @BeforeEach
+    void setUp() {
+        submissionService = new SubmissionServiceImpl(
+                submissionRepository,
+                challengeService,
+                challengeJwtFacade,
+                userScoreService,
+                10
+        );
+    }
 
     @Test
     void getAllSubmissionsByUser_shouldReturnSubmissionDocuments() {
@@ -127,7 +140,7 @@ class SubmissionServiceImplTest {
         when(submissionRepository.save(any(SubmissionDocument.class)))
                 .thenAnswer(invocation -> Mono.just(invocation.getArgument(0)));
 
-        StepVerifier.create(submissionService.processSubmissionAction(userUuid.toString(), request))
+        StepVerifier.create(submissionService.processSubmissionAction(userUuid.toString(), request, null))
                 .assertNext(response -> {
                     Assertions.assertEquals("draft text", response.getSubmissionText());
                     Assertions.assertEquals(SubmissionStatus.IN_PROGRESS.name(), response.getStatus());
@@ -167,18 +180,28 @@ class SubmissionServiceImplTest {
         when(submissionRepository.save(any(SubmissionDocument.class)))
                 .thenAnswer(invocation -> Mono.just(invocation.getArgument(0)));
 
+        when(challengeJwtFacade.getUsernameFromAuthenticationHeader(any())).thenReturn(null);
+
         when(challengeService.addChallengeToSolved(challengeUuid.toString()))
                 .thenReturn(Mono.just(new SolvedDto(true, 3)));
 
-        StepVerifier.create(submissionService.processSubmissionAction(userUuid.toString(), request))
+        when(userScoreService.recordPoints(any(UUID.class), any(UUID.class), anyInt()))
+                .thenAnswer(invocation -> Flux.<Void>empty());
+
+        StepVerifier.create(submissionService.processSubmissionAction(userUuid.toString(), request, null))
                 .assertNext(response -> {
-                    Assertions.assertEquals(SubmissionStatus.SUBMITTED_COMPLETE.name(), response.getStatus());
-                    Assertions.assertTrue(response.getIsSolved());
-                    Assertions.assertEquals(3, response.getTimesSolved());
+                    Assertions.assertEquals(SubmissionStatus.SUBMITTED_COMPLETE.name(), response.getStatus(),
+                            "status");
+                    Assertions.assertTrue(response.getIsSolved(), "isSolved");
+                    Assertions.assertNotNull(response.getTimesSolved(), "timesSolved should be set from addChallengeToSolved");
+                    Assertions.assertEquals(3, response.getTimesSolved(),
+                            "timesSolved: expected 3 from addChallengeToSolved mock, got " + response.getTimesSolved());
+
                 })
                 .verifyComplete();
 
         verify(challengeService).addChallengeToSolved(challengeUuid.toString());
+        verify(userScoreService).recordPoints(userUuid, challengeUuid, 10);
     }
 
     @Test
@@ -206,7 +229,7 @@ class SubmissionServiceImplTest {
         when(submissionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid))
                 .thenReturn(Mono.just(existing));
 
-        StepVerifier.create(submissionService.processSubmissionAction(userUuid.toString(), request))
+        StepVerifier.create(submissionService.processSubmissionAction(userUuid.toString(), request, null))
                 .expectError(UnmodifiableSubmissionException.class)
                 .verify();
 
@@ -232,7 +255,7 @@ class SubmissionServiceImplTest {
         when(submissionRepository.save(any(SubmissionDocument.class)))
                 .thenAnswer(invocation -> Mono.just(invocation.getArgument(0)));
 
-        StepVerifier.create(submissionService.processSubmissionAction(userUuid.toString(), request))
+        StepVerifier.create(submissionService.processSubmissionAction(userUuid.toString(), request, null))
                 .assertNext(response -> Assertions.assertEquals(SubmissionStatus.IN_PROGRESS.name(), response.getStatus()))
                 .verifyComplete();
     }

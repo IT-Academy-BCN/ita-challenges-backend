@@ -13,7 +13,7 @@ public interface SubmissionService {
 
     Flux<SubmissionDto> getAllSubmissionsByUser(String userId);
 
-    Mono<SubmissionActionResponseDto> processSubmissionAction(String userId, SubmissionActionRequestDto request);
+    Mono<SubmissionActionResponseDto> processSubmissionAction(String userId, SubmissionActionRequestDto request, String authHeader);
 
     /**
      * Returns up to 10 most recent peer solutions for the given challenge (Story #191, card #253).

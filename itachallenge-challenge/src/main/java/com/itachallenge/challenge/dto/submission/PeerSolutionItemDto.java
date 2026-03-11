@@ -32,4 +32,7 @@ public class PeerSolutionItemDto {
 
     @JsonProperty("status")
     private String status;
+
+    @JsonProperty("author")
+    private String author;
 }

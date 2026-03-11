@@ -50,8 +50,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added (Story #191 – Peer solutions, card #254)
+- **Author in peer-solutions:** Peer-solutions response now includes `author` (display name from JWT). Username is read from the `Authorization` header via `IChallengeJwtFacade.getUsernameFromAuthenticationHeader` and stored in `SubmissionDocument.submittedByUsername` on POST submission; GET peer-solutions return it as `author` in the DTO. No call to the User microservice.
+
 ### Added (Story #191 – Peer solutions, card #253)
-- **GET /itachallenge/api/v1/challenge/challenges/{challengeId}/peer-solutions:** Endpoint to retrieve up to 10 most recent peer solutions for a challenge. Access allowed only if the requesting user has already submitted the challenge (SUBMITTED_COMPLETE or SUBMITTED_INCOMPLETE). Returns 403 Forbidden otherwise. Results ordered by submission date descending. Response DTO: solution_id, challenge_id, user_id, language_id, submitted_at, submission_text, status. Implementation uses `SubmissionService.getPeerSolutions` (no dedicated PeerSolutionsService, YAGNI). Author display name/alias to be added in a follow-up card (#254).
+- **GET /itachallenge/api/v1/challenge/challenges/{challengeId}/peer-solutions:** Endpoint to retrieve up to 10 most recent peer solutions for a challenge. Access allowed only if the requesting user has already submitted the challenge (SUBMITTED_COMPLETE or SUBMITTED_INCOMPLETE). Returns 403 Forbidden otherwise. Results ordered by submission date descending. Response DTO: solution_id, challenge_id, user_id, language_id, submitted_at, submission_text, status, author. Implementation uses `SubmissionService.getPeerSolutions` (no dedicated PeerSolutionsService, YAGNI).
 
 ### [itachallenge-user-3.2.2-RELEASE] - 2026-02-23
 

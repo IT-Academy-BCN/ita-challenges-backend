@@ -32,7 +32,7 @@ class SubmissionDocumentTest {
 
     @BeforeEach
     void setUp() {
-        submissionDocumentAllArgs = new SubmissionDocument(submissionId, userId, challengeId, languageId, submissionStatus, submissionText, LocalDateTime.now());
+        submissionDocumentAllArgs = new SubmissionDocument(submissionId, userId, challengeId, languageId, submissionStatus, submissionText, LocalDateTime.now(),null);
         submissionDocumentNoArgs = new SubmissionDocument();
     }
 

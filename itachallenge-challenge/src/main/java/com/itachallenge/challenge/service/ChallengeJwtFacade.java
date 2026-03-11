@@ -22,4 +22,16 @@ public class ChallengeJwtFacade implements IChallengeJwtFacade {
     public String getUserUuIdFromAuthenticationHeader(String authHeader) {
         return jwtService.getUserUuIdFromAuthenticationHeader(authHeader);
     }
+    @Override
+    public String getUsernameFromAuthenticationHeader(String authHeader) {
+        if (authHeader == null || authHeader.isBlank()) {
+            return null;
+        }
+        try {
+            String token = jwtService.extractBearerToken(authHeader);
+            return jwtService.extractAllClaims(token).getSubject();
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }

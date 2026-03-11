@@ -4,14 +4,19 @@ import com.itachallenge.challenge.dto.submission.PeerSolutionItemDto;
 import com.itachallenge.challenge.dto.submission.SubmissionActionResponseDto;
 import com.itachallenge.challenge.dto.submission.SubmissionDto;
 import com.itachallenge.challenge.dto.submission.SubmissionActionRequestDto;
+import com.itachallenge.challenge.service.IChallengeJwtFacade;
 import com.itachallenge.challenge.service.IChallengeService;
 import com.itachallenge.common.exception.BadRequestException;
+import com.itachallenge.gamification.service.UserScoreService;
 import com.itachallenge.submission.document.SubmissionDocument;
 import com.itachallenge.submission.enums.SubmissionAction;
 import com.itachallenge.submission.enums.SubmissionStatus;
 import com.itachallenge.submission.exception.UnmodifiableSubmissionException;
 import com.itachallenge.submission.mapper.SubmissionMapper;
 import com.itachallenge.submission.repository.SubmissionRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -25,6 +30,8 @@ import java.util.UUID;
 @Service
 public class SubmissionServiceImpl implements SubmissionService {
 
+    private static final Logger log = LoggerFactory.getLogger(SubmissionServiceImpl.class);
+
     private static final List<SubmissionStatus> SUBMITTED_STATUSES = List.of(
             SubmissionStatus.SUBMITTED_COMPLETE,
             SubmissionStatus.SUBMITTED_INCOMPLETE
@@ -32,8 +39,20 @@ public class SubmissionServiceImpl implements SubmissionService {
 
     private final SubmissionRepository submissionRepository;
     private final IChallengeService challengeService;
+    private final IChallengeJwtFacade challengeJwtFacade;
+    private final UserScoreService userScoreService;
+    private final int pointsOnSubmissionComplete;
 
-    public SubmissionServiceImpl(SubmissionRepository submissionRepository, IChallengeService challengeService) {
+    public SubmissionServiceImpl(
+            SubmissionRepository submissionRepository,
+            IChallengeService challengeService,
+            IChallengeJwtFacade challengeJwtFacade,
+            UserScoreService userScoreService,
+            @Value("${gamification.points.submission-complete:10}") int pointsOnSubmissionComplete
+    ){
+        this.challengeJwtFacade = challengeJwtFacade;
+        this.userScoreService = userScoreService;
+        this.pointsOnSubmissionComplete = pointsOnSubmissionComplete;
         this.submissionRepository = submissionRepository;
         this.challengeService = challengeService;
     }
@@ -48,7 +67,9 @@ public class SubmissionServiceImpl implements SubmissionService {
     }
 
     @Override
-    public Mono<SubmissionActionResponseDto> processSubmissionAction(String userId, SubmissionActionRequestDto request) {
+    public Mono<SubmissionActionResponseDto> processSubmissionAction(String userId, SubmissionActionRequestDto request, String authHeader) {
+
+        String submittedByUsername = challengeJwtFacade.getUsernameFromAuthenticationHeader(authHeader);
 
         Mono<UUID> userUuidMono = validateAndParseUuid(userId);
 
@@ -88,6 +109,9 @@ public class SubmissionServiceImpl implements SubmissionService {
                                 if (existing.getCreatedAt() == null) {
                                     existing.setCreatedAt(LocalDateTime.now());
                                 }
+                                if (submittedByUsername != null) {
+                                    existing.setSubmittedByUsername(submittedByUsername);
+                                }
                                 return submissionRepository.save(existing);
                             })
                             .switchIfEmpty(Mono.defer(() -> {
@@ -99,6 +123,7 @@ public class SubmissionServiceImpl implements SubmissionService {
                                         .status(targetStatus)
                                         .submissionText(request.getSubmissionText())
                                         .createdAt(LocalDateTime.now())
+                                        .submittedByUsername(submittedByUsername)
                                         .build();
 
                                 return submissionRepository.save(created);
@@ -111,7 +136,15 @@ public class SubmissionServiceImpl implements SubmissionService {
                                                     .status(saved.getStatus().name())
                                                     .isSolved(true)
                                                     .timesSolved(solvedDto.getTimesSolved())
-                                                    .build());
+                                                    .build())
+                                            .flatMap(responseDto ->
+                                                    userScoreService.recordPoints(userUuid, challengeUuid, pointsOnSubmissionComplete)
+                                                            .onErrorResume(ex -> {
+                                                                log.warn("Gamification recordPoints failed for userId={} challengeId={}: {}",
+                                                                        userUuid, challengeUuid, ex.getMessage());
+                                                                return Mono.empty();
+                                                            })
+                                                            .then(Mono.just(responseDto)));
                                 }
 
                                 return Mono.just(SubmissionActionResponseDto.builder()
@@ -153,6 +186,7 @@ public class SubmissionServiceImpl implements SubmissionService {
                 .submittedAt(doc.getCreatedAt())
                 .submissionText(doc.getSubmissionText())
                 .status(doc.getStatus() != null ? doc.getStatus().name() : null)
+                .author(doc.getSubmittedByUsername())
                 .build();
     }
 

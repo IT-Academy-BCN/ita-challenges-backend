@@ -38,4 +38,7 @@ public class SubmissionDocument {
 
     @Field("created_at")
     private LocalDateTime createdAt;
+
+    @Field("submitted_by_username")
+    private String submittedByUsername;
 }
