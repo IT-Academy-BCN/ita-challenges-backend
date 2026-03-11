@@ -25,6 +25,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import com.itachallenge.challenge.dto.SolvedDto;
+import org.mockito.ArgumentCaptor;
 import com.itachallenge.submission.exception.UnmodifiableSubmissionException;
 
 import java.time.LocalDateTime;
@@ -260,6 +261,81 @@ class SubmissionServiceImplTest {
                 .verifyComplete();
     }
     @Test
+    void processSubmissionAction_shouldThrow_whenActionIsSubmitAndSubmissionTextIsBlank() {
+        UUID userUuid = UUID.randomUUID();
+        UUID challengeUuid = UUID.randomUUID();
+        UUID languageUuid = UUID.randomUUID();
+
+        SubmissionActionRequestDto request = SubmissionActionRequestDto.builder()
+                .challengeId(challengeUuid)
+                .languageId(languageUuid)
+                .action(SubmissionAction.SUBMIT)
+                .submissionText("   ")
+                .build();
+
+        StepVerifier.create(submissionService.processSubmissionAction(userUuid.toString(), request, null))
+                .expectErrorMatches(ex ->
+                        ex instanceof BadRequestException
+                                && ex.getMessage().contains("submissionText")
+                                && ex.getMessage().contains("cannot be blank"))
+                .verify();
+
+        verify(submissionRepository, never()).save(any(SubmissionDocument.class));
+    }
+
+    @Test
+    void processSubmissionAction_shouldThrow_whenActionIsSubmitAndSubmissionTextIsNull() {
+        UUID userUuid = UUID.randomUUID();
+        UUID challengeUuid = UUID.randomUUID();
+        UUID languageUuid = UUID.randomUUID();
+
+        SubmissionActionRequestDto request = SubmissionActionRequestDto.builder()
+                .challengeId(challengeUuid)
+                .languageId(languageUuid)
+                .action(SubmissionAction.SUBMIT)
+                .submissionText(null)
+                .build();
+
+        StepVerifier.create(submissionService.processSubmissionAction(userUuid.toString(), request, null))
+                .expectErrorMatches(ex ->
+                        ex instanceof BadRequestException
+                                && ex.getMessage().contains("submissionText")
+                                && ex.getMessage().contains("cannot be blank"))
+                .verify();
+
+        verify(submissionRepository, never()).save(any(SubmissionDocument.class));
+    }
+
+    @Test
+    void processSubmissionAction_shouldStoreSubmittedByUsername_whenAuthHeaderProvided() {
+        UUID userUuid = UUID.randomUUID();
+        UUID challengeUuid = UUID.randomUUID();
+        UUID languageUuid = UUID.randomUUID();
+        String authHeader = "Bearer token";
+        String username = "alice";
+
+        SubmissionActionRequestDto request = SubmissionActionRequestDto.builder()
+                .challengeId(challengeUuid)
+                .languageId(languageUuid)
+                .action(SubmissionAction.SAVE)
+                .submissionText("draft")
+                .build();
+
+        when(challengeJwtFacade.getUsernameFromAuthenticationHeader(authHeader)).thenReturn(username);
+        when(submissionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid))
+                .thenReturn(Mono.empty());
+        when(submissionRepository.save(any(SubmissionDocument.class)))
+                .thenAnswer(invocation -> Mono.just(invocation.getArgument(0)));
+
+        StepVerifier.create(submissionService.processSubmissionAction(userUuid.toString(), request, authHeader))
+                .assertNext(response -> Assertions.assertEquals(SubmissionStatus.IN_PROGRESS.name(), response.getStatus()))
+                .verifyComplete();
+
+        ArgumentCaptor<SubmissionDocument> captor = ArgumentCaptor.forClass(SubmissionDocument.class);
+        verify(submissionRepository).save(captor.capture());
+        Assertions.assertEquals(username, captor.getValue().getSubmittedByUsername());
+    }
+    @Test
     void getPeerSolutions_whenUserHasSubmitted_returnsPeerSolutionsOrderedByDateDesc() {
         UUID challengeId = UUID.randomUUID();
         UUID userId = UUID.randomUUID();
@@ -276,6 +352,7 @@ class SubmissionServiceImplTest {
                 .status(SubmissionStatus.SUBMITTED_COMPLETE)
                 .submissionText("solution code")
                 .createdAt(LocalDateTime.now().minusDays(1))
+                .submittedByUsername("peerUser")
                 .build();
 
         when(submissionRepository.findTop10ByChallengeIdAndUserIdNotAndStatusInOrderByCreatedAtDesc(
@@ -289,7 +366,8 @@ class SubmissionServiceImplTest {
                         dto.getChallengeId().equals(challengeId.toString())
                                 && dto.getUserId().equals(otherUserId.toString())
                                 && "solution code".equals(dto.getSubmissionText())
-                                && dto.getStatus().equals(SubmissionStatus.SUBMITTED_COMPLETE.name()))
+                                && dto.getStatus().equals(SubmissionStatus.SUBMITTED_COMPLETE.name())
+                                && "peerUser".equals(dto.getAuthor()))
                 .verifyComplete();
 
         verify(submissionRepository).existsByUserIdAndChallengeIdAndStatusIn(eq(userId), eq(challengeId), anyList());
