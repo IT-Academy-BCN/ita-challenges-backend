@@ -12,6 +12,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated imports across `user` and `userinteraction` modules to use the unified exceptions.
 - Refactored `UserGlobalExceptionHandlerTest` to align with the new package structure.
 
+## [Unreleased] - 2026-03-11
+
+### Added
+- New DTOs for leaderboard feature: `LeaderboardEntryDto` and `LeaderboardResponseDto` with pagination support.
+- Repository-level aggregation methods in `UserScoreRepository`:
+    - `aggregateUserScores()` for efficient leaderboard generation with pagination;
+    - `countDistinctUsers()` for total participant count.
+- Internal `UserScoreAggregation` helper class for MongoDB aggregation results.
+- Integration tests for repository aggregation methods using Testcontainers.
+- Unit tests for DTO serialization/deserialization.
+
+
 ## [itachallenge-challenge-3.3.0] - 2026-03-05
 
 ### Added

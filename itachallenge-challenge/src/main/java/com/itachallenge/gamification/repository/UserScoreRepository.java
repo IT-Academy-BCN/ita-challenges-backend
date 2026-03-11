@@ -1,6 +1,5 @@
 package com.itachallenge.gamification.repository;
 
-import com.itachallenge.challenge.dto.gamification.UserScoreAggregationDto;
 import com.itachallenge.gamification.document.UserScoreDocument;
 import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
@@ -13,6 +12,16 @@ public interface UserScoreRepository extends ReactiveMongoRepository<UserScoreDo
 
     Flux<UserScoreDocument> findByUserIdOrderByCreatedAtDesc(UUID userId);
 
+    /**
+     * Aggregates user scores to create a leaderboard.
+     *
+     * For each user, sums all points_earned and returns the most recent username.
+     * Results are sorted by totalPoints in descending order.
+     *
+     * @param skip number of records to skip (for pagination)
+     * @param limit maximum number of records to return
+     * @return Flux of aggregated user scores with userId, username, and totalPoints
+     */
     @Aggregation(pipeline = {
             "{$sort: {user_id: 1, created_at: -1}}",
             "{$group: {_id: '$user_id', " +
@@ -26,8 +35,13 @@ public interface UserScoreRepository extends ReactiveMongoRepository<UserScoreDo
             "{$skip: ?0}",
             "{$limit: ?1}"
     })
-    Flux<UserScoreAggregationDto> aggregateUserScores(int skip, int limit);
+    Flux<UserScoreAggregation> aggregateUserScores(int skip, int limit);
 
+    /**
+     * Counts the total number of distinct users who have scores.
+     *
+     * @return Mono containing the count of distinct users
+     */
     @Aggregation(pipeline = {
             "{$group: {_id: '$user_id'}}",
             "{$count: 'total'}"

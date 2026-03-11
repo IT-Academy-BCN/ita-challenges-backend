@@ -1,6 +1,5 @@
-package com.itachallenge.challenge.dto.gamification;
+package com.itachallenge.gamification.repository;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -11,10 +10,9 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserScoreAggregationDto {
+public class UserScoreAggregation {
 
     @Field("user_id")
-    @JsonProperty("user_id")
     private UUID userId;
 
     private String username;

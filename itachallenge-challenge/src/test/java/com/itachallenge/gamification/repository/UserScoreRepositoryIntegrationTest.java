@@ -1,6 +1,5 @@
 package com.itachallenge.gamification.repository;
 
-import com.itachallenge.challenge.dto.gamification.UserScoreAggregationDto;
 import com.itachallenge.gamification.document.UserScoreDocument;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -46,7 +45,8 @@ class UserScoreRepositoryIntegrationTest {
     private UUID userId1;
     private UUID userId2;
     private UUID userId3;
-    private static final String USERNAME_1 = "user1";
+    private static final String OLD_USERNAME = "user";
+    private static final String CURRENT_USERNAME = "user1";
     private static final String USERNAME_2 = "user2";
     private static final String USERNAME_3 = "user3";
 
@@ -72,7 +72,7 @@ class UserScoreRepositoryIntegrationTest {
         UserScoreDocument user1Score1 = UserScoreDocument.builder()
                 .id(UUID.randomUUID())
                 .userId(userId1)
-                .username("user")
+                .username(OLD_USERNAME)
                 .challengeId(UUID.randomUUID())
                 .pointsEarned(10)
                 .createdAt(now.minusDays(2))
@@ -81,7 +81,7 @@ class UserScoreRepositoryIntegrationTest {
         UserScoreDocument user1Score2 = UserScoreDocument.builder()
                 .id(UUID.randomUUID())
                 .userId(userId1)
-                .username(USERNAME_1)
+                .username(CURRENT_USERNAME)
                 .challengeId(UUID.randomUUID())
                 .pointsEarned(15)
                 .createdAt(now.minusDays(1))
@@ -90,7 +90,7 @@ class UserScoreRepositoryIntegrationTest {
         UserScoreDocument user1Score3 = UserScoreDocument.builder()
                 .id(UUID.randomUUID())
                 .userId(userId1)
-                .username(USERNAME_1)
+                .username(CURRENT_USERNAME)
                 .challengeId(UUID.randomUUID())
                 .pointsEarned(10)
                 .createdAt(now)
@@ -132,13 +132,13 @@ class UserScoreRepositoryIntegrationTest {
 
     @Test
     void givenMultipleUsersScores_whenAggregateUserScores_thenReturnUsersSortedByTotalPointsDesc() {
-        Flux<UserScoreAggregationDto> result = userScoreRepository.aggregateUserScores(0, 10);
+        Flux<UserScoreAggregation> result = userScoreRepository.aggregateUserScores(0, 10);
 
         StepVerifier.create(result)
                 .expectNextMatches(dto ->
                         dto.getUsername().equals(USERNAME_3) && dto.getTotalPoints() == 50)
                 .expectNextMatches(agg ->
-                        agg.getUsername().equals(USERNAME_1) && agg.getTotalPoints() == 35)
+                        agg.getUsername().equals(CURRENT_USERNAME) && agg.getTotalPoints() == 35)
                 .expectNextMatches(agg ->
                         agg.getUsername().equals(USERNAME_2) && agg.getTotalPoints() == 25)
                 .verifyComplete();
@@ -146,7 +146,7 @@ class UserScoreRepositoryIntegrationTest {
 
     @Test
     void givenUserWithMultipleUsernames_whenAggregateUserScores_thenReturnMostRecentUsername() {
-        Flux<UserScoreAggregationDto> result = userScoreRepository.aggregateUserScores(0, 10);
+        Flux<UserScoreAggregation> result = userScoreRepository.aggregateUserScores(0, 10);
 
         StepVerifier.create(result)
                 .expectNextMatches(dto ->
@@ -154,7 +154,7 @@ class UserScoreRepositoryIntegrationTest {
                                 dto.getUserId() != null &&
                                 dto.getUserId().equals(userId3))
                 .expectNextMatches(dto ->
-                        dto.getUsername().equals(USERNAME_1) &&
+                        dto.getUsername().equals(CURRENT_USERNAME) &&
                                 dto.getUserId() != null &&
                                 dto.getUserId().equals(userId1))
                 .expectNextMatches(dto ->
@@ -166,20 +166,20 @@ class UserScoreRepositoryIntegrationTest {
 
     @Test
     void givenPaginationParameters_whenAggregateUserScores_thenReturnCorrectPage() {
-        Flux<UserScoreAggregationDto> firstPage = userScoreRepository.aggregateUserScores(0, 2);
+        Flux<UserScoreAggregation> firstPage = userScoreRepository.aggregateUserScores(0, 2);
 
         StepVerifier.create(firstPage)
                 .expectNextMatches(dto -> dto.getUsername().equals(USERNAME_3))
-                .expectNextMatches(dto -> dto.getUsername().equals(USERNAME_1))
+                .expectNextMatches(dto -> dto.getUsername().equals(CURRENT_USERNAME))
                 .verifyComplete();
 
-        Flux<UserScoreAggregationDto> secondPage = userScoreRepository.aggregateUserScores(2, 2);
+        Flux<UserScoreAggregation> secondPage = userScoreRepository.aggregateUserScores(2, 2);
 
         StepVerifier.create(secondPage)
                 .expectNextMatches(dto -> dto.getUsername().equals(USERNAME_2))
                 .verifyComplete();
 
-        Flux<UserScoreAggregationDto> thirdPage = userScoreRepository.aggregateUserScores(3, 2);
+        Flux<UserScoreAggregation> thirdPage = userScoreRepository.aggregateUserScores(3, 2);
 
         StepVerifier.create(thirdPage)
                 .verifyComplete();
@@ -187,10 +187,10 @@ class UserScoreRepositoryIntegrationTest {
 
     @Test
     void givenSkipAndLimitParameters_whenAggregateUserScores_thenRespectPagination() {
-        Flux<UserScoreAggregationDto> result = userScoreRepository.aggregateUserScores(1, 1);
+        Flux<UserScoreAggregation> result = userScoreRepository.aggregateUserScores(1, 1);
 
         StepVerifier.create(result)
-                .expectNextMatches(dto -> dto.getUsername().equals(USERNAME_1) &&
+                .expectNextMatches(dto -> dto.getUsername().equals(CURRENT_USERNAME) &&
                         dto.getTotalPoints() == 35)
                 .verifyComplete();
     }
@@ -206,13 +206,13 @@ class UserScoreRepositoryIntegrationTest {
 
     @Test
     void givenUserWithMultipleScores_whenAggregateUserScores_thenSumPointsCorrectly() {
-        Flux<UserScoreAggregationDto> result = userScoreRepository.aggregateUserScores(0, 10);
+        Flux<UserScoreAggregation> result = userScoreRepository.aggregateUserScores(0, 10);
 
         StepVerifier.create(result)
                 .expectNextMatches(dto ->
                         dto.getUsername().equals(USERNAME_3) && dto.getTotalPoints() == 50)
                 .expectNextMatches(dto ->
-                        dto.getUsername().equals(USERNAME_1) && dto.getTotalPoints() == 35)
+                        dto.getUsername().equals(CURRENT_USERNAME) && dto.getTotalPoints() == 35)
                 .expectNextMatches(dto ->
                         dto.getUsername().equals(USERNAME_2) && dto.getTotalPoints() == 25)
                 .verifyComplete();
@@ -222,7 +222,7 @@ class UserScoreRepositoryIntegrationTest {
     void givenEmptyDatabase_whenAggregateUserScores_thenReturnZero() {
         userScoreRepository.deleteAll().block();
 
-        Flux<UserScoreAggregationDto> result = userScoreRepository.aggregateUserScores(0, 10);
+        Flux<UserScoreAggregation> result = userScoreRepository.aggregateUserScores(0, 10);
 
         StepVerifier.create(result)
                 .expectNextCount(0)
@@ -237,7 +237,7 @@ class UserScoreRepositoryIntegrationTest {
 
     @Test
     void givenSkipBeyondTotalUsers_whenAggregateUserScores_thenReturnEmpty() {
-        Flux<UserScoreAggregationDto> result = userScoreRepository.aggregateUserScores(5, 10);
+        Flux<UserScoreAggregation> result = userScoreRepository.aggregateUserScores(5, 10);
 
         StepVerifier.create(result)
                 .verifyComplete();
