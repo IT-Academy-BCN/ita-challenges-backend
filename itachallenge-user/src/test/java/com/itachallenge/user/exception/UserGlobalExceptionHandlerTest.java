@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
+import com.itachallenge.common.exception.NotFoundException;
+import com.itachallenge.common.exception.UserGlobalExceptionHandler;
 import com.itachallenge.githubcore.exception.GithubUnavailableException;
 import com.itachallenge.user.dto.APIErrorResponse;
 import org.junit.jupiter.api.BeforeEach;

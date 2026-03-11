@@ -2,9 +2,9 @@ package com.itachallenge.user.controller;
 
 import com.itachallenge.user.document.UserDocument;
 import com.itachallenge.user.document.enums.Role;
-import com.itachallenge.user.exception.BadUUIDException;
-import com.itachallenge.user.exception.NotFoundException;
-import com.itachallenge.user.exception.UserGlobalExceptionHandler;
+import com.itachallenge.common.exception.BadUUIDException;
+import com.itachallenge.common.exception.NotFoundException;
+import com.itachallenge.common.exception.UserGlobalExceptionHandler;
 import com.itachallenge.user.service.UserService;
 import org.junit.jupiter.api.*;
 import org.mockito.InjectMocks;

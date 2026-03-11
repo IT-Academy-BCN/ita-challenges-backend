@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itachallenge.user.dto.SolvedDto;
 import com.itachallenge.user.exception.BadRequestException;
 import com.itachallenge.user.exception.InternalServerErrorException;
-import com.itachallenge.user.exception.NotFoundException;
+import com.itachallenge.common.exception.NotFoundException;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
