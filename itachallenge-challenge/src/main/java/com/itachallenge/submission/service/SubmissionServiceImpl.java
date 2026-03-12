@@ -13,8 +13,6 @@ import com.itachallenge.submission.enums.SubmissionStatus;
 import com.itachallenge.submission.exception.UnmodifiableSubmissionException;
 import com.itachallenge.submission.mapper.SubmissionMapper;
 import com.itachallenge.submission.repository.SubmissionRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -27,8 +25,6 @@ import java.util.UUID;
 
 @Service
 public class SubmissionServiceImpl implements SubmissionService {
-
-    private static final Logger log = LoggerFactory.getLogger(SubmissionServiceImpl.class);
 
     private static final List<SubmissionStatus> SUBMITTED_STATUSES = List.of(
             SubmissionStatus.SUBMITTED_COMPLETE,
@@ -72,7 +68,7 @@ public class SubmissionServiceImpl implements SubmissionService {
                     Mono<SubmissionDocument> savedMono = validateSubmitText(request)
                             .then(Mono.defer(() -> saveOrUpdateSubmission(
                                     tuple.getT1(), tuple.getT2(), tuple.getT3(), request, submittedByUsername)));
-                    return savedMono.flatMap(saved -> buildResponse(saved, tuple.getT2(), tuple.getT1()));
+                    return savedMono.flatMap(saved -> buildResponse(saved, tuple.getT2()));
                 });
     }
     private Mono<Void> validateSubmitText(SubmissionActionRequestDto request) {
@@ -125,7 +121,7 @@ public class SubmissionServiceImpl implements SubmissionService {
         return submissionRepository.save(created);
     }
 
-    private Mono<SubmissionActionResponseDto> buildResponse(SubmissionDocument saved, UUID challengeUuid, UUID userUuid) {
+    private Mono<SubmissionActionResponseDto> buildResponse(SubmissionDocument saved, UUID challengeUuid) {
         if (saved.getStatus() == SubmissionStatus.SUBMITTED_COMPLETE) {
             return challengeService.addChallengeToSolved(challengeUuid.toString())
                     .map(solvedDto -> SubmissionActionResponseDto.builder()
