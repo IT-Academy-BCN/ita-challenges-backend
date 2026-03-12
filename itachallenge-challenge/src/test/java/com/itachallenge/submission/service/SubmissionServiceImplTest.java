@@ -1,6 +1,6 @@
 package com.itachallenge.submission.service;
 
-import com.itachallenge.challenge.dto.submission.PeerSolutionItemDto;
+import com.itachallenge.challenge.dto.submission.PeerSubmissionItemDto;
 import com.itachallenge.challenge.dto.submission.SubmissionDto;
 import com.itachallenge.challenge.dto.submission.SubmissionActionRequestDto;
 import com.itachallenge.challenge.service.IChallengeJwtFacade;
@@ -359,7 +359,7 @@ class SubmissionServiceImplTest {
                 eq(challengeId), eq(userId), anyList()))
                 .thenReturn(Flux.just(doc));
 
-        Flux<PeerSolutionItemDto> result = submissionService.getPeerSolutions(challengeId, userId);
+        Flux<PeerSubmissionItemDto> result = submissionService.getPeerSolutions(challengeId, userId);
 
         StepVerifier.create(result)
                 .expectNextMatches(dto ->
@@ -383,7 +383,7 @@ class SubmissionServiceImplTest {
         when(submissionRepository.existsByUserIdAndChallengeIdAndStatusIn(eq(userId), eq(challengeId), anyList()))
                 .thenReturn(Mono.just(false));
 
-        Flux<PeerSolutionItemDto> result = submissionService.getPeerSolutions(challengeId, userId);
+        Flux<PeerSubmissionItemDto> result = submissionService.getPeerSolutions(challengeId, userId);
 
         StepVerifier.create(result)
                 .expectErrorMatches(throwable ->

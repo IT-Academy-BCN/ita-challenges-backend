@@ -26,7 +26,7 @@ import reactor.core.publisher.Mono;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import com.itachallenge.challenge.dto.submission.PeerSolutionItemDto;
+import com.itachallenge.challenge.dto.submission.PeerSubmissionItemDto;
 import com.itachallenge.submission.service.SubmissionService;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 
@@ -381,14 +381,14 @@ public class ChallengeController {
                     @ApiResponse(
                             responseCode = "200",
                             description = "List of up to 10 peer solutions, ordered by date descending",
-                            content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = PeerSolutionItemDto.class)))
+                            content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = PeerSubmissionItemDto.class)))
                     ),
                     @ApiResponse(responseCode = "400", description = "Missing/invalid authorization or invalid challengeId"),
                     @ApiResponse(responseCode = "403", description = "User has not submitted the challenge yet"),
                     @ApiResponse(responseCode = "500", description = "Internal Server Error")
             }
     )
-    public Mono<ResponseEntity<List<PeerSolutionItemDto>>> getPeerSolutions(
+    public Mono<ResponseEntity<List<PeerSubmissionItemDto>>> getPeerSolutions(
             @PathVariable String challengeId,
             @RequestHeader(name = "Authorization", required = false) String authHeader) {
         UUID challengeUuid = parseUuid(challengeId, "challengeId");

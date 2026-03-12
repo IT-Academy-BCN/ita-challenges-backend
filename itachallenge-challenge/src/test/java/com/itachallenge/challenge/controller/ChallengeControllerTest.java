@@ -3,7 +3,7 @@ package com.itachallenge.challenge.controller;
 import com.itachallenge.challenge.config.PropertiesConfig;
 import com.itachallenge.challenge.document.DetailDocument;
 import com.itachallenge.challenge.dto.*;
-import com.itachallenge.challenge.dto.submission.PeerSolutionItemDto;
+import com.itachallenge.challenge.dto.submission.PeerSubmissionItemDto;
 import com.itachallenge.challenge.enums.DifficultyLevel;
 import com.itachallenge.challenge.enums.Topic;
 import com.itachallenge.challenge.exception.*;
@@ -925,7 +925,7 @@ class ChallengeControllerTest {
         String userId = UUID.randomUUID().toString();
         String authHeader = "Bearer token";
 
-        PeerSolutionItemDto item = PeerSolutionItemDto.builder()
+        PeerSubmissionItemDto item = PeerSubmissionItemDto.builder()
                 .solutionId(UUID.randomUUID().toString())
                 .challengeId(challengeId)
                 .userId(UUID.randomUUID().toString())
@@ -942,7 +942,7 @@ class ChallengeControllerTest {
                 .header("Authorization", authHeader)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBodyList(PeerSolutionItemDto.class)
+                .expectBodyList(PeerSubmissionItemDto.class)
                 .hasSize(1)
                 .value(list -> Assertions.assertEquals("code", list.get(0).getSubmissionText()));
 

@@ -1,6 +1,6 @@
 package com.itachallenge.submission.service;
 
-import com.itachallenge.challenge.dto.submission.PeerSolutionItemDto;
+import com.itachallenge.challenge.dto.submission.PeerSubmissionItemDto;
 import com.itachallenge.challenge.dto.submission.SubmissionActionResponseDto;
 import com.itachallenge.challenge.dto.submission.SubmissionDto;
 import com.itachallenge.challenge.dto.submission.SubmissionActionRequestDto;
@@ -163,18 +163,18 @@ public class SubmissionServiceImpl implements SubmissionService {
     }
 
     @Override
-    public Flux<PeerSolutionItemDto> getPeerSolutions(UUID challengeId, UUID userId) {
+    public Flux<PeerSubmissionItemDto> getPeerSolutions(UUID challengeId, UUID userId) {
         return submissionRepository.existsByUserIdAndChallengeIdAndStatusIn(userId, challengeId, SUBMITTED_STATUSES)
                 .flatMapMany(hasSubmitted -> Boolean.TRUE.equals(hasSubmitted)
                         ? submissionRepository.findTop10ByChallengeIdAndUserIdNotAndStatusInOrderByCreatedAtDesc(
                                 challengeId, userId, SUBMITTED_STATUSES)
-                        .map(this::toPeerSolutionItemDto)
+                        .map(this::toPeerSubmissionDto)
                         : Flux.error(new ResponseStatusException(HttpStatus.FORBIDDEN,
                         "User must have submitted the challenge before viewing peer solutions.")));
     }
 
-    private PeerSolutionItemDto toPeerSolutionItemDto(SubmissionDocument doc) {
-        return PeerSolutionItemDto.builder()
+    private PeerSubmissionItemDto toPeerSubmissionDto(SubmissionDocument doc) {
+        return PeerSubmissionItemDto.builder()
                 .solutionId(doc.getSubmissionId() != null ? doc.getSubmissionId().toString() : null)
                 .challengeId(doc.getChallengeId() != null ? doc.getChallengeId().toString() : null)
                 .userId(doc.getUserId() != null ? doc.getUserId().toString() : null)

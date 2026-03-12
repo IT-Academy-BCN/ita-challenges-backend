@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Builder
-public class PeerSolutionItemDto {
+public class PeerSubmissionItemDto {
 
     @JsonProperty("solution_id")
     private String solutionId;
