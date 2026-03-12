@@ -57,4 +57,16 @@ class LeaderboardServiceImplTest {
                 })
                 .verifyComplete();
     }
+
+    @Test
+    void getLeaderboard_whenRepositoryFails_returnsEmptyList() {
+        when(userScoreRepository.aggregateUserScores())
+                .thenReturn(Flux.error(new RuntimeException("Database connection failed.")));
+
+        StepVerifier.create(leaderboardServiceImpl.getLeaderboard())
+                .assertNext(response -> {
+                    assertThat(response.getLeaderboard()).isEmpty();
+                })
+                .verifyComplete();
+    }
 }
