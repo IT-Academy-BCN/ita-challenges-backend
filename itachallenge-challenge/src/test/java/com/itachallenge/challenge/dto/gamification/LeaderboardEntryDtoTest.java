@@ -128,31 +128,13 @@ class LeaderboardEntryDtoTest {
     }
 
     @Test
-    void givenDtoWithSameValues_whenCompare_thenEqualsAndHashCodeWork() {
-        LeaderboardEntryDto dto1 = new LeaderboardEntryDto(TEST_USERNAME, TEST_POINTS);
-        LeaderboardEntryDto dto2 = new LeaderboardEntryDto(TEST_USERNAME, TEST_POINTS);
-        LeaderboardEntryDto dto3 = new LeaderboardEntryDto("newUser", 111);
+    void givenTwoDtosWithSameValues_whenCompare_thenPropertiesMatch() {
+        LeaderboardEntryDto dto1 = new LeaderboardEntryDto("test", 100);
+        LeaderboardEntryDto dto2 = new LeaderboardEntryDto("test", 100);
 
-        assertThat(dto1)
-                .isEqualTo(dto2)
-                .hasSameHashCodeAs(dto2)
-                .isNotSameAs(dto2)
-                .isNotEqualTo(dto3);
-    }
+        assertThat(dto1.getUsername()).isEqualTo(dto2.getUsername());
+        assertThat(dto1.getTotalPoints()).isEqualTo(dto2.getTotalPoints());
 
-    @Test
-    void lombokTest() {
-        LeaderboardEntryDto entry1 = new LeaderboardEntryDto("test", 10);
-        LeaderboardEntryDto entry2 = new LeaderboardEntryDto("test", 10);
-        LeaderboardEntryDto entry3 = new LeaderboardEntryDto("diff", 20);
-
-        assertThat(entry1)
-                .isEqualTo(entry2)
-                .hasSameHashCodeAs(entry2)
-                .isNotEqualTo(entry3)
-                .isNotEqualTo(null);
-
-        assertThat(entry1.canEqual(entry2)).isTrue();
-        assertThat(entry1.toString()).isNotNull();
+        assertThat(dto1).isNotSameAs(dto2);
     }
 }

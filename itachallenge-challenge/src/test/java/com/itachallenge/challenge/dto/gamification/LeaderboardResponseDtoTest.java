@@ -126,19 +126,14 @@ class LeaderboardResponseDtoTest {
     }
 
     @Test
-    void lombokTest() {
-        LeaderboardResponseDto dto1 = new LeaderboardResponseDto(List.of());
-        LeaderboardResponseDto dto2 = new LeaderboardResponseDto(List.of());
-        LeaderboardResponseDto dto3 = LeaderboardResponseDto.builder()
-                .leaderboard(List.of(new LeaderboardEntryDto("user", 10)))
-                .build();
+    void givenResponseDto_whenModify_thenFieldsAreCorrect() {
+        LeaderboardResponseDto dto = new LeaderboardResponseDto();
+        List<LeaderboardEntryDto> list = List.of(new LeaderboardEntryDto("user", 50));
 
-        assertThat(dto1)
-                .isEqualTo(dto2)
-                .hasSameHashCodeAs(dto2)
-                .isNotEqualTo(dto3);
+        dto.setLeaderboard(list);
 
-        assertThat(dto1.canEqual(dto2)).isTrue();
-        assertThat(dto1.toString()).isNotNull();
+        assertThat(dto.getLeaderboard())
+                .hasSize(1)
+                .containsExactlyElementsOf(list);
     }
 }

@@ -9,7 +9,6 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
 public class LeaderboardResponseDto {
     private List<LeaderboardEntryDto> leaderboard;
 }
