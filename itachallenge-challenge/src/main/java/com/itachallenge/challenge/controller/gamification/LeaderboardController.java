@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,8 +39,9 @@ public class LeaderboardController {
                     @ApiResponse(responseCode = "500", description = "Internal Server Error.")
             }
     )
-    public Mono<LeaderboardResponseDto> getLeaderboard() {
-        log.info("Receiving request to fetch leaderboard");
-        return leaderboardService.getLeaderboard();
+    public Mono<ResponseEntity<LeaderboardResponseDto>> getLeaderboard() {
+        log.info("Receiving request to fetch global leaderboard");
+        return leaderboardService.getLeaderboard()
+                .map(ResponseEntity::ok);
     }
 }
