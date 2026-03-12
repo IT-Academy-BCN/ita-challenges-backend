@@ -15,10 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased] - 2026-03-11
 
 ### Added
-- New DTOs for leaderboard feature: `LeaderboardEntryDto` and `LeaderboardResponseDto` with pagination support.
-- Repository-level aggregation methods in `UserScoreRepository`:
-    - `aggregateUserScores()` for efficient leaderboard generation with pagination;
-    - `countDistinctUsers()` for total participant count.
+- New DTOs for leaderboard feature: `LeaderboardEntryDto` and `LeaderboardResponseDto`.
+- `aggregateUserScores()` method in `UserScoreRepository` for efficient leaderboard generation.
 - Internal `UserScoreAggregation` helper class for MongoDB aggregation results.
 - Integration tests for repository aggregation methods using Testcontainers.
 - Unit tests for DTO serialization/deserialization.

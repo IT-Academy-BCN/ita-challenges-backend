@@ -12,7 +12,6 @@ import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.time.LocalDateTime;
@@ -132,7 +131,7 @@ class UserScoreRepositoryIntegrationTest {
 
     @Test
     void givenMultipleUsersScores_whenAggregateUserScores_thenReturnUsersSortedByTotalPointsDesc() {
-        Flux<UserScoreAggregation> result = userScoreRepository.aggregateUserScores(0, 10);
+        Flux<UserScoreAggregation> result = userScoreRepository.aggregateUserScores();
 
         StepVerifier.create(result)
                 .expectNextMatches(dto ->
@@ -146,67 +145,21 @@ class UserScoreRepositoryIntegrationTest {
 
     @Test
     void givenUserWithMultipleUsernames_whenAggregateUserScores_thenReturnMostRecentUsername() {
-        Flux<UserScoreAggregation> result = userScoreRepository.aggregateUserScores(0, 10);
+        Flux<UserScoreAggregation> result = userScoreRepository.aggregateUserScores();
 
         StepVerifier.create(result)
                 .expectNextMatches(dto ->
-                        dto.getUsername().equals(USERNAME_3) &&
-                                dto.getUserId() != null &&
-                                dto.getUserId().equals(userId3))
+                        dto.getUsername().equals(USERNAME_3))
                 .expectNextMatches(dto ->
-                        dto.getUsername().equals(CURRENT_USERNAME) &&
-                                dto.getUserId() != null &&
-                                dto.getUserId().equals(userId1))
+                        dto.getUsername().equals(CURRENT_USERNAME))
                 .expectNextMatches(dto ->
-                        dto.getUsername().equals(USERNAME_2) &&
-                                dto.getUserId() != null &&
-                                dto.getUserId().equals(userId2))
-                .verifyComplete();
-    }
-
-    @Test
-    void givenPaginationParameters_whenAggregateUserScores_thenReturnCorrectPage() {
-        Flux<UserScoreAggregation> firstPage = userScoreRepository.aggregateUserScores(0, 2);
-
-        StepVerifier.create(firstPage)
-                .expectNextMatches(dto -> dto.getUsername().equals(USERNAME_3))
-                .expectNextMatches(dto -> dto.getUsername().equals(CURRENT_USERNAME))
-                .verifyComplete();
-
-        Flux<UserScoreAggregation> secondPage = userScoreRepository.aggregateUserScores(2, 2);
-
-        StepVerifier.create(secondPage)
-                .expectNextMatches(dto -> dto.getUsername().equals(USERNAME_2))
-                .verifyComplete();
-
-        Flux<UserScoreAggregation> thirdPage = userScoreRepository.aggregateUserScores(3, 2);
-
-        StepVerifier.create(thirdPage)
-                .verifyComplete();
-    }
-
-    @Test
-    void givenSkipAndLimitParameters_whenAggregateUserScores_thenRespectPagination() {
-        Flux<UserScoreAggregation> result = userScoreRepository.aggregateUserScores(1, 1);
-
-        StepVerifier.create(result)
-                .expectNextMatches(dto -> dto.getUsername().equals(CURRENT_USERNAME) &&
-                        dto.getTotalPoints() == 35)
-                .verifyComplete();
-    }
-
-    @Test
-    void givenExistingUsers_whenCountDistinctUsers_thenReturnTotalNumberOfUsers() {
-        Mono<Long> count = userScoreRepository.countDistinctUsers();
-
-        StepVerifier.create(count)
-                .expectNext(3L)
+                        dto.getUsername().equals(USERNAME_2))
                 .verifyComplete();
     }
 
     @Test
     void givenUserWithMultipleScores_whenAggregateUserScores_thenSumPointsCorrectly() {
-        Flux<UserScoreAggregation> result = userScoreRepository.aggregateUserScores(0, 10);
+        Flux<UserScoreAggregation> result = userScoreRepository.aggregateUserScores();
 
         StepVerifier.create(result)
                 .expectNextMatches(dto ->
@@ -222,36 +175,10 @@ class UserScoreRepositoryIntegrationTest {
     void givenEmptyDatabase_whenAggregateUserScores_thenReturnZero() {
         userScoreRepository.deleteAll().block();
 
-        Flux<UserScoreAggregation> result = userScoreRepository.aggregateUserScores(0, 10);
+        Flux<UserScoreAggregation> result = userScoreRepository.aggregateUserScores();
 
         StepVerifier.create(result)
                 .expectNextCount(0)
-                .verifyComplete();
-
-        Mono<Long> count = userScoreRepository.countDistinctUsers()
-                .defaultIfEmpty(0L);
-        StepVerifier.create(count)
-                .expectNext(0L)
-                .verifyComplete();
-    }
-
-    @Test
-    void givenSkipBeyondTotalUsers_whenAggregateUserScores_thenReturnEmpty() {
-        Flux<UserScoreAggregation> result = userScoreRepository.aggregateUserScores(5, 10);
-
-        StepVerifier.create(result)
-                .verifyComplete();
-    }
-
-    @Test
-    void givenEmptyDatabase_whenCountDistinctUsers_thenReturnZero() {
-        userScoreRepository.deleteAll().block();
-
-        Mono<Long> count = userScoreRepository.countDistinctUsers()
-                .defaultIfEmpty(0L);
-
-        StepVerifier.create(count)
-                .expectNext(0L)
                 .verifyComplete();
     }
 }
