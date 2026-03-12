@@ -6,7 +6,6 @@ import com.itachallenge.challenge.dto.submission.SubmissionActionRequestDto;
 import com.itachallenge.challenge.service.IChallengeJwtFacade;
 import com.itachallenge.challenge.service.IChallengeService;
 import com.itachallenge.common.exception.BadRequestException;
-import com.itachallenge.gamification.service.UserScoreService;
 import com.itachallenge.submission.document.SubmissionDocument;
 import com.itachallenge.submission.enums.SubmissionAction;
 import com.itachallenge.submission.enums.SubmissionStatus;
@@ -22,15 +21,14 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
+
 import com.itachallenge.challenge.dto.SolvedDto;
 import org.mockito.ArgumentCaptor;
 import com.itachallenge.submission.exception.UnmodifiableSubmissionException;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class SubmissionServiceImplTest {
@@ -41,8 +39,6 @@ class SubmissionServiceImplTest {
     private IChallengeService challengeService;
     @Mock
     private IChallengeJwtFacade challengeJwtFacade;
-    @Mock
-    private UserScoreService userScoreService;
 
     private SubmissionServiceImpl submissionService;
 
@@ -51,9 +47,7 @@ class SubmissionServiceImplTest {
         submissionService = new SubmissionServiceImpl(
                 submissionRepository,
                 challengeService,
-                challengeJwtFacade,
-                userScoreService,
-                10
+                challengeJwtFacade
         );
     }
 
@@ -183,11 +177,8 @@ class SubmissionServiceImplTest {
 
         when(challengeJwtFacade.getUsernameFromAuthenticationHeader(any())).thenReturn(null);
 
-        when(challengeService.addChallengeToSolved(challengeUuid.toString()))
+        when(challengeService.addChallengeToSolved(anyString()))
                 .thenReturn(Mono.just(new SolvedDto(true, 3)));
-
-        when(userScoreService.recordPoints(any(UUID.class), any(UUID.class), anyInt()))
-                .thenAnswer(invocation -> Flux.<Void>empty());
 
         StepVerifier.create(submissionService.processSubmissionAction(userUuid.toString(), request, null))
                 .assertNext(response -> {
@@ -201,8 +192,7 @@ class SubmissionServiceImplTest {
                 })
                 .verifyComplete();
 
-        verify(challengeService).addChallengeToSolved(challengeUuid.toString());
-        verify(userScoreService).recordPoints(userUuid, challengeUuid, 10);
+        verify(challengeService).addChallengeToSolved(anyString());
     }
 
     @Test

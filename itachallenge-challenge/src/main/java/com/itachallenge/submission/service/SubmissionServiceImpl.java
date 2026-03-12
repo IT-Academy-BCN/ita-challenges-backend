@@ -7,7 +7,6 @@ import com.itachallenge.challenge.dto.submission.SubmissionActionRequestDto;
 import com.itachallenge.challenge.service.IChallengeJwtFacade;
 import com.itachallenge.challenge.service.IChallengeService;
 import com.itachallenge.common.exception.BadRequestException;
-import com.itachallenge.gamification.service.UserScoreService;
 import com.itachallenge.submission.document.SubmissionDocument;
 import com.itachallenge.submission.enums.SubmissionAction;
 import com.itachallenge.submission.enums.SubmissionStatus;
@@ -16,7 +15,6 @@ import com.itachallenge.submission.mapper.SubmissionMapper;
 import com.itachallenge.submission.repository.SubmissionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -40,19 +38,13 @@ public class SubmissionServiceImpl implements SubmissionService {
     private final SubmissionRepository submissionRepository;
     private final IChallengeService challengeService;
     private final IChallengeJwtFacade challengeJwtFacade;
-    private final UserScoreService userScoreService;
-    private final int pointsOnSubmissionComplete;
 
     public SubmissionServiceImpl(
             SubmissionRepository submissionRepository,
             IChallengeService challengeService,
-            IChallengeJwtFacade challengeJwtFacade,
-            UserScoreService userScoreService,
-            @Value("${gamification.points.submission-complete:10}") int pointsOnSubmissionComplete
+            IChallengeJwtFacade challengeJwtFacade
     ){
         this.challengeJwtFacade = challengeJwtFacade;
-        this.userScoreService = userScoreService;
-        this.pointsOnSubmissionComplete = pointsOnSubmissionComplete;
         this.submissionRepository = submissionRepository;
         this.challengeService = challengeService;
     }
@@ -141,8 +133,7 @@ public class SubmissionServiceImpl implements SubmissionService {
                             .status(saved.getStatus().name())
                             .isSolved(true)
                             .timesSolved(solvedDto.getTimesSolved())
-                            .build())
-                    .flatMap(responseDto -> recordPointsAndReturn(userUuid, challengeUuid, responseDto));
+                            .build());
         }
         return Mono.just(SubmissionActionResponseDto.builder()
                 .submissionText(saved.getSubmissionText())
@@ -150,16 +141,6 @@ public class SubmissionServiceImpl implements SubmissionService {
                 .isSolved(false)
                 .timesSolved(null)
                 .build());
-    }
-
-    private Mono<SubmissionActionResponseDto> recordPointsAndReturn(UUID userUuid, UUID challengeUuid, SubmissionActionResponseDto responseDto) {
-        return userScoreService.recordPoints(userUuid, challengeUuid, pointsOnSubmissionComplete)
-                .onErrorResume(ex -> {
-                    log.warn("Gamification recordPoints failed for userId={} challengeId={}: {}",
-                            userUuid, challengeUuid, ex.getMessage());
-                    return Mono.empty();
-                })
-                .then(Mono.just(responseDto));
     }
 
     @Override
