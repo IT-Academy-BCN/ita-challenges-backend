@@ -142,13 +142,17 @@ class LeaderboardEntryDtoTest {
 
     @Test
     void lombokTest() {
-        LeaderboardEntryDto entry1 = new LeaderboardEntryDto();
-        entry1.setUsername("test");
-        entry1.setTotalPoints(10);
-
+        LeaderboardEntryDto entry1 = new LeaderboardEntryDto("test", 10);
         LeaderboardEntryDto entry2 = new LeaderboardEntryDto("test", 10);
+        LeaderboardEntryDto entry3 = new LeaderboardEntryDto("diff", 20);
 
-        assertThat(entry1).isEqualTo(entry2);
-        assertThat(entry1.hashCode()).isEqualTo(entry2.hashCode());
+        assertThat(entry1)
+                .isEqualTo(entry2)
+                .hasSameHashCodeAs(entry2)
+                .isNotEqualTo(entry3)
+                .isNotEqualTo(null);
+
+        assertThat(entry1.canEqual(entry2)).isTrue();
+        assertThat(entry1.toString()).isNotNull();
     }
 }
