@@ -124,4 +124,17 @@ class LeaderboardResponseDtoTest {
 
         assertThat(dto.getLeaderboard()).isEqualTo(newLeaderboard);
     }
+
+    @Test
+    void lombokTest() {
+        LeaderboardEntryDto entry1 = new LeaderboardEntryDto();
+        entry1.setUsername("test");
+        entry1.setTotalPoints(10);
+
+        LeaderboardEntryDto entry2 = new LeaderboardEntryDto("test", 10);
+
+        assertThat(entry1).isEqualTo(entry2);
+        assertThat(entry1.hashCode()).isEqualTo(entry2.hashCode());
+        assertThat(entry1.canEqual(entry2)).isTrue();
+    }
 }

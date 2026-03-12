@@ -135,8 +135,20 @@ class LeaderboardEntryDtoTest {
 
         assertThat(dto1)
                 .isEqualTo(dto2)
-                .hasSameHashCodeAs(dto2);
-        assertThat(dto1).isNotSameAs(dto2);
-        assertThat(dto1).isNotEqualTo(dto3);
+                .hasSameHashCodeAs(dto2)
+                .isNotSameAs(dto2)
+                .isNotEqualTo(dto3);
+    }
+
+    @Test
+    void lombokTest() {
+        LeaderboardEntryDto entry1 = new LeaderboardEntryDto();
+        entry1.setUsername("test");
+        entry1.setTotalPoints(10);
+
+        LeaderboardEntryDto entry2 = new LeaderboardEntryDto("test", 10);
+
+        assertThat(entry1).isEqualTo(entry2);
+        assertThat(entry1.hashCode()).isEqualTo(entry2.hashCode());
     }
 }
