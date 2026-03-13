@@ -145,12 +145,14 @@ public class SubmissionServiceImpl implements SubmissionService {
                 .flatMapMany(hasSubmitted -> Boolean.TRUE.equals(hasSubmitted)
                         ? submissionRepository.findTop10ByChallengeIdAndUserIdNotAndStatusInOrderByCreatedAtDesc(
                                 challengeId, userId, SUBMITTED_STATUSES)
-                        .map(this::toPeerSubmissionDto)
+                        .map(this::toPeerSubmissionItemDto)
                         : Flux.error(new ResponseStatusException(HttpStatus.FORBIDDEN,
                         "User must have submitted the challenge before viewing peer solutions.")));
     }
-
-    private PeerSubmissionItemDto toPeerSubmissionDto(SubmissionDocument doc) {
+    /**
+     * Maps a submission document to the peer-solutions DTO. Fields may be null for legacy or incomplete data; see PeerSubmissionItemDto Javadoc.
+     */
+    private PeerSubmissionItemDto toPeerSubmissionItemDto(SubmissionDocument doc) {
         return PeerSubmissionItemDto.builder()
                 .solutionId(doc.getSubmissionId() != null ? doc.getSubmissionId().toString() : null)
                 .challengeId(doc.getChallengeId() != null ? doc.getChallengeId().toString() : null)

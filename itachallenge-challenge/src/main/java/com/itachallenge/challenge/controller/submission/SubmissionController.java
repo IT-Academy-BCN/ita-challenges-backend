@@ -63,7 +63,7 @@ public class SubmissionController {
     @PostMapping
     @Operation(
             summary = "Create or update a submission",
-            description = "Creates or updates a user submission depending on the action (SAVE, SUBMIT, GIVE_UP). When the result is SUBMITTED_COMPLETE, the user's gamification score is updated (UserScoreService).",
+            description = "Creates or updates a user submission depending on the action (SAVE, SUBMIT, GIVE_UP).",
             parameters = {
                     @Parameter(
                             name = "userId",
