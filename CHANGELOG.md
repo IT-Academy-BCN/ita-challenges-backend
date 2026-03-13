@@ -44,11 +44,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed deprecated legacy Bookmarks routes previously served by BookmarkLegacyController. (GitHub Task [#186], PR [#1106])
 ## [UNRELEASED]
 
+## [Unreleased]
+
 ### Added
+
 - New MongoDB collection `user_score_history` with compound indexing for efficient retrieval for gamification tracking.
 - Reactive Repository for user score transactions.
 
-## [Unreleased]
+### Changed
+
+#### User Microservice Exception Handling Refactor
+
+- Introduced `common.exception` package to centralize cross-cutting exceptions in the User microservice.
+- Moved `UserGlobalExceptionHandler`, `BadUUIDException`, and `NotFoundException` to the new package.
+- Updated imports across `user` and `userinteraction` modules to use the unified exceptions.
+- Refactored `UserGlobalExceptionHandlerTest` to align with the new package structure.
+- Ensured the GlobalExceptionHandler applies to controllers from both modules via component scanning.
 ### [itachallenge-user-3.2.2-RELEASE] - 2026-02-23
 
 ### Removed
