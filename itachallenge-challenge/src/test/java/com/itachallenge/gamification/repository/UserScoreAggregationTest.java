@@ -9,11 +9,23 @@ class UserScoreAggregationTest {
 
     @Test
     void testUserScoreAggregation() {
-        UserScoreAggregation agg =  new UserScoreAggregation("user", 100);
-        agg.setUsername("newName");
-        agg.setTotalPoints(200);
+        String username = "user";
+        Integer totalPoints = 100;
 
-        assertThat(agg.getUsername()).isEqualTo("newName");
-        assertThat(agg.getTotalPoints()).isEqualTo(200);
+        UserScoreAggregation agg = new UserScoreAggregation(username, totalPoints);
+
+        assertThat(agg.getUsername()).isEqualTo("user");
+        assertThat(agg.getTotalPoints()).isEqualTo(100);
+    }
+
+    @Test
+    void testUserScoreAggregationBuilder() {
+        UserScoreAggregation agg = UserScoreAggregation.builder()
+                .username("testUser")
+                .totalPoints(150)
+                .build();
+
+        assertThat(agg.getUsername()).isEqualTo("testUser");
+        assertThat(agg.getTotalPoints()).isEqualTo(150);
     }
 }

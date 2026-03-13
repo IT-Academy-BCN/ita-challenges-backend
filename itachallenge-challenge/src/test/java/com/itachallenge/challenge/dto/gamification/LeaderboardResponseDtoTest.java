@@ -111,29 +111,4 @@ class LeaderboardResponseDtoTest {
         assertThat(dto.getLeaderboard().getFirst().getUsername()).isEqualTo("user1");
         assertThat(dto.getLeaderboard().getFirst().getTotalPoints()).isEqualTo(200);
     }
-
-    @Test
-    void givenExistingDto_whenModifyWithSetters_thenFieldsAreUpdated() {
-        List<LeaderboardEntryDto> leaderboard = List.of(createTestEntry("user1", 200));
-        LeaderboardResponseDto dto = LeaderboardResponseDto.builder()
-                .leaderboard(leaderboard)
-                .build();
-
-        List<LeaderboardEntryDto> newLeaderboard = List.of(createTestEntry("new_user", 500));
-        dto.setLeaderboard(newLeaderboard);
-
-        assertThat(dto.getLeaderboard()).isEqualTo(newLeaderboard);
-    }
-
-    @Test
-    void givenResponseDto_whenModify_thenFieldsAreCorrect() {
-        LeaderboardResponseDto dto = new LeaderboardResponseDto();
-        List<LeaderboardEntryDto> list = List.of(new LeaderboardEntryDto("user", 50));
-
-        dto.setLeaderboard(list);
-
-        assertThat(dto.getLeaderboard())
-                .hasSize(1)
-                .containsExactlyElementsOf(list);
-    }
 }

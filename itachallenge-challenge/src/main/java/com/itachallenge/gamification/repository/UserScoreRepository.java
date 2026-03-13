@@ -13,9 +13,15 @@ public interface UserScoreRepository extends ReactiveMongoRepository<UserScoreDo
 
     @Aggregation(pipeline = {
             "{$sort: {user_id: 1, created_at: -1}}",
-            "{$group: {_id: '$user_id', " +
-                    "username: {$first: '$username'}, " +
-                    "totalPoints: {$sum: '$points_earned'}}}",
+            """
+             {
+               $group: {
+                 _id: '$user_id',
+                 username: {$first: '$username'},
+                 totalPoints: {$sum: '$points_earned'}
+               }
+             }
+            """,
             "{$project: {_id: 0, username: 1, totalPoints: 1}}",
             "{$sort: {totalPoints: -1}}"
     })

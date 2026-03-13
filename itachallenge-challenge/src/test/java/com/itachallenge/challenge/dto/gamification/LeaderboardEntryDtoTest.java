@@ -69,51 +69,11 @@ class LeaderboardEntryDtoTest {
     }
 
     @Test
-    void givenNoArgsConstructor_whenCreateDto_thenDtoIsNotNullAndFieldsAreSet() {
-        LeaderboardEntryDto dto = new LeaderboardEntryDto();
-
-        assertThat(dto).isNotNull();
-
-        dto.setUsername(TEST_USERNAME);
-        dto.setTotalPoints(TEST_POINTS);
-
-        assertThat(dto.getUsername()).isEqualTo(TEST_USERNAME);
-        assertThat(dto.getTotalPoints()).isEqualTo(TEST_POINTS);
-    }
-
-    @Test
     void givenAllArgsConstructor_whenCreateDto_thenAllFieldsAreSet() {
         LeaderboardEntryDto dto = new LeaderboardEntryDto(TEST_USERNAME, TEST_POINTS);
 
         assertThat(dto.getUsername()).isEqualTo(TEST_USERNAME);
         assertThat(dto.getTotalPoints()).isEqualTo(TEST_POINTS);
-    }
-
-    @Test
-    void givenExistingDto_whenModifyWithSetters_thenFieldsAreUpdated() {
-        LeaderboardEntryDto dto = LeaderboardEntryDto.builder()
-                .username(TEST_USERNAME)
-                .totalPoints(TEST_POINTS)
-                .build();
-
-        assertThat(dto.getUsername()).isEqualTo(TEST_USERNAME);
-        assertThat(dto.getTotalPoints()).isEqualTo(TEST_POINTS);
-
-        String newUsername = "updated_user";
-        int newPoints = 400;
-
-        dto.setUsername(newUsername);
-        dto.setTotalPoints(newPoints);
-
-        assertThat(dto.getUsername())
-                .as("Username should be updated to: %s", newUsername)
-                .isEqualTo(newUsername);
-        assertThat(dto.getTotalPoints())
-                .as("Total points should be updated to: %d", newPoints)
-                .isEqualTo(newPoints);
-
-        assertThat(dto.getUsername()).isNotEqualTo(TEST_USERNAME);
-        assertThat(dto.getTotalPoints()).isNotEqualTo(TEST_POINTS);
     }
 
     @Test

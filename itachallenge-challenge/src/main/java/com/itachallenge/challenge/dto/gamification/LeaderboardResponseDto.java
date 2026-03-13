@@ -1,14 +1,14 @@
 package com.itachallenge.challenge.dto.gamification;
 
 import lombok.*;
+import lombok.extern.jackson.Jacksonized;
 
 import java.util.List;
 
 @Getter
-@Setter
 @Builder
+@Jacksonized
 @AllArgsConstructor
-@NoArgsConstructor
 public class LeaderboardResponseDto {
-    private List<LeaderboardEntryDto> leaderboard;
+    private final List<LeaderboardEntryDto> leaderboard;
 }

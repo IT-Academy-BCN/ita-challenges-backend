@@ -3,11 +3,9 @@ package com.itachallenge.gamification.repository;
 import lombok.*;
 
 @Getter
-@Setter
-@NoArgsConstructor
+@Builder
 @AllArgsConstructor
 public class UserScoreAggregation {
-
     private String username;
-    private int totalPoints;
+    private Integer totalPoints;
 }
