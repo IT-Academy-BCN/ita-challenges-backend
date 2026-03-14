@@ -22,9 +22,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Robust error handling: Database errors are logged and propagated as `InternalServerErrorException` (500).
 
 #### Leaderboard API
-- `LeaderboardController` with REST endpoint `GET /itachallenge/api/v1/leaderboard`.
+- `LeaderboardController` with REST endpoint `GET /itachallenge/api/v1/users/leaderboard`.
 - Complete OpenAPI/Swagger documentation detailing response schemes and status codes.
-- Structured logging (SLF4J) for request traceability in Controller and Service layers.
+- Traceability and monitoring via structured logs (SLF4J) in the Controller and Service layers.
 
 #### DTOs
 - `LeaderboardResponseDto` and `LeaderboardEntryDto` for API responses.
