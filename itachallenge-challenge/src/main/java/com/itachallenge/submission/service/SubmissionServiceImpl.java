@@ -150,7 +150,9 @@ public class SubmissionServiceImpl implements SubmissionService {
                         "User must have submitted the challenge before viewing peer solutions.")));
     }
     /**
-     * Maps a submission document to the peer-solutions DTO. Fields may be null for legacy or incomplete data; see PeerSubmissionItemDto Javadoc.
+     * Maps a submission document to the peer-solutions DTO.
+     * {@code author} may be null when the submission was created before we stored the submitter username,
+     * or when no valid Authorization header was sent at submitted time.
      */
     private PeerSubmissionItemDto toPeerSubmissionItemDto(SubmissionDocument doc) {
         return PeerSubmissionItemDto.builder()
