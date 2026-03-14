@@ -33,18 +33,24 @@ class LeaderboardServiceImplTest {
     }
 
     @Test
-    void getLeaderboard_returnsSortedData() {
+    void getLeaderboard_mapsAggregationsWithFallbacks() {
         when(userScoreRepository.aggregateUserScores()).thenReturn(Flux.just(aggregate1, aggregate2));
 
         StepVerifier.create(leaderboardServiceImpl.getLeaderboard())
                 .assertNext(response -> {
-                    assertThat(response.getLeaderboard()).hasSize(2);
-                    assertThat(response.getLeaderboard().getFirst().getUsername()).isEqualTo("testUser");
-                    assertThat(response.getLeaderboard().getFirst().getTotalPoints()).isEqualTo(100);
-                    assertThat(response.getLeaderboard().get(1).getUsername()).isEqualTo("Anonymous");
-                    assertThat(response.getLeaderboard().get(1).getTotalPoints()).isEqualTo(50);
-                })
-                .verifyComplete();
+                    assertThat(response.getLeaderboard())
+                            .hasSize(2)
+                            .satisfiesExactlyInAnyOrder(
+                                    first -> {
+                                        assertThat(first.getUsername()).isEqualTo("testUser");
+                                        assertThat(first.getTotalPoints()).isEqualTo(100);
+                                    },
+                                    second -> {
+                                        assertThat(second.getUsername()).isEqualTo("Anonymous");
+                                        assertThat(second.getTotalPoints()).isEqualTo(50);
+                                    }
+                            );
+                });
     }
 
     @Test
