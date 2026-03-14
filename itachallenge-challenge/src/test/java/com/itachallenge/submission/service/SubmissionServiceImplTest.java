@@ -386,4 +386,104 @@ class SubmissionServiceImplTest {
                 .findTop10ByChallengeIdAndUserIdNotAndStatusInOrderByCreatedAtDesc(any(), any(), anyList());
     }
 
+    @Test
+    void getPeerSolutions_whenUserHasSubmitted_returnsEmptyList_whenNoPeerSubmissions() {
+        UUID challengeId = UUID.randomUUID();
+        UUID userId = UUID.randomUUID();
+
+        when(submissionRepository.existsByUserIdAndChallengeIdAndStatusIn(eq(userId), eq(challengeId), anyList()))
+                .thenReturn(Mono.just(true));
+        when(submissionRepository.findTop10ByChallengeIdAndUserIdNotAndStatusInOrderByCreatedAtDesc(
+                eq(challengeId), eq(userId), anyList()))
+                .thenReturn(Flux.empty());
+
+        Flux<PeerSubmissionItemDto> result = submissionService.getPeerSolutions(challengeId, userId);
+
+        StepVerifier.create(result)
+                .verifyComplete();
+
+        verify(submissionRepository).existsByUserIdAndChallengeIdAndStatusIn(eq(userId), eq(challengeId), anyList());
+        verify(submissionRepository).findTop10ByChallengeIdAndUserIdNotAndStatusInOrderByCreatedAtDesc(
+                eq(challengeId), eq(userId), anyList());
+    }
+
+    @Test
+    void getPeerSolutions_whenDocumentHasNoAuthor_returnsDtoWithNullAuthor() {
+        UUID challengeId = UUID.randomUUID();
+        UUID userId = UUID.randomUUID();
+        UUID otherUserId = UUID.randomUUID();
+
+        when(submissionRepository.existsByUserIdAndChallengeIdAndStatusIn(eq(userId), eq(challengeId), anyList()))
+                .thenReturn(Mono.just(true));
+
+        SubmissionDocument doc = SubmissionDocument.builder()
+                .submissionId(UUID.randomUUID())
+                .userId(otherUserId)
+                .challengeId(challengeId)
+                .languageId(UUID.randomUUID())
+                .status(SubmissionStatus.SUBMITTED_COMPLETE)
+                .submissionText("solution code")
+                .createdAt(LocalDateTime.now().minusDays(1))
+                .submittedByUsername(null)
+                .build();
+
+        when(submissionRepository.findTop10ByChallengeIdAndUserIdNotAndStatusInOrderByCreatedAtDesc(
+                eq(challengeId), eq(userId), anyList()))
+                .thenReturn(Flux.just(doc));
+
+        Flux<PeerSubmissionItemDto> result = submissionService.getPeerSolutions(challengeId, userId);
+
+        StepVerifier.create(result)
+                .expectNextMatches(dto ->
+                        dto.getChallengeId().equals(challengeId.toString())
+                                && dto.getUserId().equals(otherUserId.toString())
+                                && "solution code".equals(dto.getSubmissionText())
+                                && dto.getAuthor() == null)
+                .verifyComplete();
+    }
+
+    @Test
+    void processSubmissionAction_shouldThrow_whenChallengeIdIsNull() {
+        UUID userUuid = UUID.randomUUID();
+        UUID languageUuid = UUID.randomUUID();
+
+        SubmissionActionRequestDto request = SubmissionActionRequestDto.builder()
+                .challengeId(null)
+                .languageId(languageUuid)
+                .action(SubmissionAction.SAVE)
+                .submissionText("draft")
+                .build();
+
+        StepVerifier.create(submissionService.processSubmissionAction(userUuid.toString(), request, null))
+                .expectErrorMatches(ex ->
+                        ex instanceof BadRequestException
+                                && ex.getMessage().contains("challengeId")
+                                && ex.getMessage().contains("cannot be null"))
+                .verify();
+
+        verify(submissionRepository, never()).save(any(SubmissionDocument.class));
+    }
+
+    @Test
+    void processSubmissionAction_shouldThrow_whenLanguageIdIsNull() {
+        UUID userUuid = UUID.randomUUID();
+        UUID challengeUuid = UUID.randomUUID();
+
+        SubmissionActionRequestDto request = SubmissionActionRequestDto.builder()
+                .challengeId(challengeUuid)
+                .languageId(null)
+                .action(SubmissionAction.SAVE)
+                .submissionText("draft")
+                .build();
+
+        StepVerifier.create(submissionService.processSubmissionAction(userUuid.toString(), request, null))
+                .expectErrorMatches(ex ->
+                        ex instanceof BadRequestException
+                                && ex.getMessage().contains("languageId")
+                                && ex.getMessage().contains("cannot be null"))
+                .verify();
+
+        verify(submissionRepository, never()).save(any(SubmissionDocument.class));
+    }
+
 }

@@ -982,4 +982,18 @@ class ChallengeControllerTest {
 
         verify(submissionService, never()).getPeerSolutions(any(), any());
     }
+
+    @Test
+    void getPeerSolutions_missingOrInvalidAuth_returns400() {
+        String challengeIdStr = UUID.randomUUID().toString();
+        when(challengeJwtFacade.getUserUuIdFromAuthenticationHeader(null))
+                .thenThrow(new JwtException("Missing or invalid authorization"));
+
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/challenge/challenges/" + challengeIdStr + "/peer-solutions")
+                .exchange()
+                .expectStatus().isBadRequest();
+
+        verify(submissionService, never()).getPeerSolutions(any(), any());
+    }
 }
