@@ -1,5 +1,6 @@
 package com.itachallenge.gamification.service;
 
+import com.itachallenge.challenge.exception.InternalServerErrorException;
 import com.itachallenge.gamification.repository.UserScoreRepository;
 import com.itachallenge.gamification.repository.projection.LeaderboardAggregationResult;
 import org.junit.jupiter.api.BeforeEach;
@@ -50,7 +51,8 @@ class LeaderboardServiceImplTest {
                                         assertThat(second.getTotalPoints()).isEqualTo(50);
                                     }
                             );
-                });
+                })
+                .verifyComplete();
     }
 
     @Test
@@ -65,14 +67,16 @@ class LeaderboardServiceImplTest {
     }
 
     @Test
-    void getLeaderboard_whenRepositoryFails_returnsEmptyList() {
+    void getLeaderboard_whenRepositoryFails_throwsInternalServiceException() {
         when(userScoreRepository.aggregateUserScores())
                 .thenReturn(Flux.error(new RuntimeException("Database connection failed.")));
 
         StepVerifier.create(leaderboardServiceImpl.getLeaderboard())
-                .assertNext(response -> {
-                    assertThat(response.getLeaderboard()).isEmpty();
+                .expectErrorSatisfies(throwable -> {
+                    assertThat(throwable)
+                            .isInstanceOf(InternalServerErrorException.class)
+                            .hasMessage("Unable to retrieve leaderboard data. Please try again later.");
                 })
-                .verifyComplete();
+                .verify();
     }
 }

@@ -2,14 +2,14 @@ package com.itachallenge.gamification.service;
 
 import com.itachallenge.challenge.dto.gamification.LeaderboardEntryDto;
 import com.itachallenge.challenge.dto.gamification.LeaderboardResponseDto;
+import com.itachallenge.challenge.exception.InternalServerErrorException;
 import com.itachallenge.gamification.repository.UserScoreRepository;
+import com.itachallenge.gamification.repository.projection.LeaderboardAggregationResult;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
-
-import java.util.Collections;
 
 @Service
 @RequiredArgsConstructor
@@ -21,19 +21,23 @@ public class LeaderboardServiceImpl implements LeaderboardService {
     @Override
     public Mono<LeaderboardResponseDto> getLeaderboard() {
         return userScoreRepository.aggregateUserScores()
-                .map(aggregation -> LeaderboardEntryDto.builder()
-                        .username(aggregation.getUsername() != null ? aggregation.getUsername() : "Anonymous")
-                        .totalPoints(aggregation.getTotalPoints() !=null ? aggregation.getTotalPoints() : 0)
-                        .build())
+                .map(this::mapToEntryDto)
                 .collectList()
                 .map(entries -> LeaderboardResponseDto.builder()
                         .leaderboard(entries)
                         .build())
                 .onErrorResume(e -> {
-                    log.error("Error retrieving leaderboard data: {}", e.getMessage());
-                    return Mono.just(LeaderboardResponseDto.builder()
-                            .leaderboard(Collections.emptyList())
-                            .build());
+                    log.error("Critical error in leaderboard service - database unavailable. {}", e.getMessage());
+                    return Mono.error(new InternalServerErrorException(
+                            "Unable to retrieve leaderboard data. Please try again later."
+                    ));
                 });
+    }
+
+    private LeaderboardEntryDto mapToEntryDto(LeaderboardAggregationResult agg) {
+        return LeaderboardEntryDto.builder()
+                .username(agg.getUsername() != null ? agg.getUsername() : "Anonymous")
+                .totalPoints(agg.getTotalPoints() !=null ? agg.getTotalPoints() : 0)
+                .build();
     }
 }
