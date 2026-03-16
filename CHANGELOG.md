@@ -201,14 +201,6 @@ Supported actions: SAVE, GIVE_UP, SUBMIT. (Taiga [#871], PR [#1043])
     - SUBMIT → SUBMITTED_COMPLETED
 - Updated OpenAPI documentation.
 
-## [Unreleased]
-
-
-### Chore/Internal
-- Introduced `SolutionAction` enum (internal change)
-  - Values: SAVE, GIVE_UP, SUBMIT
-  - Prepared for action-based status handling (Taiga User Story [#871], PR [#1036])
-
 ### [itachallenge-challenge-3.0.3-RELEASE] - 2025-11-18
 
 ### Fixed
