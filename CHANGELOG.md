@@ -17,10 +17,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - New DTOs for leaderboard feature: `LeaderboardEntryDto` and `LeaderboardResponseDto`.
 - `aggregateUserScores()` method in `UserScoreRepository` for efficient leaderboard generation.
-- Internal `UserScoreAggregation` helper class for MongoDB aggregation results.
+- Internal `LeaderboardAggregationResult` (`repository.projection` package) helper class for MongoDB aggregation results.
 - Integration tests for repository aggregation methods using Testcontainers.
 - Unit tests for DTO serialization/deserialization.
-- UserScoreAggregationTest to cover Sonar coverage.
 
 
 ## [itachallenge-challenge-3.3.0] - 2026-03-05

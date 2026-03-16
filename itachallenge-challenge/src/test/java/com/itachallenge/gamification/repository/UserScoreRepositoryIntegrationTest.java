@@ -42,37 +42,68 @@ class UserScoreRepositoryIntegrationTest {
     @Autowired
     private ReactiveMongoTemplate mongoTemplate;
 
-    private UUID userId1;
-    private UUID userId2;
-    private UUID userId3;
-    private static final String OLD_USERNAME = "user";
-    private static final String CURRENT_USERNAME = "user1";
+    private UUID userId1, userId2, userId3;
+    private static final String USERNAME_1 = "user1";
     private static final String USERNAME_2 = "user2";
     private static final String USERNAME_3 = "user3";
 
     @BeforeEach
     void setUp() {
-        if (userScoreRepository != null) {
-            userScoreRepository.deleteAll().block();
-        }
-        userId1 = UUID.randomUUID();
-        userId2 = UUID.randomUUID();
-        userId3 = UUID.randomUUID();
-
-        if (userScoreRepository != null) {
-            createTestData();
-        }
+        userScoreRepository.deleteAll().block();
+        createTestData();
     }
+
+    @Test
+    void givenMultipleUsersScores_whenAggregateUserScores_thenReturnUsersSortedByTotalPointsDesc() {
+        Flux<LeaderboardAggregationResult> result = userScoreRepository.aggregateUserScores();
+
+        StepVerifier.create(result)
+                .expectNextMatches(dto ->
+                        dto.getUsername().equals(USERNAME_3) && dto.getTotalPoints() == 50)
+                .expectNextMatches(agg ->
+                        agg.getUsername().equals(USERNAME_1) && agg.getTotalPoints() == 35)
+                .expectNextMatches(agg ->
+                        agg.getUsername().equals(USERNAME_2) && agg.getTotalPoints() == 25)
+                .verifyComplete();
+    }
+
+    @Test
+    void givenUserWithMultipleUsernames_whenAggregateUserScores_thenReturnMostRecentUsername() {
+        Flux<LeaderboardAggregationResult> result = userScoreRepository.aggregateUserScores();
+
+        StepVerifier.create(result)
+                .expectNextMatches(dto ->
+                        dto.getUsername().equals(USERNAME_3))
+                .expectNextMatches(dto ->
+                        dto.getUsername().equals(USERNAME_1))
+                .expectNextMatches(dto ->
+                        dto.getUsername().equals(USERNAME_2))
+                .verifyComplete();
+    }
+
+    @Test
+    void givenEmptyDatabase_whenAggregateUserScores_thenReturnZero() {
+        userScoreRepository.deleteAll().block();
+
+        Flux<LeaderboardAggregationResult> result = userScoreRepository.aggregateUserScores();
+
+        StepVerifier.create(result)
+                .expectNextCount(0)
+                .verifyComplete();
+    }
+
 
     private void createTestData() {
         LocalDateTime now = LocalDateTime.now();
 
-        userScoreRepository.deleteAll().block();
+        userId1 = UUID.randomUUID();
+        userId2 = UUID.randomUUID();
+        userId3 = UUID.randomUUID();
 
         UserScoreDocument user1Score1 = UserScoreDocument.builder()
                 .id(UUID.randomUUID())
                 .userId(userId1)
-                .username(OLD_USERNAME)
+                .username("old_username")
                 .challengeId(UUID.randomUUID())
                 .pointsEarned(10)
                 .createdAt(now.minusDays(2))
@@ -81,7 +112,7 @@ class UserScoreRepositoryIntegrationTest {
         UserScoreDocument user1Score2 = UserScoreDocument.builder()
                 .id(UUID.randomUUID())
                 .userId(userId1)
-                .username(CURRENT_USERNAME)
+                .username(USERNAME_1)
                 .challengeId(UUID.randomUUID())
                 .pointsEarned(15)
                 .createdAt(now.minusDays(1))
@@ -90,7 +121,7 @@ class UserScoreRepositoryIntegrationTest {
         UserScoreDocument user1Score3 = UserScoreDocument.builder()
                 .id(UUID.randomUUID())
                 .userId(userId1)
-                .username(CURRENT_USERNAME)
+                .username(USERNAME_1)
                 .challengeId(UUID.randomUUID())
                 .pointsEarned(10)
                 .createdAt(now)
@@ -128,58 +159,5 @@ class UserScoreRepositoryIntegrationTest {
                 user2Score1, user2Score2,
                 user3Score1
         )).blockLast();
-    }
-
-    @Test
-    void givenMultipleUsersScores_whenAggregateUserScores_thenReturnUsersSortedByTotalPointsDesc() {
-        Flux<LeaderboardAggregationResult> result = userScoreRepository.aggregateUserScores();
-
-        StepVerifier.create(result)
-                .expectNextMatches(dto ->
-                        dto.getUsername().equals(USERNAME_3) && dto.getTotalPoints() == 50)
-                .expectNextMatches(agg ->
-                        agg.getUsername().equals(CURRENT_USERNAME) && agg.getTotalPoints() == 35)
-                .expectNextMatches(agg ->
-                        agg.getUsername().equals(USERNAME_2) && agg.getTotalPoints() == 25)
-                .verifyComplete();
-    }
-
-    @Test
-    void givenUserWithMultipleUsernames_whenAggregateUserScores_thenReturnMostRecentUsername() {
-        Flux<LeaderboardAggregationResult> result = userScoreRepository.aggregateUserScores();
-
-        StepVerifier.create(result)
-                .expectNextMatches(dto ->
-                        dto.getUsername().equals(USERNAME_3))
-                .expectNextMatches(dto ->
-                        dto.getUsername().equals(CURRENT_USERNAME))
-                .expectNextMatches(dto ->
-                        dto.getUsername().equals(USERNAME_2))
-                .verifyComplete();
-    }
-
-    @Test
-    void givenUserWithMultipleScores_whenAggregateUserScores_thenSumPointsCorrectly() {
-        Flux<LeaderboardAggregationResult> result = userScoreRepository.aggregateUserScores();
-
-        StepVerifier.create(result)
-                .expectNextMatches(dto ->
-                        dto.getUsername().equals(USERNAME_3) && dto.getTotalPoints() == 50)
-                .expectNextMatches(dto ->
-                        dto.getUsername().equals(CURRENT_USERNAME) && dto.getTotalPoints() == 35)
-                .expectNextMatches(dto ->
-                        dto.getUsername().equals(USERNAME_2) && dto.getTotalPoints() == 25)
-                .verifyComplete();
-    }
-
-    @Test
-    void givenEmptyDatabase_whenAggregateUserScores_thenReturnZero() {
-        userScoreRepository.deleteAll().block();
-
-        Flux<LeaderboardAggregationResult> result = userScoreRepository.aggregateUserScores();
-
-        StepVerifier.create(result)
-                .expectNextCount(0)
-                .verifyComplete();
     }
 }

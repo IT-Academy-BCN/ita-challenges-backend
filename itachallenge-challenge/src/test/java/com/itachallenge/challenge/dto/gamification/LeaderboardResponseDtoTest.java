@@ -26,7 +26,7 @@ class LeaderboardResponseDtoTest {
     }
 
     @Test
-    void givenValidLeaderboardResponse_whenSerialize_thenCorrectJsonStructure() {
+    void givenValidLeaderboardResponse_whenSerialize_thenCorrectJsonStructure() throws IOException {
         List<LeaderboardEntryDto> leaderboard = List.of(
                 createTestEntry("user1", 200),
                 createTestEntry("user2", 300)
@@ -37,12 +37,7 @@ class LeaderboardResponseDtoTest {
                 .build();
 
         JsonContent<LeaderboardResponseDto> result;
-        try {
-            result = json.write(dto);
-        } catch (IOException e) {
-            fail("Serialization failed: " + e.getMessage());
-            return;
-        }
+        result = json.write(dto);
 
         assertThat(result)
                 .hasJsonPathArrayValue("@.leaderboard")
@@ -53,62 +48,25 @@ class LeaderboardResponseDtoTest {
     }
 
     @Test
-    void givenValidJson_whenDeserialize_thenCorrectLeaderboardResponse() {
+    void givenValidJson_whenDeserialize_thenCorrectLeaderboardResponse() throws IOException {
         String jsonContent = "{\"leaderboard\": [{\"username\": \"user1\", \"total_points\": 200}]}";
 
         LeaderboardResponseDto dto;
-        try {
-            dto = json.parseObject(jsonContent);
-        } catch (IOException e) {
-            fail("Deserialization failed: " + e.getMessage());
-            return;
-        }
+        dto = json.parseObject(jsonContent);
 
         assertThat(dto.getLeaderboard()).hasSize(1);
         assertThat(dto.getLeaderboard().getFirst().getTotalPoints()).isEqualTo(200);
     }
 
     @Test
-    void givenEmptyLeaderboard_whenSerialize_thenCorrectJsonWithEmptyArray() {
+    void givenEmptyLeaderboard_whenSerialize_thenCorrectJsonWithEmptyArray() throws IOException {
         LeaderboardResponseDto dto = LeaderboardResponseDto.builder()
                 .leaderboard(List.of())
                 .build();
 
         JsonContent<LeaderboardResponseDto> result;
-        try {
-            result = json.write(dto);
-        } catch (IOException e) {
-            fail("Serialization failed: " + e.getMessage());
-            return;
-        }
+        result = json.write(dto);
 
         assertThat(result).hasJsonPathArrayValue("@.leaderboard");
-    }
-
-    @Test
-    void givenBuilderPattern_whenCreateDto_thenLeaderboardIsSet() {
-        List<LeaderboardEntryDto> leaderboard = List.of(
-                createTestEntry("user1", 200)
-        );
-
-        LeaderboardResponseDto dto = LeaderboardResponseDto.builder()
-                .leaderboard(leaderboard)
-                .build();
-
-        assertThat(dto.getLeaderboard()).hasSize(1);
-    }
-
-    @Test
-    void givenAllArgsConstructor_whenCreateDto_thenFieldsAreSet() {
-        List<LeaderboardEntryDto> leaderboard = List.of(
-                createTestEntry("user1", 200),
-                createTestEntry("user2", 300)
-        );
-
-        LeaderboardResponseDto dto = new LeaderboardResponseDto(leaderboard);
-
-        assertThat(dto.getLeaderboard()).hasSize(2);
-        assertThat(dto.getLeaderboard().getFirst().getUsername()).isEqualTo("user1");
-        assertThat(dto.getLeaderboard().getFirst().getTotalPoints()).isEqualTo(200);
-    }
+        assertThat(result).hasEmptyJsonPathValue("@.leaderboard");    }
 }

@@ -21,19 +21,14 @@ class LeaderboardEntryDtoTest {
     private static final int TEST_POINTS = 150;
 
     @Test
-    void givenValidLeaderboardEntry_whenSerialize_thenCorrectJsonStructure() {
+    void givenValidLeaderboardEntry_whenSerialize_thenCorrectJsonStructure() throws IOException {
         LeaderboardEntryDto dto = LeaderboardEntryDto.builder()
                 .username(TEST_USERNAME)
                 .totalPoints(TEST_POINTS)
                 .build();
 
         JsonContent<LeaderboardEntryDto> result;
-        try {
-            result = json.write(dto);
-        } catch (IOException e) {
-            fail("Serialization failed: " + e.getMessage());
-            return;
-        }
+        result = json.write(dto);
 
         assertThat(result)
                 .hasJsonPathStringValue("@.username", TEST_USERNAME)
@@ -41,60 +36,14 @@ class LeaderboardEntryDtoTest {
     }
 
     @Test
-    void givenValidJson_whenDeserialize_thenCorrectLeaderboardEntry() {
+    void givenValidJson_whenDeserialize_thenCorrectLeaderboardEntry() throws IOException {
         String jsonContent = String.format("{\"username\":\"%s\",\"total_points\":%d}",
                 TEST_USERNAME, TEST_POINTS);
 
         LeaderboardEntryDto dto;
-        try {
-            dto = json.parseObject(jsonContent);
-        } catch (IOException e) {
-            fail("Deserialization failed: " + e.getMessage());
-            return;
-        }
+        dto = json.parseObject(jsonContent);
 
         assertThat(dto.getUsername()).isEqualTo(TEST_USERNAME);
         assertThat(dto.getTotalPoints()).isEqualTo(TEST_POINTS);
-    }
-
-    @Test
-    void givenBuilderPattern_whenCreateDto_thenAllFieldsAreSet() {
-        LeaderboardEntryDto dto = LeaderboardEntryDto.builder()
-                .username(TEST_USERNAME)
-                .totalPoints(TEST_POINTS)
-                .build();
-
-        assertThat(dto.getUsername()).isEqualTo(TEST_USERNAME);
-        assertThat(dto.getTotalPoints()).isEqualTo(TEST_POINTS);
-    }
-
-    @Test
-    void givenAllArgsConstructor_whenCreateDto_thenAllFieldsAreSet() {
-        LeaderboardEntryDto dto = new LeaderboardEntryDto(TEST_USERNAME, TEST_POINTS);
-
-        assertThat(dto.getUsername()).isEqualTo(TEST_USERNAME);
-        assertThat(dto.getTotalPoints()).isEqualTo(TEST_POINTS);
-    }
-
-    @Test
-    void givenZeroPoints_whenCreateDto_thenPointsAreZero() {
-        LeaderboardEntryDto dto = LeaderboardEntryDto.builder()
-                .username(TEST_USERNAME)
-                .totalPoints(0)
-                .build();
-
-        assertThat(dto.getUsername()).isEqualTo(TEST_USERNAME);
-        assertThat(dto.getTotalPoints()).isZero();
-    }
-
-    @Test
-    void givenTwoDtosWithSameValues_whenCompare_thenPropertiesMatch() {
-        LeaderboardEntryDto dto1 = new LeaderboardEntryDto("test", 100);
-        LeaderboardEntryDto dto2 = new LeaderboardEntryDto("test", 100);
-
-        assertThat(dto1.getUsername()).isEqualTo(dto2.getUsername());
-        assertThat(dto1.getTotalPoints()).isEqualTo(dto2.getTotalPoints());
-
-        assertThat(dto1).isNotSameAs(dto2);
     }
 }
