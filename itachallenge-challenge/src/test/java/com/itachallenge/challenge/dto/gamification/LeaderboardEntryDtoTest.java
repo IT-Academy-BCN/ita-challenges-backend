@@ -9,7 +9,6 @@ import org.springframework.boot.test.json.JsonContent;
 import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.fail;
 
 @JsonTest
 class LeaderboardEntryDtoTest {

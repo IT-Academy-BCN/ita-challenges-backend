@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.fail;
 
 @JsonTest
 class LeaderboardResponseDtoTest {
@@ -67,6 +66,8 @@ class LeaderboardResponseDtoTest {
         JsonContent<LeaderboardResponseDto> result;
         result = json.write(dto);
 
-        assertThat(result).hasJsonPathArrayValue("@.leaderboard");
-        assertThat(result).hasEmptyJsonPathValue("@.leaderboard");    }
+        assertThat(result)
+                .hasJsonPathArrayValue("@.leaderboard")
+                .hasEmptyJsonPathValue("@.leaderboard");
+    }
 }
