@@ -1,7 +1,7 @@
 package com.itachallenge.gamification.service;
 
-import com.itachallenge.gamification.repository.UserScoreAggregation;
 import com.itachallenge.gamification.repository.UserScoreRepository;
+import com.itachallenge.gamification.repository.projection.LeaderboardAggregationResult;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,13 +23,13 @@ class LeaderboardServiceImplTest {
     @InjectMocks
     private LeaderboardServiceImpl leaderboardServiceImpl;
 
-    private UserScoreAggregation aggregate1;
-    private UserScoreAggregation aggregate2;
+    private LeaderboardAggregationResult aggregate1;
+    private LeaderboardAggregationResult aggregate2;
 
     @BeforeEach
     void setUp() {
-        aggregate1 = new UserScoreAggregation("testUser", 100);
-        aggregate2 = new UserScoreAggregation(null, 50);
+        aggregate1 = new LeaderboardAggregationResult("testUser", 100);
+        aggregate2 = new LeaderboardAggregationResult(null, 50);
     }
 
     @Test
