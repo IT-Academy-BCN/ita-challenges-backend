@@ -1,18 +1,19 @@
 package com.itachallenge.gamification.repository;
 
 
+import com.itachallenge.gamification.repository.projection.LeaderboardAggregationResult;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class UserScoreAggregationTest {
+class LeaderboardAggregationResultTest {
 
     @Test
     void testUserScoreAggregation() {
         String username = "user";
         Integer totalPoints = 100;
 
-        UserScoreAggregation agg = new UserScoreAggregation(username, totalPoints);
+        LeaderboardAggregationResult agg = new LeaderboardAggregationResult(username, totalPoints);
 
         assertThat(agg.getUsername()).isEqualTo("user");
         assertThat(agg.getTotalPoints()).isEqualTo(100);
@@ -20,7 +21,7 @@ class UserScoreAggregationTest {
 
     @Test
     void testUserScoreAggregationBuilder() {
-        UserScoreAggregation agg = UserScoreAggregation.builder()
+        LeaderboardAggregationResult agg = LeaderboardAggregationResult.builder()
                 .username("testUser")
                 .totalPoints(150)
                 .build();

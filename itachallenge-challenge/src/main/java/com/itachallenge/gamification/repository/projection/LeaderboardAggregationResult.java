@@ -1,11 +1,11 @@
-package com.itachallenge.gamification.repository;
+package com.itachallenge.gamification.repository.projection;
 
 import lombok.*;
 
 @Getter
 @Builder
 @AllArgsConstructor
-public class UserScoreAggregation {
+public class LeaderboardAggregationResult {
     private String username;
     private Integer totalPoints;
 }

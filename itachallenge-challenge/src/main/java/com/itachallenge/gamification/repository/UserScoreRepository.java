@@ -1,6 +1,7 @@
 package com.itachallenge.gamification.repository;
 
 import com.itachallenge.gamification.document.UserScoreDocument;
+import com.itachallenge.gamification.repository.projection.LeaderboardAggregationResult;
 import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import reactor.core.publisher.Flux;
@@ -25,5 +26,5 @@ public interface UserScoreRepository extends ReactiveMongoRepository<UserScoreDo
             "{$project: {_id: 0, username: 1, totalPoints: 1}}",
             "{$sort: {totalPoints: -1}}"
     })
-    Flux<UserScoreAggregation> aggregateUserScores();
+    Flux<LeaderboardAggregationResult> aggregateUserScores();
 }

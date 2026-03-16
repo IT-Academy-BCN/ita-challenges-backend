@@ -1,6 +1,7 @@
 package com.itachallenge.gamification.repository;
 
 import com.itachallenge.gamification.document.UserScoreDocument;
+import com.itachallenge.gamification.repository.projection.LeaderboardAggregationResult;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -131,7 +132,7 @@ class UserScoreRepositoryIntegrationTest {
 
     @Test
     void givenMultipleUsersScores_whenAggregateUserScores_thenReturnUsersSortedByTotalPointsDesc() {
-        Flux<UserScoreAggregation> result = userScoreRepository.aggregateUserScores();
+        Flux<LeaderboardAggregationResult> result = userScoreRepository.aggregateUserScores();
 
         StepVerifier.create(result)
                 .expectNextMatches(dto ->
@@ -145,7 +146,7 @@ class UserScoreRepositoryIntegrationTest {
 
     @Test
     void givenUserWithMultipleUsernames_whenAggregateUserScores_thenReturnMostRecentUsername() {
-        Flux<UserScoreAggregation> result = userScoreRepository.aggregateUserScores();
+        Flux<LeaderboardAggregationResult> result = userScoreRepository.aggregateUserScores();
 
         StepVerifier.create(result)
                 .expectNextMatches(dto ->
@@ -159,7 +160,7 @@ class UserScoreRepositoryIntegrationTest {
 
     @Test
     void givenUserWithMultipleScores_whenAggregateUserScores_thenSumPointsCorrectly() {
-        Flux<UserScoreAggregation> result = userScoreRepository.aggregateUserScores();
+        Flux<LeaderboardAggregationResult> result = userScoreRepository.aggregateUserScores();
 
         StepVerifier.create(result)
                 .expectNextMatches(dto ->
@@ -175,7 +176,7 @@ class UserScoreRepositoryIntegrationTest {
     void givenEmptyDatabase_whenAggregateUserScores_thenReturnZero() {
         userScoreRepository.deleteAll().block();
 
-        Flux<UserScoreAggregation> result = userScoreRepository.aggregateUserScores();
+        Flux<LeaderboardAggregationResult> result = userScoreRepository.aggregateUserScores();
 
         StepVerifier.create(result)
                 .expectNextCount(0)
