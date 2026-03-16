@@ -175,9 +175,9 @@ class SubmissionServiceImplTest {
         when(submissionRepository.save(any(SubmissionDocument.class)))
                 .thenAnswer(invocation -> Mono.just(invocation.getArgument(0)));
 
-        when(challengeJwtFacade.getUsernameFromAuthenticationHeader(any())).thenReturn(null);
+        when(challengeJwtFacade.getUsernameFromAuthenticationHeader(any())).thenReturn("test-user");
 
-        when(challengeService.addChallengeToSolved(anyString()))
+        when(challengeService.addChallengeToSolved(challengeUuid.toString()))
                 .thenReturn(Mono.just(new SolvedDto(true, 3)));
 
         StepVerifier.create(submissionService.processSubmissionAction(userUuid.toString(), request, null))
@@ -192,7 +192,7 @@ class SubmissionServiceImplTest {
                 })
                 .verifyComplete();
 
-        verify(challengeService).addChallengeToSolved(anyString());
+        verify(challengeService).addChallengeToSolved(challengeUuid.toString());
     }
 
     @Test

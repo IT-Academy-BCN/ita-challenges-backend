@@ -75,7 +75,7 @@ public class SubmissionController {
                             name = "Authorization",
                             in = ParameterIn.HEADER,
                             required = false,
-                            description = "Bearer token; if present, the submitter's username is stored for peer-solutions author display"
+                            description = "Optional Bearer token for authenticated requests."
                     )
             },
             responses = {

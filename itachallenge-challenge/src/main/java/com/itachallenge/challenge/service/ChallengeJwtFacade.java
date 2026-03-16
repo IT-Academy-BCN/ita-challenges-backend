@@ -2,10 +2,15 @@ package com.itachallenge.challenge.service;
 
 import com.itachallenge.jwtcore.service.IJwtService;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ChallengeJwtFacade implements IChallengeJwtFacade {
+
+    private static final Logger log = LoggerFactory.getLogger(ChallengeJwtFacade.class);
 
     private final IJwtService jwtService;
 
@@ -30,7 +35,8 @@ public class ChallengeJwtFacade implements IChallengeJwtFacade {
         try {
             String token = jwtService.extractBearerToken(authHeader);
             return jwtService.extractAllClaims(token).getSubject();
-        } catch (Exception e) {
+        } catch (JwtException e) {
+            log.warn("Could not extract username from Authorization header: {}", e.getMessage());
             return null;
         }
     }
