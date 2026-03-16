@@ -3,7 +3,13 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [itachallenge-challenge-3.3.0] - 2026-03-05
+## [Unreleased]
+
+### Added (Story #191 – Peer solutions)
+- **GET /itachallenge/api/v1/challenge/challenges/{challengeId}/peer-solutions:** Endpoint to retrieve up to 10 most recent peer solutions for a challenge. Access allowed only if the requesting user has already submitted the challenge (SUBMITTED_COMPLETE or SUBMITTED_INCOMPLETE). Returns 403 Forbidden otherwise. Results ordered by submission date descending. Response DTO: solution_id, challenge_id, user_id, language_id, submitted_at, submission_text, status, author. Implementation uses `SubmissionService.getPeerSolutions` (no dedicated PeerSolutionsService, YAGNI).
+- **Author in peer-solutions:** Peer-solutions response now includes `author` (display name from JWT). Username is read from the `Authorization` header via `IChallengeJwtFacade.getUsernameFromAuthenticationHeader` and stored in `SubmissionDocument.submittedByUsername` on POST submission; GET peer-solutions return it as `author` in the DTO. No call to the User microservice.
+
+### [itachallenge-challenge-3.3.0] - 2026-03-05
 
 ### Added
 
@@ -42,20 +48,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 - Removed deprecated legacy Bookmarks routes previously served by BookmarkLegacyController. (GitHub Task [#186], PR [#1106])
-## [UNRELEASED]
-
-### Added
-- New MongoDB collection `user_score_history` with compound indexing for efficient retrieval for gamification tracking.
-- Reactive Repository for user score transactions.
-
-## [Unreleased]
-
-### [itachallenge-challenge-3.3.1-RELEASE] - 2026-03-11
-
-#### Added (Story #191 – Peer solutions)
-- **GET /itachallenge/api/v1/challenge/challenges/{challengeId}/peer-solutions:** Endpoint to retrieve up to 10 most recent peer solutions for a challenge. Access allowed only if the requesting user has already submitted the challenge (SUBMITTED_COMPLETE or SUBMITTED_INCOMPLETE). Returns 403 Forbidden otherwise. Results ordered by submission date descending. Response DTO: solution_id, challenge_id, user_id, language_id, submitted_at, submission_text, status, author. Implementation uses `SubmissionService.getPeerSolutions` (no dedicated PeerSolutionsService, YAGNI).
-- **Author in peer-solutions:** Peer-solutions response now includes `author` (display name from JWT). Username is read from the `Authorization` header via `IChallengeJwtFacade.getUsernameFromAuthenticationHeader` and stored in `SubmissionDocument.submittedByUsername` on POST submission; GET peer-solutions return it as `author` in the DTO. No call to the User microservice.
-
 ### [itachallenge-user-3.2.2-RELEASE] - 2026-02-23
 
 ### Removed
@@ -158,14 +150,6 @@ Supported actions: SAVE, GIVE_UP, SUBMIT. (Taiga [#871], PR [#1043])
     - GIVE_UP → SUBMITTED_UNCOMPLETED
     - SUBMIT → SUBMITTED_COMPLETED
 - Updated OpenAPI documentation.
-
-## [Unreleased]
-
-
-### Chore/Internal
-- Introduced `SolutionAction` enum (internal change)
-  - Values: SAVE, GIVE_UP, SUBMIT
-  - Prepared for action-based status handling (Taiga User Story [#871], PR [#1036])
 
 ### [itachallenge-challenge-3.0.3-RELEASE] - 2025-11-18
 
