@@ -43,8 +43,10 @@ class PeerSolutionsControllerTest {
                 .submittedAt(submittedAt)
                 .build();
 
-        when(challengeJwtFacade.getUserUuIdFromAuthenticationHeader(authHeader)).thenReturn(userUuid.toString());
-        when(submissionService.getPeerSolutions(eq(challengeId), eq(userUuid))).thenReturn(Flux.just(item));
+        when(challengeJwtFacade.getUserUuIdFromAuthenticationHeader(authHeader))
+                .thenReturn(userUuid.toString());
+        when(submissionService.getPeerSolutions(challengeId, userUuid))
+                .thenReturn(Flux.just(item));
 
         webTestClient.get()
                 .uri("/itachallenge/api/v1/submission/challenge/{challengeId}/peer-solutions", challengeId)
@@ -81,6 +83,33 @@ class PeerSolutionsControllerTest {
                 .exchange()
                 .expectStatus().isBadRequest();
 
+        verifyNoInteractions(submissionService);
+    }
+
+    @Test
+    void getPeerSolutions_whenFacadeThrowsJwtException_returns400() {
+        UUID challengeId = UUID.randomUUID();
+        String authHeader = "Bearer token";
+        when(challengeJwtFacade.getUserUuIdFromAuthenticationHeader(authHeader))
+                .thenThrow(new io.jsonwebtoken.JwtException("Missing or invalid authorization"));
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/submission/challenge/{challengeId}/peer-solutions", challengeId)
+                .header("Authorization", authHeader)
+                .exchange()
+                .expectStatus().isBadRequest();
+        verifyNoInteractions(submissionService);
+    }
+    @Test
+    void getPeerSolutions_whenUserIdFromJwtIsInvalidUuid_returns400() {
+        UUID challengeId = UUID.randomUUID();
+        String authHeader = "Bearer token";
+        when(challengeJwtFacade.getUserUuIdFromAuthenticationHeader(authHeader))
+                .thenReturn("not-a-uuid");
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/submission/challenge/{challengeId}/peer-solutions", challengeId)
+                .header("Authorization", authHeader)
+                .exchange()
+                .expectStatus().isBadRequest();
         verifyNoInteractions(submissionService);
     }
 }
