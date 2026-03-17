@@ -6,9 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### [itachallenge-challenge-3.4.0-RELEASE] - 2026-03-17
 
 ### Added
-- New MongoDB collection `user_score_history` with compound indexing for efficient retrieval for gamification tracking.
-- Reactive Repository for user score transactions.
-- **GET /itachallenge/api/v1/challenge/challenges/{challengeId}/peer-solutions (Story #191):** Endpoint to retrieve up to 10 most recent peer solutions for a challenge. Access allowed only if the requesting user has already submitted the challenge (SUBMITTED_COMPLETE or SUBMITTED_INCOMPLETE). Returns 403 Forbidden otherwise. Results ordered by submission date descending. Response DTO: solution_id, challenge_id, user_id, language_id, submitted_at, submission_text, status, author. Implementation uses `SubmissionService.getPeerSolutions` (no dedicated PeerSolutionsService, YAGNI).
+- **GET /itachallenge/api/v1/challenge/challenges/{challengeId}/peer-solutions (Story #191):** Endpoint to retrieve up to 10 most recent peer solutions for a challenge. Access allowed only if the requesting user has already submitted the challenge (SUBMITTED_COMPLETE or SUBMITTED_INCOMPLETE). Returns 403 Forbidden otherwise. Results ordered by submission date descending. Response DTO: submission_id, challenge_id, user_id, language_id, submitted_at, submission_text, status, author. Implementation uses `SubmissionService.getPeerSolutions` (no dedicated PeerSolutionsService, YAGNI).
 - **Author in peer-solutions (Story #191):** Peer-solutions response now includes `author` (display name from JWT). Username is read from the `Authorization` header via `IChallengeJwtFacade.getUsernameFromAuthenticationHeader` and stored in `SubmissionDocument.submittedByUsername` on POST submission; GET peer-solutions return it as `author` in the DTO. No call to the User microservice.
 
 ## [itachallenge-challenge-3.3.0] - 2026-03-05
