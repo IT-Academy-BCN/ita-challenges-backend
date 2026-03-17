@@ -156,7 +156,7 @@ public class SubmissionServiceImpl implements SubmissionService {
      */
     private PeerSubmissionItemDto toPeerSubmissionItemDto(SubmissionDocument doc) {
         return PeerSubmissionItemDto.builder()
-                .submission_id(doc.getSubmissionId() != null ? doc.getSubmissionId().toString() : null)
+                .submissionId(doc.getSubmissionId() != null ? doc.getSubmissionId().toString() : null)
                 .challengeId(doc.getChallengeId() != null ? doc.getChallengeId().toString() : null)
                 .userId(doc.getUserId() != null ? doc.getUserId().toString() : null)
                 .languageId(doc.getLanguageId() != null ? doc.getLanguageId().toString() : null)
