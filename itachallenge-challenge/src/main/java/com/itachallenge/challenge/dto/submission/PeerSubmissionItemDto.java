@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
  * <p>
  * Fields and PO justification (#191):
  * <ul>
- *   <li>{@code solution_id} – Identifies the submission; needed for UI and future actions.</li>
+ *   <li>{@code submission_id} – Identifies the submission; needed for UI and future actions.</li>
  *   <li>{@code challenge_id} – Identifies the challenge; endpoint is "peer solutions for a challenge".</li>
  *   <li>{@code user_id} – Identifies the submitter (for display/context).</li>
  *   <li>{@code language_id} – Language of the submission.</li>

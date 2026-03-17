@@ -166,9 +166,6 @@ public class SubmissionServiceImpl implements SubmissionService {
                 .author(doc.getSubmittedByUsername())
                 .build();
     }
-    /**
-     * Validates and parses userId. Tech debt: consider moving UUID validation to the controller layer for consistency with getPeerSolutions (validation at boundary); then remove from here.
-     */
     private Mono<UUID> validateAndParseUuid(String userId) {
         if (userId == null || userId.trim().isEmpty()) {
             return Mono.error(new BadRequestException("The 'userId' parameter cannot be null or empty."));

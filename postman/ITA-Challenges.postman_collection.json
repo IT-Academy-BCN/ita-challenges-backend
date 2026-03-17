@@ -566,6 +566,70 @@
           "response": []
         },
         {
+          "name": "Challenge / create-or-update submission",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "description": "Optional. If present, the submitter username is stored for peer-solutions author display."
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"uuid_challenge\": \"{{challenge_id}}\",\n  \"uuid_language\": \"{{language_id}}\",\n  \"action\": \"SAVE\",\n  \"submission_text\": \"console.log('draft')\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://{{ip}}:{{challenge_port}}/itachallenge/api/v1/users/{{user_id}}/submissions",
+              "protocol": "http",
+              "host": ["{{ip}}"],
+              "port": "{{challenge_port}}",
+              "path": ["itachallenge", "api", "v1", "users", "{{user_id}}", "submissions"]
+            },
+            "description": "Creates or updates a submission (SAVE/SUBMIT/GIVE_UP)."
+          },
+          "response": []
+        },
+        {
+          "name": "Challenge / peer-solutions (peer submissions)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "http://{{ip}}:{{challenge_port}}/itachallenge/api/v1/submission/challenge/{{challenge_id}}/peer-solutions",
+              "protocol": "http",
+              "host": ["{{ip}}"],
+              "port": "{{challenge_port}}",
+              "path": ["itachallenge", "api", "v1", "submission", "challenge", "{{challenge_id}}", "peer-solutions"]
+            },
+            "description": "Returns up to 10 most recent peer submissions for a challenge (requires requester to have already submitted)."
+          },
+          "response": []
+        },
+        {
           "name": "Challenge / user scores history",
           "request": {
             "method": "GET",

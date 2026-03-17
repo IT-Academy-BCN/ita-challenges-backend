@@ -1,7 +1,6 @@
 package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.annotations.ValidGenericPattern;
-import com.itachallenge.challenge.config.PropertiesConfig;
 import com.itachallenge.challenge.dto.*;
 import com.itachallenge.common.exception.BadRequestException;
 import com.itachallenge.challenge.exception.JwtException;
@@ -26,12 +25,6 @@ import reactor.core.publisher.Mono;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import com.itachallenge.challenge.dto.submission.PeerSubmissionItemDto;
-import com.itachallenge.submission.service.SubmissionService;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
-
-import java.util.List;
-import java.util.UUID;
 
 @RestController
 @Validated
@@ -44,21 +37,13 @@ public class ChallengeController {
     private static final String LIMIT = "^([1-9]\\d?|1\\d{2}|200)$";  // Integer in range [1, 200]
     private static final String NO_SERVICE = "No Services";
     private static final String INVALID_PARAM = "Invalid parameter";
-    private static final String UUID_PATTERN = "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$";
-    private static final String STRING_PATTERN = "^[A-Za-z]{1,9}$";  //max 9 characters
-    private static final String MESSAGE = "message";
-
     private static final Logger log = LoggerFactory.getLogger(ChallengeController.class);
-
-    private final PropertiesConfig config;
 
     private final DiscoveryClient discoveryClient;
 
     private final IChallengeService challengeService;
 
     private final IChallengeJwtFacade challengeJwtFacade;
-
-    private final SubmissionService submissionService;
 
     @Value("${spring.application.version}")
     private String version;
@@ -365,48 +350,5 @@ public class ChallengeController {
                 .flatMap(userId -> challengeService.removeChallengeFromBookmarks(challengeId, userId))
                 .doOnError(error -> log.error("Error removing challenge with id {} from bookmarks: {}", challengeId, error.getMessage()))
                 .map(ResponseEntity::ok);
-    }
-    @GetMapping("/challenges/{challengeId}/peer-solutions")
-    @Operation(
-            operationId = "getPeerSolutions",
-            summary = "Get peer solutions for a challenge",
-            description = "Returns up to 10 most recent submissions from other students for the given challenge. " +
-                    "The requesting user must have already submitted the challenge (with or without solution). " +
-                    "Otherwise returns 403 Forbidden.",
-            parameters = {
-                    @io.swagger.v3.oas.annotations.Parameter(name = "challengeId", required = true, description = "Challenge UUID"),
-                    @io.swagger.v3.oas.annotations.Parameter(name = "Authorization", in = io.swagger.v3.oas.annotations.enums.ParameterIn.HEADER, required = true, description = "Bearer token")
-            },
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "List of up to 10 peer solutions, ordered by date descending",
-                            content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = PeerSubmissionItemDto.class)))
-                    ),
-                    @ApiResponse(responseCode = "400", description = "Missing/invalid authorization or invalid challengeId"),
-                    @ApiResponse(responseCode = "403", description = "User has not submitted the challenge yet"),
-                    @ApiResponse(responseCode = "500", description = "Internal Server Error")
-            }
-    )
-    public Mono<ResponseEntity<List<PeerSubmissionItemDto>>> getPeerSolutions(
-            @PathVariable String challengeId,
-            @RequestHeader(name = "Authorization", required = false) String authHeader) {
-        UUID challengeUuid = parseUuid(challengeId, "challengeId");
-        return Mono.fromCallable(() -> challengeJwtFacade.getUserUuIdFromAuthenticationHeader(authHeader))
-                .onErrorMap(JwtException.class, e -> new BadRequestException(e.getMessage()))
-                .flatMap(userIdStr -> {
-                    UUID userUuid = parseUuid(userIdStr, "userId");
-                    return submissionService.getPeerSolutions(challengeUuid, userUuid)
-                            .collectList()
-                            .map(ResponseEntity::ok);
-                });
-    }
-
-    private UUID parseUuid(String value, String paramName) {
-        try {
-            return UUID.fromString(value != null ? value.trim() : "");
-        } catch (IllegalArgumentException e) {
-            throw new BadRequestException("Invalid UUID for " + paramName + ".");
-        }
     }
 }
