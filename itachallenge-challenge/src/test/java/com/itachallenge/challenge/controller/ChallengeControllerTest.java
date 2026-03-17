@@ -926,7 +926,7 @@ class ChallengeControllerTest {
         String authHeader = "Bearer token";
 
         PeerSubmissionItemDto item = PeerSubmissionItemDto.builder()
-                .solutionId(UUID.randomUUID().toString())
+                .submission_id(UUID.randomUUID().toString())
                 .challengeId(challengeId)
                 .userId(UUID.randomUUID().toString())
                 .submissionText("code")

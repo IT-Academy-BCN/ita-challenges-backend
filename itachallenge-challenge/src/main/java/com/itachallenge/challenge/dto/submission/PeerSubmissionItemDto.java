@@ -30,8 +30,8 @@ import java.time.LocalDateTime;
 @Builder
 public class PeerSubmissionItemDto {
 
-    @JsonProperty("solution_id")
-    private String solutionId;
+    @JsonProperty("submission_id")
+    private String submission_id;
 
     @JsonProperty("challenge_id")
     private String challengeId;
