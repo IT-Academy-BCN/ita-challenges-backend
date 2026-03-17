@@ -3,15 +3,15 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+### [itachallenge-challenge-3.4.0-RELEASE] - 2026-03-17
 
 ### Added
 - New MongoDB collection `user_score_history` with compound indexing for efficient retrieval for gamification tracking.
 - Reactive Repository for user score transactions.
 - **GET /itachallenge/api/v1/challenge/challenges/{challengeId}/peer-solutions (Story #191):** Endpoint to retrieve up to 10 most recent peer solutions for a challenge. Access allowed only if the requesting user has already submitted the challenge (SUBMITTED_COMPLETE or SUBMITTED_INCOMPLETE). Returns 403 Forbidden otherwise. Results ordered by submission date descending. Response DTO: solution_id, challenge_id, user_id, language_id, submitted_at, submission_text, status, author. Implementation uses `SubmissionService.getPeerSolutions` (no dedicated PeerSolutionsService, YAGNI).
-- **Author in peer-solutions (Story #191):** Peer-solutions response now includes `author` (display name from JWT). Username is read from the `Authorization` header via `IChallengeJwtFacade.getUsernameFromAuthenticationHeader` and stored in `SubmissionDocument.submittedByUsername` on POST submission; GET peer-solutions return it as `author` in the DTO. No call to the User microservice.
+- **Author in peer-solutions (Story #191):** Peer-solutions response now includes `author` (display name from JWT). Username is read from the `Authorization` header via `IChallengeJwtFacade.getUsernameFromAuthenticationHeader` and stored in `SubmissionDocument.submittedByUsername` on POST submission; GET peer-solutions returns it as `author` in the DTO. No call to the User microservice.
 
-### [itachallenge-challenge-3.3.0] - 2026-03-05
+## [itachallenge-challenge-3.3.0] - 2026-03-05
 
 ### Added
 
@@ -30,7 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `UserScoreServiceImplTest` unit tests validating calculation and ordering logic.
 
 #### User Points History API
-- `UserScoreHistoryController` with a new **GET endpoint** to retrieve the authenticated user's points history.
+- `UserScoreHistoryController` with a new **GET endpoint** to retrieve the authenticated user’s points history.
 - Validation of the authenticated user identifier (UUID).
 - Response formatted for frontend visualization of user progress over time.
 
@@ -50,7 +50,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 - Removed deprecated legacy Bookmarks routes previously served by BookmarkLegacyController. (GitHub Task [#186], PR [#1106])
+## [UNRELEASED]
 
+### Added
+- New MongoDB collection `user_score_history` with compound indexing for efficient retrieval for gamification tracking.
+- Reactive Repository for user score transactions.
+
+## [Unreleased]
 ### [itachallenge-user-3.2.2-RELEASE] - 2026-02-23
 
 ### Removed
@@ -153,6 +159,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - GIVE_UP → SUBMITTED_UNCOMPLETED
   - SUBMIT → SUBMITTED_COMPLETED
 - Updated OpenAPI documentation.
+
+## [Unreleased]
+
+
+### Chore/Internal
+- Introduced `SolutionAction` enum (internal change)
+  - Values: SAVE, GIVE_UP, SUBMIT
+  - Prepared for action-based status handling (Taiga User Story [#871], PR [#1036])
 
 ### [itachallenge-challenge-3.0.3-RELEASE] - 2025-11-18
 
@@ -400,7 +414,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add validation to verify that the provided user ID exists for the getAllSolutionsByUser endpoint. (Taiga [#437], PR [#889])
 - FavoriteController and extracted endpoints from ChallengeController. (Taiga [#418], PR [#886])
 - POST endpoint in Auth microservice to allow user role change at runtime (Taiga [#404], PR [#882])
-- Hardcoded GET endpoint to return all of a user's challenge solutions (Taiga [#435], PR [#884])
+- Hardcoded GET endpoint to return all of a user’s challenge solutions (Taiga [#435], PR [#884])
 - JWT authentication to logout endpoint in User microservice (Taiga [#399], PR [#864])
 - Error handling for malformed tag UUIDs and duplicate UUID detection in TagServiceImpl.getValidatedTags (Taiga [#355], PR [#872])
 - Tag validation in the addChallenge endpoint (Taiga [#354], PR [#866])
@@ -415,7 +429,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added the class ChallengeServiceImpl to comunicate with the Challenge microservice (Taiga [#413], PR [#890])
 
 ### Changed
-- Replaced Hardcoded GET endpoint to return all of a user's challenge solutions with actual solutions (Taiga [#406], PR [#887])
+- Replaced Hardcoded GET endpoint to return all of a user’s challenge solutions with actual solutions (Taiga [#406], PR [#887])
 - POST endpoint for adding new challenges in Challenge microservice (PR #763)
 - Improved filtering at `/GET Challenges`: added DTO for filters (language, level, tags), refactored `filterByLanguage()`, `filterByLevel()`, and `filterByTags()` methods, and added `GET /allTags` endpoint (PR #180 & PR #185)
 - Modify method to increase times solved counter (Taiga [#415], PR [#885])
