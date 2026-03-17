@@ -11,7 +11,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Refactor: Moved `UserGlobalExceptionHandler`, `BadUUIDException`, and `NotFoundException` to the new package.
 - Updated imports across `user` and `userinteraction` modules to use the unified exceptions.
 - Refactored `UserGlobalExceptionHandlerTest` to align with the new package structure.
-- Ensured the GlobalExceptionHandler applies to controllers from both modules via component scanning.
 
 ## [itachallenge-challenge-3.3.0] - 2026-03-05
 
@@ -47,7 +46,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - HTTP status codes
   - JSON response schema
   - error responses.
-
+  
 ### [itachallenge-user-3.2.3-RELEASE] - 2026-02-18
 
 ### Removed
@@ -112,12 +111,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Submission domain bootstrap (documents, repository, service layer and DTOs).
 - New `SubmissionController` exposing read endpoints for user submissions.
-
+ 
 ### [itachallenge-challenge-3.0.4-RELEASE] - 2025-12-17
 
 ### Fixed
 - Updated the favorites integration path to point to the new `FavoriteController` of the `user` micro.
-  (No changes to the public `challenge` API. Bookmarks remains the same.)
+(No changes to the public `challenge` API. Bookmarks remains the same.)
 
 ### [itachallenge-user-3.1.3-RELEASE] - 2025-12-12
 
@@ -155,11 +154,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Breaking Change
 - API Contract: Replaced the `status` field with action in UserSolutionRequestDto.
-  Supported actions: SAVE, GIVE_UP, SUBMIT. (Taiga [#871], PR [#1043])
+Supported actions: SAVE, GIVE_UP, SUBMIT. (Taiga [#871], PR [#1043])
 - New SolutionAction enum : Action-based submission workflow: Implemented business logic to map user actions to internal solution statuses:
-  - SAVE → IN_PROGRESS
-  - GIVE_UP → SUBMITTED_UNCOMPLETED
-  - SUBMIT → SUBMITTED_COMPLETED
+    - SAVE → IN_PROGRESS
+    - GIVE_UP → SUBMITTED_UNCOMPLETED
+    - SUBMIT → SUBMITTED_COMPLETED
 - Updated OpenAPI documentation.
 
 ## [Unreleased]
@@ -230,10 +229,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Foundation for managing user favorites in a dedicated collection.
   - Favorite domain & persistence
-    - FavoriteDocument & FavoriteDocumentTest
+    - FavoriteDocument & FavoriteDocumentTest 
     - FavoriteRepository (ReactiveMongoRepository<FavoriteDocument, UUID>) ; Favorites collection starts empty.
     - FavoriteResponseDto & FavoriteResponseDtoTest
-
+ 
 
 ### Changed
 - UserServiceImpl
@@ -271,20 +270,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Now returns 503 Service Unavailable or 504 Gateway Timeout instead of a generic 500.
   - Introduced `GithubUnavailableException` to encapsulate timeout and unavailability causes.
   - Updated `UserGlobalExceptionHandler` to map these cases accordingly.
-  -
+  - 
 ### [itachallenge-user-3.0.0-RELEASE] - 2025-10-09
 
 ### Changed
-- Before: SolutionStatus enum only had two options `ENDED` and `IN_PROGRESS`, solutions with status `ENDED` could be modified,
+- Before: SolutionStatus enum only had two options `ENDED` and `IN_PROGRESS`, solutions with status `ENDED` could be modified, 
   leading to ambiguity in submission state.
 - After: SolutionStatus enum options can be marked as `IN_PROGRESS`, `SUBMITTED_COMPLETE` or `SUBMITTED_INCOMPLETE`.
   Solutions marked as `SUBMITTED_COMPLETE` or `SUBMITTED_INCOMPLETE` now throw `UnmodifiableSolutionException`
   when updated. Only `IN_PROGRESS` solutions remain editable.
 - This changes prevents accidental overwrites of finalized submissions.
 - this changes will break the communication between back and frontend, it is required to adjust the type of answer that can be submitted
-  by users ENDED is replaced with SUBMITTED_COMPLETE and SUBMITTED_INCOMPLETE has to be added to better reflect the status
+  by users ENDED is replaced with SUBMITTED_COMPLETE and SUBMITTED_INCOMPLETE has to be added to better reflect the status 
   in which challenges can be set (Taiga user story [#703])
-
+  
 ### [itachallenge-user-2.1.0-RELEASE] - 2025-10-03
 
 ### Added
@@ -301,8 +300,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Added github username validation to user microservice upon creation of a new user (Taiga [#650], PR [#960])
-  - Before: POST /users/create accepted any githubUsername value and returned success (201/ok) even if that wasn't a GitHub username.
-  - After: POST /users/create now calls the GitHub API and rejects the request when the GitHub username does not exist.
+  - Before: POST /users/create accepted any githubUsername value and returned success (201/ok) even if that wasn't a GitHub username. 
+  - After: POST /users/create now calls the GitHub API and rejects the request when the GitHub username does not exist. 
   - Clients that previously relied on creating users with invalid GitHub usernames will now get errors for some requests that used to succeed.
 
 ### [itachallenge-githubcore-1.0.0-RELEASE] - 2025-09-11
@@ -414,15 +413,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Add validation to verify that the provided user ID exists for the getAllSolutionsByUser endpoint. (Taiga [#437], PR [#889])
-- FavoriteController and extracted endpoints from ChallengeController. (Taiga [#418], PR [#886])
-- POST endpoint in Auth microservice to allow user role change at runtime (Taiga [#404], PR [#882])
-- Hardcoded GET endpoint to return all of a user’s challenge solutions (Taiga [#435], PR [#884])
-- JWT authentication to logout endpoint in User microservice (Taiga [#399], PR [#864])
-- Error handling for malformed tag UUIDs and duplicate UUID detection in TagServiceImpl.getValidatedTags (Taiga [#355], PR [#872])
-- Tag validation in the addChallenge endpoint (Taiga [#354], PR [#866])
+- FavoriteController and extracted endpoints from ChallengeController. (Taiga [#418], PR [#886]) 
+- POST endpoint in Auth microservice to allow user role change at runtime (Taiga [#404], PR [#882])  
+- Hardcoded GET endpoint to return all of a user’s challenge solutions (Taiga [#435], PR [#884])  
+- JWT authentication to logout endpoint in User microservice (Taiga [#399], PR [#864])  
+- Error handling for malformed tag UUIDs and duplicate UUID detection in TagServiceImpl.getValidatedTags (Taiga [#355], PR [#872]) 
+- Tag validation in the addChallenge endpoint (Taiga [#354], PR [#866])  
 - GET endpoint for retrieving resources from a challenge (Taiga [#281], PR [#852])
-- GET endpoint to retrieve all user's bookmarked challenges (Taiga [#255], PR [#849])
-- DELETE endpoint in Challenge microservice to unbookmark a challenge (Taiga [#205], PR [#843])
+- GET endpoint to retrieve all user's bookmarked challenges (Taiga [#255], PR [#849]) 
+- DELETE endpoint in Challenge microservice to unbookmark a challenge (Taiga [#205], PR [#843]) 
 - POST endpoint in Challenge microservice to bookmark a challenge (Taiga [#183], PR [#829])
 - POST endpoint in User microservice to bookmark a challenge (Taiga [#183], PR [#827])
 - DELETE endpoint for user's bookmarks in User microservice (Taiga [#205], PR [#831])
@@ -434,7 +433,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Replaced Hardcoded GET endpoint to return all of a user’s challenge solutions with actual solutions (Taiga [#406], PR [#887])
 - POST endpoint for adding new challenges in Challenge microservice (PR #763)
 - Improved filtering at `/GET Challenges`: added DTO for filters (language, level, tags), refactored `filterByLanguage()`, `filterByLevel()`, and `filterByTags()` methods, and added `GET /allTags` endpoint (PR #180 & PR #185)
-- Modify method to increase times solved counter (Taiga [#415], PR [#885])
+- Modify method to increase times solved counter (Taiga [#415], PR [#885]) 
 
 ### Removed
 - Removed `score` attribute from `UserSolution` DTOs and cleaned up all score/solution-related code in User microservice (PR #825, PR #725)
