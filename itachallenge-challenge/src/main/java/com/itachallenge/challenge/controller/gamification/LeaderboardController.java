@@ -1,6 +1,8 @@
 package com.itachallenge.challenge.controller.gamification;
 
+import com.itachallenge.challenge.dto.MessageDto;
 import com.itachallenge.challenge.dto.gamification.LeaderboardResponseDto;
+import com.itachallenge.challenge.exception.InternalServerErrorException;
 import com.itachallenge.gamification.service.LeaderboardService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -20,7 +22,7 @@ import reactor.core.publisher.Mono;
 @RequestMapping("/itachallenge/api/v1/users")
 public class LeaderboardController {
 
-    private static final Logger log =  LoggerFactory.getLogger(LeaderboardController.class);
+    private static final Logger log = LoggerFactory.getLogger(LeaderboardController.class);
     private final LeaderboardService leaderboardService;
 
     @GetMapping("/leaderboard")
@@ -36,12 +38,19 @@ public class LeaderboardController {
                                     schema = @Schema(implementation = LeaderboardResponseDto.class)
                             )
                     ),
-                    @ApiResponse(responseCode = "500", description = "Internal Server Error.")
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "Internal Server Error - Database unavailable or unexpected error",
+                            content = @Content(schema = @Schema(implementation = MessageDto.class))
+
+                    )
             }
     )
     public Mono<ResponseEntity<LeaderboardResponseDto>> getLeaderboard() {
         log.info("Receiving request to fetch global leaderboard");
         return leaderboardService.getLeaderboard()
-                .map(ResponseEntity::ok);
+                .map(ResponseEntity::ok)
+                .doOnError(e -> log.error("Error in leaderboard request: {}", e.getMessage()))
+                .onErrorResume(InternalServerErrorException.class, Mono::error);
     }
 }
