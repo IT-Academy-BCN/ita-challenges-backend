@@ -3,7 +3,6 @@ package com.itachallenge.challenge.controller;
 import com.itachallenge.challenge.config.PropertiesConfig;
 import com.itachallenge.challenge.document.DetailDocument;
 import com.itachallenge.challenge.dto.*;
-import com.itachallenge.challenge.dto.submission.PeerSubmissionItemDto;
 import com.itachallenge.challenge.enums.DifficultyLevel;
 import com.itachallenge.challenge.enums.Topic;
 import com.itachallenge.challenge.exception.*;

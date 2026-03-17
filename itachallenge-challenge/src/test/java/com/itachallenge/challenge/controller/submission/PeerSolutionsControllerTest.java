@@ -58,7 +58,7 @@ class PeerSolutionsControllerTest {
                 .jsonPath("$[0].challenge_id").isEqualTo(challengeId.toString())
                 .jsonPath("$[0].submission_text").isEqualTo("code");
 
-        verify(submissionService).getPeerSolutions(eq(challengeId), eq(userUuid));
+        verify(submissionService).getPeerSolutions(challengeId, userUuid);
     }
 
     @Test
