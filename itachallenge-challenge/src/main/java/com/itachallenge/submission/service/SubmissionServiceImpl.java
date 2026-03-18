@@ -39,7 +39,7 @@ public class SubmissionServiceImpl implements SubmissionService {
             SubmissionRepository submissionRepository,
             IChallengeService challengeService,
             IChallengeJwtFacade challengeJwtFacade
-    ) {
+    ){
         this.challengeJwtFacade = challengeJwtFacade;
         this.submissionRepository = submissionRepository;
         this.challengeService = challengeService;
@@ -71,19 +71,6 @@ public class SubmissionServiceImpl implements SubmissionService {
                     return savedMono.flatMap(saved -> buildResponse(saved, tuple.getT2()));
                 });
     }
-
-    @Override
-    public Flux<PeerSubmissionItemDto> getPeerSubmissions(UUID challengeId, UUID userId) {
-        return submissionRepository.existsByUserIdAndChallengeIdAndStatusIn(userId, challengeId, SUBMITTED_STATUSES)
-                .flatMapMany(hasSubmitted -> Boolean.TRUE.equals(hasSubmitted)
-                        ? submissionRepository.findTop10ByChallengeIdAndUserIdNotAndStatusInOrderByCreatedAtDesc(
-                                challengeId, userId, SUBMITTED_STATUSES)
-                        .map(this::toPeerSubmissionItemDto)
-                        : Flux.error(new ResponseStatusException(HttpStatus.FORBIDDEN,
-                        "User must have submitted the challenge before viewing peer submissions.")));
-
-    }
-
     private Mono<Void> validateSubmitText(SubmissionActionRequestDto request) {
         if (request.getAction() == SubmissionAction.SUBMIT
                 && (request.getSubmissionText() == null || request.getSubmissionText().isBlank())) {
@@ -93,9 +80,8 @@ public class SubmissionServiceImpl implements SubmissionService {
     }
 
     private boolean isSubmitted(SubmissionStatus status) {
-        return status == SubmissionStatus.SUBMITTED_COMPLETE || status == SubmissionStatus.SUBMITTED_INCOMPLETE;
+        return SUBMITTED_STATUSES.contains(status);
     }
-
     private Mono<SubmissionDocument> saveOrUpdateSubmission(UUID userUuid, UUID challengeUuid, UUID languageUuid,
                                                             SubmissionActionRequestDto request, String submittedByUsername) {
         SubmissionStatus targetStatus = request.getAction().toStatus();
@@ -153,13 +139,15 @@ public class SubmissionServiceImpl implements SubmissionService {
                 .build());
     }
 
-    private Mono<UUID> validateAndParseUuid(String userId) {
-        if (userId == null || userId.trim().isEmpty()) {
-            return Mono.error(new BadRequestException("The 'userId' parameter cannot be null or empty."));
-        }
-        return Mono.fromCallable(() -> UUID.fromString(userId.trim()))
-                .onErrorMap(IllegalArgumentException.class,
-                        ex -> new BadRequestException("The 'userId' parameter must be a valid UUID."));
+    @Override
+    public Flux<PeerSubmissionItemDto> getPeerSubmissions(UUID challengeId, UUID userId) {
+        return submissionRepository.existsByUserIdAndChallengeIdAndStatusIn(userId, challengeId, SUBMITTED_STATUSES)
+                .flatMapMany(hasSubmitted -> Boolean.TRUE.equals(hasSubmitted)
+                        ? submissionRepository.findTop10ByChallengeIdAndUserIdNotAndStatusInOrderByCreatedAtDesc(
+                                challengeId, userId, SUBMITTED_STATUSES)
+                        .map(this::toPeerSubmissionItemDto)
+                        : Flux.error(new ResponseStatusException(HttpStatus.FORBIDDEN,
+                        "Access denied to requested resource")));
     }
 
     private PeerSubmissionItemDto toPeerSubmissionItemDto(SubmissionDocument doc) {
@@ -174,4 +162,13 @@ public class SubmissionServiceImpl implements SubmissionService {
                 .author(doc.getSubmittedByUsername())
                 .build();
     }
+    private Mono<UUID> validateAndParseUuid(String userId) {
+        if (userId == null || userId.trim().isEmpty()) {
+            return Mono.error(new BadRequestException("The 'userId' parameter cannot be null or empty."));
+        }
+        return Mono.fromCallable(() -> UUID.fromString(userId.trim()))
+                .onErrorMap(IllegalArgumentException.class,
+                        ex -> new BadRequestException("The 'userId' parameter must be a valid UUID."));
+    }
+
 }

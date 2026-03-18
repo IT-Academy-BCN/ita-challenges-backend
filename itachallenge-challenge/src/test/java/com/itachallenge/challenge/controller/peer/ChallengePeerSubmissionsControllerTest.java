@@ -1,4 +1,4 @@
-package com.itachallenge.challenge.controller;
+package com.itachallenge.challenge.controller.peer;
 
 import com.itachallenge.challenge.dto.submission.PeerSubmissionItemDto;
 import com.itachallenge.challenge.service.IChallengeJwtFacade;
@@ -15,7 +15,7 @@ import java.util.UUID;
 
 import static org.mockito.Mockito.*;
 
-@WebFluxTest(ChallengePeerSubmissionsController.class)
+@WebFluxTest(com.itachallenge.challenge.controller.peer.ChallengePeerSubmissionsController.class)
 class ChallengePeerSubmissionsControllerTest {
 
     @Autowired
@@ -122,7 +122,7 @@ class ChallengePeerSubmissionsControllerTest {
         when(submissionService.getPeerSubmissions(challengeId, userUuid))
                 .thenReturn(Flux.error(new org.springframework.web.server.ResponseStatusException(
                         org.springframework.http.HttpStatus.FORBIDDEN,
-                        "User must have submitted the challenge before viewing peer submissions."
+                        "Access denied to requested resource"
                 )));
         webTestClient.get()
                 .uri("/itachallenge/api/v1/challenges/{challengeId}/peer-submissions", challengeId)
