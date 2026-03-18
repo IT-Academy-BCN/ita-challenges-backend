@@ -175,9 +175,9 @@ class SubmissionServiceImplTest {
         when(submissionRepository.save(any(SubmissionDocument.class)))
                 .thenAnswer(invocation -> Mono.just(invocation.getArgument(0)));
 
-        when(challengeJwtFacade.getUsernameFromAuthenticationHeader(any())).thenReturn(null);
+        when(challengeJwtFacade.getUsernameFromAuthenticationHeader(any())).thenReturn("test-user");
 
-        when(challengeService.addChallengeToSolved(anyString()))
+        when(challengeService.addChallengeToSolved(challengeUuid.toString()))
                 .thenReturn(Mono.just(new SolvedDto(true, 3)));
 
         StepVerifier.create(submissionService.processSubmissionAction(userUuid.toString(), request, null))
@@ -192,7 +192,7 @@ class SubmissionServiceImplTest {
                 })
                 .verifyComplete();
 
-        verify(challengeService).addChallengeToSolved(anyString());
+        verify(challengeService).addChallengeToSolved(challengeUuid.toString());
     }
 
     @Test
@@ -340,7 +340,7 @@ class SubmissionServiceImplTest {
                 .challengeId(challengeId)
                 .languageId(UUID.randomUUID())
                 .status(SubmissionStatus.SUBMITTED_COMPLETE)
-                .submissionText("solution code")
+                .submissionText("submission code")
                 .createdAt(LocalDateTime.now().minusDays(1))
                 .submittedByUsername("peerUser")
                 .build();
@@ -355,7 +355,7 @@ class SubmissionServiceImplTest {
                 .expectNextMatches(dto ->
                         dto.getChallengeId().equals(challengeId.toString())
                                 && dto.getUserId().equals(otherUserId.toString())
-                                && "solution code".equals(dto.getSubmissionText())
+                                && "submission code".equals(dto.getSubmissionText())
                                 && dto.getStatus().equals(SubmissionStatus.SUBMITTED_COMPLETE.name())
                                 && "peerUser".equals(dto.getAuthor()))
                 .verifyComplete();
@@ -422,7 +422,7 @@ class SubmissionServiceImplTest {
                 .challengeId(challengeId)
                 .languageId(UUID.randomUUID())
                 .status(SubmissionStatus.SUBMITTED_COMPLETE)
-                .submissionText("solution code")
+                .submissionText("submission code")
                 .createdAt(LocalDateTime.now().minusDays(1))
                 .submittedByUsername(null)
                 .build();
@@ -437,7 +437,7 @@ class SubmissionServiceImplTest {
                 .expectNextMatches(dto ->
                         dto.getChallengeId().equals(challengeId.toString())
                                 && dto.getUserId().equals(otherUserId.toString())
-                                && "solution code".equals(dto.getSubmissionText())
+                                && "submission code".equals(dto.getSubmissionText())
                                 && dto.getAuthor() == null)
                 .verifyComplete();
     }
