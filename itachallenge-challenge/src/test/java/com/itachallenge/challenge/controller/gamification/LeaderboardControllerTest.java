@@ -28,7 +28,7 @@ class LeaderboardControllerTest {
     private LeaderboardService leaderboardService;
 
     @Test
-    void getLeaderboard_returnsSortedData() {
+    void getLeaderboard_returnsOkAndLeaderboard() {
         LeaderboardResponseDto expectedResponse = LeaderboardResponseDto.builder()
                 .leaderboard(List.of(
                         LeaderboardEntryDto.builder().username("user2").totalPoints(50).build(),
@@ -54,7 +54,7 @@ class LeaderboardControllerTest {
 
 
     @Test
-    void getLeaderboard_whenEmpty_returnsEmptyArray() {
+    void getLeaderboard_whenEmpty_returnsOkAndEmptyArray() {
         LeaderboardResponseDto emptyResponse = LeaderboardResponseDto.builder()
                 .leaderboard(Collections.emptyList())
                 .build();
@@ -72,7 +72,7 @@ class LeaderboardControllerTest {
     }
 
     @Test
-    void getLeaderboard_whenServiceError_returnsServerError() {
+    void getLeaderboard_whenServiceError_returns500Error() {
         when(leaderboardService.getLeaderboard())
                 .thenReturn(Mono.error(new InternalServerErrorException("DB error")));
 
