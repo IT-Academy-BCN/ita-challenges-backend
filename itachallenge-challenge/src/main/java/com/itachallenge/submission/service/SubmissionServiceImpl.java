@@ -162,11 +162,6 @@ public class SubmissionServiceImpl implements SubmissionService {
                         ex -> new BadRequestException("The 'userId' parameter must be a valid UUID."));
     }
 
-    /**
-     * Maps a submission document to the peer-submissions DTO.
-     * {@code author} may be null when the submission was created before we stored the submitter username,
-     * or when no valid Authorization header was sent at submission time.
-     */
     private PeerSubmissionItemDto toPeerSubmissionItemDto(SubmissionDocument doc) {
         return PeerSubmissionItemDto.builder()
                 .submissionId(doc.getSubmissionId() != null ? doc.getSubmissionId().toString() : null)
