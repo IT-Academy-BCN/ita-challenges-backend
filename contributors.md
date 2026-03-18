@@ -28,7 +28,7 @@
 * Alberto Castillo Corporan - https://github.com/albertocstll70
 * Joan Carles Martínez - https://github.com/leibaral
 * Christian Bowser - https://github.com/bowserchris
-* Natalia Fara - https://github.com/nfaraDev
+* Natalia Fara - https://github.com/nfaraDevgit
 * Kirill Dolgopolov - https://github.com/KirillDolgopolov
 * Pau Franco Toda - https://github.com/Parapau
 * Arnau Burguera Calles - https://github.com/ArnauBurguera
@@ -124,3 +124,4 @@
 * David Rey Muñiz - https://github.com/Viid21
 * Andrés Rojo Cabrera - https://github.com/andyrouge81
 * Adrià Lorente Arnau - https://github.com/alaw810
+* Jordi Casas González - https://github.com/JordiCasas87
