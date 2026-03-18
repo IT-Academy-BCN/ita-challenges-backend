@@ -1,6 +1,7 @@
 package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.annotations.ValidGenericPattern;
+import com.itachallenge.challenge.config.PropertiesConfig;
 import com.itachallenge.challenge.dto.*;
 import com.itachallenge.common.exception.BadRequestException;
 import com.itachallenge.challenge.exception.JwtException;
@@ -37,7 +38,13 @@ public class ChallengeController {
     private static final String LIMIT = "^([1-9]\\d?|1\\d{2}|200)$";  // Integer in range [1, 200]
     private static final String NO_SERVICE = "No Services";
     private static final String INVALID_PARAM = "Invalid parameter";
+    private static final String UUID_PATTERN = "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$";
+    private static final String STRING_PATTERN = "^[A-Za-z]{1,9}$";  //max 9 characters
+    private static final String MESSAGE = "message";
+
     private static final Logger log = LoggerFactory.getLogger(ChallengeController.class);
+
+    private final PropertiesConfig config;
 
     private final DiscoveryClient discoveryClient;
 
@@ -351,4 +358,5 @@ public class ChallengeController {
                 .doOnError(error -> log.error("Error removing challenge with id {} from bookmarks: {}", challengeId, error.getMessage()))
                 .map(ResponseEntity::ok);
     }
+
 }
