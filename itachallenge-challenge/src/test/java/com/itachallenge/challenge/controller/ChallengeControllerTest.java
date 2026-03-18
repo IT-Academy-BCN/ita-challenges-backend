@@ -10,7 +10,6 @@ import com.itachallenge.challenge.repository.ChallengeRepository;
 import com.itachallenge.challenge.service.*;
 import com.itachallenge.common.exception.BadRequestException;
 import com.itachallenge.common.exception.GlobalExceptionHandler;
-import com.itachallenge.submission.service.SubmissionService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -86,9 +85,6 @@ class ChallengeControllerTest {
 
     @MockBean
     private MappingMongoConverter mappingMongoConverter;
-
-    @MockBean
-    private SubmissionService submissionService;
 
     private List<UUID> tags;
     private String challengeId;
@@ -910,13 +906,18 @@ class ChallengeControllerTest {
                 .expectStatus().isBadRequest();
     }
 
+
     @Test
     void deleteChallenge_shouldReturn200Ok() {
+        String challengeId = "12345678-1234-1234-1234-123456789012";
+
         DeleteResponseDto deleteResponse = new DeleteResponseDto(challengeId, "Challenge deleted successfully");
 
         when(challengeService.deleteChallengeById(challengeId)).thenReturn(Mono.just(deleteResponse));
 
         webTestClient.delete()
-                .uri("/itachallenge/api/v1/challenge/challenges/" + challengeId);
+                .uri("/itachallenge/api/v1/challenge/challenges/" + challengeId)
+                .exchange()
+                .expectStatus().isOk();  // ← 200 OK, no 204
     }
 }
