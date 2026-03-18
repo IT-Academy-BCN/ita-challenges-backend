@@ -121,5 +121,6 @@
 * Pol Serrano Franquesa - https://github.com/polserrano8
 * Andrea Pan i Ubiergo - https://github.com/Apani13
 * Andrés Calvo Prieto - https://github.com/Andrescalvo22
+* Esther Arias Valor https://github.com/eariasvalor
 * Andrés Rojo Cabrera - https://github.com/andyrouge81
 * David Rey Muñiz - https://github.com/Viid21
