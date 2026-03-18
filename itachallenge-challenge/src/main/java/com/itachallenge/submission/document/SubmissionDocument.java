@@ -36,8 +36,9 @@ public class SubmissionDocument {
     @Field("submission")
     private String submissionText;
 
+    @Builder.Default
     @Field("created_at")
-    private LocalDateTime createdAt;
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     @Field("submitted_by_username")
     private String submittedByUsername;

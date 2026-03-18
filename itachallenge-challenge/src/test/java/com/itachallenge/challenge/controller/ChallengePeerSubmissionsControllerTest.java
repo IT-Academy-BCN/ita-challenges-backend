@@ -16,7 +16,7 @@ import java.util.UUID;
 import static org.mockito.Mockito.*;
 
 @WebFluxTest(ChallengePeerSubmissionsController.class)
-class PeerSubmissionsControllerTest {
+class ChallengePeerSubmissionsControllerTest {
 
     @Autowired
     private WebTestClient webTestClient;
@@ -111,6 +111,41 @@ class PeerSubmissionsControllerTest {
                 .exchange()
                 .expectStatus().isBadRequest();
         verifyNoInteractions(submissionService);
+    }
+    @Test
+    void getPeerSubmissions_whenUserHasNotSubmitted_returns403() {
+        UUID challengeId = UUID.randomUUID();
+        UUID userUuid = UUID.randomUUID();
+        String authHeader = "Bearer token";
+        when(challengeJwtFacade.getUserUuIdFromAuthenticationHeader(authHeader))
+                .thenReturn(userUuid.toString());
+        when(submissionService.getPeerSubmissions(challengeId, userUuid))
+                .thenReturn(Flux.error(new org.springframework.web.server.ResponseStatusException(
+                        org.springframework.http.HttpStatus.FORBIDDEN,
+                        "User must have submitted the challenge before viewing peer submissions."
+                )));
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/challenges/{challengeId}/peer-submissions", challengeId)
+                .header("Authorization", authHeader)
+                .exchange()
+                .expectStatus().isForbidden();
+        verify(submissionService).getPeerSubmissions(challengeId, userUuid);
+    }
+    @Test
+    void getPeerSubmissions_whenServiceThrowsUnexpectedError_returns500() {
+        UUID challengeId = UUID.randomUUID();
+        UUID userUuid = UUID.randomUUID();
+        String authHeader = "Bearer token";
+        when(challengeJwtFacade.getUserUuIdFromAuthenticationHeader(authHeader))
+                .thenReturn(userUuid.toString());
+        when(submissionService.getPeerSubmissions(challengeId, userUuid))
+                .thenReturn(Flux.error(new RuntimeException("boom")));
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/challenges/{challengeId}/peer-submissions", challengeId)
+                .header("Authorization", authHeader)
+                .exchange()
+                .expectStatus().is5xxServerError();
+        verify(submissionService).getPeerSubmissions(challengeId, userUuid);
     }
 }
 

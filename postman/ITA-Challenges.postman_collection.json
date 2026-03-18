@@ -623,7 +623,7 @@
               "protocol": "http",
               "host": ["{{ip}}"],
               "port": "{{challenge_port}}",
-              "path": ["itachallenge", "api", "v1", "submission", "challenge", "{{challenge_id}}", "peer-submissions"]
+              "path": ["itachallenge", "api", "v1", "challenges", "{{challenge_id}}", "peer-submissions"]
             },
             "description": "Returns up to 10 most recent peer submissions for a challenge (requires requester to have already submitted)."
           },
