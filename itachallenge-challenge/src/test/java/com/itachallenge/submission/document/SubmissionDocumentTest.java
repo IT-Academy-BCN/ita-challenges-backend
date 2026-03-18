@@ -1,6 +1,7 @@
 package com.itachallenge.submission.document;
 
 import com.itachallenge.submission.enums.SubmissionStatus;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -114,5 +115,19 @@ class SubmissionDocumentTest {
     @Test
     void shouldInstantiateDocumentWithNoArgsConstructor() {
         assertNotNull(submissionDocumentNoArgs);
+    }
+
+    @Test
+    void builder_whenCreatedAtNotProvided_setsCreatedAtByDefault() {
+        SubmissionDocument doc = SubmissionDocument.builder()
+                .submissionId(UUID.randomUUID())
+                .userId(UUID.randomUUID())
+                .challengeId(UUID.randomUUID())
+                .languageId(UUID.randomUUID())
+                .status(SubmissionStatus.IN_PROGRESS)
+                .submissionText("draft")
+                .build();
+
+        Assertions.assertNotNull(doc.getCreatedAt());
     }
 }
