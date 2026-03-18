@@ -6,8 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [itachallenge-challenge-3.4.0-RELEASE] - 2026-03-17
 
 ### Added
-- **GET /itachallenge/api/v1/submission/challenge/{challengeId}/peer-solutions (Story #191):** Endpoint to retrieve up to 10 most recent peer solutions for a challenge. Access allowed only if the requesting user has already submitted the challenge (SUBMITTED_COMPLETE or SUBMITTED_INCOMPLETE). Returns 403 Forbidden otherwise. Results ordered by submission date descending. Response DTO: submission_id, challenge_id, user_id, language_id, submitted_at, submission_text, status, author. Implementation uses `SubmissionService.getPeerSolutions` (no dedicated PeerSolutionsService, YAGNI).
-- **Author in peer-solutions (Story #191):** Peer-solutions response now incluye `author` (display name from JWT). Username se lee del header `Authorization` vía `IChallengeJwtFacade.getUsernameFromAuthenticationHeader` y se guarda en `SubmissionDocument.submittedByUsername` en el POST; el GET de peer-solutions lo expone como `author` en el DTO.
+- **GET /itachallenge/api/v1/challenges/{challengeId}/peer-submissions (Story #191): Endpoint to retrieve up to 10 most recent peer submissions for a challenge. Access allowed only if the requesting user has already submitted the challenge (SUBMITTED_COMPLETE or SUBMITTED_INCOMPLETE). Returns 403 Forbidden otherwise. Results ordered by submission date descending. Response DTO: submission_id, challenge_id, user_id, language_id, submitted_at, submission_text, status, author. Implementation uses SubmissionService.getPeerSubmissions (no dedicated service, YAGNI).
+- **Author in peer-submissions (Story #191): Peer-submissions response now includes author (display name from JWT). Username is read from the Authorization header via IChallengeJwtFacade.getUsernameFromAuthenticationHeader and stored in SubmissionDocument.submittedByUsername on POST; the GET peer-submissions endpoint exposes it as author in the DTO.
 
 ## [itachallenge-challenge-3.3.0] - 2026-03-05
 

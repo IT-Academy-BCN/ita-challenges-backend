@@ -326,7 +326,7 @@ class SubmissionServiceImplTest {
         Assertions.assertEquals(username, captor.getValue().getSubmittedByUsername());
     }
     @Test
-    void getPeerSolutions_whenUserHasSubmitted_returnsPeerSolutionsOrderedByDateDesc() {
+    void getPeerSubmissions_whenUserHasSubmitted_returnsPeerSubmissionsOrderedByDateDesc() {
         UUID challengeId = UUID.randomUUID();
         UUID userId = UUID.randomUUID();
         UUID otherUserId = UUID.randomUUID();
@@ -340,7 +340,7 @@ class SubmissionServiceImplTest {
                 .challengeId(challengeId)
                 .languageId(UUID.randomUUID())
                 .status(SubmissionStatus.SUBMITTED_COMPLETE)
-                .submissionText("solution code")
+                .submissionText("submission code")
                 .createdAt(LocalDateTime.now().minusDays(1))
                 .submittedByUsername("peerUser")
                 .build();
@@ -349,13 +349,13 @@ class SubmissionServiceImplTest {
                 eq(challengeId), eq(userId), anyList()))
                 .thenReturn(Flux.just(doc));
 
-        Flux<PeerSubmissionItemDto> result = submissionService.getPeerSolutions(challengeId, userId);
+        Flux<PeerSubmissionItemDto> result = submissionService.getPeerSubmissions(challengeId, userId);
 
         StepVerifier.create(result)
                 .expectNextMatches(dto ->
                         dto.getChallengeId().equals(challengeId.toString())
                                 && dto.getUserId().equals(otherUserId.toString())
-                                && "solution code".equals(dto.getSubmissionText())
+                                && "submission code".equals(dto.getSubmissionText())
                                 && dto.getStatus().equals(SubmissionStatus.SUBMITTED_COMPLETE.name())
                                 && "peerUser".equals(dto.getAuthor()))
                 .verifyComplete();
@@ -366,14 +366,14 @@ class SubmissionServiceImplTest {
     }
 
     @Test
-    void getPeerSolutions_whenUserHasNotSubmitted_returns403() {
+    void getPeerSubmissions_whenUserHasNotSubmitted_returns403() {
         UUID challengeId = UUID.randomUUID();
         UUID userId = UUID.randomUUID();
 
         when(submissionRepository.existsByUserIdAndChallengeIdAndStatusIn(eq(userId), eq(challengeId), anyList()))
                 .thenReturn(Mono.just(false));
 
-        Flux<PeerSubmissionItemDto> result = submissionService.getPeerSolutions(challengeId, userId);
+        Flux<PeerSubmissionItemDto> result = submissionService.getPeerSubmissions(challengeId, userId);
 
         StepVerifier.create(result)
                 .expectErrorMatches(throwable ->
@@ -387,7 +387,7 @@ class SubmissionServiceImplTest {
     }
 
     @Test
-    void getPeerSolutions_whenUserHasSubmitted_returnsEmptyList_whenNoPeerSubmissions() {
+    void getPeerSubmissions_whenUserHasSubmitted_returnsEmptyList_whenNoPeerSubmissions() {
         UUID challengeId = UUID.randomUUID();
         UUID userId = UUID.randomUUID();
 
@@ -397,7 +397,7 @@ class SubmissionServiceImplTest {
                 eq(challengeId), eq(userId), anyList()))
                 .thenReturn(Flux.empty());
 
-        Flux<PeerSubmissionItemDto> result = submissionService.getPeerSolutions(challengeId, userId);
+        Flux<PeerSubmissionItemDto> result = submissionService.getPeerSubmissions(challengeId, userId);
 
         StepVerifier.create(result)
                 .verifyComplete();
@@ -408,7 +408,7 @@ class SubmissionServiceImplTest {
     }
 
     @Test
-    void getPeerSolutions_whenDocumentHasNoAuthor_returnsDtoWithNullAuthor() {
+    void getPeerSubmissions_whenDocumentHasNoAuthor_returnsDtoWithNullAuthor() {
         UUID challengeId = UUID.randomUUID();
         UUID userId = UUID.randomUUID();
         UUID otherUserId = UUID.randomUUID();
@@ -422,7 +422,7 @@ class SubmissionServiceImplTest {
                 .challengeId(challengeId)
                 .languageId(UUID.randomUUID())
                 .status(SubmissionStatus.SUBMITTED_COMPLETE)
-                .submissionText("solution code")
+                .submissionText("submission code")
                 .createdAt(LocalDateTime.now().minusDays(1))
                 .submittedByUsername(null)
                 .build();
@@ -431,13 +431,13 @@ class SubmissionServiceImplTest {
                 eq(challengeId), eq(userId), anyList()))
                 .thenReturn(Flux.just(doc));
 
-        Flux<PeerSubmissionItemDto> result = submissionService.getPeerSolutions(challengeId, userId);
+        Flux<PeerSubmissionItemDto> result = submissionService.getPeerSubmissions(challengeId, userId);
 
         StepVerifier.create(result)
                 .expectNextMatches(dto ->
                         dto.getChallengeId().equals(challengeId.toString())
                                 && dto.getUserId().equals(otherUserId.toString())
-                                && "solution code".equals(dto.getSubmissionText())
+                                && "submission code".equals(dto.getSubmissionText())
                                 && dto.getAuthor() == null)
                 .verifyComplete();
     }

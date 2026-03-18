@@ -140,19 +140,19 @@ public class SubmissionServiceImpl implements SubmissionService {
     }
 
     @Override
-    public Flux<PeerSubmissionItemDto> getPeerSolutions(UUID challengeId, UUID userId) {
+    public Flux<PeerSubmissionItemDto> getPeerSubmissions(UUID challengeId, UUID userId) {
         return submissionRepository.existsByUserIdAndChallengeIdAndStatusIn(userId, challengeId, SUBMITTED_STATUSES)
                 .flatMapMany(hasSubmitted -> Boolean.TRUE.equals(hasSubmitted)
                         ? submissionRepository.findTop10ByChallengeIdAndUserIdNotAndStatusInOrderByCreatedAtDesc(
                                 challengeId, userId, SUBMITTED_STATUSES)
                         .map(this::toPeerSubmissionItemDto)
                         : Flux.error(new ResponseStatusException(HttpStatus.FORBIDDEN,
-                        "User must have submitted the challenge before viewing peer solutions.")));
+                        "User must have submitted the challenge before viewing peer submissions.")));
     }
     /**
-     * Maps a submission document to the peer-solutions DTO.
+     * Maps a submission document to the peer-submissions DTO.
      * {@code author} may be null when the submission was created before we stored the submitter username,
-     * or when no valid Authorization header was sent at submitted time.
+     * or when no valid Authorization header was sent at submission time.
      */
     private PeerSubmissionItemDto toPeerSubmissionItemDto(SubmissionDocument doc) {
         return PeerSubmissionItemDto.builder()

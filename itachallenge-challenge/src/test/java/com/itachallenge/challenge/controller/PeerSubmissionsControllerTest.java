@@ -1,4 +1,4 @@
-package com.itachallenge.challenge.controller.submission;
+package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.dto.submission.PeerSubmissionItemDto;
 import com.itachallenge.challenge.service.IChallengeJwtFacade;
@@ -15,8 +15,8 @@ import java.util.UUID;
 
 import static org.mockito.Mockito.*;
 
-@WebFluxTest(PeerSolutionsController.class)
-class PeerSolutionsControllerTest {
+@WebFluxTest(ChallengePeerSubmissionsController.class)
+class PeerSubmissionsControllerTest {
 
     @Autowired
     private WebTestClient webTestClient;
@@ -28,7 +28,7 @@ class PeerSolutionsControllerTest {
     private IChallengeJwtFacade challengeJwtFacade;
 
     @Test
-    void getPeerSolutions_whenUserHasSubmitted_returns200WithList() {
+    void getPeerSubmissions_whenUserHasSubmitted_returns200WithList() {
         UUID challengeId = UUID.randomUUID();
         UUID userUuid = UUID.randomUUID();
         String authHeader = "Bearer token";
@@ -45,11 +45,11 @@ class PeerSolutionsControllerTest {
 
         when(challengeJwtFacade.getUserUuIdFromAuthenticationHeader(authHeader))
                 .thenReturn(userUuid.toString());
-        when(submissionService.getPeerSolutions(challengeId, userUuid))
+        when(submissionService.getPeerSubmissions(challengeId, userUuid))
                 .thenReturn(Flux.just(item));
 
         webTestClient.get()
-                .uri("/itachallenge/api/v1/submission/challenge/{challengeId}/peer-solutions", challengeId)
+                .uri("/itachallenge/api/v1/challenges/{challengeId}/peer-submissions", challengeId)
                 .header("Authorization", authHeader)
                 .exchange()
                 .expectStatus().isOk()
@@ -58,15 +58,15 @@ class PeerSolutionsControllerTest {
                 .jsonPath("$[0].challenge_id").isEqualTo(challengeId.toString())
                 .jsonPath("$[0].submission_text").isEqualTo("code");
 
-        verify(submissionService).getPeerSolutions(challengeId, userUuid);
+        verify(submissionService).getPeerSubmissions(challengeId, userUuid);
     }
 
     @Test
-    void getPeerSolutions_invalidChallengeId_returns400() {
+    void getPeerSubmissions_invalidChallengeId_returns400() {
         String authHeader = "Bearer token";
 
         webTestClient.get()
-                .uri("/itachallenge/api/v1/submission/challenge/not-a-uuid/peer-solutions")
+                .uri("/itachallenge/api/v1/challenges/not-a-uuid/peer-submissions")
                 .header("Authorization", authHeader)
                 .exchange()
                 .expectStatus().isBadRequest();
@@ -75,11 +75,11 @@ class PeerSolutionsControllerTest {
     }
 
     @Test
-    void getPeerSolutions_missingAuthHeader_returns400() {
+    void getPeerSubmissions_missingAuthHeader_returns400() {
         UUID challengeId = UUID.randomUUID();
 
         webTestClient.get()
-                .uri("/itachallenge/api/v1/submission/challenge/{challengeId}/peer-solutions", challengeId)
+                .uri("/itachallenge/api/v1/challenges/{challengeId}/peer-submissions", challengeId)
                 .exchange()
                 .expectStatus().isBadRequest();
 
@@ -87,26 +87,26 @@ class PeerSolutionsControllerTest {
     }
 
     @Test
-    void getPeerSolutions_whenFacadeThrowsJwtException_returns400() {
+    void getPeerSubmissions_whenFacadeThrowsJwtException_returns400() {
         UUID challengeId = UUID.randomUUID();
         String authHeader = "Bearer token";
         when(challengeJwtFacade.getUserUuIdFromAuthenticationHeader(authHeader))
                 .thenThrow(new io.jsonwebtoken.JwtException("Missing or invalid authorization"));
         webTestClient.get()
-                .uri("/itachallenge/api/v1/submission/challenge/{challengeId}/peer-solutions", challengeId)
+                .uri("/itachallenge/api/v1/challenges/{challengeId}/peer-submissions", challengeId)
                 .header("Authorization", authHeader)
                 .exchange()
                 .expectStatus().isBadRequest();
         verifyNoInteractions(submissionService);
     }
     @Test
-    void getPeerSolutions_whenUserIdFromJwtIsInvalidUuid_returns400() {
+    void getPeerSubmissions_whenUserIdFromJwtIsInvalidUuid_returns400() {
         UUID challengeId = UUID.randomUUID();
         String authHeader = "Bearer token";
         when(challengeJwtFacade.getUserUuIdFromAuthenticationHeader(authHeader))
                 .thenReturn("not-a-uuid");
         webTestClient.get()
-                .uri("/itachallenge/api/v1/submission/challenge/{challengeId}/peer-solutions", challengeId)
+                .uri("/itachallenge/api/v1/challenges/{challengeId}/peer-submissions", challengeId)
                 .header("Authorization", authHeader)
                 .exchange()
                 .expectStatus().isBadRequest();

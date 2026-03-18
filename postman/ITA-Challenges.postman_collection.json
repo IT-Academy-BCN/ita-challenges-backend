@@ -581,7 +581,7 @@
               {
                 "key": "Authorization",
                 "value": "Bearer {{token}}",
-                "description": "Optional. If present, the submitter username is stored for peer-solutions author display."
+                "description": "Optional. If present, the submitter username is stored for peer-submissions author display."
               }
             ],
             "body": {
@@ -605,7 +605,7 @@
           "response": []
         },
         {
-          "name": "Challenge / peer-solutions (peer submissions)",
+          "name": "Challenge / peer-submissions",
           "request": {
             "method": "GET",
             "header": [
@@ -619,11 +619,11 @@
               }
             ],
             "url": {
-              "raw": "http://{{ip}}:{{challenge_port}}/itachallenge/api/v1/submission/challenge/{{challenge_id}}/peer-solutions",
+              "raw": "http://{{ip}}:{{challenge_port}}/itachallenge/api/v1/challenges/{{challenge_id}}/peer-submissions",
               "protocol": "http",
               "host": ["{{ip}}"],
               "port": "{{challenge_port}}",
-              "path": ["itachallenge", "api", "v1", "submission", "challenge", "{{challenge_id}}", "peer-solutions"]
+              "path": ["itachallenge", "api", "v1", "submission", "challenge", "{{challenge_id}}", "peer-submissions"]
             },
             "description": "Returns up to 10 most recent peer submissions for a challenge (requires requester to have already submitted)."
           },

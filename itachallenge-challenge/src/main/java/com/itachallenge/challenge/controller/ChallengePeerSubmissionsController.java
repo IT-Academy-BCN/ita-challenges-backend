@@ -1,4 +1,4 @@
-package com.itachallenge.challenge.controller.submission;
+package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.dto.MessageDto;
 import com.itachallenge.challenge.dto.submission.PeerSubmissionItemDto;
@@ -29,18 +29,18 @@ import java.util.UUID;
 @RestController
 @Validated
 @RequiredArgsConstructor
-@RequestMapping("/itachallenge/api/v1/submission")
-public class PeerSolutionsController {
+@RequestMapping("/itachallenge/api/v1/challenges")
+public class ChallengePeerSubmissionsController {
 
     private final SubmissionService submissionService;
     private final IChallengeJwtFacade challengeJwtFacade;
 
-    @GetMapping("/challenge/{challengeId}/peer-solutions")
+    @GetMapping("/{challengeId}/peer-submissions")
     @Operation(
-            operationId = "getPeerSolutions",
+            operationId = "getPeerSubmissions",
             summary = "Get peer submissions for a challenge",
             description = "Returns up to 10 most recent submissions from other students for the given challenge. " +
-                    "The requesting user must have already submitted the challenge (with or without solution). " +
+                    "The requesting user must have already submitted the challenge (SUBMITTED_COMPLETE or SUBMITTED_INCOMPLETE). " +
                     "Otherwise returns 403 Forbidden.",
             parameters = {
                     @Parameter(name = "challengeId", in = ParameterIn.PATH, required = true, description = "Challenge UUID"),
@@ -70,7 +70,7 @@ public class PeerSolutionsController {
                     )
             }
     )
-    public Mono<ResponseEntity<List<PeerSubmissionItemDto>>> getPeerSolutions(
+    public Mono<ResponseEntity<List<PeerSubmissionItemDto>>> getPeerSubmissions(
             @PathVariable UUID challengeId,
             @RequestHeader(name = "Authorization") String authHeader
     ) {
@@ -83,7 +83,7 @@ public class PeerSolutionsController {
                     } catch (IllegalArgumentException e) {
                         throw new BadRequestException("Invalid UUID for userId.");
                     }
-                    return submissionService.getPeerSolutions(challengeId, userUuid)
+                    return submissionService.getPeerSubmissions(challengeId, userUuid)
                             .collectList()
                             .map(ResponseEntity::ok);
                 });
