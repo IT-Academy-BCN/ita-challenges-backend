@@ -28,8 +28,7 @@ class LeaderboardControllerIntegrationTest {
     private UserScoreRepository userScoreRepository;
 
     @Container
-    static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:6.0.4")
-            .withReuse(true);
+    static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:6.0.4");
 
     @DynamicPropertySource
     static void setProperties(DynamicPropertyRegistry registry) {
@@ -38,14 +37,14 @@ class LeaderboardControllerIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        userScoreRepository.deleteAll();
+        userScoreRepository.deleteAll().block();
         insertTestData();
     }
 
     @Test
     void getLeaderboard_returnsSortedData() {
         webTestClient.get()
-                .uri("/itachallenge/api/v1/users/leaderboard")
+                .uri("/itachallenge/api/v1/leaderboard")
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
@@ -63,7 +62,7 @@ class LeaderboardControllerIntegrationTest {
         userScoreRepository.deleteAll().block();
 
         webTestClient.get()
-                .uri("/itachallenge/api/v1/users/leaderboard")
+                .uri("/itachallenge/api/v1/leaderboard")
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()

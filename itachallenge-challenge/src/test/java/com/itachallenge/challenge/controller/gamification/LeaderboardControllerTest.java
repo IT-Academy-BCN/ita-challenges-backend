@@ -39,7 +39,7 @@ class LeaderboardControllerTest {
         when(leaderboardService.getLeaderboard()).thenReturn(Mono.just(expectedResponse));
 
         webTestClient.get()
-                .uri("/itachallenge/api/v1/users/leaderboard")
+                .uri("/itachallenge/api/v1/leaderboard")
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
@@ -62,7 +62,7 @@ class LeaderboardControllerTest {
         when(leaderboardService.getLeaderboard()).thenReturn(Mono.just(emptyResponse));
 
         webTestClient.get()
-                .uri("/itachallenge/api/v1/users/leaderboard")
+                .uri("/itachallenge/api/v1/leaderboard")
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
@@ -77,7 +77,7 @@ class LeaderboardControllerTest {
                 .thenReturn(Mono.error(new InternalServerErrorException("DB error")));
 
         webTestClient.get()
-                .uri("/itachallenge/api/v1/users/leaderboard")
+                .uri("/itachallenge/api/v1/leaderboard")
                 .exchange()
                 .expectStatus().is5xxServerError();
 
