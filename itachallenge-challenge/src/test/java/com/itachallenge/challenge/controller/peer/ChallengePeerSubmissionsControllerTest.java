@@ -37,7 +37,6 @@ class ChallengePeerSubmissionsControllerTest {
         PeerSubmissionItemDto item = PeerSubmissionItemDto.builder()
                 .submissionId(UUID.randomUUID().toString())
                 .challengeId(challengeId.toString())
-                .userId(UUID.randomUUID().toString())
                 .submissionText("code")
                 .status("SUBMITTED_COMPLETE")
                 .submittedAt(submittedAt)

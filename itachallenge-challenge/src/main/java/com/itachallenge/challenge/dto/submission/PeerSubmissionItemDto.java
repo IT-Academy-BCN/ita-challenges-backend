@@ -18,9 +18,6 @@ public class PeerSubmissionItemDto {
     @JsonProperty("challenge_id")
     private String challengeId;
 
-    @JsonProperty("user_id")
-    private String userId;
-
     @JsonProperty("language_id")
     private String languageId;
 

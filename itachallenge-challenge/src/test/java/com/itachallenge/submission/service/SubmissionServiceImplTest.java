@@ -354,7 +354,6 @@ class SubmissionServiceImplTest {
         StepVerifier.create(result)
                 .expectNextMatches(dto ->
                         dto.getChallengeId().equals(challengeId.toString())
-                                && dto.getUserId().equals(otherUserId.toString())
                                 && "submission code".equals(dto.getSubmissionText())
                                 && dto.getStatus().equals(SubmissionStatus.SUBMITTED_COMPLETE.name())
                                 && "peerUser".equals(dto.getAuthor()))
@@ -436,10 +435,51 @@ class SubmissionServiceImplTest {
         StepVerifier.create(result)
                 .expectNextMatches(dto ->
                         dto.getChallengeId().equals(challengeId.toString())
-                                && dto.getUserId().equals(otherUserId.toString())
                                 && "submission code".equals(dto.getSubmissionText())
                                 && dto.getAuthor() == null)
                 .verifyComplete();
+    }
+    @Test
+    void getPeerSubmissions_shouldPreserveRepositoryOrderAndReturnAtMostTop10Source() {
+        UUID challengeId = UUID.randomUUID();
+        UUID requesterId = UUID.randomUUID();
+
+        when(submissionRepository.existsByUserIdAndChallengeIdAndStatusIn(eq(requesterId), eq(challengeId), anyList()))
+                .thenReturn(Mono.just(true));
+
+        SubmissionDocument newest = SubmissionDocument.builder()
+                .submissionId(UUID.randomUUID())
+                .userId(UUID.randomUUID())
+                .challengeId(challengeId)
+                .languageId(UUID.randomUUID())
+                .status(SubmissionStatus.SUBMITTED_COMPLETE)
+                .submissionText("newest")
+                .createdAt(LocalDateTime.now())
+                .submittedByUsername("u1")
+                .build();
+
+        SubmissionDocument older = SubmissionDocument.builder()
+                .submissionId(UUID.randomUUID())
+                .userId(UUID.randomUUID())
+                .challengeId(challengeId)
+                .languageId(UUID.randomUUID())
+                .status(SubmissionStatus.SUBMITTED_COMPLETE)
+                .submissionText("older")
+                .createdAt(LocalDateTime.now().minusDays(1))
+                .submittedByUsername("u2")
+                .build();
+
+        when(submissionRepository.findTop10ByChallengeIdAndUserIdNotAndStatusInOrderByCreatedAtDesc(
+                eq(challengeId), eq(requesterId), anyList()))
+                .thenReturn(Flux.just(newest, older));
+
+        StepVerifier.create(submissionService.getPeerSubmissions(challengeId, requesterId))
+                .assertNext(dto -> Assertions.assertEquals("newest", dto.getSubmissionText()))
+                .assertNext(dto -> Assertions.assertEquals("older", dto.getSubmissionText()))
+                .verifyComplete();
+
+        verify(submissionRepository).findTop10ByChallengeIdAndUserIdNotAndStatusInOrderByCreatedAtDesc(
+                eq(challengeId), eq(requesterId), anyList());
     }
 
     @Test

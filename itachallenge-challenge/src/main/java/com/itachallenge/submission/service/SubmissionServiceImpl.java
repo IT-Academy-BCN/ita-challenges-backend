@@ -166,7 +166,6 @@ public class SubmissionServiceImpl implements SubmissionService {
         return PeerSubmissionItemDto.builder()
                 .submissionId(doc.getSubmissionId() != null ? doc.getSubmissionId().toString() : null)
                 .challengeId(doc.getChallengeId() != null ? doc.getChallengeId().toString() : null)
-                .userId(doc.getUserId() != null ? doc.getUserId().toString() : null)
                 .languageId(doc.getLanguageId() != null ? doc.getLanguageId().toString() : null)
                 .submittedAt(doc.getCreatedAt())
                 .submissionText(doc.getSubmissionText())
