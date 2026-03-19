@@ -31,6 +31,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### POST /submissions Enhancement:
 - Added optional `Authorization` header to capture username for future peer-submissions display.
 - Username stored in `submittedByUsername` when header is present.
+- Backward compatibility kept: request body and path contract remain unchanged for existing clients.
+
+#### Documentation:
+- Updated Postman collection with:
+  - `Challenge / create-or-update submission` request including optional `Authorization` header notes.
+  - `Challenge / peer-submissions` request for the new endpoint.
 
 #### Tests:
 - `PeerSubmissionsControllerTest`: Full controller coverage (200, 400, 403, 500).
