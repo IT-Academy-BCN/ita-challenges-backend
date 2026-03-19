@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated imports across `user` and `userinteraction` modules to use the unified exceptions.
 - Refactored `UserGlobalExceptionHandlerTest` to align with the new package structure.
 
-## [Unreleased] - 2026-03-11
+## [Unreleased] - 2026-03-13
 
 ### Added
 - New DTOs for leaderboard feature: `LeaderboardEntryDto` and `LeaderboardResponseDto`.
@@ -20,7 +20,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Internal `LeaderboardAggregationResult` (`repository.projection` package) helper class for MongoDB aggregation results.
 - Integration tests for repository aggregation methods using Testcontainers.
 - Unit tests for DTO serialization/deserialization.
-
+- Implemented `LeaderboardService` with reactive business logic to generate leaderboard rankings from aggregated scores. (Closes #1123)
+- Added mapping from aggregation results to DTOs with null-safety (`username` → "Anonymous", `totalPoints` → 0).
+- Implemented error handling: repository failures are logged and propagated as `InternalServerErrorException` (500).
+- Added unit tests for mapping, null handling, empty results, and error propagation.
 
 ## [itachallenge-challenge-3.3.0] - 2026-03-05
 
