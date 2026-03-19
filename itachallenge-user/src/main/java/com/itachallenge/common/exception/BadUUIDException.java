@@ -1,4 +1,4 @@
-package com.itachallenge.user.exception;
+package com.itachallenge.common.exception;
 
 public class BadUUIDException extends RuntimeException {
 
