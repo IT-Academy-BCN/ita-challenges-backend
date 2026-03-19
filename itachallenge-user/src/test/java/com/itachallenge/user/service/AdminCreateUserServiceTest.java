@@ -4,7 +4,7 @@ import com.itachallenge.user.document.UserDocument;
 import com.itachallenge.user.document.enums.Role;
 import com.itachallenge.user.dto.AdminCreateUserRequestDto;
 import com.itachallenge.user.dto.AdminCreateUserResponseDto;
-import com.itachallenge.user.exception.NotFoundException;
+import com.itachallenge.common.exception.NotFoundException;
 import com.itachallenge.user.exception.UsernameAlreadyExistsException;
 import com.itachallenge.user.repository.UserRepository;
 import org.junit.jupiter.api.DisplayName;
