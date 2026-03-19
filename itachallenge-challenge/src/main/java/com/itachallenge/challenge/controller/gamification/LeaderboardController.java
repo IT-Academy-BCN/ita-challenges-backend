@@ -2,7 +2,6 @@ package com.itachallenge.challenge.controller.gamification;
 
 import com.itachallenge.challenge.dto.MessageDto;
 import com.itachallenge.challenge.dto.gamification.LeaderboardResponseDto;
-import com.itachallenge.challenge.exception.InternalServerErrorException;
 import com.itachallenge.gamification.service.LeaderboardService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -19,13 +18,13 @@ import reactor.core.publisher.Mono;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/itachallenge/api/v1/users")
+@RequestMapping("/itachallenge/api/v1/leaderboard")
 public class LeaderboardController {
 
     private static final Logger log = LoggerFactory.getLogger(LeaderboardController.class);
     private final LeaderboardService leaderboardService;
 
-    @GetMapping("/leaderboard")
+    @GetMapping
     @Operation(
             summary = "Get global student ranking.",
             description = "Returns a list of students sorted by their total points in descending order.",
@@ -49,7 +48,6 @@ public class LeaderboardController {
     public Mono<ResponseEntity<LeaderboardResponseDto>> getLeaderboard() {
         log.info("Receiving request to fetch global leaderboard");
         return leaderboardService.getLeaderboard()
-                .map(ResponseEntity::ok)
-                .doOnError(e -> log.error("Error in leaderboard request: {}", e.getMessage()));
+                .map(ResponseEntity::ok);
     }
 }
