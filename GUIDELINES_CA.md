@@ -43,6 +43,8 @@
 
 8. [**TESTING**](#8-testing)
 
+9. [PATRONS D’ACCÉS A DADES AMB MONGODB]
+
 <hr/>
 
 # 1. ENLLAÇOS DEL PROJECTE
@@ -596,4 +598,117 @@ Recordeu que aquests programes o plugins són recomanats, però no són obligato
 Hi ha disponible una guia sobre testing en https://martinfowler.com/articles/practical-test-pyramid.html. 
 Si us plau, revisala abans de començar el testing.
 
+# 9. PATRONS D’ACCÉS A DADES AMB MONGODB
 
+Aquesta secció descriu els patrons i bones pràctiques per a l’accés a dades utilitzant Spring Data MongoDB i Reactive MongoDB.
+
+## 9.1. Ús d’Agregacions amb `@Aggregation`
+
+Per a consultes complexes que requereixen transformació, filtratge o càlcul de dades a nivell de base de dades
+(com ara rànquings, estadístiques o informes), cal utilitzar el framework d’agregació de MongoDB.
+
+**Patró:**
+1. Definir un mètode a la interfície del repositori (que estengui `ReactiveMongoRepository`).
+2. Anotar el mètode amb `@Aggregation`.
+3. Dins de l’anotació, escriure el pipeline d’agregació en format JSON (una cadena per etapa).
+4. Utilitzar `$group`, `$sort`, `$project` i altres etapes d’agregació per transformar les dades.
+
+**Ubicació:**
+Els mètodes amb `@Aggregation` resideixen a les interfícies de repositori dins del paquet  
+`com.itachallenge.[microservei].infrastructure.repository` (o `com.itachallenge.[microservei].repository` segons
+l’estructura del mòdul).
+
+**Consideracions importants:**
+* Les cadenes JSON dins de `@Aggregation` han de ser vàlides i poden utilitzar cometes dobles escapades (`\"`) o blocs
+* de text amb triples cometes (`"""`) per millorar la llegibilitat.
+* Els noms dels camps a l’agregació han de coincidir amb els noms dels camps als documents de MongoDB (utilitzant
+* `snake_case` si estan definits així).
+
+**Exemple:**
+```java
+public interface UserScoreRepository extends ReactiveMongoRepository<UserScoreDocument, UUID> {
+    @Aggregation(pipeline = {
+            "{$sort: {user_id: 1, created_at: -1}}",
+            """
+            {
+              $group: {
+                _id: '$user_id',
+                username: {$first: '$username'},
+                totalPoints: {$sum: '$points_earned'}
+              }
+            }
+            """,
+            "{$project: {_id: 0, username: 1, totalPoints: 1}}",
+            "{$sort: {totalPoints: -1}}"
+    })
+    Flux<LeaderboardAggregationResult> aggregateUserScores();
+}
+```
+## 9.2. Projeccions per als Resultats d’Agregació
+
+Per mapar resultats d’agregació que no corresponen a l’estructura d’un document complet, cal crear classes de projecció.
+Això permet que MongoDB mapegi només els camps necessaris.
+
+### Patró:
+
+- Crear una classe simple (preferiblement immutable) que contingui els camps retornats per l’agregació.
+- Els noms dels camps han de coincidir amb els noms dels camps del resultat de l’agregació.
+- Utilitzar Lombok (`@Getter`, `@Builder`, `@AllArgsConstructor`) per reduir codi repetitiu.
+
+### Ubicació:
+
+Aquestes projeccions s’han de col·locar al subpaquet `repository.projection` per mantenir-les organitzades i properes
+als repositoris que les utilitzen:
+
+`com.itachallenge.[microservei].repository.projection`
+
+### Exemple:
+
+```java
+package com.itachallenge.gamification.repository.projection;
+
+import lombok.*;
+
+@Getter
+@Builder
+@AllArgsConstructor
+public class LeaderboardAggregationResult {
+    private String username;
+    private Integer totalPoints;
+}
+```
+
+## 9.3. Organització Interna de Mòduls
+
+Quan una nova funcionalitat (com ara la gamificació) és prou complexa i té potencial per convertir-se en un microservei
+independent en el futur, s’hauria d’organitzar en el seu propi paquet arrel dins del microservei actual.
+
+### Patró:
+
+- Crear un paquet arrel amb el nom del domini (p. ex., `com.itachallenge.gamification`).
+- Replicar l’estructura estàndard dins d’aquest paquet: `document`, `repository`, `service`, `controller`, `dto`, etc.
+- Mantenir la funcionalitat desacoblada de la resta del microservei per facilitar una futura extracció.
+
+### Ubicació suggerida:
+
+```text
+com.itachallenge.gamification/
+├── controller/
+├── service/
+├── repository/
+│   ├── projection/
+│   └── UserScoreRepository.java
+├── document/
+│   └── UserScoreDocument.java
+└── dto/
+```
+### Beneficis:
+
+- Aïlla la funcionalitat, reduint significativament l’acoblament.
+- Facilita l’extracció futura cap a un microservei independent.
+- Millora la navegabilitat del codi i la comprensió global del projecte.
+
+## Principi important
+
+La introducció de qualsevol nou patró de codi (com ara `@Aggregation`, un subpaquet específic o un nou mòdul intern)
+s’ha de documentar en aquest fitxer (`GUIDELINES.md`). Això garanteix que el coneixement es comparteixi amb tot l’equip i manté la consistència tècnica del projecte.

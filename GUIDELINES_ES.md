@@ -43,6 +43,8 @@
 
 8. [**TESTING**](#8-testing)
 
+9. [PATRONES DE ACCESO A DATOS CON MONGODB]
+
 
 <hr/>
 
@@ -593,3 +595,115 @@ Recuerda que estos programas o plugins son recomendados, pero no son obligatorio
 Hay una guía sobre testing en https://martinfowler.com/articles/practical-test-pyramid.html.
 Por favor, revísala antes de empezar el testing.
 
+# 9. PATRONES DE ACCESO A DATOS CON MONGODB
+
+Esta sección describe los patrones y buenas prácticas para el acceso a datos utilizando Spring Data MongoDB y Reactive MongoDB.
+
+## 9.1. Uso de Agregaciones con `@Aggregation`
+
+Para consultas complejas que requieren transformación, filtrado o cálculo de datos a nivel de base de datos
+(como leaderboards, estadísticas o informes), debemos utilizar el framework de agregación de MongoDB.
+
+**Patrón:**
+1. Definir un método en la interfaz del repositorio (que extiende `ReactiveMongoRepository`).
+2. Anotar el método con `@Aggregation`.
+3. Dentro de la anotación, escribir el pipeline de agregación en formato JSON (una cadena por cada etapa).
+4. Utilizar `$group`, `$sort`, `$project` y otras etapas de agregación para transformar los datos.
+
+**Ubicación:**
+Los métodos con `@Aggregation` residen en las interfaces de repositorio dentro del paquete
+`com.itachallenge.[microservicio].infrastructure.repository` (o `com.itachallenge.[microservicio].repository` según la estructura del módulo).
+
+**Consideraciones importantes:**
+- Las cadenas JSON dentro de `@Aggregation` deben ser válidas y pueden usar comillas dobles escapadas (`\"`) o bloques
+- de texto con triple comilla (`"""`) para mejorar la legibilidad.
+- Los nombres de los campos en la agregación deben coincidir con los nombres de los campos en los documentos MongoDB
+- (usando snake_case si así están definidos).
+
+**Ejemplo:**
+
+```java
+public interface UserScoreRepository extends ReactiveMongoRepository<UserScoreDocument, UUID> {
+    @Aggregation(pipeline = {
+            "{$sort: {user_id: 1, created_at: -1}}",
+            """
+            {
+              $group: {
+                _id: '$user_id',
+                username: {$first: '$username'},
+                totalPoints: {$sum: '$points_earned'}
+              }
+            }
+            """,
+            "{$project: {_id: 0, username: 1, totalPoints: 1}}",
+            "{$sort: {totalPoints: -1}}"
+    })
+    Flux<LeaderboardAggregationResult> aggregateUserScores();
+}
+```
+
+## 9.2. Proyecciones para Resultados de Agregación
+
+Para mapear los resultados de la agregación que no corresponden a la estructura de un documento completo, debemos crear
+clases de proyección. Esto permite que MongoDB mapee solo los campos necesarios.
+
+**Patrón:**
+- Crear una clase sencilla (preferiblemente inmutable) que contenga los campos devueltos por la agregación.
+- Los nombres de los campos deben coincidir con los nombres de los campos en el resultado de la agregación.
+- Usar Lombok (`@Getter`, `@Builder`, `@AllArgsConstructor`) para reducir el código repetitivo.
+
+**Ubicación:**
+Estas proyecciones deben colocarse en el subpaquete `repository.projection` para mantenerlas organizadas y cerca de los
+repositorios que las utilizan:
+`com.itachallenge.[microservicio].repository.projection`
+
+**Ejemplo:**
+
+```java
+package com.itachallenge.gamification.repository.projection;
+
+import lombok.*;
+
+@Getter
+@Builder
+@AllArgsConstructor
+public class LeaderboardAggregationResult {
+    private String username;
+    private Integer totalPoints;
+}
+```
+
+## 9.3. Organización Interna de Módulos
+
+Cuando una nueva funcionalidad (como gamificación) es lo suficientemente compleja y tiene potencial para convertirse en
+un microservicio independiente en el futuro, debe organizarse en su propio paquete raíz dentro del microservicio actual.
+
+**Patrón:**
+* Crear un paquete raíz con el nombre del dominio (ej: `com.itachallenge.gamification`).
+* Dentro de este paquete, replicar la estructura estándar: `document`, `repository`, `service`, `controller`, `dto`, etc.
+* Mantener esta funcionalidad desacoplada del resto del microservicio para facilitar su futura extracción.
+
+**Ubicación sugerida:**
+
+```text
+com.itachallenge.gamification/
+├── controller/
+├── service/
+├── repository/
+│   ├── projection/
+│   └── UserScoreRepository.java
+├── document/
+│   └── UserScoreDocument.java
+└── dto/
+```
+
+**Beneficios:**
+
+* **Aísla la funcionalidad**, reduciendo el acoplamiento.
+* **Facilita la extracción futura** a un microservicio independiente.
+* **Mejora la navegabilidad** y comprensión del código.
+
+> ### Principio Importante
+La introducción de cualquier nuevo patrón de código (como `@Aggregation`, un subpaquete específico o un nuevo módulo
+interno) **debe ser documentada** en este archivo (`GUIDELINES.md`). Esto asegura que el conocimiento se comparta con
+todo el equipo y se mantenga la consistencia técnica del proyecto.

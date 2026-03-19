@@ -45,6 +45,8 @@
 
 8. [**TESTING**](#8-testing)
 
+9. [**MONGODB DATA ACCESS PATTERNS**]
+
 <hr/>
 
 # 1. PROJECT LINKS
@@ -596,3 +598,113 @@ Remember that these programs or plugins are recommended, but not mandatory. Usin
 # 8 TESTING
 
 Is available a guide about testing at https://martinfowler.com/articles/practical-test-pyramid.html. Please, check it before start testing.
+
+# 9. MONGODB DATA ACCESS PATTERNS
+
+This section describes the patterns and best practices for data access using Spring Data MongoDB and Reactive MongoDB.
+
+## 9.1. Using Aggregations with `@Aggregation`
+
+For complex queries that require transformation, filtering, or data calculation at the database level (such as
+leaderboards, statistics, or reports), we must use MongoDB's aggregation framework.
+
+**Pattern:**
+1. Define a method in the repository interface (which extends `ReactiveMongoRepository`).
+2. Annotate the method with `@Aggregation`.
+3. Inside the annotation, write the aggregation pipeline in JSON format (one string per stage).
+4. Use `$group`, `$sort`, `$project`, and other aggregation stages to transform the data.
+
+**Location:**
+Methods with `@Aggregation` reside in repository interfaces within the package
+`com.itachallenge.[microservice].infrastructure.repository` (or `com.itachallenge.[microservice].repository` depending on the module structure).
+
+**Important Considerations:**
+* JSON strings inside `@Aggregation` must be valid and can use escaped double quotes (`\"`) or text blocks with triple
+* quotes (`"""`) for better readability.
+* Field names in the aggregation must match the field names in the MongoDB documents (using snake_case if defined
+* that way).
+
+**Example:**
+```java
+public interface UserScoreRepository extends ReactiveMongoRepository<UserScoreDocument, UUID> {
+    @Aggregation(pipeline = {
+            "{$sort: {user_id: 1, created_at: -1}}",
+            """
+            {
+              $group: {
+                _id: '$user_id',
+                username: {$first: '$username'},
+                totalPoints: {$sum: '$points_earned'}
+              }
+            }
+            """,
+            "{$project: {_id: 0, username: 1, totalPoints: 1}}",
+            "{$sort: {totalPoints: -1}}"
+    })
+    Flux<LeaderboardAggregationResult> aggregateUserScores();
+}
+```
+## 9.2. Projections for Aggregation Results
+To map aggregation results that do not correspond to the structure of a complete document, we must create projection
+classes. This allows MongoDB to map only the necessary fields.
+
+**Pattern:**
+- Create a simple class (preferably immutable) containing the fields returned by the aggregation.
+- Field names must match the field names in the aggregation result.
+- Use Lombok (@Getter, @Builder, @AllArgsConstructor) to reduce boilerplate code.
+
+**Location:**
+These projections should be placed in the repository.projection subpackage to keep them organized and close to the
+repositories that use them:
+com.itachallenge.[microservice].repository.projection
+
+**Example:**
+Java
+``` 
+package com.itachallenge.gamification.repository.projection;
+
+import lombok.*;
+
+@Getter
+@Builder
+@AllArgsConstructor
+public class LeaderboardAggregationResult {
+private String username;
+private Integer totalPoints;
+}
+```
+## 9.3. Internal Module Organization
+
+When a new feature (such as gamification) is complex enough and has the potential to become an independent microservice
+in the future, it should be organized in its own root package within the current microservice.
+
+### Pattern:
+
+* **Create a root package** with the domain name (e.g., `com.itachallenge.gamification`).
+* **Replicate the standard structure** inside this package: `document`, `repository`, `service`, `controller`, `dto`, etc.
+* **Keep functionality decoupled** from the rest of the microservice to facilitate future extraction.
+
+### Suggested Location:
+
+```text
+com.itachallenge.gamification/
+├── controller/
+├── service/
+├── repository/
+│   ├── projection/
+│   └── UserScoreRepository.java
+├── document/
+│   └── UserScoreDocument.java
+└── dto/
+```
+
+**Benefits:**
+
+* Isolates functionality, significantly reducing coupling.
+* Facilitates future extraction to an independent microservice.
+* Improves code navigability and overall project understanding.
+
+## Important Principle
+The introduction of any new code pattern (such as @Aggregation, a specific subpackage, or a new internal module) must be
+documented in this file (GUIDELINES.md). This ensures that knowledge is shared across the entire team and maintains
+technical consistency for the project.
