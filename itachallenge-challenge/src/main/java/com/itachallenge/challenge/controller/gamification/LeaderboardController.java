@@ -50,7 +50,6 @@ public class LeaderboardController {
         log.info("Receiving request to fetch global leaderboard");
         return leaderboardService.getLeaderboard()
                 .map(ResponseEntity::ok)
-                .doOnError(e -> log.error("Error in leaderboard request: {}", e.getMessage()))
-                .onErrorResume(InternalServerErrorException.class, Mono::error);
+                .doOnError(e -> log.error("Error in leaderboard request: {}", e.getMessage()));
     }
 }
