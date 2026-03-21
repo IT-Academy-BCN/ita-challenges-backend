@@ -45,6 +45,12 @@
 
 8. [**TESTING**](#8-testing)
 
+9. [**MONGODB DATA ACCESS PATTERNS**](#9-mongodb-data-access-patterns)\
+   9.1 [Aggregations with `@Aggregation`](#91-aggregations-with-@aggregation)\
+   9.2 [Projections for Aggregations](#92-projections-for-aggregations)\
+   9.3 [Transition Module Organization](#93-transition-module-organization)\
+
+
 <hr/>
 
 # 1. PROJECT LINKS
@@ -596,3 +602,119 @@ Remember that these programs or plugins are recommended, but not mandatory. Usin
 # 8 TESTING
 
 Is available a guide about testing at https://martinfowler.com/articles/practical-test-pyramid.html. Please, check it before start testing.
+
+<hr/>
+
+
+# 9. MONGODB DATA ACCESS PATTERNS
+
+This section describes patterns and best practices for accessing data using Spring Data MongoDB and Reactive MongoDB.
+
+## 9.1. Using Aggregations with `@Aggregation`
+
+For complex queries that require transformation, filtering, or calculation of data at the database level
+(such as leaderboards, statistics, or reports), we should use MongoDB's aggregation framework to avoid expensive
+in-memory Java processing.
+
+### Pattern:
+
+1. Define a method in the repository interface (which extends `ReactiveMongoRepository`).
+2. Annotate the method with `@Aggregation`.
+3. Syntax: it's recommend to use text blocks (""") to write the JSON pipeline. This allows you to maintain MongoDB's
+native formatting and drastically improves readability.
+4. Use stages like `$group`, `$sort`, `$project`, etc. to efficiently transform the data.
+
+### Location:
+
+Methods with `@Aggregation` reside in the repository interfaces within the package `com.itachallenge.[module].repository`.
+
+**Example** (based on UserScoreRepository):
+
+```java
+public interface UserScoreRepository extends ReactiveMongoRepository<UserScoreDocument, UUID> {
+    @Aggregation(pipeline = {
+            "{$sort: {user_id: 1, created_at: -1}}",
+            """
+            {
+              $group: {
+                _id: '$user_id',
+                username: {$first: '$username'},
+                totalPoints: {$sum: '$points_earned'}
+              }
+            }
+            """,
+            "{$project: {_id: 0, username: 1, totalPoints: 1}}",
+            "{$sort: {totalPoints: -1}}"
+    })
+    Flux<LeaderboardAggregationResult> aggregateUserScores();
+}
+```
+
+## 9.2. Projections for Aggregation Results
+
+To map aggregation results that don't correspond to the structure of a complete document, we must create specific
+projection classes. This allows MongoDB to map only the necessary fields.
+
+### Pattern:
+- Create a simple, immutable class containing the fields returned by the aggregation.
+- Field names must match the names defined in the `$project` or `$group` stage.
+- Use Lombok (`@Getter`, `@Builder`, `@AllArgsConstructor`) to reduce repetitive code.
+
+### Location:
+These projections should be placed in the `repository.projection` subpackage to maintain high cohesion and separate
+the persistence models from the API DTOs: `com.itachallenge.[module].repository.projection`.
+
+**Example:**
+
+```java
+package com.itachallenge.gamification.repository.projection;
+
+import lombok.*;
+
+@Getter
+@Builder
+@AllArgsConstructor
+public class LeaderboardAggregationResult {
+    private String username;
+    private Integer totalPoints;
+}
+```
+
+## 9.3. Internal Organization of Transition Modules (Hybrid Architecture)
+
+When a feature (such as `gamification` or `submission`) has the potential to become an independent microservice, it is
+organized following a hybrid structure to facilitate decoupling. This will make it easier to extract it in the future
+(if necessary) without breaking the existing microservice.
+
+### Package Pattern:
+
+**Objective:** This physical separation of the business logic allows, in a later phase, only the
+`com.itachallenge.new_module` package to be moved to a new project, minimizing the impact on the existing infrastructure.
+
+1. **Entry Points (Hosts):** The `Controllers` and `DTOs` are kept within the current main microservice tree to maintain
+the consistency of a unified API.
+    - Example: `com.itachallenge.challenge.controller.gamification`.
+2. **Domain and Data Logic (Core):** All business logic, persistence, and configuration are located in a separate root
+package with the domain name.
+    - Example: `com.itachallenge.gamification`
+
+### Suggested Visual Structure:
+
+```text
+com.itachallenge.challenge/ (Host Microservice)
+├── controller/gamification/  <-- Entry Points
+└── dto/gamification/         <-- API Pass Objects
+
+com.itachallenge.gamification/ (Standalone Module)
+├── service/                  <-- Business Logic
+├── repository/
+│ ├── projection/             <-- Aggregation Projections
+│ └── UserScoreRepository.java
+├── document/                 <-- MongoDB Entities
+└── config/                   <-- Specific Configurations (MongoDB, etc.)
+```
+
+### Benefits:
+
+* **Isolation:** Reduces coupling between the core microservice and the new module.
+* **Extraction:** Allows moving the `com.itachallenge.new_module` package to a new project with minimal refactoring effort.
