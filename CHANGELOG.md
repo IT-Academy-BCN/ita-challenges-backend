@@ -3,49 +3,60 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-### [itachallenge-challenge-3.4.0-RELEASE] - 2026-03-17
+## [itachallenge-challenge-3.4.0 - RELEASED] 2026-03-23
+
+[Gamification]
 
 ### Added
-- New MongoDB collection `user_score_history` with compound indexing for efficient retrieval for gamification tracking.
-- Reactive Repository for user score transactions.
-- **GET /itachallenge/api/v1/challenge/challenges/{challengeId}/peer-solutions (Story #191):** Endpoint to retrieve up to 10 most recent peer solutions for a challenge. Access allowed only if the requesting user has already submitted the challenge (SUBMITTED_COMPLETE or SUBMITTED_INCOMPLETE). Returns 403 Forbidden otherwise. Results ordered by submission date descending. Response DTO: solution_id, challenge_id, user_id, language_id, submitted_at, submission_text, status, author. Implementation uses `SubmissionService.getPeerSolutions` (no dedicated PeerSolutionsService, YAGNI).
-- **Author in peer-solutions (Story #191):** Peer-solutions response now includes `author` (display name from JWT). Username is read from the `Authorization` header via `IChallengeJwtFacade.getUsernameFromAuthenticationHeader` and stored in `SubmissionDocument.submittedByUsername` on POST submission; GET peer-solutions returns it as `author` in the DTO. No call to the User microservice.
 
-#### New Controller:
-- `ChallengePeerSubmissionsController` with endpoint `GET /itachallenge/api/v1/challenges/{challengeId}/peer-submissions`. 
-- Returns up to 10 most recent submissions from other students.
-- Access control: 403 Forbidden if requesting user hasn't submitted the challenge.
-- Results ordered by `createdAt` descending (most recent first).
-- Response DTO: `PeerSubmissionItemDto` with fields: submission_id, language_id, submitted_at, submission_text, status, author.
+#### Gamification Persistence Infrastructure
+- MongoDB persistence infrastructure for leaderboard features.
+- `UserScoreRepository` with `aggregateUserScores()` method for global ranking generation.
+- `LeaderboardAggregationResult` as internal support class for MongoDB aggregation results.
+- Support Infrastructure for future gamification features.
 
-#### Author Field in Peer Submissions:
-- Username captured from JWT at submission time via `IChallengeJwtFacade.getUsernameFromAuthenticationHeader`.
-- Stored in new `submittedByUsername` field in `SubmissionDocument`.
-- Exposed as `author` in peer submissions response (nullable for legacy submissions).
+#### Leaderboard Domain Logic
+- `LeaderboardService` and `LeaderboardServiceImpl` to encapsulate the ranking business logic.
+- Reactive processing using Project Reactor for data mapping and transformation.
+- Privacy logic with automatic fallback to "Anonymous" for users with incomplete profiles.
+- Robust error handling: Database errors are logged and propagated as `InternalServerErrorException` (500).
 
-#### Domain Extensions:
-- Added `createdAt` field to `SubmissionDocument` (with `@Builder.Default = LocalDateTime.now()`).
-- Added `submittedByUsername` field to `SubmissionDocument` (optional, backward compatible).
+#### Leaderboard API
+- `LeaderboardController` with REST endpoint `GET /itachallenge/api/v1/users/leaderboard`.
+- Complete OpenAPI/Swagger documentation detailing response schemes and status codes.
+- Traceability and monitoring via structured logs (SLF4J) in the Controller and Service layers.
 
-#### Repository Methods:
-- `existsByUserIdAndChallengeIdAndStatusIn` - validates user has submitted the challenge.
-- `findTop10ByChallengeIdAndUserIdNotAndStatusInOrderByCreatedAtDesc` - retrieves peer submissions.
+#### DTOs
+- `LeaderboardResponseDto` and `LeaderboardEntryDto` for API responses.
+-  Use of `Integer` types and `@Jacksoniez` builders to ensure null safety and correct JSON serialization.
 
-#### POST /submissions Enhancement:
-- Added optional `Authorization` header to capture username for future peer-submissions display.
-- Username stored in `submittedByUsername` when header is present.
-- Backward compatibility kept: request body and path contract remain unchanged for existing clients.
+#### Tests
+- **Unit Tests** for `LeaderboardServiceImpl` for mapping logic and DTO serialization.
+- **Controller Tests** for HTTP layer validation using `@WebFluxTest` and `WebTestClient`.
+- **Integration Tests** for full end-to-end flow validation using Testcontainers (MongoDB),
+  ensuring data consistency with blocking setup/teardown.
 
-#### Documentation:
-- Updated Postman collection with:
-  - `Challenge / create-or-update submission` request including optional `Authorization` header notes.
-  - `Challenge / peer-submissions` request for the new endpoint.
+#### Peer submissions (Story #191)
+- `ChallengePeerSubmissionsController` with `GET /itachallenge/api/v1/challenges/{challengeId}/peer-submissions` (OpenAPI documented); controller and tests under `com.itachallenge.challenge.controller` following existing submission packaging (no separate `peer` package).
+- Returns up to 10 peer submissions from other users; `403 Forbidden` if the requester has not submitted the challenge (`SUBMITTED_COMPLETE` or `SUBMITTED_INCOMPLETE`); ordered by `createdAt` descending.
+- `PeerSubmissionItemDto`: `submission_id`, `language_id`, `submitted_at`, `submission_text`, `status`, `author` (nullable for legacy submissions).
+- `SubmissionDocument`: `createdAt`; optional `submittedByUsername` exposed as `author` in peer submissions.
+- Repository: `existsByUserIdAndChallengeIdAndStatusIn`; `findTop10ByChallengeIdAndUserIdNotAndStatusInOrderByCreatedAtDesc`.
+- `SubmissionService` / `SubmissionServiceImpl`: `getPeerSubmissions`.
+- POST submissions: optional `Authorization` header to persist `submittedByUsername` when present (backward compatible for existing clients).
+- Controller parses JWT user id to `UUID` before calling the service (avoids redundant `String` overload path); `400` if user id is not a valid UUID.
+- Tests: `ChallengePeerSubmissionsControllerTest`, `SubmissionServiceImplTest`, `SubmissionDocumentTest`.
+- Postman: `Challenge / peer-submissions`; notes on `Challenge / create-or-update submission` for optional `Authorization`.
 
-#### Tests:
-- `PeerSubmissionsControllerTest`: Full controller coverage (200, 400, 403, 500).
-- `SubmissionServiceImplTest`: Extended with peer submissions logic and backward compatibility scenarios.
-- `SubmissionDocumentTest`: Updated to test new fields.
-  
+### [itachallenge-user-3.2.4-RELEASE] - 2026-03-16
+
+### Changed
+
+- Introduced `common.exception` package to centralize cross-cutting exceptions in the User microservice.
+- Refactor: Moved `UserGlobalExceptionHandler`, `BadUUIDException`, and `NotFoundException` to the new package.
+- Updated imports across `user` and `userinteraction` modules to use the unified exceptions.
+- Refactored `UserGlobalExceptionHandlerTest` to align with the new package structure.
+
 ## [itachallenge-challenge-3.3.0] - 2026-03-05
 
 ### Added
