@@ -685,7 +685,7 @@ public class LeaderboardAggregationResult {
 ## 9.3. Organització Interna de Mòduls de Transició (Arquitectura Híbrida)
 
 Quan una funcionalitat (com `gamification` o `submission`) té potencial de convertir-se en un microservei independent,
-ser organitza seguint una estructura híbrida per facilitar el desacoblament, que facilitarà la seva futura extracció
+se'organitza seguint una estructura híbrida per facilitar el desacoplament, que facilitarà la seva futura extracció
 (si cal) sense trencar el microservei existent.
 
 ### Patró de paquets:
@@ -718,7 +718,7 @@ com.itachallenge.gamification/ (Mòdul Independent)
 
 ### Beneficis:
 
-* **Aïllament:** Redueix l'acoblament entre el nucli del microservei i el nou mòdul.
+* **Aïllament:** Redueix l'acoplament entre el nucli del microservei i el nou mòdul.
 * **Extracció:** Permet moure el paquet `com.itachallenge.nuevo_módul` a un nou projecte amb un esforç de
 refactorització mínim.
 
