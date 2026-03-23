@@ -1,6 +1,7 @@
 package com.itachallenge.challenge.service;
 
 import com.itachallenge.jwtcore.service.IJwtService;
+import com.itachallenge.common.exception.BadRequestException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import org.slf4j.Logger;
@@ -37,7 +38,8 @@ public class ChallengeJwtFacade implements IChallengeJwtFacade {
             return jwtService.extractAllClaims(token).getSubject();
         } catch (JwtException e) {
             log.warn("Could not extract username from Authorization header: {}", e.getMessage());
-            return null;
+            // Header is present but token is invalid/expired => genuine error (distinguish from "missing header")
+            throw new BadRequestException("Invalid or expired Authorization token.");
         }
     }
 }

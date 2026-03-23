@@ -41,7 +41,8 @@ public class ChallengePeerSubmissionsController {
             summary = "Get peer submissions for a challenge",
             description = "Returns up to 10 most recent submissions from other students for the given challenge. " +
                     "The requesting user must have already submitted the challenge (SUBMITTED_COMPLETE or SUBMITTED_INCOMPLETE). " +
-                    "Otherwise returns 403 Forbidden.",
+                    "Otherwise returns 403 Forbidden. " +
+                    "The `author` field can be null for legacy submissions.",
             parameters = {
                     @Parameter(name = "challengeId", in = ParameterIn.PATH, required = true, description = "Challenge UUID"),
                     @Parameter(name = "Authorization", in = ParameterIn.HEADER, required = true, description = "Bearer token")
@@ -76,17 +77,9 @@ public class ChallengePeerSubmissionsController {
     ) {
         return Mono.fromCallable(() -> challengeJwtFacade.getUserUuIdFromAuthenticationHeader(authHeader))
                 .onErrorMap(JwtException.class, e -> new BadRequestException(e.getMessage()))
-                .flatMap(userIdStr -> {
-                    UUID userUuid;
-                    try {
-                        userUuid = UUID.fromString(userIdStr != null ? userIdStr.trim() : "");
-                    } catch (IllegalArgumentException e) {
-                        throw new BadRequestException("Invalid UUID for userId.");
-                    }
-                    return submissionService.getPeerSubmissions(challengeId, userUuid)
-                            .collectList()
-                            .map(ResponseEntity::ok);
-                });
+                .flatMap(userIdStr -> submissionService.getPeerSubmissions(challengeId, userIdStr)
+                        .collectList()
+                        .map(ResponseEntity::ok));
     }
 }
 

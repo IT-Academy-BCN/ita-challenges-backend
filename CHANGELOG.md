@@ -11,6 +11,41 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **GET /itachallenge/api/v1/challenge/challenges/{challengeId}/peer-solutions (Story #191):** Endpoint to retrieve up to 10 most recent peer solutions for a challenge. Access allowed only if the requesting user has already submitted the challenge (SUBMITTED_COMPLETE or SUBMITTED_INCOMPLETE). Returns 403 Forbidden otherwise. Results ordered by submission date descending. Response DTO: solution_id, challenge_id, user_id, language_id, submitted_at, submission_text, status, author. Implementation uses `SubmissionService.getPeerSolutions` (no dedicated PeerSolutionsService, YAGNI).
 - **Author in peer-solutions (Story #191):** Peer-solutions response now includes `author` (display name from JWT). Username is read from the `Authorization` header via `IChallengeJwtFacade.getUsernameFromAuthenticationHeader` and stored in `SubmissionDocument.submittedByUsername` on POST submission; GET peer-solutions returns it as `author` in the DTO. No call to the User microservice.
 
+#### New Controller:
+- `ChallengePeerSubmissionsController` with endpoint `GET /itachallenge/api/v1/challenges/{challengeId}/peer-submissions`. 
+- Returns up to 10 most recent submissions from other students.
+- Access control: 403 Forbidden if requesting user hasn't submitted the challenge.
+- Results ordered by `createdAt` descending (most recent first).
+- Response DTO: `PeerSubmissionItemDto` with fields: submission_id, language_id, submitted_at, submission_text, status, author.
+
+#### Author Field in Peer Submissions:
+- Username captured from JWT at submission time via `IChallengeJwtFacade.getUsernameFromAuthenticationHeader`.
+- Stored in new `submittedByUsername` field in `SubmissionDocument`.
+- Exposed as `author` in peer submissions response (nullable for legacy submissions).
+
+#### Domain Extensions:
+- Added `createdAt` field to `SubmissionDocument` (with `@Builder.Default = LocalDateTime.now()`).
+- Added `submittedByUsername` field to `SubmissionDocument` (optional, backward compatible).
+
+#### Repository Methods:
+- `existsByUserIdAndChallengeIdAndStatusIn` - validates user has submitted the challenge.
+- `findTop10ByChallengeIdAndUserIdNotAndStatusInOrderByCreatedAtDesc` - retrieves peer submissions.
+
+#### POST /submissions Enhancement:
+- Added optional `Authorization` header to capture username for future peer-submissions display.
+- Username stored in `submittedByUsername` when header is present.
+- Backward compatibility kept: request body and path contract remain unchanged for existing clients.
+
+#### Documentation:
+- Updated Postman collection with:
+  - `Challenge / create-or-update submission` request including optional `Authorization` header notes.
+  - `Challenge / peer-submissions` request for the new endpoint.
+
+#### Tests:
+- `PeerSubmissionsControllerTest`: Full controller coverage (200, 400, 403, 500).
+- `SubmissionServiceImplTest`: Extended with peer submissions logic and backward compatibility scenarios.
+- `SubmissionDocumentTest`: Updated to test new fields.
+  
 ## [itachallenge-challenge-3.3.0] - 2026-03-05
 
 ### Added

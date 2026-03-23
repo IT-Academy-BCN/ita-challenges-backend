@@ -17,20 +17,18 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 
 
 
 @RestController
 @Validated
+@RequiredArgsConstructor
 @RequestMapping("/itachallenge/api/v1/users/{userId}/submissions")
 public class SubmissionController {
 
     private final SubmissionService submissionService;
-
-    public SubmissionController(SubmissionService submissionService) {
-        this.submissionService = submissionService;
-    }
 
     @GetMapping
     @Operation(

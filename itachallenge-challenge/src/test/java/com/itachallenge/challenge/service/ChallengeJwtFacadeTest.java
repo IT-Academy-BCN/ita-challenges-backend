@@ -26,11 +26,14 @@ class ChallengeJwtFacadeTest {
     }
 
     @Test
-    void getUsernameFromAuthenticationHeader_whenTokenInvalid_returnsNull() {
+    void getUsernameFromAuthenticationHeader_whenTokenInvalid_throwsBadRequestException() {
         String authHeader = "Bearer bad";
         when(jwtService.extractBearerToken(authHeader)).thenThrow(new JwtException("bad token"));
-
-        assertNull(facade.getUsernameFromAuthenticationHeader(authHeader));
+ 
+        org.junit.jupiter.api.Assertions.assertThrows(
+                com.itachallenge.common.exception.BadRequestException.class,
+                () -> facade.getUsernameFromAuthenticationHeader(authHeader)
+        );
 
         verify(jwtService).extractBearerToken(authHeader);
         verify(jwtService, never()).extractAllClaims(anyString());

@@ -2,6 +2,7 @@ package com.itachallenge.challenge.controller.peer;
 
 import com.itachallenge.challenge.dto.submission.PeerSubmissionItemDto;
 import com.itachallenge.challenge.service.IChallengeJwtFacade;
+import com.itachallenge.common.exception.BadRequestException;
 import com.itachallenge.submission.service.SubmissionService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,6 @@ class ChallengePeerSubmissionsControllerTest {
 
         PeerSubmissionItemDto item = PeerSubmissionItemDto.builder()
                 .submissionId(UUID.randomUUID().toString())
-                .challengeId(challengeId.toString())
                 .submissionText("code")
                 .status("SUBMITTED_COMPLETE")
                 .submittedAt(submittedAt)
@@ -44,7 +44,7 @@ class ChallengePeerSubmissionsControllerTest {
 
         when(challengeJwtFacade.getUserUuIdFromAuthenticationHeader(authHeader))
                 .thenReturn(userUuid.toString());
-        when(submissionService.getPeerSubmissions(challengeId, userUuid))
+        when(submissionService.getPeerSubmissions(challengeId, userUuid.toString()))
                 .thenReturn(Flux.just(item));
 
         webTestClient.get()
@@ -54,10 +54,9 @@ class ChallengePeerSubmissionsControllerTest {
                 .expectStatus().isOk()
                 .expectBody()
                 .jsonPath("$[0].submission_id").isNotEmpty()
-                .jsonPath("$[0].challenge_id").isEqualTo(challengeId.toString())
                 .jsonPath("$[0].submission_text").isEqualTo("code");
 
-        verify(submissionService).getPeerSubmissions(challengeId, userUuid);
+        verify(submissionService).getPeerSubmissions(challengeId, userUuid.toString());
     }
 
     @Test
@@ -102,14 +101,17 @@ class ChallengePeerSubmissionsControllerTest {
     void getPeerSubmissions_whenUserIdFromJwtIsInvalidUuid_returns400() {
         UUID challengeId = UUID.randomUUID();
         String authHeader = "Bearer token";
+        String invalidUserId = "not-a-uuid";
         when(challengeJwtFacade.getUserUuIdFromAuthenticationHeader(authHeader))
-                .thenReturn("not-a-uuid");
+                .thenReturn(invalidUserId);
+        when(submissionService.getPeerSubmissions(challengeId, invalidUserId))
+                .thenReturn(Flux.error(new BadRequestException("Invalid UUID for userId.")));
         webTestClient.get()
                 .uri("/itachallenge/api/v1/challenges/{challengeId}/peer-submissions", challengeId)
                 .header("Authorization", authHeader)
                 .exchange()
                 .expectStatus().isBadRequest();
-        verifyNoInteractions(submissionService);
+        verify(submissionService).getPeerSubmissions(challengeId, invalidUserId);
     }
     @Test
     void getPeerSubmissions_whenUserHasNotSubmitted_returns403() {
@@ -118,9 +120,8 @@ class ChallengePeerSubmissionsControllerTest {
         String authHeader = "Bearer token";
         when(challengeJwtFacade.getUserUuIdFromAuthenticationHeader(authHeader))
                 .thenReturn(userUuid.toString());
-        when(submissionService.getPeerSubmissions(challengeId, userUuid))
-                .thenReturn(Flux.error(new org.springframework.web.server.ResponseStatusException(
-                        org.springframework.http.HttpStatus.FORBIDDEN,
+        when(submissionService.getPeerSubmissions(challengeId, userUuid.toString()))
+                .thenReturn(Flux.error(new com.itachallenge.common.exception.ForbiddenException(
                         "Access denied to requested resource"
                 )));
         webTestClient.get()
@@ -128,7 +129,7 @@ class ChallengePeerSubmissionsControllerTest {
                 .header("Authorization", authHeader)
                 .exchange()
                 .expectStatus().isForbidden();
-        verify(submissionService).getPeerSubmissions(challengeId, userUuid);
+        verify(submissionService).getPeerSubmissions(challengeId, userUuid.toString());
     }
     @Test
     void getPeerSubmissions_whenServiceThrowsUnexpectedError_returns500() {
@@ -137,14 +138,14 @@ class ChallengePeerSubmissionsControllerTest {
         String authHeader = "Bearer token";
         when(challengeJwtFacade.getUserUuIdFromAuthenticationHeader(authHeader))
                 .thenReturn(userUuid.toString());
-        when(submissionService.getPeerSubmissions(challengeId, userUuid))
+        when(submissionService.getPeerSubmissions(challengeId, userUuid.toString()))
                 .thenReturn(Flux.error(new RuntimeException("boom")));
         webTestClient.get()
                 .uri("/itachallenge/api/v1/challenges/{challengeId}/peer-submissions", challengeId)
                 .header("Authorization", authHeader)
                 .exchange()
                 .expectStatus().is5xxServerError();
-        verify(submissionService).getPeerSubmissions(challengeId, userUuid);
+        verify(submissionService).getPeerSubmissions(challengeId, userUuid.toString());
     }
 }
 

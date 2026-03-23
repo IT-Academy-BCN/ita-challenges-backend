@@ -16,7 +16,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -353,8 +352,7 @@ class SubmissionServiceImplTest {
 
         StepVerifier.create(result)
                 .expectNextMatches(dto ->
-                        dto.getChallengeId().equals(challengeId.toString())
-                                && "submission code".equals(dto.getSubmissionText())
+                        "submission code".equals(dto.getSubmissionText())
                                 && dto.getStatus().equals(SubmissionStatus.SUBMITTED_COMPLETE.name())
                                 && "peerUser".equals(dto.getAuthor()))
                 .verifyComplete();
@@ -376,8 +374,7 @@ class SubmissionServiceImplTest {
 
         StepVerifier.create(result)
                 .expectErrorMatches(throwable ->
-                        throwable instanceof ResponseStatusException
-                                && ((ResponseStatusException) throwable).getStatusCode().value() == 403)
+                        throwable instanceof com.itachallenge.common.exception.ForbiddenException)
                 .verify();
 
         verify(submissionRepository).existsByUserIdAndChallengeIdAndStatusIn(eq(userId), eq(challengeId), anyList());
@@ -434,8 +431,7 @@ class SubmissionServiceImplTest {
 
         StepVerifier.create(result)
                 .expectNextMatches(dto ->
-                        dto.getChallengeId().equals(challengeId.toString())
-                                && "submission code".equals(dto.getSubmissionText())
+                        "submission code".equals(dto.getSubmissionText())
                                 && dto.getAuthor() == null)
                 .verifyComplete();
     }

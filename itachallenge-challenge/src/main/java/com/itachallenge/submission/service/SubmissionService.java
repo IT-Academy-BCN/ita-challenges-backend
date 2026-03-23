@@ -16,6 +16,8 @@ public interface SubmissionService {
     Mono<SubmissionActionResponseDto> processSubmissionAction(String userId, SubmissionActionRequestDto request, String authHeader);
 
     Flux<PeerSubmissionItemDto> getPeerSubmissions(UUID challengeId, UUID userId);
+
+    Flux<PeerSubmissionItemDto> getPeerSubmissions(UUID challengeId, String userIdStr);
 }
 
 

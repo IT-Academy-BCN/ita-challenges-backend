@@ -7,15 +7,14 @@ import com.itachallenge.challenge.dto.submission.SubmissionActionRequestDto;
 import com.itachallenge.challenge.service.IChallengeJwtFacade;
 import com.itachallenge.challenge.service.IChallengeService;
 import com.itachallenge.common.exception.BadRequestException;
+import com.itachallenge.common.exception.ForbiddenException;
 import com.itachallenge.submission.document.SubmissionDocument;
 import com.itachallenge.submission.enums.SubmissionAction;
 import com.itachallenge.submission.enums.SubmissionStatus;
 import com.itachallenge.submission.exception.UnmodifiableSubmissionException;
 import com.itachallenge.submission.mapper.SubmissionMapper;
 import com.itachallenge.submission.repository.SubmissionRepository;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -70,6 +69,21 @@ public class SubmissionServiceImpl implements SubmissionService {
                                     tuple.getT1(), tuple.getT2(), tuple.getT3(), request, submittedByUsername)));
                     return savedMono.flatMap(saved -> buildResponse(saved, tuple.getT2()));
                 });
+    }
+    @Override
+    public Flux<PeerSubmissionItemDto> getPeerSubmissions(UUID challengeId, UUID userId) {
+        return submissionRepository.existsByUserIdAndChallengeIdAndStatusIn(userId, challengeId, SUBMITTED_STATUSES)
+                .flatMapMany(hasSubmitted -> Boolean.TRUE.equals(hasSubmitted)
+                        ? submissionRepository.findTop10ByChallengeIdAndUserIdNotAndStatusInOrderByCreatedAtDesc(
+                                challengeId, userId, SUBMITTED_STATUSES)
+                        .map(this::toPeerSubmissionItemDto)
+                        : Flux.error(new ForbiddenException("Access denied to requested resource")));
+    }
+
+    @Override
+    public Flux<PeerSubmissionItemDto> getPeerSubmissions(UUID challengeId, String userIdStr) {
+        return validateAndParseUuid(userIdStr)
+                .flatMapMany(userUuid -> getPeerSubmissions(challengeId, userUuid));
     }
     private Mono<Void> validateSubmitText(SubmissionActionRequestDto request) {
         if (request.getAction() == SubmissionAction.SUBMIT
@@ -139,33 +153,6 @@ public class SubmissionServiceImpl implements SubmissionService {
                 .build());
     }
 
-    @Override
-    public Flux<PeerSubmissionItemDto> getPeerSolutions(UUID challengeId, UUID userId) {
-        return submissionRepository.existsByUserIdAndChallengeIdAndStatusIn(userId, challengeId, SUBMITTED_STATUSES)
-                .flatMapMany(hasSubmitted -> Boolean.TRUE.equals(hasSubmitted)
-                        ? submissionRepository.findTop10ByChallengeIdAndUserIdNotAndStatusInOrderByCreatedAtDesc(
-                                challengeId, userId, SUBMITTED_STATUSES)
-                        .map(this::toPeerSubmissionItemDto)
-                        : Flux.error(new ResponseStatusException(HttpStatus.FORBIDDEN,
-                        "User must have submitted the challenge before viewing peer solutions.")));
-    }
-    /**
-     * Maps a submission document to the peer-solutions DTO.
-     * {@code author} may be null when the submission was created before we stored the submitter username,
-     * or when no valid Authorization header was sent at submitted time.
-     */
-    private PeerSubmissionItemDto toPeerSubmissionItemDto(SubmissionDocument doc) {
-        return PeerSubmissionItemDto.builder()
-                .solutionId(doc.getSubmissionId() != null ? doc.getSubmissionId().toString() : null)
-                .challengeId(doc.getChallengeId() != null ? doc.getChallengeId().toString() : null)
-                .userId(doc.getUserId() != null ? doc.getUserId().toString() : null)
-                .languageId(doc.getLanguageId() != null ? doc.getLanguageId().toString() : null)
-                .submittedAt(doc.getCreatedAt())
-                .submissionText(doc.getSubmissionText())
-                .status(doc.getStatus() != null ? doc.getStatus().name() : null)
-                .author(doc.getSubmittedByUsername())
-                .build();
-    }
     /**
      * Validates and parses userId. Tech debt: consider moving UUID validation to the controller layer for consistency with getPeerSolutions (validation at boundary); then remove from here.
      */
@@ -178,4 +165,14 @@ public class SubmissionServiceImpl implements SubmissionService {
                         ex -> new BadRequestException("The 'userId' parameter must be a valid UUID."));
     }
 
+    private PeerSubmissionItemDto toPeerSubmissionItemDto(SubmissionDocument doc) {
+        return PeerSubmissionItemDto.builder()
+                .submissionId(doc.getSubmissionId() != null ? doc.getSubmissionId().toString() : null)
+                .languageId(doc.getLanguageId() != null ? doc.getLanguageId().toString() : null)
+                .submittedAt(doc.getCreatedAt())
+                .submissionText(doc.getSubmissionText())
+                .status(doc.getStatus() != null ? doc.getStatus().name() : null)
+                .author(doc.getSubmittedByUsername())
+                .build();
+    }
 }
