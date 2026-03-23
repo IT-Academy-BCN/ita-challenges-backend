@@ -77,7 +77,9 @@ public class ChallengePeerSubmissionsController {
     ) {
         return Mono.fromCallable(() -> challengeJwtFacade.getUserUuIdFromAuthenticationHeader(authHeader))
                 .onErrorMap(JwtException.class, e -> new BadRequestException(e.getMessage()))
-                .flatMap(userIdStr -> submissionService.getPeerSubmissions(challengeId, userIdStr)
+                .map(UUID::fromString)
+                .onErrorMap(IllegalArgumentException.class, e -> new BadRequestException("Invalid UUID for userId."))
+                .flatMap(userId -> submissionService.getPeerSubmissions(challengeId, userId)
                         .collectList()
                         .map(ResponseEntity::ok));
     }

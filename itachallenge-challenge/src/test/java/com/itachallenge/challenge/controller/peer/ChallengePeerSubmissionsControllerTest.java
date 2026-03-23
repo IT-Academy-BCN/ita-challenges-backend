@@ -2,8 +2,9 @@ package com.itachallenge.challenge.controller.peer;
 
 import com.itachallenge.challenge.dto.submission.PeerSubmissionItemDto;
 import com.itachallenge.challenge.service.IChallengeJwtFacade;
-import com.itachallenge.common.exception.BadRequestException;
+import com.itachallenge.common.exception.ForbiddenException;
 import com.itachallenge.submission.service.SubmissionService;
+import io.jsonwebtoken.JwtException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
@@ -16,7 +17,7 @@ import java.util.UUID;
 
 import static org.mockito.Mockito.*;
 
-@WebFluxTest(com.itachallenge.challenge.controller.peer.ChallengePeerSubmissionsController.class)
+@WebFluxTest(ChallengePeerSubmissionsController.class)
 class ChallengePeerSubmissionsControllerTest {
 
     @Autowired
@@ -44,7 +45,7 @@ class ChallengePeerSubmissionsControllerTest {
 
         when(challengeJwtFacade.getUserUuIdFromAuthenticationHeader(authHeader))
                 .thenReturn(userUuid.toString());
-        when(submissionService.getPeerSubmissions(challengeId, userUuid.toString()))
+        when(submissionService.getPeerSubmissions(challengeId, userUuid))
                 .thenReturn(Flux.just(item));
 
         webTestClient.get()
@@ -56,7 +57,7 @@ class ChallengePeerSubmissionsControllerTest {
                 .jsonPath("$[0].submission_id").isNotEmpty()
                 .jsonPath("$[0].submission_text").isEqualTo("code");
 
-        verify(submissionService).getPeerSubmissions(challengeId, userUuid.toString());
+        verify(submissionService).getPeerSubmissions(challengeId, userUuid);
     }
 
     @Test
@@ -89,7 +90,7 @@ class ChallengePeerSubmissionsControllerTest {
         UUID challengeId = UUID.randomUUID();
         String authHeader = "Bearer token";
         when(challengeJwtFacade.getUserUuIdFromAuthenticationHeader(authHeader))
-                .thenThrow(new io.jsonwebtoken.JwtException("Missing or invalid authorization"));
+                .thenThrow(new JwtException("Missing or invalid authorization"));
         webTestClient.get()
                 .uri("/itachallenge/api/v1/challenges/{challengeId}/peer-submissions", challengeId)
                 .header("Authorization", authHeader)
@@ -97,6 +98,7 @@ class ChallengePeerSubmissionsControllerTest {
                 .expectStatus().isBadRequest();
         verifyNoInteractions(submissionService);
     }
+
     @Test
     void getPeerSubmissions_whenUserIdFromJwtIsInvalidUuid_returns400() {
         UUID challengeId = UUID.randomUUID();
@@ -104,15 +106,14 @@ class ChallengePeerSubmissionsControllerTest {
         String invalidUserId = "not-a-uuid";
         when(challengeJwtFacade.getUserUuIdFromAuthenticationHeader(authHeader))
                 .thenReturn(invalidUserId);
-        when(submissionService.getPeerSubmissions(challengeId, invalidUserId))
-                .thenReturn(Flux.error(new BadRequestException("Invalid UUID for userId.")));
         webTestClient.get()
                 .uri("/itachallenge/api/v1/challenges/{challengeId}/peer-submissions", challengeId)
                 .header("Authorization", authHeader)
                 .exchange()
                 .expectStatus().isBadRequest();
-        verify(submissionService).getPeerSubmissions(challengeId, invalidUserId);
+        verifyNoInteractions(submissionService);
     }
+
     @Test
     void getPeerSubmissions_whenUserHasNotSubmitted_returns403() {
         UUID challengeId = UUID.randomUUID();
@@ -120,8 +121,8 @@ class ChallengePeerSubmissionsControllerTest {
         String authHeader = "Bearer token";
         when(challengeJwtFacade.getUserUuIdFromAuthenticationHeader(authHeader))
                 .thenReturn(userUuid.toString());
-        when(submissionService.getPeerSubmissions(challengeId, userUuid.toString()))
-                .thenReturn(Flux.error(new com.itachallenge.common.exception.ForbiddenException(
+        when(submissionService.getPeerSubmissions(challengeId, userUuid))
+                .thenReturn(Flux.error(new ForbiddenException(
                         "Access denied to requested resource"
                 )));
         webTestClient.get()
@@ -129,8 +130,9 @@ class ChallengePeerSubmissionsControllerTest {
                 .header("Authorization", authHeader)
                 .exchange()
                 .expectStatus().isForbidden();
-        verify(submissionService).getPeerSubmissions(challengeId, userUuid.toString());
+        verify(submissionService).getPeerSubmissions(challengeId, userUuid);
     }
+
     @Test
     void getPeerSubmissions_whenServiceThrowsUnexpectedError_returns500() {
         UUID challengeId = UUID.randomUUID();
@@ -138,14 +140,14 @@ class ChallengePeerSubmissionsControllerTest {
         String authHeader = "Bearer token";
         when(challengeJwtFacade.getUserUuIdFromAuthenticationHeader(authHeader))
                 .thenReturn(userUuid.toString());
-        when(submissionService.getPeerSubmissions(challengeId, userUuid.toString()))
+        when(submissionService.getPeerSubmissions(challengeId, userUuid))
                 .thenReturn(Flux.error(new RuntimeException("boom")));
         webTestClient.get()
                 .uri("/itachallenge/api/v1/challenges/{challengeId}/peer-submissions", challengeId)
                 .header("Authorization", authHeader)
                 .exchange()
                 .expectStatus().is5xxServerError();
-        verify(submissionService).getPeerSubmissions(challengeId, userUuid.toString());
+        verify(submissionService).getPeerSubmissions(challengeId, userUuid);
     }
 }
 
