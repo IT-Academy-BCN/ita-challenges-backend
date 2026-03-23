@@ -1,4 +1,4 @@
-package com.itachallenge.challenge.controller.peer;
+package com.itachallenge.challenge.controller.submission;
 
 import com.itachallenge.challenge.dto.MessageDto;
 import com.itachallenge.challenge.dto.submission.PeerSubmissionItemDto;

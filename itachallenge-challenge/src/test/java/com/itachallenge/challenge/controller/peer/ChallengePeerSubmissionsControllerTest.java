@@ -1,5 +1,6 @@
 package com.itachallenge.challenge.controller.peer;
 
+import com.itachallenge.challenge.controller.submission.ChallengePeerSubmissionsController;
 import com.itachallenge.challenge.dto.submission.PeerSubmissionItemDto;
 import com.itachallenge.challenge.service.IChallengeJwtFacade;
 import com.itachallenge.common.exception.ForbiddenException;
