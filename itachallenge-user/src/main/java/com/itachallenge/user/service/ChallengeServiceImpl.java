@@ -1,7 +1,7 @@
 package com.itachallenge.user.service;
 
 import com.itachallenge.user.dto.SolvedDto;
-import com.itachallenge.user.exception.NotFoundException;
+import com.itachallenge.common.exception.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;

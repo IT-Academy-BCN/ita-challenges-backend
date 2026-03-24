@@ -25,9 +25,24 @@
 - http://localhost:8762/actuator/scheduledtasks
 - http://localhost:8762/actuator/threaddump
 
-## Submissions Module Overview
+## Submissions and Gamification Modules Overview
 
-The `itachallenge-challenge` service includes a new internal package: `submission`.
+The `itachallenge-challenge` service has been structured to host emerging functional domains as internal modules:
+`submission` and `gamification`.
+
+### Modularization & Growth Strategy
+This microservice follows a "Feature-Separation" pattern to ensure these modules can be easily extracted into
+independent microservices in the future:
+
+- **Separation of Concerns:** Business logic, repositories, and documents are isolated in standalone root packages:
+  `com.itachallenge.submission` and `com.itachallenge.gamification`.
+- **API Consistency:** Controllers and DTOs remain within the `itachallenge-challenge` infrastructure to provide a
+unified entry point for the API.
+- **Data Access:** High-performance queries are implemented via MongoDB Aggregations, with results mapped to specific
+classes in the `repository.projection` subpackage.
+
+For detailed implementation rules, see the global [9. Data Access Patterns Guidelines]
+(https://github.com/IT-Academy-BCN/ita-challenges-backend/blob/main/GUIDELINES.md#9-mongodb-data-access-patterns).
 
 ### Official Solutions (Mentor Solutions)
 - Represent the official solution for each challenge.

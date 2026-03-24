@@ -581,6 +581,27 @@
           "response": []
         },
         {
+          "name": "Get Leaderboard",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://{{dns}}:{{challenge_port}}/itachallenge/api/v1/leaderboard",
+              "protocol": "http",
+              "host": ["{{ip}}"],
+              "port": "{{challenge_port}}",
+              "path": ["itachallenge", "api", "v1", "leaderboard"]
+            },
+            "description": "Returns a list of students ranked by their total points earned."
+          },
+          "response": []
+        },
+        {
           "name": "Challenge/challenges",
           "request": {
             "method": "POST",
