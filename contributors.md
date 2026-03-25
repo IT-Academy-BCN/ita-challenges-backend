@@ -124,3 +124,4 @@
 * David Rey Muñiz - https://github.com/Viid21
 * Andrés Rojo Cabrera - https://github.com/andyrouge81
 * Adrià Lorente Arnau - https://github.com/alaw810
+* Esther Arias Valor - https://github.com/eariasvalor
