@@ -121,5 +121,6 @@
 * Pol Serrano Franquesa - https://github.com/polserrano8
 * Andrea Pan i Ubiergo - https://github.com/Apani13
 * Andrés Calvo Prieto - https://github.com/Andrescalvo22
-* Adrià Lorente Arnau - https://github.com/alaw810
 * David Rey Muñiz - https://github.com/Viid21
+* Andrés Rojo Cabrera - https://github.com/andyrouge81
+* Adrià Lorente Arnau - https://github.com/alaw810
