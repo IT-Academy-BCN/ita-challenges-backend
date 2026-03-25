@@ -125,3 +125,4 @@
 * Andrés Rojo Cabrera - https://github.com/andyrouge81
 * Adrià Lorente Arnau - https://github.com/alaw810
 * Jordi Casas González - https://github.com/JordiCasas87
+* Esther Arias Valor - https://github.com/eariasvalor
