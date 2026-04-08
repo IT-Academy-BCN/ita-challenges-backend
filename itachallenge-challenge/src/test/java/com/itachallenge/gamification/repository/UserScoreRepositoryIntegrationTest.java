@@ -169,7 +169,7 @@ class UserScoreRepositoryIntegrationTest {
                 .expectNextMatches(doc -> doc.getPointsEarned() == 10) // now
                 .verifyComplete();
     }
-    @SuppressWarnings("java:S2699") // to be extended with source_type when #275/#276 are merged
+    @SuppressWarnings("java:S2699") // to be extended with activityType when #275/#276 are merged
     @Test
     void givenMultipleUsersScores_whenFindByUserIdOrderByCreatedAtAsc_thenReturnsOnlyRequestedUser() {
         StepVerifier.create(userScoreRepository.findByUserIdOrderByCreatedAtAsc(userId1))
