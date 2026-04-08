@@ -163,12 +163,37 @@ class UserScoreRepositoryIntegrationTest {
 
     @Test
     void givenUserWithMultipleScores_whenFindByUserIdOrderByCreatedAtAsc_thenReturnsInAscendingOrder() {
-        StepVerifier.create(userScoreRepository.findByUserIdOrderByCreatedAtAsc(userId1))
-                .expectNextMatches(doc -> doc.getPointsEarned() == 10) // minusDays(2)
-                .expectNextMatches(doc -> doc.getPointsEarned() == 15) // minusDays(1)
-                .expectNextMatches(doc -> doc.getPointsEarned() == 10) // now
+        userScoreRepository.deleteAll().block();
+
+        UUID testUserId = UUID.randomUUID();
+
+        UserScoreDocument first = UserScoreDocument.builder()
+                .id(UUID.randomUUID()).userId(testUserId).username("testuser")
+                .challengeId(UUID.randomUUID()).pointsEarned(10)
+                .createdAt(LocalDateTime.of(2024, 3, 1, 10, 0))
+                .build();
+        UserScoreDocument second = UserScoreDocument.builder()
+                .id(UUID.randomUUID()).userId(testUserId).username("testuser")
+                .challengeId(UUID.randomUUID()).pointsEarned(15)
+                .createdAt(LocalDateTime.of(2024, 3, 5, 10, 0))
+                .build();
+        UserScoreDocument third = UserScoreDocument.builder()
+                .id(UUID.randomUUID()).userId(testUserId).username("testuser")
+                .challengeId(UUID.randomUUID()).pointsEarned(20)
+                .createdAt(LocalDateTime.of(2024, 3, 10, 10, 0))
+                .build();
+
+        mongoTemplate.insert(first, "user_score_history").block();
+        mongoTemplate.insert(second, "user_score_history").block();
+        mongoTemplate.insert(third, "user_score_history").block();
+
+        StepVerifier.create(userScoreRepository.findByUserIdOrderByCreatedAtAsc(testUserId))
+                .expectNextMatches(doc -> doc.getPointsEarned() == 10)
+                .expectNextMatches(doc -> doc.getPointsEarned() == 15)
+                .expectNextMatches(doc -> doc.getPointsEarned() == 20)
                 .verifyComplete();
     }
+
     @SuppressWarnings("java:S2699") // to be extended with activityType when #275/#276 are merged
     @Test
     void givenMultipleUsersScores_whenFindByUserIdOrderByCreatedAtAsc_thenReturnsOnlyRequestedUser() {
