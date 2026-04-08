@@ -11,7 +11,7 @@ import java.util.UUID;
 @Builder
 @Jacksonized
 @AllArgsConstructor
-public class ScoresHistoryChartDto {
+public class ScoresHistoryResponseDto {
     @JsonProperty("user_id")
     private UUID userId;
 

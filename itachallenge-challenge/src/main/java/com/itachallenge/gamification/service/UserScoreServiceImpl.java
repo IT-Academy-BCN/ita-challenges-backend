@@ -2,7 +2,7 @@ package com.itachallenge.gamification.service;
 
 import com.itachallenge.challenge.dto.gamification.PointHistoryEntryDto;
 import com.itachallenge.challenge.dto.gamification.PointsHistoryResponseDto;
-import com.itachallenge.challenge.dto.gamification.ScoresHistoryChartDto;
+import com.itachallenge.challenge.dto.gamification.ScoresHistoryResponseDto;
 import com.itachallenge.challenge.dto.gamification.WeeklyPointsDto;
 import com.itachallenge.gamification.document.UserScoreDocument;
 import com.itachallenge.gamification.repository.UserScoreRepository;
@@ -28,7 +28,7 @@ public class UserScoreServiceImpl implements UserScoreService {
     }
 
     @Override
-    public Mono<ScoresHistoryChartDto> getUserScoresHistoryChart(UUID userId) {
+    public Mono<ScoresHistoryResponseDto> getUserScoresHistoryChart(UUID userId) {
         return userScoreRepository.findByUserIdOrderByCreatedAtAsc(userId)
                 .collectList()
                 .map(docs -> buildChartResponse(userId, docs));
@@ -57,9 +57,9 @@ public class UserScoreServiceImpl implements UserScoreService {
                 .build();
     }
 
-    private ScoresHistoryChartDto buildChartResponse(UUID userId, List<UserScoreDocument> docs) {
+    private ScoresHistoryResponseDto buildChartResponse(UUID userId, List<UserScoreDocument> docs) {
         if (docs.isEmpty()) {
-            return ScoresHistoryChartDto.builder()
+            return ScoresHistoryResponseDto.builder()
                     .userId(userId)
                     .totalPoints(0)
                     .aggregationType("WEEKLY")
@@ -89,7 +89,7 @@ public class UserScoreServiceImpl implements UserScoreService {
                     .build());
         }
 
-        return ScoresHistoryChartDto.builder()
+        return ScoresHistoryResponseDto.builder()
                 .userId(userId)
                 .totalPoints(accumulated)
                 .aggregationType("WEEKLY")
