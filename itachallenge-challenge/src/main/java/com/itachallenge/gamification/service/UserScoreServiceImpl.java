@@ -2,16 +2,17 @@ package com.itachallenge.gamification.service;
 
 import com.itachallenge.challenge.dto.gamification.PointHistoryEntryDto;
 import com.itachallenge.challenge.dto.gamification.PointsHistoryResponseDto;
+import com.itachallenge.challenge.dto.gamification.ScoresHistoryChartDto;
+import com.itachallenge.challenge.dto.gamification.WeeklyPointsDto;
 import com.itachallenge.gamification.document.UserScoreDocument;
 import com.itachallenge.gamification.repository.UserScoreRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.time.format.DateTimeFormatter;
+import java.time.format.ResolverStyle;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +25,13 @@ public class UserScoreServiceImpl implements UserScoreService {
         return userScoreRepository.findByUserIdOrderByCreatedAtDesc(userId)
                 .collectList()
                 .map(this::buildHistoryResponse);
+    }
+
+    @Override
+    public Mono<ScoresHistoryChartDto> getUserScoresHistoryChart(UUID userId) {
+        return userScoreRepository.findByUserIdOrderByCreatedAtAsc(userId)
+                .collectList()
+                .map(docs -> buildChartResponse(userId, docs));
     }
 
     private PointsHistoryResponseDto buildHistoryResponse(List<UserScoreDocument> docs) {
@@ -45,6 +53,46 @@ public class UserScoreServiceImpl implements UserScoreService {
         return PointsHistoryResponseDto.builder()
                 .username(docs.isEmpty() ? "" : docs.getFirst().getUsername())
                 .totalPoints(totalPoints)
+                .history(history)
+                .build();
+    }
+
+    private ScoresHistoryChartDto buildChartResponse(UUID userId, List<UserScoreDocument> docs) {
+        if (docs.isEmpty()) {
+            return ScoresHistoryChartDto.builder()
+                    .userId(userId)
+                    .totalPoints(0)
+                    .aggregationType("WEEKLY")
+                    .history(List.of())
+                    .build();
+        }
+
+        DateTimeFormatter weekFormatter = DateTimeFormatter.ofPattern("YYYY-'W'ww")
+                .withLocale(Locale.getDefault())
+                .withResolverStyle(ResolverStyle.STRICT);
+
+        Map<String, Integer> pointsByWeek = new LinkedHashMap<>();
+        for (UserScoreDocument doc : docs) {
+            if (doc.getCreatedAt() == null || doc.getPointsEarned() == null) continue;
+            String week = doc.getCreatedAt().format(weekFormatter);
+            pointsByWeek.merge(week, doc.getPointsEarned(), Integer::sum);
+        }
+
+        List<WeeklyPointsDto> history = new ArrayList<>();
+        int accumulated = 0;
+        for (Map.Entry<String, Integer> entry : pointsByWeek.entrySet()) {
+            accumulated += entry.getValue();
+            history.add(WeeklyPointsDto.builder()
+                    .period(entry.getKey())
+                    .pointsEarned(entry.getValue())
+                    .accumulatedAtEnd(accumulated)
+                    .build());
+        }
+
+        return ScoresHistoryChartDto.builder()
+                .userId(userId)
+                .totalPoints(accumulated)
+                .aggregationType("WEEKLY")
                 .history(history)
                 .build();
     }
