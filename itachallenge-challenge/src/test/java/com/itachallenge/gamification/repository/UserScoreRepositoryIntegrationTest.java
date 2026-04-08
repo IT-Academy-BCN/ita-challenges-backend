@@ -2,6 +2,7 @@ package com.itachallenge.gamification.repository;
 
 import com.itachallenge.gamification.document.UserScoreDocument;
 import com.itachallenge.gamification.repository.projection.LeaderboardAggregationResult;
+import com.itachallenge.gamification.util.WeeklyWindow;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,8 @@ import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.UUID;
 
 @DataMongoTest
@@ -99,8 +102,10 @@ class UserScoreRepositoryIntegrationTest {
 
         UUID weeklyUserId = UUID.randomUUID();
         UUID outsideUserId = UUID.randomUUID();
-        LocalDateTime from = LocalDateTime.of(2026, 4, 6, 0, 0);
-        LocalDateTime to = LocalDateTime.of(2026, 4, 12, 23, 59, 59);
+        WeeklyWindow window = WeeklyWindow.fromReferenceDateTime(
+                ZonedDateTime.of(2026, 4, 8, 10, 0, 0, 0, ZoneId.of("Europe/Madrid")));
+        LocalDateTime from = window.getFromInclusive();
+        LocalDateTime to = window.getToInclusive();
 
         UserScoreDocument insideFirst = UserScoreDocument.builder()
                 .id(UUID.randomUUID())
@@ -140,6 +145,32 @@ class UserScoreRepositoryIntegrationTest {
                 .verifyComplete();
     }
 
+    @Test
+    void givenScoreAtSundayLastNanosecond_whenAggregateUserScoresByPeriod_thenIncluded() {
+        userScoreRepository.deleteAll().block();
+
+        UUID userId = UUID.randomUUID();
+        WeeklyWindow window = WeeklyWindow.fromReferenceDateTime(
+                ZonedDateTime.of(2026, 4, 8, 12, 0, 0, 0, ZoneId.of("Europe/Madrid")));
+        LocalDateTime from = window.getFromInclusive();
+        LocalDateTime to = window.getToInclusive();
+
+        UserScoreDocument atEndOfSunday = UserScoreDocument.builder()
+                .id(UUID.randomUUID())
+                .userId(userId)
+                .username("edge_user")
+                .challengeId(UUID.randomUUID())
+                .pointsEarned(7)
+                .createdAt(to)
+                .build();
+
+        mongoTemplate.insert(atEndOfSunday).block();
+
+        StepVerifier.create(userScoreRepository.aggregateUserScoresByPeriod(from, to))
+                .expectNextMatches(agg ->
+                        agg.getUsername().equals("edge_user") && agg.getTotalPoints() == 7)
+                .verifyComplete();
+    }
 
     private void createTestData() {
         LocalDateTime now = LocalDateTime.now();
