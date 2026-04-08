@@ -6,7 +6,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
-import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.MongoDBContainer;
@@ -20,6 +19,7 @@ import java.util.UUID;
 
 @DataMongoTest
 @Testcontainers(disabledWithoutDocker = true)
+@SuppressWarnings("resource")
 class UserScoreRepositoryIntegrationTest {
 
     @Container
@@ -38,9 +38,6 @@ class UserScoreRepositoryIntegrationTest {
 
     @Autowired
     private UserScoreRepository userScoreRepository;
-
-    @Autowired
-    private ReactiveMongoTemplate mongoTemplate;
 
     private UUID userId1, userId2, userId3;
     private static final String USERNAME_1 = "user1";
@@ -89,6 +86,50 @@ class UserScoreRepositoryIntegrationTest {
 
         StepVerifier.create(result)
                 .expectNextCount(0)
+                .verifyComplete();
+    }
+
+    @Test
+    void givenScoresInsideAndOutsidePeriod_whenAggregateUserScoresByPeriod_thenReturnsOnlyInsideRange() {
+        userScoreRepository.deleteAll().block();
+
+        UUID weeklyUserId = UUID.randomUUID();
+        UUID outsideUserId = UUID.randomUUID();
+        LocalDateTime from = LocalDateTime.of(2026, 4, 6, 0, 0);
+        LocalDateTime to = LocalDateTime.of(2026, 4, 12, 23, 59, 59);
+
+        UserScoreDocument insideFirst = UserScoreDocument.builder()
+                .id(UUID.randomUUID())
+                .userId(weeklyUserId)
+                .username("weekly_user")
+                .challengeId(UUID.randomUUID())
+                .pointsEarned(25)
+                .createdAt(LocalDateTime.of(2026, 4, 8, 10, 0))
+                .build();
+
+        UserScoreDocument insideSecond = UserScoreDocument.builder()
+                .id(UUID.randomUUID())
+                .userId(weeklyUserId)
+                .username("weekly_user")
+                .challengeId(UUID.randomUUID())
+                .pointsEarned(15)
+                .createdAt(LocalDateTime.of(2026, 4, 10, 19, 30))
+                .build();
+
+        UserScoreDocument outside = UserScoreDocument.builder()
+                .id(UUID.randomUUID())
+                .userId(outsideUserId)
+                .username("outside_user")
+                .challengeId(UUID.randomUUID())
+                .pointsEarned(99)
+                .createdAt(LocalDateTime.of(2026, 4, 20, 12, 0))
+                .build();
+
+        userScoreRepository.saveAll(Flux.just(insideFirst, insideSecond, outside)).blockLast();
+
+        StepVerifier.create(userScoreRepository.aggregateUserScoresByPeriod(from, to))
+                .expectNextMatches(agg ->
+                        agg.getUsername().equals("weekly_user") && agg.getTotalPoints() == 40)
                 .verifyComplete();
     }
 
