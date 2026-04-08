@@ -160,4 +160,32 @@ class UserScoreRepositoryIntegrationTest {
                 user3Score1
         )).blockLast();
     }
+
+    @Test
+    void givenUserWithMultipleScores_whenFindByUserIdOrderByCreatedAtAsc_thenReturnsInAscendingOrder() {
+        StepVerifier.create(userScoreRepository.findByUserIdOrderByCreatedAtAsc(userId1))
+                .expectNextMatches(doc -> doc.getPointsEarned() == 10) // minusDays(2)
+                .expectNextMatches(doc -> doc.getPointsEarned() == 15) // minusDays(1)
+                .expectNextMatches(doc -> doc.getPointsEarned() == 10) // now
+                .verifyComplete();
+    }
+    @SuppressWarnings("java:S2699") // to be extended with source_type when #275/#276 are merged
+    @Test
+    void givenMultipleUsersScores_whenFindByUserIdOrderByCreatedAtAsc_thenReturnsOnlyRequestedUser() {
+        StepVerifier.create(userScoreRepository.findByUserIdOrderByCreatedAtAsc(userId1))
+                .expectNextCount(3)
+                .verifyComplete();
+
+        StepVerifier.create(userScoreRepository.findByUserIdOrderByCreatedAtAsc(userId2))
+                .expectNextCount(2)
+                .verifyComplete();
+    }
+
+    @Test
+    void givenUserWithNoScores_whenFindByUserIdOrderByCreatedAtAsc_thenReturnsEmpty() {
+        UUID unknownUserId = UUID.randomUUID();
+
+        StepVerifier.create(userScoreRepository.findByUserIdOrderByCreatedAtAsc(unknownUserId))
+                .verifyComplete();
+    }
 }

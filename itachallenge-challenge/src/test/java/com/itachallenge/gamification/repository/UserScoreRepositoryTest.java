@@ -19,9 +19,10 @@ class UserScoreRepositoryTest {
     @Mock
     private UserScoreRepository userScoreRepository;
 
+    private final UUID userId = UUID.randomUUID();
+
     @Test
     void givenExistingScores_whenFindByUsername_thenReturnsSortedByDescendingDates() {
-        UUID userId = UUID.randomUUID();
         UserScoreDocument score1 = UserScoreDocument.builder()
                 .id(UUID.randomUUID())
                 .userId(userId)
@@ -48,6 +49,28 @@ class UserScoreRepositoryTest {
                 .expectNextMatches(s -> s.getPointsEarned() == 3)
                 .expectNextMatches(s -> s.getPointsEarned() == 2)
                 .expectNextMatches(s -> s.getPointsEarned() == 1)
+                .verifyComplete();
+    }
+
+    @Test
+    void givenExistingScores_whenFindByUserIdOrderByCreatedAtAsc_thenReturnsSortedByAscendingDates() {
+        UserScoreDocument score1 = UserScoreDocument.builder()
+                .id(UUID.randomUUID()).userId(userId)
+                .pointsEarned(3).createdAt(LocalDateTime.now()).build();
+        UserScoreDocument score2 = UserScoreDocument.builder()
+                .id(UUID.randomUUID()).userId(userId)
+                .pointsEarned(1).createdAt(LocalDateTime.now().minusDays(3)).build();
+        UserScoreDocument score3 = UserScoreDocument.builder()
+                .id(UUID.randomUUID()).userId(userId)
+                .pointsEarned(2).createdAt(LocalDateTime.now().minusDays(1)).build();
+
+        when(userScoreRepository.findByUserIdOrderByCreatedAtAsc(userId))
+                .thenReturn(Flux.just(score2, score3, score1));
+
+        StepVerifier.create(userScoreRepository.findByUserIdOrderByCreatedAtAsc(userId))
+                .expectNextMatches(s -> s.getPointsEarned() == 1)
+                .expectNextMatches(s -> s.getPointsEarned() == 2)
+                .expectNextMatches(s -> s.getPointsEarned() == 3)
                 .verifyComplete();
     }
 }
