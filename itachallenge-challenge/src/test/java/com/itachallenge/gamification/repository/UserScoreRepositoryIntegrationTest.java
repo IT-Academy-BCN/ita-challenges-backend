@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.MongoDBContainer;
@@ -38,6 +39,9 @@ class UserScoreRepositoryIntegrationTest {
 
     @Autowired
     private UserScoreRepository userScoreRepository;
+
+    @Autowired
+    private ReactiveMongoTemplate mongoTemplate;
 
     private UUID userId1, userId2, userId3;
     private static final String USERNAME_1 = "user1";
@@ -125,7 +129,10 @@ class UserScoreRepositoryIntegrationTest {
                 .createdAt(LocalDateTime.of(2026, 4, 20, 12, 0))
                 .build();
 
-        userScoreRepository.saveAll(Flux.just(insideFirst, insideSecond, outside)).blockLast();
+        // insert() keeps fixed createdAt; save/saveAll triggers @CreatedDate auditing and overwrites dates
+        mongoTemplate.insert(insideFirst).block();
+        mongoTemplate.insert(insideSecond).block();
+        mongoTemplate.insert(outside).block();
 
         StepVerifier.create(userScoreRepository.aggregateUserScoresByPeriod(from, to))
                 .expectNextMatches(agg ->
