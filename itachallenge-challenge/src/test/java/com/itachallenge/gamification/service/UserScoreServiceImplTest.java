@@ -220,7 +220,7 @@ class UserScoreServiceImplTest {
                 .verifyComplete();
     }
 
-    @SuppressWarnings("java:S2699") // to be extended with source_type when #275/#276 are merged
+    @SuppressWarnings("java:S2699") // to be extended with activityType when #275/#276 are merged
     @Test
     void givenMixedSourcesInSameWeek_whenGetUserScoresHistoryChart_thenAllPointsAreSummedTogether() {
         LocalDateTime week10 = LocalDateTime.of(2024, 3, 4, 10, 0);
