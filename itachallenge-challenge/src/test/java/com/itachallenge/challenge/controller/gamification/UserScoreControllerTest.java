@@ -1,7 +1,5 @@
 package com.itachallenge.challenge.controller.gamification;
 
-import com.itachallenge.challenge.dto.gamification.PointHistoryEntryDto;
-import com.itachallenge.challenge.dto.gamification.PointsHistoryResponseDto;
 import com.itachallenge.challenge.dto.gamification.ScoresHistoryResponseDto;
 import com.itachallenge.challenge.dto.gamification.WeeklyPointsDto;
 import com.itachallenge.gamification.service.UserScoreService;
