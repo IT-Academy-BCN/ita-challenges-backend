@@ -10,6 +10,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -20,6 +23,7 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
@@ -271,8 +275,12 @@ class BookmarkServiceImplTest {
     }
 
 
-    @Test
-    void deleteChallengeFromBookmarks_ShouldReturnFalse_WhenBookmarksIsNull() {
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("provideDeleteBookmarkFailureCases")
+    void deleteChallengeFromBookmarks_ShouldReturnFalse_WhenBookmarkNotFound(
+            String testCase,
+            List<UUID> bookmarks) {
+
         UUID challengeId = UUID.randomUUID();
         UUID userId = UUID.randomUUID();
         UserDocument user = new UserDocument(userId, "testUser", null, 0);
@@ -290,42 +298,12 @@ class BookmarkServiceImplTest {
         verify(bookmarkRepository, never()).delete(any());
     }
 
-    @Test
-    void deleteChallengeFromBookmarks_ShouldReturnFalse_WhenBookmarksIsEmpty() {
-        UUID challengeId = UUID.randomUUID();
-        UUID userId = UUID.randomUUID();
-        UserDocument user = new UserDocument(userId, "testUser", null, 0);
-
-        when(userRepository.findById(userId)).thenReturn(Mono.just(user));
-        when(bookmarkRepository.findByUserIdAndChallengeId(any(UUID.class), any(UUID.class)))
-                .thenReturn(Mono.empty());
-
-        StepVerifier.create(bookmarkService.deleteChallengeFromBookmarks(userId.toString(), challengeId.toString()))
-                .expectNext(false)
-                .verifyComplete();
-
-        verify(userRepository, times(1)).findById(userId);
-        verify(bookmarkRepository).findByUserIdAndChallengeId(any(UUID.class), any(UUID.class));
-        verify(bookmarkRepository, never()).delete(any());
-    }
-
-    @Test
-    void deleteChallengeFromBookmarks_ShouldReturnFalse_WhenChallengeNotInBookmarks() {
-        UUID challengeId = UUID.randomUUID();
-        UUID userId = UUID.randomUUID();
-        UserDocument user = new UserDocument(userId, "testUser", null, 0);
-
-        when(userRepository.findById(userId)).thenReturn(Mono.just(user));
-        when(bookmarkRepository.findByUserIdAndChallengeId(any(UUID.class), any(UUID.class)))
-                .thenReturn(Mono.empty());
-
-        StepVerifier.create(bookmarkService.deleteChallengeFromBookmarks(userId.toString(), challengeId.toString()))
-                .expectNext(false)
-                .verifyComplete();
-
-        verify(userRepository, times(1)).findById(userId);
-        verify(bookmarkRepository).findByUserIdAndChallengeId(any(UUID.class), any(UUID.class));
-        verify(bookmarkRepository, never()).delete(any());
+    private static Stream<Arguments> provideDeleteBookmarkFailureCases() {
+        return Stream.of(
+                Arguments.of("When bookmarks is null", null),
+                Arguments.of("When bookmarks is empty", Collections.emptyList()),
+                Arguments.of("When challenge not in bookmarks", Collections.emptyList())
+        );
     }
 
     @Test
