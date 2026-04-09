@@ -152,30 +152,9 @@ class BookmarkServiceImplTest {
         verify(bookmarkRepository, times(1)).findByUserId(userId);
     }
 
-    @Test
-    void addChallengeToBookmarks_ShouldReturnTrue_WhenBookmarksIsNull() {
-        UUID userId = UUID.randomUUID();
-        UUID challengeId = UUID.randomUUID();
-        UserDocument user = new UserDocument(userId, "testUser", null, 0);
-
-        when(userRepository.findById(userId)).thenReturn(Mono.just(user));
-        when(bookmarkRepository.existsByUserIdAndChallengeId(userId, challengeId))
-                .thenReturn(Mono.just(false));
-        when(bookmarkRepository.save(any(BookmarkDocument.class)))
-                .thenReturn(Mono.just(new BookmarkDocument()));
-
-        StepVerifier.create(bookmarkService.addChallengeToBookmarks(userId.toString(), challengeId.toString()))
-                .expectNext(true)
-                .verifyComplete();
-
-        verify(userRepository, times(1)).findById(userId);
-        verify(bookmarkRepository, times(1)).existsByUserIdAndChallengeId(userId, challengeId);
-        verify(bookmarkRepository, times(1)).save(any(BookmarkDocument.class));
-        verify(userRepository, never()).save(any());
-    }
-
-    @Test
-    void addChallengeToBookmarks_ShouldReturnTrue_WhenBookmarksIsEmpty() {
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("provideAddBookmarkSuccessCases")
+    void addChallengeToBookmarks_ShouldReturnTrue_WhenBookmarkDoesNotExist(String testCase) {
         UUID challengeId = UUID.randomUUID();
         UUID userId = UUID.randomUUID();
         UserDocument user = new UserDocument(userId, "testUser", null, 0);
@@ -195,25 +174,12 @@ class BookmarkServiceImplTest {
         verify(bookmarkRepository, times(1)).save(any(BookmarkDocument.class));
     }
 
-    @Test
-    void addChallengeToBookmarks_ShouldReturnTrue_WhenBookmarksHasValues() {
-        UUID challengeId = UUID.randomUUID();
-        UUID userId = UUID.randomUUID();
-        UserDocument user = new UserDocument(userId, "testUser", null, 0);
-
-        when(userRepository.findById(userId)).thenReturn(Mono.just(user));
-        when(bookmarkRepository.existsByUserIdAndChallengeId(userId, challengeId))
-                .thenReturn(Mono.just(false));
-        when(bookmarkRepository.save(any(BookmarkDocument.class)))
-                .thenReturn(Mono.just(new BookmarkDocument()));
-
-        StepVerifier.create(bookmarkService.addChallengeToBookmarks(userId.toString(), challengeId.toString()))
-                .expectNext(true)
-                .verifyComplete();
-
-        verify(userRepository, times(1)).findById(userId);
-        verify(bookmarkRepository, times(1)).existsByUserIdAndChallengeId(userId, challengeId);
-        verify(bookmarkRepository, times(1)).save(any());
+    private static Stream<Arguments> provideAddBookmarkSuccessCases() {
+        return Stream.of(
+                Arguments.of("When bookmarks is null"),
+                Arguments.of("When bookmarks is empty"),
+                Arguments.of("When bookmarks has values")
+        );
     }
 
     @Test
@@ -277,8 +243,7 @@ class BookmarkServiceImplTest {
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("provideDeleteBookmarkFailureCases")
-    void deleteChallengeFromBookmarks_ShouldReturnFalse_WhenBookmarkNotFound(
-            String testCase) {
+    void deleteChallengeFromBookmarks_ShouldReturnFalse_WhenBookmarkNotFound(String testCase) {
 
         UUID challengeId = UUID.randomUUID();
         UUID userId = UUID.randomUUID();
@@ -299,9 +264,9 @@ class BookmarkServiceImplTest {
 
     private static Stream<Arguments> provideDeleteBookmarkFailureCases() {
         return Stream.of(
-                Arguments.of("When bookmarks is null", null),
-                Arguments.of("When bookmarks is empty", Collections.emptyList()),
-                Arguments.of("When challenge not in bookmarks", Collections.emptyList())
+                Arguments.of("When bookmarks is null"),
+                Arguments.of("When bookmarks is empty"),
+                Arguments.of("When challenge not in bookmarks")
         );
     }
 
