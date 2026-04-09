@@ -69,8 +69,7 @@ class FavoriteControllerIntegrationTest {
         addFavorite(userId, challengeId2);
         addFavorite(userId, challengeId3);
 
-        System.out.println("DB FAVORITES: " + favoriteRepository.findAll().collectList().block());
-        webTestClient.get()
+                webTestClient.get()
                 .uri("/itachallenge/api/v1/userinteraction/favorites/{userId}", userId)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
@@ -125,7 +124,6 @@ class FavoriteControllerIntegrationTest {
                             assertThat(favorites).hasSize(2);
                             assertThat(favorites).containsExactlyInAnyOrder(challengeId1, challengeId2);
                             assertThat(favorites).doesNotContain(challengeId3);
-                            System.out.println("FAVORITES: " + favorites);
                         }
                 );
     }
