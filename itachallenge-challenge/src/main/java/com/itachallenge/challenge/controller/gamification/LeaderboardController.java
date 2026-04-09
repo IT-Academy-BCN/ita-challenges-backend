@@ -2,7 +2,9 @@ package com.itachallenge.challenge.controller.gamification;
 
 import com.itachallenge.challenge.dto.MessageDto;
 import com.itachallenge.challenge.dto.gamification.LeaderboardResponseDto;
+import com.itachallenge.challenge.dto.gamification.WeeklyLeaguesResponseDto;
 import com.itachallenge.gamification.service.LeaderboardService;
+import com.itachallenge.gamification.service.WeeklyLeaguesResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -49,5 +51,40 @@ public class LeaderboardController {
         log.info("Receiving request to fetch global leaderboard");
         return leaderboardService.getLeaderboard()
                 .map(ResponseEntity::ok);
+    }
+
+    @GetMapping("/weekly")
+    @Operation(
+            summary = "Get weekly leagues ranking.",
+            description = "Returns users split into Gold, Silver and Bronze leagues for the current week.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = WeeklyLeaguesResponseDto.class)
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "Internal Server Error - Database unavailable or unexpected error",
+                            content = @Content(schema = @Schema(implementation = MessageDto.class))
+                    )
+            }
+    )
+    public Mono<ResponseEntity<WeeklyLeaguesResponseDto>> getWeeklyLeagues() {
+        log.info("Receiving request to fetch weekly leagues leaderboard");
+        return leaderboardService.getWeeklyLeagues()
+                .map(this::mapToWeeklyLeaguesResponse)
+                .map(ResponseEntity::ok);
+    }
+
+    private WeeklyLeaguesResponseDto mapToWeeklyLeaguesResponse(WeeklyLeaguesResult result) {
+        return WeeklyLeaguesResponseDto.builder()
+                .gold(result.getGold())
+                .silver(result.getSilver())
+                .bronze(result.getBronze())
+                .build();
     }
 }
