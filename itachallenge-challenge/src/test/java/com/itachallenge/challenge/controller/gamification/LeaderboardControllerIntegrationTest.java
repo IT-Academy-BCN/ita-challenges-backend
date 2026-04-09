@@ -1,6 +1,7 @@
 package com.itachallenge.challenge.controller.gamification;
 
 import com.itachallenge.gamification.document.UserScoreDocument;
+import com.itachallenge.gamification.enums.ActivityType;
 import com.itachallenge.gamification.repository.UserScoreRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -75,7 +76,7 @@ class LeaderboardControllerIntegrationTest {
         UUID userId2 = UUID.randomUUID();
         UUID userId3 = UUID.randomUUID();
 
-        UserScoreDocument user1Score1 = UserScoreDocument.builder()
+        UserScoreDocument user1Score1 = UserScoreDocument.builder().activityType(ActivityType.CHALLENGE_COMPLETED)
                 .id(UUID.randomUUID())
                 .userId(userId1)
                 .username("user1")
@@ -84,7 +85,7 @@ class LeaderboardControllerIntegrationTest {
                 .createdAt(now.minusDays(2))
                 .build();
 
-        UserScoreDocument user1Score2 = UserScoreDocument.builder()
+        UserScoreDocument user1Score2 = UserScoreDocument.builder().activityType(ActivityType.CHALLENGE_COMPLETED)
                 .id(UUID.randomUUID())
                 .userId(userId1)
                 .username("user1")
@@ -93,7 +94,7 @@ class LeaderboardControllerIntegrationTest {
                 .createdAt(now.minusDays(1))
                 .build();
 
-        UserScoreDocument user1Score3 = UserScoreDocument.builder()
+        UserScoreDocument user1Score3 = UserScoreDocument.builder().activityType(ActivityType.CHALLENGE_COMPLETED)
                 .id(UUID.randomUUID())
                 .userId(userId1)
                 .username("user1")
@@ -102,7 +103,7 @@ class LeaderboardControllerIntegrationTest {
                 .createdAt(now)
                 .build();
 
-        UserScoreDocument user2Score1 = UserScoreDocument.builder()
+        UserScoreDocument user2Score1 = UserScoreDocument.builder().activityType(ActivityType.CHALLENGE_COMPLETED)
                 .id(UUID.randomUUID())
                 .userId(userId2)
                 .username("user2")
@@ -111,7 +112,7 @@ class LeaderboardControllerIntegrationTest {
                 .createdAt(now)
                 .build();
 
-        UserScoreDocument user2Score2 = UserScoreDocument.builder()
+        UserScoreDocument user2Score2 = UserScoreDocument.builder().activityType(ActivityType.CHALLENGE_COMPLETED)
                 .id(UUID.randomUUID())
                 .userId(userId2)
                 .username("user2")
@@ -120,7 +121,7 @@ class LeaderboardControllerIntegrationTest {
                 .createdAt(now.minusDays(1))
                 .build();
 
-        UserScoreDocument user3Score1 = UserScoreDocument.builder()
+        UserScoreDocument user3Score1 = UserScoreDocument.builder().activityType(ActivityType.CHALLENGE_COMPLETED)
                 .id(UUID.randomUUID())
                 .userId(userId3)
                 .username("user3")
