@@ -10,8 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
-import java.time.format.DateTimeFormatter;
-import java.time.format.ResolverStyle;
+import java.time.temporal.WeekFields;
 import java.util.*;
 
 @Service
@@ -67,14 +66,13 @@ public class UserScoreServiceImpl implements UserScoreService {
                     .build();
         }
 
-        DateTimeFormatter weekFormatter = DateTimeFormatter.ofPattern("YYYY-'W'ww")
-                .withLocale(Locale.getDefault())
-                .withResolverStyle(ResolverStyle.STRICT);
-
         Map<String, Integer> pointsByWeek = new LinkedHashMap<>();
+
         for (UserScoreDocument doc : docs) {
             if (doc.getCreatedAt() == null || doc.getPointsEarned() == null) continue;
-            String week = doc.getCreatedAt().format(weekFormatter);
+            int weekYear = doc.getCreatedAt().get(WeekFields.ISO.weekBasedYear());
+            int weekNumber = doc.getCreatedAt().get(WeekFields.ISO.weekOfWeekBasedYear());
+            String week = String.format("%d-W%02d", weekYear, weekNumber);
             pointsByWeek.merge(week, doc.getPointsEarned(), Integer::sum);
         }
 
