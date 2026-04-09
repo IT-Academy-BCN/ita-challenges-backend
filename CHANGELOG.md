@@ -3,6 +3,28 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [itachallenge-challenge-3.5.0 - RELEASED] 2026-04-09
+
+[Gamification]
+
+### Added
+
+#### UserScore Activity Classification
+
+* Added `activityType` field to `UserScoreDocument` to classify user score events.
+
+### Changed
+
+#### UserScore Model Constraints
+
+* Marked `activityType` as mandatory using `@NonNull`.
+* Updated all related tests to include the required field.
+
+#### Test Stability Improvements
+
+* Fixed flaky reactive integration tests by ensuring proper response consumption (`expectBody()`).
+
+
 ### [itachallenge-challenge-3.5.0-RELEASE] - 2026-04-09
 
 [Gamification]
