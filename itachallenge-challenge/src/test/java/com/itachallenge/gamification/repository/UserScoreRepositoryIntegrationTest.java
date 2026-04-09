@@ -160,4 +160,57 @@ class UserScoreRepositoryIntegrationTest {
                 user3Score1
         )).blockLast();
     }
+
+    @Test
+    void givenUserWithMultipleScores_whenFindByUserIdOrderByCreatedAtAsc_thenReturnsInAscendingOrder() {
+        userScoreRepository.deleteAll().block();
+
+        UUID testUserId = UUID.randomUUID();
+
+        UserScoreDocument first = UserScoreDocument.builder()
+                .id(UUID.randomUUID()).userId(testUserId).username("testuser")
+                .challengeId(UUID.randomUUID()).pointsEarned(10)
+                .createdAt(LocalDateTime.of(2024, 3, 1, 10, 0))
+                .build();
+        UserScoreDocument second = UserScoreDocument.builder()
+                .id(UUID.randomUUID()).userId(testUserId).username("testuser")
+                .challengeId(UUID.randomUUID()).pointsEarned(15)
+                .createdAt(LocalDateTime.of(2024, 3, 5, 10, 0))
+                .build();
+        UserScoreDocument third = UserScoreDocument.builder()
+                .id(UUID.randomUUID()).userId(testUserId).username("testuser")
+                .challengeId(UUID.randomUUID()).pointsEarned(20)
+                .createdAt(LocalDateTime.of(2024, 3, 10, 10, 0))
+                .build();
+
+        mongoTemplate.insert(first, "user_score_history").block();
+        mongoTemplate.insert(second, "user_score_history").block();
+        mongoTemplate.insert(third, "user_score_history").block();
+
+        StepVerifier.create(userScoreRepository.findByUserIdOrderByCreatedAtAsc(testUserId))
+                .expectNextMatches(doc -> doc.getPointsEarned() == 10)
+                .expectNextMatches(doc -> doc.getPointsEarned() == 15)
+                .expectNextMatches(doc -> doc.getPointsEarned() == 20)
+                .verifyComplete();
+    }
+
+    @SuppressWarnings("java:S2699") // to be extended with activityType when #275/#276 are merged
+    @Test
+    void givenMultipleUsersScores_whenFindByUserIdOrderByCreatedAtAsc_thenReturnsOnlyRequestedUser() {
+        StepVerifier.create(userScoreRepository.findByUserIdOrderByCreatedAtAsc(userId1))
+                .expectNextCount(3)
+                .verifyComplete();
+
+        StepVerifier.create(userScoreRepository.findByUserIdOrderByCreatedAtAsc(userId2))
+                .expectNextCount(2)
+                .verifyComplete();
+    }
+
+    @Test
+    void givenUserWithNoScores_whenFindByUserIdOrderByCreatedAtAsc_thenReturnsEmpty() {
+        UUID unknownUserId = UUID.randomUUID();
+
+        StepVerifier.create(userScoreRepository.findByUserIdOrderByCreatedAtAsc(unknownUserId))
+                .verifyComplete();
+    }
 }
