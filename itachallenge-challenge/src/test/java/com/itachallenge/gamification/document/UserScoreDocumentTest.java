@@ -35,6 +35,7 @@ class UserScoreDocumentTest {
         assertThat(document.getChallengeId()).isEqualTo(challengeId);
         assertThat(document.getPointsEarned()).isEqualTo(points);
         assertThat(document.getCreatedAt()).isEqualTo(createdAt);
+        assertThat(document.getActivityType()).isEqualTo(ActivityType.CHALLENGE_COMPLETED);
     }
 
     @Test
