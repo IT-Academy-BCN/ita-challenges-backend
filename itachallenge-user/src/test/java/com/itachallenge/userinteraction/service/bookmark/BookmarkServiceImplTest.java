@@ -278,8 +278,7 @@ class BookmarkServiceImplTest {
     @ParameterizedTest(name = "{0}")
     @MethodSource("provideDeleteBookmarkFailureCases")
     void deleteChallengeFromBookmarks_ShouldReturnFalse_WhenBookmarkNotFound(
-            String testCase,
-            List<UUID> bookmarks) {
+            String testCase) {
 
         UUID challengeId = UUID.randomUUID();
         UUID userId = UUID.randomUUID();
