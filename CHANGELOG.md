@@ -10,8 +10,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 #### Weekly Leaderboard API
-- New endpoint `GET /itachallenge/api/v1/leaderboard/weekly` to expose weekly leagues ranking.
-- New `WeeklyLeaguesResponseDto` response contract with `gold`, `silver`, and `bronze` arrays.
+- Added new endpoint `GET /itachallenge/api/v1/leaderboard/weekly` to expose weekly leagues ranking.
+- Added response contract `WeeklyLeaguesResponseDto` with league arrays:
+  - `gold`
+  - `silver`
+  - `bronze`
+- Reused `LeaderboardEntryDto` as league entry shape (`username`, `total_points`) to keep consistency with existing leaderboard responses.
+
+#### Controller Layer
+- Extended `LeaderboardController` with weekly leaderboard route wiring.
+- Added OpenAPI/Swagger documentation for the new weekly endpoint (200 and 500 responses).
+
+#### Tests
+- Extended `LeaderboardControllerTest` for weekly endpoint scenarios:
+  - successful response with `gold/silver/bronze`,
+  - empty arrays response,
+  - service error mapped to 5xx.
+- Verified existing global leaderboard endpoint `GET /itachallenge/api/v1/leaderboard` remains unchanged.
 
 ## [itachallenge-challenge-3.4.0 - RELEASED] 2026-03-23
 
