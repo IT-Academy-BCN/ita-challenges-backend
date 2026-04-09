@@ -65,7 +65,7 @@ public class LeaderboardServiceImpl implements LeaderboardService {
     private LeaderboardEntryDto mapToEntryDto(LeaderboardAggregationResult agg) {
         return LeaderboardEntryDto.builder()
                 .username(agg.getUsername() != null ? agg.getUsername() : "Anonymous")
-                .totalPoints(agg.getTotalPoints() !=null ? agg.getTotalPoints() : 0)
+                .totalPoints(agg.getTotalPoints() != null ? agg.getTotalPoints() : 0)
                 .build();
     }
 
