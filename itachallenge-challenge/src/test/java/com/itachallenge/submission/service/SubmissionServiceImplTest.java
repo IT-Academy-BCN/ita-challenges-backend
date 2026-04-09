@@ -4,6 +4,7 @@ import com.itachallenge.challenge.dto.submission.SubmissionDto;
 import com.itachallenge.challenge.dto.submission.SubmissionActionRequestDto;
 import com.itachallenge.challenge.service.IChallengeService;
 import com.itachallenge.common.exception.BadRequestException;
+import com.itachallenge.gamification.service.SubmissionScoreRecorder;
 import com.itachallenge.submission.document.SubmissionDocument;
 import com.itachallenge.submission.enums.SubmissionAction;
 import com.itachallenge.submission.enums.SubmissionStatus;
@@ -35,6 +36,8 @@ class SubmissionServiceImplTest {
     private SubmissionRepository submissionRepository;
     @Mock
     private IChallengeService challengeService;
+    @Mock
+    private SubmissionScoreRecorder submissionScoreRecorder;
 
 
 
@@ -135,6 +138,7 @@ class SubmissionServiceImplTest {
                 .verifyComplete();
 
         verify(challengeService, never()).addChallengeToSolved(anyString());
+        verify(submissionScoreRecorder, never()).recordCompletedSubmissionScore(any(), any());
     }
 
     @Test
@@ -168,6 +172,8 @@ class SubmissionServiceImplTest {
         when(challengeService.addChallengeToSolved(challengeUuid.toString()))
                 .thenReturn(Mono.just(new SolvedDto(true, 3)));
 
+        when(submissionScoreRecorder.recordCompletedSubmissionScore(userUuid, challengeUuid)).thenReturn(Mono.empty());
+
         StepVerifier.create(submissionService.processSubmissionAction(userUuid.toString(), request))
                 .assertNext(response -> {
                     Assertions.assertEquals(SubmissionStatus.SUBMITTED_COMPLETE.name(), response.getStatus());
@@ -177,6 +183,7 @@ class SubmissionServiceImplTest {
                 .verifyComplete();
 
         verify(challengeService).addChallengeToSolved(challengeUuid.toString());
+        verify(submissionScoreRecorder).recordCompletedSubmissionScore(userUuid, challengeUuid);
     }
 
     @Test
@@ -209,6 +216,7 @@ class SubmissionServiceImplTest {
                 .verify();
 
         verify(challengeService, never()).addChallengeToSolved(anyString());
+        verify(submissionScoreRecorder, never()).recordCompletedSubmissionScore(any(), any());
     }
 
     @Test
@@ -233,6 +241,7 @@ class SubmissionServiceImplTest {
         StepVerifier.create(submissionService.processSubmissionAction(userUuid.toString(), request))
                 .assertNext(response -> Assertions.assertEquals(SubmissionStatus.IN_PROGRESS.name(), response.getStatus()))
                 .verifyComplete();
+        verify(submissionScoreRecorder, never()).recordCompletedSubmissionScore(any(), any());
     }
 
 }

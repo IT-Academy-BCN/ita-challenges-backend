@@ -5,6 +5,7 @@ import com.itachallenge.challenge.dto.submission.SubmissionDto;
 import com.itachallenge.challenge.dto.submission.SubmissionActionRequestDto;
 import com.itachallenge.challenge.service.IChallengeService;
 import com.itachallenge.common.exception.BadRequestException;
+import com.itachallenge.gamification.service.SubmissionScoreRecorder;
 import com.itachallenge.submission.document.SubmissionDocument;
 import com.itachallenge.submission.enums.SubmissionAction;
 import com.itachallenge.submission.enums.SubmissionStatus;
@@ -21,11 +22,14 @@ import java.util.UUID;
 public class SubmissionServiceImpl implements SubmissionService {
     private final SubmissionRepository submissionRepository;
     private final IChallengeService challengeService;
+    private final SubmissionScoreRecorder submissionScoreRecorder;
 
 
-    public SubmissionServiceImpl(SubmissionRepository submissionRepository, IChallengeService challengeService) {
+    public SubmissionServiceImpl(SubmissionRepository submissionRepository, IChallengeService challengeService,
+                                 SubmissionScoreRecorder submissionScoreRecorder) {
         this.submissionRepository = submissionRepository;
         this.challengeService = challengeService;
+        this.submissionScoreRecorder = submissionScoreRecorder;
     }
 
     @Override
@@ -91,7 +95,8 @@ public class SubmissionServiceImpl implements SubmissionService {
                             }))
                             .flatMap(saved -> {
                                 if (saved.getStatus() == SubmissionStatus.SUBMITTED_COMPLETE) {
-                                    return challengeService.addChallengeToSolved(challengeUuid.toString())
+                                    return submissionScoreRecorder.recordCompletedSubmissionScore(userUuid, challengeUuid)
+                                            .then(challengeService.addChallengeToSolved(challengeUuid.toString()))
                                             .map(solvedDto -> SubmissionActionResponseDto.builder()
                                                     .submissionText(saved.getSubmissionText())
                                                     .status(saved.getStatus().name())
