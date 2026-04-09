@@ -135,7 +135,7 @@ public class UserController {
     )
 
     @PostMapping("/users/{userId}/bookmarks/{challengeId}")
-    public Mono<ResponseEntity<Boolean>> addToBookmarks(@PathVariable String userId, @PathVariable String challengeId) {
+    public Mono<ResponseEntity<Boolean>> addChallengeToBookmarks(@PathVariable String userId, @PathVariable String challengeId) {
         return bookmarkService.addChallengeToBookmarks(userId, challengeId)
                 .map(added -> {
                     if (Boolean.TRUE.equals(added)) {
@@ -189,7 +189,7 @@ public class UserController {
             }
     )
     @DeleteMapping("/users/{userId}/bookmarks/{challengeId}")
-    public Mono<ResponseEntity<Boolean>> deleteFromBookmarks(@PathVariable String userId, @PathVariable String challengeId) {
+    public Mono<ResponseEntity<Boolean>> deleteChallengeFromBookmarks(@PathVariable String userId, @PathVariable String challengeId) {
         return bookmarkService.deleteChallengeFromBookmarks(userId, challengeId)
                 .map(deleted -> {
                     if (Boolean.TRUE.equals(deleted)) {
