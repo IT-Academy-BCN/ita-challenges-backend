@@ -1,6 +1,7 @@
 package com.itachallenge.gamification.repository;
 
 import com.itachallenge.gamification.document.UserScoreDocument;
+import com.itachallenge.gamification.enums.ActivityType;
 import com.itachallenge.gamification.repository.projection.LeaderboardAggregationResult;
 import com.itachallenge.gamification.util.WeeklyWindow;
 import org.junit.jupiter.api.BeforeEach;
@@ -192,7 +193,7 @@ class UserScoreRepositoryIntegrationTest {
         userId2 = UUID.randomUUID();
         userId3 = UUID.randomUUID();
 
-        UserScoreDocument user1Score1 = UserScoreDocument.builder()
+        UserScoreDocument user1Score1 = UserScoreDocument.builder().activityType(ActivityType.CHALLENGE_COMPLETED)
                 .id(UUID.randomUUID())
                 .userId(userId1)
                 .username("old_username")
@@ -201,7 +202,7 @@ class UserScoreRepositoryIntegrationTest {
                 .createdAt(now.minusDays(2))
                 .build();
 
-        UserScoreDocument user1Score2 = UserScoreDocument.builder()
+        UserScoreDocument user1Score2 = UserScoreDocument.builder().activityType(ActivityType.CHALLENGE_COMPLETED)
                 .id(UUID.randomUUID())
                 .userId(userId1)
                 .username(USERNAME_1)
@@ -210,7 +211,7 @@ class UserScoreRepositoryIntegrationTest {
                 .createdAt(now.minusDays(1))
                 .build();
 
-        UserScoreDocument user1Score3 = UserScoreDocument.builder()
+        UserScoreDocument user1Score3 = UserScoreDocument.builder().activityType(ActivityType.CHALLENGE_COMPLETED)
                 .id(UUID.randomUUID())
                 .userId(userId1)
                 .username(USERNAME_1)
@@ -219,7 +220,7 @@ class UserScoreRepositoryIntegrationTest {
                 .createdAt(now)
                 .build();
 
-        UserScoreDocument user2Score1 = UserScoreDocument.builder()
+        UserScoreDocument user2Score1 = UserScoreDocument.builder().activityType(ActivityType.CHALLENGE_COMPLETED)
                 .id(UUID.randomUUID())
                 .userId(userId2)
                 .username(USERNAME_2)
@@ -228,7 +229,7 @@ class UserScoreRepositoryIntegrationTest {
                 .createdAt(LocalDateTime.now())
                 .build();
 
-        UserScoreDocument user2Score2 = UserScoreDocument.builder()
+        UserScoreDocument user2Score2 = UserScoreDocument.builder().activityType(ActivityType.CHALLENGE_COMPLETED)
                 .id(UUID.randomUUID())
                 .userId(userId2)
                 .username(USERNAME_2)
@@ -237,7 +238,7 @@ class UserScoreRepositoryIntegrationTest {
                 .createdAt(LocalDateTime.now().minusDays(1))
                 .build();
 
-        UserScoreDocument user3Score1 = UserScoreDocument.builder()
+        UserScoreDocument user3Score1 = UserScoreDocument.builder().activityType(ActivityType.CHALLENGE_COMPLETED)
                 .id(UUID.randomUUID())
                 .userId(userId3)
                 .username(USERNAME_3)
@@ -259,17 +260,17 @@ class UserScoreRepositoryIntegrationTest {
 
         UUID testUserId = UUID.randomUUID();
 
-        UserScoreDocument first = UserScoreDocument.builder()
+        UserScoreDocument first = UserScoreDocument.builder().activityType(ActivityType.CHALLENGE_COMPLETED)
                 .id(UUID.randomUUID()).userId(testUserId).username("testuser")
                 .challengeId(UUID.randomUUID()).pointsEarned(10)
                 .createdAt(LocalDateTime.of(2024, 3, 1, 10, 0))
                 .build();
-        UserScoreDocument second = UserScoreDocument.builder()
+        UserScoreDocument second = UserScoreDocument.builder().activityType(ActivityType.CHALLENGE_COMPLETED)
                 .id(UUID.randomUUID()).userId(testUserId).username("testuser")
                 .challengeId(UUID.randomUUID()).pointsEarned(15)
                 .createdAt(LocalDateTime.of(2024, 3, 5, 10, 0))
                 .build();
-        UserScoreDocument third = UserScoreDocument.builder()
+        UserScoreDocument third = UserScoreDocument.builder().activityType(ActivityType.CHALLENGE_COMPLETED)
                 .id(UUID.randomUUID()).userId(testUserId).username("testuser")
                 .challengeId(UUID.randomUUID()).pointsEarned(20)
                 .createdAt(LocalDateTime.of(2024, 3, 10, 10, 0))

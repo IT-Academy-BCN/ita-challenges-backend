@@ -1,5 +1,6 @@
 package com.itachallenge.gamification.document;
 
+import com.itachallenge.gamification.enums.ActivityType;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
@@ -18,7 +19,7 @@ class UserScoreDocumentTest {
         int points = 10;
         LocalDateTime createdAt = LocalDateTime.now();
 
-        UserScoreDocument document = UserScoreDocument.builder()
+        UserScoreDocument document = UserScoreDocument.builder().activityType(ActivityType.CHALLENGE_COMPLETED)
                 .id(id)
                 .userId(userId)
                 .username(username)
