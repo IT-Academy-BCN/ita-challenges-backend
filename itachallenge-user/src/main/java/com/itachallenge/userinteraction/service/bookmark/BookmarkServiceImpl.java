@@ -38,18 +38,6 @@ public class BookmarkServiceImpl implements BookmarkService {
                 );
     }
 
-    private Mono<UUID> parseAndValidateUUID(String id) {
-        if (id == null || id.isEmpty()) {
-            return Mono.error(new BadUUIDException("Invalid ID format"));
-        }
-
-        try {
-            return Mono.just(UUID.fromString(id));
-        } catch (IllegalArgumentException ex) {
-            return Mono.error(new BadUUIDException("Invalid ID format"));
-        }
-    }
-
     @Override
     public Mono<Boolean> addChallengeToBookmarks(String userId, String challengeId) {
         return Mono.zip(parseAndValidateUUID(userId), parseAndValidateUUID(challengeId))
@@ -74,6 +62,18 @@ public class BookmarkServiceImpl implements BookmarkService {
                             .switchIfEmpty(Mono.error(new NotFoundException("User not found")))
                             .flatMap(user -> deleteFromBookmarks(userUuid, challengeUuid));
                 });
+    }
+
+    private Mono<UUID> parseAndValidateUUID(String id) {
+        if (id == null || id.isEmpty()) {
+            return Mono.error(new BadUUIDException("Invalid ID format"));
+        }
+
+        try {
+            return Mono.just(UUID.fromString(id));
+        } catch (IllegalArgumentException ex) {
+            return Mono.error(new BadUUIDException("Invalid ID format"));
+        }
     }
 
     private Mono<Boolean> addToBookmarks(UUID userUuid, UUID challengeUuid) {
