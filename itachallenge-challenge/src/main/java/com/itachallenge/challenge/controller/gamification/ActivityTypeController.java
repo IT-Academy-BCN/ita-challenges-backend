@@ -29,7 +29,7 @@ public class ActivityTypeController {
             responses = {
                     @ApiResponse(
                             responseCode = "200",
-                            description = "OK - empty array if none.",
+                            description = "OK - returns an object with an empty activityTypes list if none.",
                             content = @Content(
                                     mediaType = "application/json",
                                     schema = @Schema(implementation = ActivityTypeResponseDto.class)

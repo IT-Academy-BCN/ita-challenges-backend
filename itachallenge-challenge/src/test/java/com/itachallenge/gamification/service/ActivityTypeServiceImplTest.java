@@ -1,7 +1,10 @@
 package com.itachallenge.gamification.service;
 
+import com.itachallenge.gamification.enums.ActivityType;
 import org.junit.jupiter.api.Test;
 import reactor.test.StepVerifier;
+
+import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -13,7 +16,9 @@ class ActivityTypeServiceImplTest {
     void getAvailableActivityTypes_returnsAllEnumNames() {
         StepVerifier.create(activityTypeService.getAvailableActivityTypes())
                 .assertNext(response -> assertThat(response.getActivityTypes())
-                        .containsExactly("CODE_REVIEW", "PRESENTATION", "CHALLENGE_COMPLETED"))
+                        .containsExactly(Arrays.stream(ActivityType.values())
+                                .map(Enum::name)
+                                .toArray(String[]::new)))
                 .verifyComplete();
     }
 }
