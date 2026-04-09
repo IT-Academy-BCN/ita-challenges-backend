@@ -3,6 +3,18 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+
+### [itachallenge-challenge-3.5.0-RELEASE] - 2026-04-09
+
+### Added
+- `ScoresHistoryResponseDto` and `WeeklyPointsDto` to support weekly aggregated score history responses (GitHub Task [#300], PR [#...])
+
+### Changed
+- `GET /users/{userId}/scores/history` now returns a weekly aggregated response grouped by ISO week, including accumulated points per period (GitHub Task [#300], PR [#...])
+
+### Removed
+- `PointsHistoryResponseDto` and `PointHistoryEntryDto` — replaced by the new response structure (GitHub Task [#300], PR [#...])
+
 ## [itachallenge-challenge-3.4.0 - RELEASED] 2026-03-23
 
 [Gamification]
