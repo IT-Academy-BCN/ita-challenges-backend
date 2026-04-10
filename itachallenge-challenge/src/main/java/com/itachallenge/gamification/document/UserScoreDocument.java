@@ -1,5 +1,6 @@
 package com.itachallenge.gamification.document;
 
+import com.itachallenge.gamification.enums.ActivityType;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
@@ -28,6 +29,10 @@ public class UserScoreDocument {
 
     @Field("username")
     private String username;
+
+    @NonNull
+    @Field("activity_type")
+    private ActivityType activityType;
 
     @Field("challenge_id")
     private UUID challengeId;

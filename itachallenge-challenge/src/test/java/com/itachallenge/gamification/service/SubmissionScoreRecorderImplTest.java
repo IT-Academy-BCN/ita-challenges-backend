@@ -14,8 +14,7 @@ import reactor.test.StepVerifier;
 
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -53,9 +52,8 @@ class SubmissionScoreRecorderImplTest {
         assertEquals(userId, savedDocument.getUserId());
         assertEquals(challengeId, savedDocument.getChallengeId());
         assertEquals(ActivityType.CHALLENGE_COMPLETED.getPoints(), savedDocument.getPointsEarned());
+        assertEquals(ActivityType.CHALLENGE_COMPLETED, savedDocument.getActivityType());
+        assertNotNull(savedDocument.getCreatedAt());
         assertNull(savedDocument.getUsername());
-
-
     }
-
 }
