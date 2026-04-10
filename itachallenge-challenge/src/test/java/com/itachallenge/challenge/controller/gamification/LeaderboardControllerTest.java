@@ -2,9 +2,9 @@ package com.itachallenge.challenge.controller.gamification;
 
 import com.itachallenge.challenge.dto.gamification.LeaderboardEntryDto;
 import com.itachallenge.challenge.dto.gamification.LeaderboardResponseDto;
+import com.itachallenge.challenge.dto.gamification.WeeklyLeaguesResponseDto;
 import com.itachallenge.challenge.exception.InternalServerErrorException;
 import com.itachallenge.gamification.service.LeaderboardService;
-import com.itachallenge.gamification.service.WeeklyLeaguesResult;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
@@ -87,7 +87,7 @@ class LeaderboardControllerTest {
 
     @Test
     void getWeeklyLeagues_returnsOkAndThreeArrays() {
-        WeeklyLeaguesResult response = WeeklyLeaguesResult.builder()
+        WeeklyLeaguesResponseDto response = WeeklyLeaguesResponseDto.builder()
                 .gold(List.of(LeaderboardEntryDto.builder().username("userG1").totalPoints(100).build()))
                 .silver(List.of(LeaderboardEntryDto.builder().username("userS1").totalPoints(70).build()))
                 .bronze(List.of(LeaderboardEntryDto.builder().username("userB1").totalPoints(40).build()))
@@ -111,7 +111,7 @@ class LeaderboardControllerTest {
 
     @Test
     void getWeeklyLeagues_whenEmpty_returnsOkAndEmptyArrays() {
-        WeeklyLeaguesResult emptyResponse = WeeklyLeaguesResult.builder()
+        WeeklyLeaguesResponseDto emptyResponse = WeeklyLeaguesResponseDto.builder()
                 .gold(Collections.emptyList())
                 .silver(Collections.emptyList())
                 .bronze(Collections.emptyList())

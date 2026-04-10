@@ -4,7 +4,6 @@ import com.itachallenge.challenge.dto.MessageDto;
 import com.itachallenge.challenge.dto.gamification.LeaderboardResponseDto;
 import com.itachallenge.challenge.dto.gamification.WeeklyLeaguesResponseDto;
 import com.itachallenge.gamification.service.LeaderboardService;
-import com.itachallenge.gamification.service.WeeklyLeaguesResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -76,15 +75,6 @@ public class LeaderboardController {
     public Mono<ResponseEntity<WeeklyLeaguesResponseDto>> getWeeklyLeagues() {
         log.info("Receiving request to fetch weekly leagues leaderboard");
         return leaderboardService.getWeeklyLeagues()
-                .map(this::mapToWeeklyLeaguesResponse)
                 .map(ResponseEntity::ok);
-    }
-
-    private WeeklyLeaguesResponseDto mapToWeeklyLeaguesResponse(WeeklyLeaguesResult result) {
-        return WeeklyLeaguesResponseDto.builder()
-                .gold(result.getGold())
-                .silver(result.getSilver())
-                .bronze(result.getBronze())
-                .build();
     }
 }

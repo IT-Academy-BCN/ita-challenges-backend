@@ -9,6 +9,9 @@ import reactor.core.publisher.Flux;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+/**
+ * Leaderboard aggregations sort by {@code totalPoints} descending, then {@code username} ascending (tie-break in MongoDB).
+ */
 public interface UserScoreRepository extends ReactiveMongoRepository<UserScoreDocument, UUID> {
 
     Flux<UserScoreDocument> findByUserIdOrderByCreatedAtAsc(UUID userId);
@@ -26,7 +29,7 @@ public interface UserScoreRepository extends ReactiveMongoRepository<UserScoreDo
              }
             """,
             "{$project: {_id: 0, username: 1, totalPoints: 1}}",
-            "{$sort: {totalPoints: -1}}"
+            "{$sort: {totalPoints: -1, username: 1}}"
     })
     Flux<LeaderboardAggregationResult> aggregateUserScores();
 
@@ -43,7 +46,7 @@ public interface UserScoreRepository extends ReactiveMongoRepository<UserScoreDo
              }
             """,
             "{$project: {_id: 0, username: 1, totalPoints: 1}}",
-            "{$sort: {totalPoints: -1}}"
+            "{$sort: {totalPoints: -1, username: 1}}"
     })
     Flux<LeaderboardAggregationResult> aggregateUserScoresByPeriod(LocalDateTime fromInclusive, LocalDateTime toInclusive);
 }
