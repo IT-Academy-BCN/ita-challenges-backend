@@ -10,6 +10,6 @@ public interface UserScoreService {
 
     Mono<PointsHistoryResponseDto> getUserPointsHistory(UUID userId);
 
-    Mono<Void> registerPoints(UUID userId, ActivityType type, UUID challengeId);
+    Mono<Void> registerPoints(UUID userId, String username, ActivityType type, UUID challengeId);
 }
 

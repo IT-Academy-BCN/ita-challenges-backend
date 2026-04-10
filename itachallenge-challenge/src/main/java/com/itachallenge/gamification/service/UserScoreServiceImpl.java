@@ -51,7 +51,7 @@ public class UserScoreServiceImpl implements UserScoreService {
     }
 
     @Override
-    public Mono<Void> registerPoints(UUID userId, ActivityType type, UUID challengeId) {
+    public Mono<Void> registerPoints(UUID userId, String username, ActivityType type, UUID challengeId) {
 
         if (userId == null) {
             return Mono.error(new IllegalArgumentException("userId cannot be null"));
@@ -59,6 +59,10 @@ public class UserScoreServiceImpl implements UserScoreService {
 
         if (type == null) {
             return Mono.error(new IllegalArgumentException("ActivityType cannot be null"));
+        }
+
+        if (username == null || username.isBlank()) {
+            return Mono.error(new IllegalArgumentException("username cannot be null or blank"));
         }
 
         if (type == ActivityType.CHALLENGE_COMPLETED && challengeId == null) {
@@ -74,7 +78,9 @@ public class UserScoreServiceImpl implements UserScoreService {
         UUID finalChallengeId = (type == ActivityType.CHALLENGE_COMPLETED) ? challengeId : null;
 
         UserScoreDocument document = UserScoreDocument.builder()
+                .id(UUID.randomUUID())
                 .userId(userId)
+                .username(username)
                 .activityType(type)
                 .pointsEarned(points)
                 .challengeId(finalChallengeId)

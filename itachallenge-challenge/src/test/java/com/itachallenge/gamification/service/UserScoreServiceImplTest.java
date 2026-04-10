@@ -173,7 +173,7 @@ class UserScoreServiceImplTest {
         when(userScoreRepository.save(any()))
                 .thenAnswer(invocation -> Mono.just(invocation.getArgument(0)));
 
-        var result = userScoreService.registerPoints(userId, ActivityType.CHALLENGE_COMPLETED, challengeId);
+        var result = userScoreService.registerPoints(userId, "testUser", ActivityType.CHALLENGE_COMPLETED, challengeId);
 
         StepVerifier.create(result)
                 .verifyComplete();
@@ -185,7 +185,7 @@ class UserScoreServiceImplTest {
     void givenChallengeCompletedWithoutChallengeId_whenRegisterPoints_thenError() {
         UUID userId = UUID.randomUUID();
 
-        var result = userScoreService.registerPoints(userId, ActivityType.CHALLENGE_COMPLETED, null);
+        var result = userScoreService.registerPoints(userId, "testUser", ActivityType.CHALLENGE_COMPLETED, null);
 
         StepVerifier.create(result)
                 .expectError(IllegalArgumentException.class)
@@ -199,7 +199,7 @@ class UserScoreServiceImplTest {
         UUID userId = UUID.randomUUID();
         UUID challengeId = UUID.randomUUID();
 
-        var result = userScoreService.registerPoints(userId, ActivityType.CODE_REVIEW, challengeId);
+        var result = userScoreService.registerPoints(userId, "testUser", ActivityType.CODE_REVIEW, challengeId);
 
         StepVerifier.create(result)
                 .expectError(IllegalArgumentException.class)
@@ -215,7 +215,7 @@ class UserScoreServiceImplTest {
         when(userScoreRepository.save(any()))
                 .thenAnswer(invocation -> Mono.just(invocation.getArgument(0)));
 
-        var result = userScoreService.registerPoints(userId, ActivityType.CODE_REVIEW, null);
+        var result = userScoreService.registerPoints(userId, "testUser", ActivityType.CODE_REVIEW, null);
 
         StepVerifier.create(result)
                 .verifyComplete();
