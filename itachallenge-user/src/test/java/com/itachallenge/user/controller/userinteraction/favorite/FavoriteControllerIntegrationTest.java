@@ -58,7 +58,7 @@ class FavoriteControllerIntegrationTest {
 
 
     @Test
-    void getUserFavorites_WithExistingFavorites_ReturnsSetOfChallengeIds(){
+    void getUserFavorites_WithExistingFavorites_ReturnsSetOfChallengeIds() {
         String userId = createUser("user");
 
         String challengeId1 = UUID.randomUUID().toString();
@@ -69,13 +69,14 @@ class FavoriteControllerIntegrationTest {
         addFavorite(userId, challengeId2);
         addFavorite(userId, challengeId3);
 
-                webTestClient.get()
+        webTestClient.get()
                 .uri("/itachallenge/api/v1/userinteraction/favorites/{userId}", userId)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON)
-                .expectBody(new ParameterizedTypeReference<Set<String>>(){})
+                .expectBody(new ParameterizedTypeReference<Set<String>>() {
+                })
                 .value(
                         favorites -> {
                             assertThat(favorites).hasSize(3);
@@ -85,7 +86,7 @@ class FavoriteControllerIntegrationTest {
     }
 
     @Test
-    void getUserFavorites_WithNoFavorites_ReturnsEmptySet(){
+    void getUserFavorites_WithNoFavorites_ReturnsEmptySet() {
         String userId = createUser("user");
 
         webTestClient.get()
@@ -94,7 +95,8 @@ class FavoriteControllerIntegrationTest {
                 .exchange()
                 .expectStatus().isOk()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON)
-                .expectBody(new ParameterizedTypeReference<Set<String>>(){})
+                .expectBody(new ParameterizedTypeReference<Set<String>>() {
+                })
                 .value(
                         favorites -> assertThat(favorites).isEmpty()
                 );
@@ -129,7 +131,7 @@ class FavoriteControllerIntegrationTest {
     }
 
     @Test
-    void getUserFavorites_WithInvalidUUID_Returns400(){
+    void getUserFavorites_WithInvalidUUID_Returns400() {
         webTestClient.get()
                 .uri("/itachallenge/api/v1/userinteraction/favorites/{userId}", 321)
                 .accept(MediaType.APPLICATION_JSON)
@@ -146,12 +148,12 @@ class FavoriteControllerIntegrationTest {
 //                .jsonPath("$.path").value(path -> assertThat(path.toString())
 //                        .contains("/users/" + invalidUserId + "/favorites"));
                 .expectBody(String.class)
-                .value( body ->
+                .value(body ->
                         assertThat(body).contains("The provided IDs are not valid"));
     }
 
     @Test
-    void getUserFavorites_WhenUserDoesntExist_Returns404(){
+    void getUserFavorites_WhenUserDoesntExist_Returns404() {
         String nonExistentUserId = UUID.randomUUID().toString();
 
         webTestClient.get()
@@ -170,13 +172,12 @@ class FavoriteControllerIntegrationTest {
 //                .jsonPath("$.path").value(path -> assertThat(path.toString())
 //                        .contains("/users/" + invalidUserId + "/favorites"));
                 .expectBody(String.class)
-                .value( body ->
+                .value(body ->
                         assertThat(body).contains("not found"));
     }
 
 
-
-    private String createUser(String user){
+    private String createUser(String user) {
         AdminCreateUserRequestDto userRequestDto = new AdminCreateUserRequestDto();
         userRequestDto.setUsername(user);
 
@@ -195,7 +196,7 @@ class FavoriteControllerIntegrationTest {
         return userResponseDto.getUserId();
     }
 
-    private void addFavorite(String userId, String challengeId){
+    private void addFavorite(String userId, String challengeId) {
         webTestClient.post()
                 .uri("/itachallenge/api/v1/userinteraction/favorites/users/{userId}/favorites/{challengeId}", userId, challengeId)
                 .exchange()
