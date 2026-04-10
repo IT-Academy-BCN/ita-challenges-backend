@@ -54,8 +54,7 @@ class UserScoreServiceImplTest {
         var result = userScoreService.getUserPointsHistory(userId);
 
         StepVerifier.create(result)
-                .expectNextMatches(response ->
-                        response.getTotalPoints() == 35)
+                .expectNextMatches(response -> response.getTotalPoints() == 35)
                 .verifyComplete();
     }
 

@@ -3,7 +3,7 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [itachallenge-challenge-3.5.0 - UNRELEASED] 2026-04-09
+## [itachallenge-challenge-3.5.0 - UNRELEASED] 2026-04-10
 
 [Gamification]
 
@@ -13,6 +13,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 * Added `activityType` field to `UserScoreDocument` to classify user score events.
 
+#### Unified Point Assignment Logic
+
+* Added `registerPoints(UUID userId, ActivityType type, UUID challengeId)` method in `UserScoreServiceImpl` as the single entry point for point persistence.
+* Enabled support for both academy activities (`CODE_REVIEW`, `PRESENTATION`) and challenge completions (`CHALLENGE_COMPLETED`).
+* Implemented validation logic for `challengeId`:
+  * Required for `CHALLENGE_COMPLETED`
+  * Must be null for other activity types
+
 ### Changed
 
 #### UserScore Model Constraints
@@ -20,10 +28,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Marked `activityType` as mandatory using `@NonNull`.
 * Updated all related tests to include the required field.
 
+#### Point Assignment Strategy
+
+* Centralized point values within `ActivityType` enum.
+* Removed need for external configuration by retrieving points directly from the enum.
+
 #### Test Stability Improvements
 
 * Fixed flaky reactive integration tests by ensuring proper response consumption (`expectBody()`).
 
+#### UserScoreService Testing Coverage
+
+* Extended unit tests in `UserScoreServiceImplTest` to cover point registration logic.
+* Added test cases for:
+  * Successful point persistence for both challenge and non-challenge activities
+  * Validation of `challengeId` constraints
+  * Error handling for invalid inputs
 
 ### [itachallenge-challenge-3.5.0-RELEASE] - 2026-04-09
 

@@ -1,6 +1,7 @@
 package com.itachallenge.gamification.service;
 
 import com.itachallenge.challenge.dto.gamification.PointHistoryEntryDto;
+import com.itachallenge.gamification.enums.ActivityType;
 import com.itachallenge.challenge.dto.gamification.PointsHistoryResponseDto;
 import com.itachallenge.challenge.dto.gamification.ScoresHistoryResponseDto;
 import com.itachallenge.challenge.dto.gamification.WeeklyPointsDto;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
+import java.time.LocalDateTime;
 import java.time.temporal.WeekFields;
 import java.util.*;
 
@@ -51,7 +53,7 @@ public class UserScoreServiceImpl implements UserScoreService {
                 .toList();
 
         return PointsHistoryResponseDto.builder()
-                .username(docs.isEmpty() ? "" : docs.getFirst().getUsername())
+                .username(docs.isEmpty() ? "" : Optional.ofNullable(docs.getFirst().getUsername()).orElse(""))
                 .totalPoints(totalPoints)
                 .history(history)
                 .build();
@@ -94,5 +96,39 @@ public class UserScoreServiceImpl implements UserScoreService {
                 .aggregationType(AGGREGATION_TYPE_WEEKLY)
                 .history(history)
                 .build();
+    }
+
+    @Override
+    public Mono<Void> registerPoints(UUID userId, ActivityType type, UUID challengeId) {
+
+        if (userId == null) {
+            return Mono.error(new IllegalArgumentException("userId cannot be null"));
+        }
+
+        if (type == null) {
+            return Mono.error(new IllegalArgumentException("ActivityType cannot be null"));
+        }
+
+        if (type == ActivityType.CHALLENGE_COMPLETED && challengeId == null) {
+            return Mono.error(new IllegalArgumentException("challengeId is required for CHALLENGE_COMPLETED"));
+        }
+
+        if (type != ActivityType.CHALLENGE_COMPLETED && challengeId != null) {
+            return Mono.error(new IllegalArgumentException("challengeId must be null for non-challenge activities"));
+        }
+
+        int points = type.getPoints();
+
+        UUID finalChallengeId = (type == ActivityType.CHALLENGE_COMPLETED) ? challengeId : null;
+
+        UserScoreDocument document = UserScoreDocument.builder()
+                .userId(userId)
+                .activityType(type)
+                .pointsEarned(points)
+                .createdAt(LocalDateTime.now())
+                .challengeId(finalChallengeId)
+                .build();
+
+        return userScoreRepository.save(document).then();
     }
 }
