@@ -73,7 +73,7 @@ public class LeaderboardServiceImpl implements LeaderboardService {
         List<LeaderboardEntryDto> ordered = new ArrayList<>(entries);
         ordered.sort(Comparator
                 .comparing(LeaderboardEntryDto::getTotalPoints, Comparator.nullsLast(Comparator.reverseOrder()))
-                .thenComparing(LeaderboardEntryDto::getUsername, String.CASE_INSENSITIVE_ORDER));
+                .thenComparing(LeaderboardEntryDto::getUsername, Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER)));
 
         int goldEnd = Math.min(GOLD_LIMIT, ordered.size());
         int silverEnd = Math.min(GOLD_LIMIT + SILVER_LIMIT, ordered.size());
