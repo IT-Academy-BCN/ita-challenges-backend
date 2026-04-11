@@ -1,6 +1,7 @@
 package com.itachallenge.gamification.repository;
 
 import com.itachallenge.gamification.document.UserScoreDocument;
+import com.itachallenge.gamification.enums.ActivityType;
 import com.itachallenge.gamification.repository.projection.LeaderboardAggregationResult;
 import com.itachallenge.gamification.util.WeeklyWindow;
 import org.junit.jupiter.api.BeforeEach;
@@ -193,6 +194,7 @@ class UserScoreRepositoryIntegrationTest {
         userId3 = UUID.randomUUID();
 
         UserScoreDocument user1Score1 = UserScoreDocument.builder()
+                .activityType(ActivityType.CHALLENGE_COMPLETED)
                 .id(UUID.randomUUID())
                 .userId(userId1)
                 .username("old_username")
@@ -202,6 +204,7 @@ class UserScoreRepositoryIntegrationTest {
                 .build();
 
         UserScoreDocument user1Score2 = UserScoreDocument.builder()
+                .activityType(ActivityType.CHALLENGE_COMPLETED)
                 .id(UUID.randomUUID())
                 .userId(userId1)
                 .username(USERNAME_1)
@@ -220,6 +223,7 @@ class UserScoreRepositoryIntegrationTest {
                 .build();
 
         UserScoreDocument user2Score1 = UserScoreDocument.builder()
+                .activityType(ActivityType.CHALLENGE_COMPLETED)
                 .id(UUID.randomUUID())
                 .userId(userId2)
                 .username(USERNAME_2)
@@ -229,6 +233,7 @@ class UserScoreRepositoryIntegrationTest {
                 .build();
 
         UserScoreDocument user2Score2 = UserScoreDocument.builder()
+                .activityType(ActivityType.CHALLENGE_COMPLETED)
                 .id(UUID.randomUUID())
                 .userId(userId2)
                 .username(USERNAME_2)
@@ -238,6 +243,7 @@ class UserScoreRepositoryIntegrationTest {
                 .build();
 
         UserScoreDocument user3Score1 = UserScoreDocument.builder()
+                .activityType(ActivityType.CHALLENGE_COMPLETED)
                 .id(UUID.randomUUID())
                 .userId(userId3)
                 .username(USERNAME_3)
