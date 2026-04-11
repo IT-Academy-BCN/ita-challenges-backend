@@ -214,6 +214,7 @@ class UserScoreRepositoryIntegrationTest {
                 .build();
 
         UserScoreDocument user1Score3 = UserScoreDocument.builder()
+                .activityType(ActivityType.CHALLENGE_COMPLETED)
                 .id(UUID.randomUUID())
                 .userId(userId1)
                 .username(USERNAME_1)
@@ -266,18 +267,29 @@ class UserScoreRepositoryIntegrationTest {
         UUID testUserId = UUID.randomUUID();
 
         UserScoreDocument first = UserScoreDocument.builder()
-                .id(UUID.randomUUID()).userId(testUserId).username("testuser")
-                .challengeId(UUID.randomUUID()).pointsEarned(10)
+                .id(UUID.randomUUID())
+                .userId(testUserId)
+                .username("testuser")
+                .challengeId(UUID.randomUUID())
+                .pointsEarned(10)
+                .activityType(ActivityType.CHALLENGE_COMPLETED)
                 .createdAt(LocalDateTime.of(2024, 3, 1, 10, 0))
                 .build();
         UserScoreDocument second = UserScoreDocument.builder()
-                .id(UUID.randomUUID()).userId(testUserId).username("testuser")
-                .challengeId(UUID.randomUUID()).pointsEarned(15)
+                .id(UUID.randomUUID())
+                .userId(testUserId)
+                .username("testuser")
+                .challengeId(UUID.randomUUID())
+                .pointsEarned(15)
+                .activityType(ActivityType.CHALLENGE_COMPLETED)
                 .createdAt(LocalDateTime.of(2024, 3, 5, 10, 0))
                 .build();
         UserScoreDocument third = UserScoreDocument.builder()
-                .id(UUID.randomUUID()).userId(testUserId).username("testuser")
-                .challengeId(UUID.randomUUID()).pointsEarned(20)
+                .id(UUID.randomUUID())
+                .userId(testUserId).username("testuser")
+                .challengeId(UUID.randomUUID())
+                .pointsEarned(20)
+                .activityType(ActivityType.CHALLENGE_COMPLETED)
                 .createdAt(LocalDateTime.of(2024, 3, 10, 10, 0))
                 .build();
 
@@ -292,7 +304,7 @@ class UserScoreRepositoryIntegrationTest {
                 .verifyComplete();
     }
 
-    @SuppressWarnings("java:S2699") // to be extended with activityType when #275/#276 are merged
+    @SuppressWarnings("java:S2699")
     @Test
     void givenMultipleUsersScores_whenFindByUserIdOrderByCreatedAtAsc_thenReturnsOnlyRequestedUser() {
         StepVerifier.create(userScoreRepository.findByUserIdOrderByCreatedAtAsc(userId1))
