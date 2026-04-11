@@ -3,11 +3,13 @@ package com.itachallenge.gamification.service;
 import com.itachallenge.challenge.dto.gamification.PointHistoryEntryDto;
 import com.itachallenge.challenge.dto.gamification.PointsHistoryResponseDto;
 import com.itachallenge.gamification.document.UserScoreDocument;
+import com.itachallenge.gamification.enums.ActivityType;
 import com.itachallenge.gamification.repository.UserScoreRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -34,7 +36,8 @@ public class UserScoreServiceImpl implements UserScoreService {
                 .sum();
 
         List<PointHistoryEntryDto> history = docs.stream()
-                .sorted(Comparator.comparing(UserScoreDocument::getCreatedAt,
+                .sorted(Comparator.comparing(
+                        UserScoreDocument::getCreatedAt,
                         Comparator.nullsLast(Comparator.naturalOrder())))
                 .map(doc -> PointHistoryEntryDto.builder()
                         .createdAt(doc.getCreatedAt() != null ? doc.getCreatedAt().toString() : "")
@@ -47,5 +50,44 @@ public class UserScoreServiceImpl implements UserScoreService {
                 .totalPoints(totalPoints)
                 .history(history)
                 .build();
+    }
+
+    @Override
+    public Mono<Void> registerPoints(UUID userId, String username, ActivityType type, UUID challengeId) {
+
+        if (userId == null) {
+            return Mono.error(new IllegalArgumentException("userId cannot be null"));
+        }
+
+        if (type == null) {
+            return Mono.error(new IllegalArgumentException("ActivityType cannot be null"));
+        }
+
+        if (username == null || username.isBlank()) {
+            return Mono.error(new IllegalArgumentException("username cannot be null or blank"));
+        }
+
+        if (type == ActivityType.CHALLENGE_COMPLETED && challengeId == null) {
+            return Mono.error(new IllegalArgumentException("challengeId is required for CHALLENGE_COMPLETED"));
+        }
+
+        if (type != ActivityType.CHALLENGE_COMPLETED && challengeId != null) {
+            return Mono.error(new IllegalArgumentException("challengeId must be null for non-challenge activities"));
+        }
+
+        int points = type.getPoints();
+        UUID finalChallengeId = (type == ActivityType.CHALLENGE_COMPLETED) ? challengeId : null;
+
+        UserScoreDocument document = UserScoreDocument.builder()
+                .id(UUID.randomUUID())
+                .userId(userId)
+                .username(username)
+                .activityType(type)
+                .pointsEarned(points)
+                .challengeId(finalChallengeId)
+                .createdAt(LocalDateTime.now())
+                .build();
+
+        return userScoreRepository.save(document).then();
     }
 }
