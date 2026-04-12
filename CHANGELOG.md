@@ -3,25 +3,6 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [itachallenge-challenge-3.5.0 - UNRELEASED] 2026-04-11
-
-[Submission]
-
-### Added
-
-#### Completed Submission Score Persistence
-
-* Added score persistence trigger for completed reto submissions in `SubmissionServiceImpl`.
-* Added `SubmissionScoreRecorder` and `SubmissionScoreRecorderImpl` to connect the submission flow with the shared gamification score model.
-* Persisted score records for completed submissions in `user_score_history` including:
-  * `activityType = CHALLENGE_COMPLETED`
-  * `challengeId`
-  * enum-based points
-  * `createdAt`
-* Verified compatibility with existing score consumers:
-  * `GET /users/{userId}/scores/history`
-  * `GET /leaderboard`
-
 ## [itachallenge-challenge-3.5.0 - UNRELEASED] 2026-04-10
 
 [Gamification]
