@@ -9,11 +9,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -250,10 +254,9 @@ class UserScoreServiceImplTest {
 
     @Test
     void givenValidInput_whenAssignPoints_thenReturnsPointsAndSavesDocument() {
-        UUID userId = UUID.randomUUID();
         ActivityType activityType = ActivityType.CODE_REVIEW;
 
-        when(userScoreRepository.save(any()))
+        when(userScoreRepository.save(any(UserScoreDocument.class)))
                 .thenAnswer(invocation -> Mono.just(invocation.getArgument(0)));
 
         var result = userScoreService.assignPoints(userId, activityType);
@@ -267,6 +270,7 @@ class UserScoreServiceImplTest {
 
     @Test
     void givenNullUserId_whenAssignPoints_thenError() {
+
         ActivityType activityType = ActivityType.CODE_REVIEW;
 
         var result = userScoreService.assignPoints(null, activityType);

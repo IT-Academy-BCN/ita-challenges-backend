@@ -32,7 +32,9 @@ class ActivityControllerIntegrationTest {
         when(userScoreService.assignPoints(userId, activityType))
                 .thenReturn(Mono.just(activityType.getPoints()));
 
-        ActivityPointsRequest request = new ActivityPointsRequest(userId, activityType);
+        ActivityPointsRequest request = new ActivityPointsRequest();
+        request.setUserId(userId);
+        request.setActivityType(activityType);
 
         webTestClient.post()
                 .uri("/activities/points")
@@ -49,7 +51,9 @@ class ActivityControllerIntegrationTest {
 
     @Test
     void givenNullUserId_whenAssignPoints_thenReturnsBadRequest() {
-        ActivityPointsRequest request = new ActivityPointsRequest(null, ActivityType.CODE_REVIEW);
+        ActivityPointsRequest request = new ActivityPointsRequest();
+        request.setUserId(null);
+        request.setActivityType(ActivityType.CODE_REVIEW);
 
         webTestClient.post()
                 .uri("/activities/points")
@@ -60,13 +64,39 @@ class ActivityControllerIntegrationTest {
 
     @Test
     void givenNullActivityType_whenAssignPoints_thenReturnsBadRequest() {
-        UUID userId = UUID.randomUUID();
-
-        ActivityPointsRequest request = new ActivityPointsRequest(userId, null);
+        ActivityPointsRequest request = new ActivityPointsRequest();
+        request.setUserId(UUID.randomUUID());
+        request.setActivityType(null);
 
         webTestClient.post()
                 .uri("/activities/points")
                 .bodyValue(request)
+                .exchange()
+                .expectStatus().isBadRequest();
+    }
+
+    @Test
+    void givenInvalidActivityType_whenAssignPoints_thenReturnsBadRequest() {
+        String body = """
+        {
+          "userId": "%s",
+          "activityType": "INVALID"
+        }
+        """.formatted(UUID.randomUUID());
+
+        webTestClient.post()
+                .uri("/activities/points")
+                .contentType(org.springframework.http.MediaType.APPLICATION_JSON) // 👈 CLAVE
+                .bodyValue(body)
+                .exchange()
+                .expectStatus().isBadRequest();
+    }
+
+    @Test
+    void givenEmptyBody_whenAssignPoints_thenReturnsBadRequest() {
+        webTestClient.post()
+                .uri("/activities/points")
+                .bodyValue(new ActivityPointsRequest())
                 .exchange()
                 .expectStatus().isBadRequest();
     }
