@@ -4,7 +4,8 @@ import com.itachallenge.challenge.dto.submission.SubmissionDto;
 import com.itachallenge.challenge.dto.submission.SubmissionActionRequestDto;
 import com.itachallenge.challenge.service.IChallengeService;
 import com.itachallenge.common.exception.BadRequestException;
-import com.itachallenge.gamification.service.SubmissionScoreRecorder;
+import com.itachallenge.gamification.enums.ActivityType;
+import com.itachallenge.gamification.service.UserScoreService;
 import com.itachallenge.submission.document.SubmissionDocument;
 import com.itachallenge.submission.enums.SubmissionAction;
 import com.itachallenge.submission.enums.SubmissionStatus;
@@ -37,9 +38,7 @@ class SubmissionServiceImplTest {
     @Mock
     private IChallengeService challengeService;
     @Mock
-    private SubmissionScoreRecorder submissionScoreRecorder;
-
-
+    private UserScoreService userScoreService;
 
     @InjectMocks
     private SubmissionServiceImpl submissionService;
@@ -138,7 +137,7 @@ class SubmissionServiceImplTest {
                 .verifyComplete();
 
         verify(challengeService, never()).addChallengeToSolved(anyString());
-        verify(submissionScoreRecorder, never()).recordCompletedSubmissionScore(any(), any());
+        verify(userScoreService, never()).registerPoints(any(), any(),any(), any());
     }
 
     @Test
@@ -172,7 +171,7 @@ class SubmissionServiceImplTest {
         when(challengeService.addChallengeToSolved(challengeUuid.toString()))
                 .thenReturn(Mono.just(new SolvedDto(true, 3)));
 
-        when(submissionScoreRecorder.recordCompletedSubmissionScore(userUuid, challengeUuid)).thenReturn(Mono.empty());
+        when(userScoreService.registerPoints(userUuid,null, ActivityType.CHALLENGE_COMPLETED, challengeUuid)).thenReturn(Mono.empty());
 
         StepVerifier.create(submissionService.processSubmissionAction(userUuid.toString(), request))
                 .assertNext(response -> {
@@ -183,7 +182,7 @@ class SubmissionServiceImplTest {
                 .verifyComplete();
 
         verify(challengeService).addChallengeToSolved(challengeUuid.toString());
-        verify(submissionScoreRecorder).recordCompletedSubmissionScore(userUuid, challengeUuid);
+        verify(userScoreService).registerPoints(userUuid, null, ActivityType.CHALLENGE_COMPLETED, challengeUuid);
     }
 
     @Test
@@ -216,7 +215,7 @@ class SubmissionServiceImplTest {
                 .verify();
 
         verify(challengeService, never()).addChallengeToSolved(anyString());
-        verify(submissionScoreRecorder, never()).recordCompletedSubmissionScore(any(), any());
+        verify(userScoreService, never()).registerPoints(any(), any(), any(), any());
     }
 
     @Test
@@ -241,7 +240,7 @@ class SubmissionServiceImplTest {
         StepVerifier.create(submissionService.processSubmissionAction(userUuid.toString(), request))
                 .assertNext(response -> Assertions.assertEquals(SubmissionStatus.IN_PROGRESS.name(), response.getStatus()))
                 .verifyComplete();
-        verify(submissionScoreRecorder, never()).recordCompletedSubmissionScore(any(), any());
+        verify(userScoreService, never()).registerPoints(any(), any(),any(), any());
     }
 
 }

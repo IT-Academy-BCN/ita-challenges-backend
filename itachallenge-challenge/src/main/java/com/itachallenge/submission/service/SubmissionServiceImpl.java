@@ -5,7 +5,8 @@ import com.itachallenge.challenge.dto.submission.SubmissionDto;
 import com.itachallenge.challenge.dto.submission.SubmissionActionRequestDto;
 import com.itachallenge.challenge.service.IChallengeService;
 import com.itachallenge.common.exception.BadRequestException;
-import com.itachallenge.gamification.service.SubmissionScoreRecorder;
+import com.itachallenge.gamification.enums.ActivityType;
+import com.itachallenge.gamification.service.UserScoreService;
 import com.itachallenge.submission.document.SubmissionDocument;
 import com.itachallenge.submission.enums.SubmissionAction;
 import com.itachallenge.submission.enums.SubmissionStatus;
@@ -22,14 +23,14 @@ import java.util.UUID;
 public class SubmissionServiceImpl implements SubmissionService {
     private final SubmissionRepository submissionRepository;
     private final IChallengeService challengeService;
-    private final SubmissionScoreRecorder submissionScoreRecorder;
+    private final UserScoreService userScoreService;
 
 
     public SubmissionServiceImpl(SubmissionRepository submissionRepository, IChallengeService challengeService,
-                                 SubmissionScoreRecorder submissionScoreRecorder) {
+                                 UserScoreService userScoreService) {
         this.submissionRepository = submissionRepository;
         this.challengeService = challengeService;
-        this.submissionScoreRecorder = submissionScoreRecorder;
+        this.userScoreService = userScoreService;
     }
 
     @Override
@@ -95,7 +96,7 @@ public class SubmissionServiceImpl implements SubmissionService {
                             }))
                             .flatMap(saved -> {
                                 if (saved.getStatus() == SubmissionStatus.SUBMITTED_COMPLETE) {
-                                    return submissionScoreRecorder.recordCompletedSubmissionScore(userUuid, challengeUuid)
+                                    return userScoreService.registerPoints(userUuid, null, ActivityType.CHALLENGE_COMPLETED, challengeUuid)
                                             .then(challengeService.addChallengeToSolved(challengeUuid.toString()))
                                             .map(solvedDto -> SubmissionActionResponseDto.builder()
                                                     .submissionText(saved.getSubmissionText())

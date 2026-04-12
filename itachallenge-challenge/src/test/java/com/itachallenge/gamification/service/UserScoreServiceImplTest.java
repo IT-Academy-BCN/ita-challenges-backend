@@ -222,4 +222,26 @@ class UserScoreServiceImplTest {
 
         verify(userScoreRepository).save(any());
     }
+
+    @Test
+    void givenChallengeCompletedWithoutUsername_whenRegisterPoints_thenSavesWithChallengeId() {
+        UUID userId = UUID.randomUUID();
+        UUID challengeId = UUID.randomUUID();
+
+        when(userScoreRepository.save(any()))
+                .thenAnswer(invocation -> Mono.just(invocation.getArgument(0)));
+
+        var result = userScoreService.registerPoints(
+                userId,
+                null,
+                ActivityType.CHALLENGE_COMPLETED,
+                challengeId
+        );
+
+        StepVerifier.create(result)
+                .verifyComplete();
+
+        verify(userScoreRepository).save(any());
+    }
+
 }

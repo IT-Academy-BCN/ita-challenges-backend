@@ -189,7 +189,6 @@ class SubmissionControllerTest {
                 .submissionText("draft text")
                 .build();
 
-
         when(submissionService.processSubmissionAction(eq(userId), any(SubmissionActionRequestDto.class)))
                 .thenReturn(Mono.error(new UnmodifiableSubmissionException("Submission already completed")));
 

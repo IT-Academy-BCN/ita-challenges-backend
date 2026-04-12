@@ -63,7 +63,7 @@ public class UserScoreServiceImpl implements UserScoreService {
             return Mono.error(new IllegalArgumentException("ActivityType cannot be null"));
         }
 
-        if (username == null || username.isBlank()) {
+        if (type != ActivityType.CHALLENGE_COMPLETED && (username == null || username.isBlank())) {
             return Mono.error(new IllegalArgumentException("username cannot be null or blank"));
         }
 
