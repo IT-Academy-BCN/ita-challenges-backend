@@ -137,4 +137,28 @@ public class UserScoreServiceImpl implements UserScoreService {
 
         return userScoreRepository.save(document).then();
     }
+
+    @Override
+    public Mono<Integer> assignPoints(UUID userId, ActivityType activityType) {
+
+        if (userId == null) {
+            return Mono.error(new IllegalArgumentException("userId cannot be null"));
+        }
+
+        if (activityType == null) {
+            return Mono.error(new IllegalArgumentException("ActivityType cannot be null"));
+        }
+
+        int points = activityType.getPoints();
+
+        UserScoreDocument document = UserScoreDocument.builder()
+                .id(UUID.randomUUID())
+                .userId(userId)
+                .activityType(activityType)
+                .pointsEarned(points)
+                .build();
+
+        return userScoreRepository.save(document)
+                .thenReturn(points);
+    }
 }

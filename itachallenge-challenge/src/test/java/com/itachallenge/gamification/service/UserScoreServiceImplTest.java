@@ -247,4 +247,47 @@ class UserScoreServiceImplTest {
                                 response.getHistory().get(1).getPeriod().equals("2024-W11"))
                 .verifyComplete();
     }
+
+    @Test
+    void givenValidInput_whenAssignPoints_thenReturnsPointsAndSavesDocument() {
+        UUID userId = UUID.randomUUID();
+        ActivityType activityType = ActivityType.CODE_REVIEW;
+
+        when(userScoreRepository.save(any()))
+                .thenAnswer(invocation -> Mono.just(invocation.getArgument(0)));
+
+        var result = userScoreService.assignPoints(userId, activityType);
+
+        StepVerifier.create(result)
+                .expectNext(activityType.getPoints())
+                .verifyComplete();
+
+        verify(userScoreRepository).save(any());
+    }
+
+    @Test
+    void givenNullUserId_whenAssignPoints_thenError() {
+        ActivityType activityType = ActivityType.CODE_REVIEW;
+
+        var result = userScoreService.assignPoints(null, activityType);
+
+        StepVerifier.create(result)
+                .expectError(IllegalArgumentException.class)
+                .verify();
+
+        verifyNoInteractions(userScoreRepository);
+    }
+
+    @Test
+    void givenNullActivityType_whenAssignPoints_thenError() {
+        UUID userId = UUID.randomUUID();
+
+        var result = userScoreService.assignPoints(userId, null);
+
+        StepVerifier.create(result)
+                .expectError(IllegalArgumentException.class)
+                .verify();
+
+        verifyNoInteractions(userScoreRepository);
+    }
 }

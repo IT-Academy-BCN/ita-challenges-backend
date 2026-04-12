@@ -7,6 +7,32 @@
   },
   "item": [
     {
+      "name": "Gamification - Assign Activity Points",
+      "request": {
+        "method": "POST",
+        "header": [ {
+          "key": "Content-Type",
+          "value": "application/json"
+        }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"userId\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"activityType\": \"CODE_REVIEW\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://{{dns}}/activities/points",
+          "protocol": "http",
+          "host": ["{{dns}}"],
+          "path": ["activities", "points"]
+        }
+      },
+      "response": []
+    },
+    {
       "name": "SSO",
       "item": [
         {

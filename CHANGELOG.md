@@ -3,7 +3,7 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [itachallenge-challenge-3.5.0 - UNRELEASED] 2026-04-10
+## [itachallenge-challenge-3.5.0 - UNRELEASED] 2026-04-12
 
 [Gamification]
 
@@ -20,6 +20,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Implemented validation logic for `challengeId`:
   * Required for `CHALLENGE_COMPLETED`
   * Must be null for other activity types
+
+#### Activity Points API Endpoint
+
+* Added new REST endpoint `POST /activities/points` to register activity-based points.
+* The endpoint delegates point assignment to `UserScoreServiceImpl`.
+* Persists a new `UserScoreDocument` for each activity.
+* Returns awarded points along with the corresponding `activityType`.
+
+#### Activity Points DTOs
+
+* Introduced `ActivityPointsRequest` DTO:
+  * Contains `userId` and `activityType`
+* Introduced `ActivityPointsResponse` DTO:
+  * Contains `pointsEarned` and `activityType`
+* Enables clear separation between API layer and service logic.
+
+#### ActivityController
+
+* Added `ActivityController` to expose activity-based scoring endpoint.
+* Handles request validation and delegates business logic to `UserScoreService`.
+* Ensures proper HTTP responses for both valid and invalid inputs.
+
+#### API Documentation (Postman Collection)
+
+* Added new endpoint `POST /activities/points` to Postman collection.
+* Provides request example for activity-based point assignment.
+* Ensures availability for frontend and team integration.
+
+---
 
 ### Changed
 
@@ -45,16 +74,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   * Validation of `challengeId` constraints
   * Error handling for invalid inputs
 
-### [itachallenge-challenge-3.5.0-RELEASE] - 2026-04-09
+#### Controller Testing Coverage
 
-[Gamification]
-
-### Added
-
-#### Activity Types API
-- Added `ActivityType` enum as the shared source of truth for available point-generating activity types.
-- Added `GET /itachallenge/api/v1/activity-types` endpoint to expose available activity types for frontend consumption.
-- Added service, DTO, and controller support for activity type retrieval, along with unit and controller tests.
+* Added integration tests for `ActivityController`.
+* Covered:
+  * Successful request returning awarded points
+  * Validation errors for invalid input (`400 Bad Request`)
+  * Proper interaction with `UserScoreService`
 
 ## [itachallenge-challenge-3.4.0 - RELEASED] 2026-03-23
 
