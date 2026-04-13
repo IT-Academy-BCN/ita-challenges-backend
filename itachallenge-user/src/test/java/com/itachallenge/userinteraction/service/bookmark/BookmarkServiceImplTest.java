@@ -154,7 +154,7 @@ class BookmarkServiceImplTest {
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("provideAddBookmarkSuccessCases")
-    void addChallengeToBookmarks_ShouldReturnTrue_WhenBookmarkDoesNotExist(String testCase) {
+    void addChallengeToBookmarks_ShouldReturnTrue_WhenChallengeIsNotBookmarked(String testCase) {
         UUID challengeId = UUID.randomUUID();
         UUID userId = UUID.randomUUID();
         UserDocument user = new UserDocument(userId, "testUser", null, 0);
