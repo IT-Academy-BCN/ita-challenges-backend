@@ -97,6 +97,19 @@ class UserScoreRepositoryIntegrationTest {
     }
 
     @Test
+    void givenEmptyDatabase_whenAggregateUserScoresByPeriod_thenReturnsEmpty() {
+        userScoreRepository.deleteAll().block();
+
+        WeeklyWindow window = WeeklyWindow.fromReferenceDateTime(
+                ZonedDateTime.of(2026, 4, 8, 12, 0, 0, 0, ZoneId.of("Europe/Madrid")));
+        LocalDateTime from = window.getFromInclusive();
+        LocalDateTime to = window.getToInclusive();
+
+        StepVerifier.create(userScoreRepository.aggregateUserScoresByPeriod(from, to))
+                .verifyComplete();
+    }
+
+    @Test
     void givenScoresInsideAndOutsidePeriod_whenAggregateUserScoresByPeriod_thenReturnsOnlyInsideRange() {
         userScoreRepository.deleteAll().block();
 
