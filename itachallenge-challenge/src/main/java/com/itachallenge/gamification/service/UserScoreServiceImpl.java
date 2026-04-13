@@ -101,10 +101,6 @@ public class UserScoreServiceImpl implements UserScoreService {
     @Override
     public Mono<Void> registerPoints(UUID userId, String username, ActivityType type, UUID challengeId) {
 
-        if (userId == null) {
-            return Mono.error(new IllegalArgumentException("userId cannot be null"));
-        }
-
         if (type == null) {
             return Mono.error(new IllegalArgumentException("ActivityType cannot be null"));
         }

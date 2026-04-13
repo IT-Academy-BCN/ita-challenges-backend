@@ -19,7 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Enabled support for both academy activities (`CODE_REVIEW`, `PRESENTATION`) and challenge completions (`CHALLENGE_COMPLETED`).
 * Implemented validation logic for inputs:
   * `userId`, `type`, and `username` are mandatory
-  * `username` must not be blank
+  * `username is nullable
   * `challengeId` is required for `CHALLENGE_COMPLETED`
   * `challengeId` must be null for other activity types
 
