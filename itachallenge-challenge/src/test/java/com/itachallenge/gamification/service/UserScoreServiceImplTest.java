@@ -258,8 +258,11 @@ class UserScoreServiceImplTest {
     }
 
     @Test
-    void givenNullUsername_whenRegisterPoints_thenError() {
+    void givenNullUsername_whenRegisterPoints_thenSucceeds() {
         UUID userId = UUID.randomUUID();
+
+        when(userScoreRepository.save(any()))
+                .thenAnswer(invocation -> Mono.just(invocation.getArgument(0)));
 
         var result = userScoreService.registerPoints(
                 userId,
@@ -269,15 +272,17 @@ class UserScoreServiceImplTest {
         );
 
         StepVerifier.create(result)
-                .expectError(IllegalArgumentException.class)
-                .verify();
+                .verifyComplete();
 
-        verifyNoInteractions(userScoreRepository);
+        verify(userScoreRepository).save(any());
     }
 
     @Test
-    void givenBlankUsername_whenRegisterPoints_thenError() {
+    void givenBlankUsername_whenRegisterPoints_thenSucceeds() {
         UUID userId = UUID.randomUUID();
+
+        when(userScoreRepository.save(any()))
+                .thenAnswer(invocation -> Mono.just(invocation.getArgument(0)));
 
         var result = userScoreService.registerPoints(
                 userId,
@@ -287,10 +292,9 @@ class UserScoreServiceImplTest {
         );
 
         StepVerifier.create(result)
-                .expectError(IllegalArgumentException.class)
-                .verify();
+                .verifyComplete();
 
-        verifyNoInteractions(userScoreRepository);
+        verify(userScoreRepository).save(any());
     }
 
     @Test

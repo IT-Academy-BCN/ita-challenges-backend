@@ -18,11 +18,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Added `registerPoints(UUID userId, String username, ActivityType type, UUID challengeId)` method in `UserScoreServiceImpl` as the single entry point for point persistence.
 * Enabled support for both academy activities (`CODE_REVIEW`, `PRESENTATION`) and challenge completions (`CHALLENGE_COMPLETED`).
 * Implemented validation logic for inputs:
-  * `userId`, `type`, and `username` are mandatory
-  * `username is nullable
+  * `userId` and `type` are mandatory
+  * `username` is nullable
   * `challengeId` is required for `CHALLENGE_COMPLETED`
   * `challengeId` must be null for other activity types
-
 ### Changed
 
 #### UserScore Model Constraints
