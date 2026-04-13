@@ -3,25 +3,48 @@ package com.itachallenge.challenge.dto.gamification;
 import com.itachallenge.gamification.enums.ActivityType;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class ActivityPointsResponseTest {
 
     @Test
-    void shouldTestAllMethods() {
-        ActivityPointsResponse response = new ActivityPointsResponse();
-        response.setPointsEarned(5);
-        response.setActivityType(ActivityType.CODE_REVIEW);
+    void shouldCreateResponseWithAllArgsConstructor() {
+        ActivityPointsResponse response =
+                new ActivityPointsResponse(10, ActivityType.CODE_REVIEW);
 
-        assertEquals(5, response.getPointsEarned());
-        assertEquals(ActivityType.CODE_REVIEW, response.getActivityType());
+        assertThat(response.getPointsEarned()).isEqualTo(10);
+        assertThat(response.getActivityType()).isEqualTo(ActivityType.CODE_REVIEW);
+    }
 
-        ActivityPointsResponse response2 =
+    @Test
+    void shouldSetAndGetValues() {
+        ActivityPointsResponse response =
+                new ActivityPointsResponse(0, null);
+
+        response.setPointsEarned(15);
+        response.setActivityType(ActivityType.PRESENTATION);
+
+        assertThat(response.getPointsEarned()).isEqualTo(15);
+        assertThat(response.getActivityType()).isEqualTo(ActivityType.PRESENTATION);
+    }
+
+    @Test
+    void shouldSupportEqualsAndHashCode() {
+        ActivityPointsResponse r1 =
                 new ActivityPointsResponse(5, ActivityType.CODE_REVIEW);
 
-        assertEquals(response, response2);
-        assertEquals(response.hashCode(), response2.hashCode());
+        ActivityPointsResponse r2 =
+                new ActivityPointsResponse(5, ActivityType.CODE_REVIEW);
 
-        assertNotNull(response.toString());
+        assertThat(r1).isEqualTo(r2);
+        assertThat(r1.hashCode()).isEqualTo(r2.hashCode());
+    }
+
+    @Test
+    void shouldHaveToString() {
+        ActivityPointsResponse response =
+                new ActivityPointsResponse(5, ActivityType.CODE_REVIEW);
+
+        assertThat(response.toString()).isNotNull();
     }
 }

@@ -149,16 +149,7 @@ public class UserScoreServiceImpl implements UserScoreService {
             return Mono.error(new IllegalArgumentException("ActivityType cannot be null"));
         }
 
-        int points = activityType.getPoints();
-
-        UserScoreDocument document = UserScoreDocument.builder()
-                .id(UUID.randomUUID())
-                .userId(userId)
-                .activityType(activityType)
-                .pointsEarned(points)
-                .build();
-
-        return userScoreRepository.save(document)
-                .thenReturn(points);
+        return registerPoints(userId, "system", activityType, null)
+                .thenReturn(activityType.getPoints());
     }
 }

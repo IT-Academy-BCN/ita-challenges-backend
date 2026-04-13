@@ -16,9 +16,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserScoreServiceImplTest {
@@ -69,14 +67,14 @@ class UserScoreServiceImplTest {
         UserScoreDocument latest = UserScoreDocument.builder().activityType(ActivityType.CHALLENGE_COMPLETED)
                 .userId(userId)
                 .pointsEarned(10)
-                .createdAt(now)
                 .challengeId(UUID.randomUUID())
+                .createdAt(now)
                 .build();
         UserScoreDocument older = UserScoreDocument.builder().activityType(ActivityType.CHALLENGE_COMPLETED)
                 .userId(userId)
                 .pointsEarned(5)
-                .createdAt(now.minusDays(3))
                 .challengeId(UUID.randomUUID())
+                .createdAt(now.minusDays(3))
                 .build();
 
         when(userScoreRepository.findByUserIdOrderByCreatedAtDesc(userId)).thenReturn(Flux.just(latest, older));
@@ -293,5 +291,35 @@ class UserScoreServiceImplTest {
                 .verify();
 
         verifyNoInteractions(userScoreRepository);
+    }
+
+    @Test
+    void givenRepositoryError_whenAssignPoints_thenErrorPropagates() {
+        UUID userId = UUID.randomUUID();
+        ActivityType activityType = ActivityType.CODE_REVIEW;
+
+        when(userScoreRepository.save(any()))
+                .thenReturn(Mono.error(new RuntimeException("DB error")));
+
+        var result = userScoreService.assignPoints(userId, activityType);
+
+        StepVerifier.create(result)
+                .expectError(RuntimeException.class)
+                .verify();
+    }
+
+    @Test
+    void givenDifferentActivityType_whenAssignPoints_thenReturnsCorrectPoints() {
+        UUID userId = UUID.randomUUID();
+        ActivityType activityType = ActivityType.PRESENTATION;
+
+        when(userScoreRepository.save(any()))
+                .thenAnswer(invocation -> Mono.just(invocation.getArgument(0)));
+
+        var result = userScoreService.assignPoints(userId, activityType);
+
+        StepVerifier.create(result)
+                .expectNext(activityType.getPoints())
+                .verifyComplete();
     }
 }
