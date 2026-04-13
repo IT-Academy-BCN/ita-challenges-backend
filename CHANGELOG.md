@@ -15,11 +15,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Unified Point Assignment Logic
 
-* Added `registerPoints(UUID userId, ActivityType type, UUID challengeId)` method in `UserScoreServiceImpl` as the single entry point for point persistence.
+* Added `registerPoints(UUID userId, String username, ActivityType type, UUID challengeId)` method in `UserScoreServiceImpl` as the single entry point for point persistence.
 * Enabled support for both academy activities (`CODE_REVIEW`, `PRESENTATION`) and challenge completions (`CHALLENGE_COMPLETED`).
-* Implemented validation logic for `challengeId`:
-  * Required for `CHALLENGE_COMPLETED`
-  * Must be null for other activity types
+* Implemented validation logic for inputs:
+  * `userId`, `type`, and `username` are mandatory
+  * `username` must not be blank
+  * `challengeId` is required for `CHALLENGE_COMPLETED`
+  * `challengeId` must be null for other activity types
 
 ### Changed
 
@@ -39,11 +41,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### UserScoreService Testing Coverage
 
-* Extended unit tests in `UserScoreServiceImplTest` to cover point registration logic.
+* Extended unit tests in `UserScoreServiceImplTest` to improve branch and validation coverage.
 * Added test cases for:
+  * Validation of `userId`, `type`, and `username` (including blank values)
+  * Enforcement of `challengeId` constraints for different activity types
+  * Repository error propagation scenarios
   * Successful point persistence for both challenge and non-challenge activities
-  * Validation of `challengeId` constraints
-  * Error handling for invalid inputs
 
 ## [itachallenge-challenge-3.4.0 - RELEASED] 2026-03-23
 

@@ -222,4 +222,93 @@ class UserScoreServiceImplTest {
 
         verify(userScoreRepository).save(any());
     }
+
+    @Test
+    void givenNullUserId_whenRegisterPoints_thenError() {
+        var result = userScoreService.registerPoints(
+                null,
+                "testUser",
+                ActivityType.CODE_REVIEW,
+                null
+        );
+
+        StepVerifier.create(result)
+                .expectError(IllegalArgumentException.class)
+                .verify();
+
+        verifyNoInteractions(userScoreRepository);
+    }
+
+    @Test
+    void givenNullActivityType_whenRegisterPoints_thenError() {
+        UUID userId = UUID.randomUUID();
+
+        var result = userScoreService.registerPoints(
+                userId,
+                "testUser",
+                null,
+                null
+        );
+
+        StepVerifier.create(result)
+                .expectError(IllegalArgumentException.class)
+                .verify();
+
+        verifyNoInteractions(userScoreRepository);
+    }
+
+    @Test
+    void givenNullUsername_whenRegisterPoints_thenError() {
+        UUID userId = UUID.randomUUID();
+
+        var result = userScoreService.registerPoints(
+                userId,
+                null,
+                ActivityType.CODE_REVIEW,
+                null
+        );
+
+        StepVerifier.create(result)
+                .expectError(IllegalArgumentException.class)
+                .verify();
+
+        verifyNoInteractions(userScoreRepository);
+    }
+
+    @Test
+    void givenBlankUsername_whenRegisterPoints_thenError() {
+        UUID userId = UUID.randomUUID();
+
+        var result = userScoreService.registerPoints(
+                userId,
+                "   ",
+                ActivityType.CODE_REVIEW,
+                null
+        );
+
+        StepVerifier.create(result)
+                .expectError(IllegalArgumentException.class)
+                .verify();
+
+        verifyNoInteractions(userScoreRepository);
+    }
+
+    @Test
+    void givenRepositoryError_whenRegisterPoints_thenErrorPropagates() {
+        UUID userId = UUID.randomUUID();
+
+        when(userScoreRepository.save(any()))
+                .thenReturn(Mono.error(new RuntimeException("DB error")));
+
+        var result = userScoreService.registerPoints(
+                userId,
+                "testUser",
+                ActivityType.CODE_REVIEW,
+                null
+        );
+
+        StepVerifier.create(result)
+                .expectError(RuntimeException.class)
+                .verify();
+    }
 }
