@@ -46,7 +46,11 @@ public class UserScoreServiceImpl implements UserScoreService {
                 .toList();
 
         return PointsHistoryResponseDto.builder()
-                .username(docs.isEmpty() ? "" : docs.getFirst().getUsername())
+                .username(
+                        docs.isEmpty()
+                                ? ""
+                                : (docs.getFirst().getUsername() != null ? docs.getFirst().getUsername() : "Anonymous")
+                )
                 .totalPoints(totalPoints)
                 .history(history)
                 .build();
@@ -61,10 +65,6 @@ public class UserScoreServiceImpl implements UserScoreService {
 
         if (type == null) {
             return Mono.error(new IllegalArgumentException("ActivityType cannot be null"));
-        }
-
-        if (type != ActivityType.CHALLENGE_COMPLETED && (username == null || username.isBlank())) {
-            return Mono.error(new IllegalArgumentException("username cannot be null or blank"));
         }
 
         if (type == ActivityType.CHALLENGE_COMPLETED && challengeId == null) {

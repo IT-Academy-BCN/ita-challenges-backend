@@ -244,4 +244,50 @@ class UserScoreServiceImplTest {
         verify(userScoreRepository).save(any());
     }
 
+    @Test
+    void givenHistoryWithNullUsername_whenGetUserPointsHistory_thenReturnsAnonymousUsername() {
+        UUID userId = UUID.randomUUID();
+        LocalDateTime now = LocalDateTime.now();
+
+        UserScoreDocument score = UserScoreDocument.builder()
+                .activityType(ActivityType.CHALLENGE_COMPLETED)
+                .username(null)
+                .pointsEarned(10)
+                .challengeId(UUID.randomUUID())
+                .createdAt(now)
+                .build();
+
+        when(userScoreRepository.findByUserIdOrderByCreatedAtDesc(userId))
+                .thenReturn(Flux.just(score));
+
+        var result = userScoreService.getUserPointsHistory(userId);
+
+        StepVerifier.create(result)
+                .expectNextMatches(response ->
+                        "Anonymous".equals(response.getUsername()) &&
+                                response.getTotalPoints() == 10 &&
+                                response.getHistory().size() == 1)
+                .verifyComplete();
+    }
+
+    @Test
+    void givenNonChallengeWithoutUsername_whenRegisterPoints_thenSavesWithoutChallengeId() {
+        UUID userId = UUID.randomUUID();
+
+        when(userScoreRepository.save(any()))
+                .thenAnswer(invocation -> Mono.just(invocation.getArgument(0)));
+
+        var result = userScoreService.registerPoints(
+                userId,
+                null,
+                ActivityType.CODE_REVIEW,
+                null
+        );
+
+        StepVerifier.create(result)
+                .verifyComplete();
+
+        verify(userScoreRepository).save(any());
+    }
+
 }
