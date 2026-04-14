@@ -69,6 +69,9 @@ public class LeaderboardServiceImpl implements LeaderboardService {
                 .build();
     }
 
+    /**
+     * Orders weekly entries by points (desc) and username (asc, null-safe), then splits into leagues.
+     */
     private WeeklyLeaguesResult sortAndSplitByLeague(List<LeaderboardEntryDto> entries) {
         List<LeaderboardEntryDto> ordered = new ArrayList<>(entries);
         ordered.sort(Comparator
