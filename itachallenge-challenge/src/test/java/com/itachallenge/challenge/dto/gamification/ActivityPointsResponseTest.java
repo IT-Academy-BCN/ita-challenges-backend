@@ -37,7 +37,38 @@ class ActivityPointsResponseTest {
                 new ActivityPointsResponse(5, ActivityType.CODE_REVIEW);
 
         assertThat(r1).isEqualTo(r2);
-        assertThat(r1.hashCode()).isEqualTo(r2.hashCode());
+        assertThat(r1).hasSameHashCodeAs(r2);
+    }
+
+    @Test
+    void shouldNotBeEqualWhenFieldsDiffer() {
+        ActivityPointsResponse r1 =
+                new ActivityPointsResponse(5, ActivityType.CODE_REVIEW);
+
+        ActivityPointsResponse r2 =
+                new ActivityPointsResponse(10, ActivityType.CODE_REVIEW);
+
+        assertThat(r1).isNotEqualTo(r2);
+    }
+
+    @Test
+    void shouldNotBeEqualToNullOrDifferentObject() {
+        ActivityPointsResponse response =
+                new ActivityPointsResponse(5, ActivityType.CODE_REVIEW);
+
+        assertThat(response).isNotEqualTo(null);
+        assertThat(response).isNotEqualTo("string");
+    }
+
+    @Test
+    void shouldOverwriteValuesWithSetters() {
+        ActivityPointsResponse response =
+                new ActivityPointsResponse(5, ActivityType.CODE_REVIEW);
+
+        response.setPointsEarned(10);
+        response.setPointsEarned(20);
+
+        assertThat(response.getPointsEarned()).isEqualTo(20);
     }
 
     @Test
@@ -45,6 +76,8 @@ class ActivityPointsResponseTest {
         ActivityPointsResponse response =
                 new ActivityPointsResponse(5, ActivityType.CODE_REVIEW);
 
-        assertThat(response.toString()).isNotNull();
+        assertThat(response.toString())
+                .contains("5")
+                .contains("CODE_REVIEW");
     }
 }

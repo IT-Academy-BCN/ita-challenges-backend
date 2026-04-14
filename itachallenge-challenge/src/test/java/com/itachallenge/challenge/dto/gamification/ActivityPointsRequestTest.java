@@ -42,7 +42,40 @@ class ActivityPointsRequestTest {
         ActivityPointsRequest r2 = new ActivityPointsRequest(userId, ActivityType.CODE_REVIEW);
 
         assertThat(r1).isEqualTo(r2);
-        assertThat(r1.hashCode()).isEqualTo(r2.hashCode());
+        assertThat(r1).hasSameHashCodeAs(r2); // 🔥 sonar fix
+    }
+
+    @Test
+    void shouldNotBeEqualWhenFieldsDiffer() {
+        UUID userId = UUID.randomUUID();
+
+        ActivityPointsRequest r1 = new ActivityPointsRequest(userId, ActivityType.CODE_REVIEW);
+        ActivityPointsRequest r2 = new ActivityPointsRequest(userId, ActivityType.PRESENTATION);
+
+        assertThat(r1).isNotEqualTo(r2);
+    }
+
+    @Test
+    void shouldNotBeEqualToNullOrDifferentObject() {
+        UUID userId = UUID.randomUUID();
+
+        ActivityPointsRequest request = new ActivityPointsRequest(userId, ActivityType.CODE_REVIEW);
+
+        assertThat(request).isNotEqualTo(null);
+        assertThat(request).isNotEqualTo("string");
+    }
+
+    @Test
+    void shouldOverwriteValuesWithSetters() {
+        ActivityPointsRequest request = new ActivityPointsRequest();
+
+        UUID userId = UUID.randomUUID();
+
+        request.setUserId(userId);
+        request.setUserId(null);
+        request.setUserId(userId);
+
+        assertThat(request.getUserId()).isEqualTo(userId);
     }
 
     @Test
@@ -50,6 +83,7 @@ class ActivityPointsRequestTest {
         ActivityPointsRequest request =
                 new ActivityPointsRequest(UUID.randomUUID(), ActivityType.CODE_REVIEW);
 
-        assertThat(request.toString()).isNotNull();
+        assertThat(request.toString())
+                .contains("CODE_REVIEW");
     }
 }
