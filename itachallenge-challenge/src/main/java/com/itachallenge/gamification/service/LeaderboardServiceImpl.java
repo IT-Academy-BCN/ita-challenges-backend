@@ -47,6 +47,7 @@ public class LeaderboardServiceImpl implements LeaderboardService {
 
     @Override
     public Mono<WeeklyLeaguesResponseDto> getWeeklyLeagues() {
+    public Mono<WeeklyLeaguesResult> getWeeklyLeagues() {
         WeeklyWindow weeklyWindow = WeeklyWindow.fromReferenceDateTime(ZonedDateTime.now(LEADERBOARD_ZONE));
         return userScoreRepository.aggregateUserScoresByPeriod(
                         weeklyWindow.getFromInclusive(),
@@ -55,6 +56,7 @@ public class LeaderboardServiceImpl implements LeaderboardService {
                 .map(this::mapToEntryDto)
                 .collectList()
                 .map(this::splitByLeague)
+                .map(this::sortAndSplitByLeague)
                 .onErrorResume(e -> {
                     log.error("Critical error in weekly leagues service - database unavailable. {}", e.getMessage());
                     return Mono.error(new InternalServerErrorException(
@@ -75,11 +77,17 @@ public class LeaderboardServiceImpl implements LeaderboardService {
      */
     private WeeklyLeaguesResponseDto splitByLeague(List<LeaderboardEntryDto> entries) {
         List<LeaderboardEntryDto> ordered = new ArrayList<>(entries);
+    private WeeklyLeaguesResult sortAndSplitByLeague(List<LeaderboardEntryDto> entries) {
+        List<LeaderboardEntryDto> ordered = new ArrayList<>(entries);
+        ordered.sort(Comparator
+                .comparing(LeaderboardEntryDto::getTotalPoints, Comparator.nullsLast(Comparator.reverseOrder()))
+                .thenComparing(LeaderboardEntryDto::getUsername, Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER)));
 
         int goldEnd = Math.min(GOLD_LIMIT, ordered.size());
         int silverEnd = Math.min(GOLD_LIMIT + SILVER_LIMIT, ordered.size());
 
         return WeeklyLeaguesResponseDto.builder()
+        return WeeklyLeaguesResult.builder()
                 .gold(new ArrayList<>(ordered.subList(0, goldEnd)))
                 .silver(new ArrayList<>(ordered.subList(goldEnd, silverEnd)))
                 .bronze(new ArrayList<>(ordered.subList(silverEnd, ordered.size())))

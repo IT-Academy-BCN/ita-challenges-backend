@@ -97,6 +97,17 @@ class LeaderboardServiceImplTest {
         when(userScoreRepository.aggregateUserScoresByPeriod(org.mockito.ArgumentMatchers.any(LocalDateTime.class),
                 org.mockito.ArgumentMatchers.any(LocalDateTime.class)))
                 .thenReturn(Flux.fromIterable(asReturnedByDb));
+        when(userScoreRepository.aggregateUserScoresByPeriod(org.mockito.ArgumentMatchers.any(LocalDateTime.class),
+                org.mockito.ArgumentMatchers.any(LocalDateTime.class)))
+                .thenReturn(Flux.concat(
+                        Flux.just(
+                                new LeaderboardAggregationResult("zoe", 100),
+                                new LeaderboardAggregationResult("anna", 100),
+                                new LeaderboardAggregationResult("mike", 90)
+                        ),
+                        Flux.range(1, 30)
+                                .map(i -> new LeaderboardAggregationResult("user" + i, 89 - i))
+                ));
 
         StepVerifier.create(leaderboardServiceImpl.getWeeklyLeagues())
                 .assertNext(response -> {
@@ -104,6 +115,7 @@ class LeaderboardServiceImplTest {
                     assertThat(response.getSilver()).hasSize(20);
                     assertThat(response.getBronze()).hasSize(3);
 
+                    // Tie on points 100 must be resolved alphabetically
                     assertThat(response.getGold().get(0).getUsername()).isEqualTo("anna");
                     assertThat(response.getGold().get(1).getUsername()).isEqualTo("zoe");
                     assertThat(response.getGold().get(2).getUsername()).isEqualTo("mike");
