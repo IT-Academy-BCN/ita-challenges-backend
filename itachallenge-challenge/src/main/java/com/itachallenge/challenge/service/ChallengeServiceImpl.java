@@ -356,19 +356,8 @@ public class ChallengeServiceImpl implements IChallengeService {
     @Override
     public Mono<ChallengeListDto> getChallengesByTopic(Topic topic, int page, int size) {
         Logger log = LoggerFactory.getLogger(getClass());
-        challengeRepository.findByTopic(topic)
-                .count()
-                .doOnSuccess(count -> log.info("All challenges found: {}", count)).subscribe();
+
         if (topic == null) {
-            return Mono.just(ChallengeListDto.builder()
-                    .results(new ArrayList<>())
-                    .total(0)
-                    .build());
-        }
-
-        Flux<ChallengeDocument> challengesFlux = challengeRepository.findByTopic(topic);
-
-        if (challengesFlux == null) {
             return Mono.just(ChallengeListDto.builder()
                     .results(new ArrayList<>())
                     .total(0)
