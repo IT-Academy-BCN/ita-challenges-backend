@@ -18,6 +18,7 @@ import java.util.*;
 public class UserScoreServiceImpl implements UserScoreService {
 
     private final UserScoreRepository userScoreRepository;
+    private static final String AGGREGATION_TYPE_WEEKLY = "WEEKLY";
 
     @Override
     public Mono<PointsHistoryResponseDto> getUserPointsHistory(UUID userId) {
@@ -61,7 +62,7 @@ public class UserScoreServiceImpl implements UserScoreService {
             return ScoresHistoryResponseDto.builder()
                     .userId(userId)
                     .totalPoints(0)
-                    .aggregationType("WEEKLY")
+                    .aggregationType(AGGREGATION_TYPE_WEEKLY)
                     .history(List.of())
                     .build();
         }
@@ -90,7 +91,7 @@ public class UserScoreServiceImpl implements UserScoreService {
         return ScoresHistoryResponseDto.builder()
                 .userId(userId)
                 .totalPoints(accumulated)
-                .aggregationType("WEEKLY")
+                .aggregationType(AGGREGATION_TYPE_WEEKLY)
                 .history(history)
                 .build();
     }
