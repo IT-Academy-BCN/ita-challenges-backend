@@ -103,13 +103,8 @@ public class ResourceServiceImpl implements IResourceService {
                 .onErrorResume(error -> {
                     log.error("Handling error {}", error.getMessage());
 
-                    if (error instanceof IllegalArgumentException || error instanceof IllegalStateException) {
-                        return Mono.error(error);
-                    }
-
                     return Mono.error(new RuntimeException("Error creating resource"));
                 });
-
     }
 
 
@@ -124,7 +119,7 @@ public class ResourceServiceImpl implements IResourceService {
         ResourceDocument resourceDocument = resourceConverter.convertDtoToDocument(resourceDto, ResourceDocument.class);
 
         if (resourceDocument == null) {
-            log.error("Error converting ResourceDto to ResourceDocument: converter returned null");
+            log.error("Error: resourceConverter is null");
             return Mono.error(new IllegalStateException("Conversion DTO to Document null"));
         }
 
