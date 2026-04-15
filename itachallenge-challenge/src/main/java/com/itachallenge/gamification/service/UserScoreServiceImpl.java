@@ -1,15 +1,14 @@
 package com.itachallenge.gamification.service;
 
 import com.itachallenge.challenge.dto.gamification.PointHistoryEntryDto;
+import com.itachallenge.gamification.enums.ActivityType;
 import com.itachallenge.challenge.dto.gamification.PointsHistoryResponseDto;
 import com.itachallenge.gamification.document.UserScoreDocument;
-import com.itachallenge.gamification.enums.ActivityType;
 import com.itachallenge.gamification.repository.UserScoreRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
-import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -36,8 +35,7 @@ public class UserScoreServiceImpl implements UserScoreService {
                 .sum();
 
         List<PointHistoryEntryDto> history = docs.stream()
-                .sorted(Comparator.comparing(
-                        UserScoreDocument::getCreatedAt,
+                .sorted(Comparator.comparing(UserScoreDocument::getCreatedAt,
                         Comparator.nullsLast(Comparator.naturalOrder())))
                 .map(doc -> PointHistoryEntryDto.builder()
                         .createdAt(doc.getCreatedAt() != null ? doc.getCreatedAt().toString() : "")
@@ -46,11 +44,7 @@ public class UserScoreServiceImpl implements UserScoreService {
                 .toList();
 
         return PointsHistoryResponseDto.builder()
-                .username(
-                        docs.isEmpty()
-                                ? ""
-                                : (docs.getFirst().getUsername() != null ? docs.getFirst().getUsername() : "Anonymous")
-                )
+                .username(docs.isEmpty() ? "" : docs.getFirst().getUsername())
                 .totalPoints(totalPoints)
                 .history(history)
                 .build();
@@ -59,12 +53,12 @@ public class UserScoreServiceImpl implements UserScoreService {
     @Override
     public Mono<Void> registerPoints(UUID userId, String username, ActivityType type, UUID challengeId) {
 
-        if (userId == null) {
-            return Mono.error(new IllegalArgumentException("userId cannot be null"));
-        }
-
         if (type == null) {
             return Mono.error(new IllegalArgumentException("ActivityType cannot be null"));
+        }
+
+        if (userId == null){
+            return Mono.error(new IllegalArgumentException("userId cannot be null or blank"));
         }
 
         if (type == ActivityType.CHALLENGE_COMPLETED && challengeId == null) {
@@ -76,6 +70,7 @@ public class UserScoreServiceImpl implements UserScoreService {
         }
 
         int points = type.getPoints();
+
         UUID finalChallengeId = (type == ActivityType.CHALLENGE_COMPLETED) ? challengeId : null;
 
         UserScoreDocument document = UserScoreDocument.builder()
@@ -85,9 +80,23 @@ public class UserScoreServiceImpl implements UserScoreService {
                 .activityType(type)
                 .pointsEarned(points)
                 .challengeId(finalChallengeId)
-                .createdAt(LocalDateTime.now())
                 .build();
 
         return userScoreRepository.save(document).then();
+    }
+
+    @Override
+    public Mono<Integer> assignPoints(UUID userId, ActivityType activityType) {
+
+        if (userId == null) {
+            return Mono.error(new IllegalArgumentException("userId cannot be null"));
+        }
+
+        if (activityType == null) {
+            return Mono.error(new IllegalArgumentException("ActivityType cannot be null"));
+        }
+
+        return registerPoints(userId, "system", activityType, null)
+                .thenReturn(activityType.getPoints());
     }
 }
