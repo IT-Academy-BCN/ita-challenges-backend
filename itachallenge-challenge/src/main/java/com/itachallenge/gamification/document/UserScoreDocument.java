@@ -30,7 +30,7 @@ public class UserScoreDocument {
     @Field("username")
     private String username;
 
-    @NonNull
+    //@NonNull
     @Field("activity_type")
     private ActivityType activityType;
 
