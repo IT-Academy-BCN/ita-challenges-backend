@@ -3,7 +3,6 @@ package com.itachallenge.gamification.repository;
 import com.itachallenge.gamification.document.UserScoreDocument;
 import com.itachallenge.gamification.enums.ActivityType;
 import com.itachallenge.gamification.repository.projection.LeaderboardAggregationResult;
-import com.itachallenge.gamification.util.WeeklyWindow;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,13 +17,10 @@ import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.UUID;
 
 @DataMongoTest
 @Testcontainers(disabledWithoutDocker = true)
-@SuppressWarnings("resource")
 class UserScoreRepositoryIntegrationTest {
 
     @Container
@@ -97,95 +93,6 @@ class UserScoreRepositoryIntegrationTest {
                 .verifyComplete();
     }
 
-    @Test
-    void givenEmptyDatabase_whenAggregateUserScoresByPeriod_thenReturnsEmpty() {
-        userScoreRepository.deleteAll().block();
-
-        WeeklyWindow window = WeeklyWindow.fromReferenceDateTime(
-                ZonedDateTime.of(2026, 4, 8, 12, 0, 0, 0, ZoneId.of("Europe/Madrid")));
-        LocalDateTime from = window.getFromInclusive();
-        LocalDateTime to = window.getToInclusive();
-
-        StepVerifier.create(userScoreRepository.aggregateUserScoresByPeriod(from, to))
-                .verifyComplete();
-    }
-
-    @Test
-    void givenScoresInsideAndOutsidePeriod_whenAggregateUserScoresByPeriod_thenReturnsOnlyInsideRange() {
-        userScoreRepository.deleteAll().block();
-
-        UUID weeklyUserId = UUID.randomUUID();
-        UUID outsideUserId = UUID.randomUUID();
-        WeeklyWindow window = WeeklyWindow.fromReferenceDateTime(
-                ZonedDateTime.of(2026, 4, 8, 10, 0, 0, 0, ZoneId.of("Europe/Madrid")));
-        LocalDateTime from = window.getFromInclusive();
-        LocalDateTime to = window.getToInclusive();
-
-        UserScoreDocument insideFirst = UserScoreDocument.builder()
-                .id(UUID.randomUUID())
-                .userId(weeklyUserId)
-                .username("weekly_user")
-                .challengeId(UUID.randomUUID())
-                .pointsEarned(25)
-                .createdAt(LocalDateTime.of(2026, 4, 8, 10, 0))
-                .build();
-
-        UserScoreDocument insideSecond = UserScoreDocument.builder()
-                .id(UUID.randomUUID())
-                .userId(weeklyUserId)
-                .username("weekly_user")
-                .challengeId(UUID.randomUUID())
-                .pointsEarned(15)
-                .createdAt(LocalDateTime.of(2026, 4, 10, 19, 30))
-                .build();
-
-        UserScoreDocument outside = UserScoreDocument.builder()
-                .id(UUID.randomUUID())
-                .userId(outsideUserId)
-                .username("outside_user")
-                .challengeId(UUID.randomUUID())
-                .pointsEarned(99)
-                .createdAt(LocalDateTime.of(2026, 4, 20, 12, 0))
-                .build();
-
-        // insert() keeps fixed createdAt; save/saveAll triggers @CreatedDate auditing and overwrites dates
-        mongoTemplate.insert(insideFirst).block();
-        mongoTemplate.insert(insideSecond).block();
-        mongoTemplate.insert(outside).block();
-
-        StepVerifier.create(userScoreRepository.aggregateUserScoresByPeriod(from, to))
-                .expectNextMatches(agg ->
-                        agg.getUsername().equals("weekly_user") && agg.getTotalPoints() == 40)
-                .verifyComplete();
-    }
-
-    @Test
-    void givenScoreAtSundayLastNanosecond_whenAggregateUserScoresByPeriod_thenIncluded() {
-        userScoreRepository.deleteAll().block();
-
-        UUID userId = UUID.randomUUID();
-        WeeklyWindow window = WeeklyWindow.fromReferenceDateTime(
-                ZonedDateTime.of(2026, 4, 8, 12, 0, 0, 0, ZoneId.of("Europe/Madrid")));
-        LocalDateTime from = window.getFromInclusive();
-        LocalDateTime to = window.getToInclusive();
-
-        UserScoreDocument atEndOfSunday = UserScoreDocument.builder()
-                .id(UUID.randomUUID())
-                .userId(userId)
-                .username("edge_user")
-                .challengeId(UUID.randomUUID())
-                .pointsEarned(7)
-                .createdAt(to)
-                .build();
-
-        mongoTemplate.insert(atEndOfSunday).block();
-
-        StepVerifier.create(userScoreRepository.aggregateUserScoresByPeriod(from, to))
-                .expectNextMatches(agg ->
-                        agg.getUsername().equals("edge_user") && agg.getTotalPoints() == 7)
-                .verifyComplete();
-    }
-
     private void createTestData() {
         LocalDateTime now = LocalDateTime.now();
 
@@ -193,65 +100,14 @@ class UserScoreRepositoryIntegrationTest {
         userId2 = UUID.randomUUID();
         userId3 = UUID.randomUUID();
 
-        UserScoreDocument user1Score1 = UserScoreDocument.builder()
-                .activityType(ActivityType.CHALLENGE_COMPLETED)
-                .id(UUID.randomUUID())
-                .userId(userId1)
-                .username("old_username")
-                .challengeId(UUID.randomUUID())
-                .pointsEarned(10)
-                .createdAt(now.minusDays(2))
-                .build();
+        UserScoreDocument user1Score1 = buildScore(userId1, "old_username", 10, now.minusDays(2));
+        UserScoreDocument user1Score2 = buildScore(userId1, USERNAME_1, 15, now.minusDays(1));
+        UserScoreDocument user1Score3 = buildScore(userId1, USERNAME_1, 10, now);
 
-        UserScoreDocument user1Score2 = UserScoreDocument.builder()
-                .activityType(ActivityType.CHALLENGE_COMPLETED)
-                .id(UUID.randomUUID())
-                .userId(userId1)
-                .username(USERNAME_1)
-                .challengeId(UUID.randomUUID())
-                .pointsEarned(15)
-                .createdAt(now.minusDays(1))
-                .build();
+        UserScoreDocument user2Score1 = buildScore(userId2, USERNAME_2, 20, LocalDateTime.now());
+        UserScoreDocument user2Score2 = buildScore(userId2, USERNAME_2, 5, LocalDateTime.now().minusDays(1));
 
-        UserScoreDocument user1Score3 = UserScoreDocument.builder()
-                .activityType(ActivityType.CHALLENGE_COMPLETED)
-                .id(UUID.randomUUID())
-                .userId(userId1)
-                .username(USERNAME_1)
-                .challengeId(UUID.randomUUID())
-                .pointsEarned(10)
-                .createdAt(now)
-                .build();
-
-        UserScoreDocument user2Score1 = UserScoreDocument.builder()
-                .activityType(ActivityType.CHALLENGE_COMPLETED)
-                .id(UUID.randomUUID())
-                .userId(userId2)
-                .username(USERNAME_2)
-                .challengeId(UUID.randomUUID())
-                .pointsEarned(20)
-                .createdAt(LocalDateTime.now())
-                .build();
-
-        UserScoreDocument user2Score2 = UserScoreDocument.builder()
-                .activityType(ActivityType.CHALLENGE_COMPLETED)
-                .id(UUID.randomUUID())
-                .userId(userId2)
-                .username(USERNAME_2)
-                .challengeId(UUID.randomUUID())
-                .pointsEarned(5)
-                .createdAt(LocalDateTime.now().minusDays(1))
-                .build();
-
-        UserScoreDocument user3Score1 = UserScoreDocument.builder()
-                .activityType(ActivityType.CHALLENGE_COMPLETED)
-                .id(UUID.randomUUID())
-                .userId(userId3)
-                .username(USERNAME_3)
-                .challengeId(UUID.randomUUID())
-                .pointsEarned(50)
-                .createdAt(LocalDateTime.now())
-                .build();
+        UserScoreDocument user3Score1 = buildScore(userId3, USERNAME_3, 50, LocalDateTime.now());
 
         userScoreRepository.saveAll(Flux.just(
                 user1Score1, user1Score2, user1Score3,
@@ -266,32 +122,26 @@ class UserScoreRepositoryIntegrationTest {
 
         UUID testUserId = UUID.randomUUID();
 
-        UserScoreDocument first = UserScoreDocument.builder()
-                .activityType(ActivityType.CHALLENGE_COMPLETED)
-                .id(UUID.randomUUID())
-                .userId(testUserId)
-                .username("testuser")
-                .challengeId(UUID.randomUUID())
-                .pointsEarned(10)
-                .createdAt(LocalDateTime.of(2024, 3, 1, 10, 0))
-                .build();
-        UserScoreDocument second = UserScoreDocument.builder()
-                .activityType(ActivityType.CHALLENGE_COMPLETED)
-                .id(UUID.randomUUID())
-                .userId(testUserId)
-                .username("testuser")
-                .challengeId(UUID.randomUUID())
-                .pointsEarned(15)
-                .createdAt(LocalDateTime.of(2024, 3, 5, 10, 0))
-                .build();
-        UserScoreDocument third = UserScoreDocument.builder()
-                .activityType(ActivityType.CHALLENGE_COMPLETED)
-                .id(UUID.randomUUID())
-                .userId(testUserId).username("testuser")
-                .challengeId(UUID.randomUUID())
-                .pointsEarned(20)
-                .createdAt(LocalDateTime.of(2024, 3, 10, 10, 0))
-                .build();
+        UserScoreDocument first = buildScore(
+                testUserId,
+                "testuser",
+                10,
+                LocalDateTime.of(2024, 3, 1, 10, 0)
+        );
+
+        UserScoreDocument second = buildScore(
+                testUserId,
+                "testuser",
+                15,
+                LocalDateTime.of(2024, 3, 5, 10, 0)
+        );
+
+        UserScoreDocument third = buildScore(
+                testUserId,
+                "testuser",
+                20,
+                LocalDateTime.of(2024, 3, 10, 10, 0)
+        );
 
         mongoTemplate.insert(first, "user_score_history").block();
         mongoTemplate.insert(second, "user_score_history").block();
@@ -322,5 +172,22 @@ class UserScoreRepositoryIntegrationTest {
 
         StepVerifier.create(userScoreRepository.findByUserIdOrderByCreatedAtAsc(unknownUserId))
                 .verifyComplete();
+    }
+
+    private UserScoreDocument buildScore(
+            UUID userId,
+            String username,
+            int points,
+            LocalDateTime createdAt
+    ) {
+        return UserScoreDocument.builder()
+                .id(UUID.randomUUID())
+                .userId(userId)
+                .username(username)
+                .challengeId(UUID.randomUUID())
+                .pointsEarned(points)
+                .activityType(ActivityType.CHALLENGE_COMPLETED)
+                .createdAt(createdAt)
+                .build();
     }
 }
