@@ -31,13 +31,22 @@ class UserScoreServiceImplTest {
     private static final LocalDateTime WEEK_10_SUNDAY    = LocalDateTime.of(2024, 3, 10, 23, 59);
     private static final LocalDateTime WEEK_11_MONDAY    = LocalDateTime.of(2024, 3, 11, 0, 1);
 
+    private UserScoreDocument scoreDoc(int points, LocalDateTime date) {
+        return UserScoreDocument.builder()
+                .userId(userId)
+                .pointsEarned(points)
+                .challengeId(UUID.randomUUID())
+                .createdAt(date)
+                .build();
+    }
+
     @Test
     void givenMultipleScores_whenGetUserPointsHistory_thenTotalPointsIsCorrectlySummed() {
         LocalDateTime now = LocalDateTime.now();
 
-        UserScoreDocument score1 = UserScoreDocument.builder().pointsEarned(10).challengeId(UUID.randomUUID()).createdAt(now).build();
-        UserScoreDocument score2 = UserScoreDocument.builder().pointsEarned(5).challengeId(UUID.randomUUID()).createdAt(now.minusDays(3)).build();
-        UserScoreDocument score3 = UserScoreDocument.builder().pointsEarned(20).challengeId(UUID.randomUUID()).createdAt(now.minusDays(1)).build();
+        UserScoreDocument score1 = UserScoreDocument.builder().userId(userId).pointsEarned(10).challengeId(UUID.randomUUID()).createdAt(now).build();
+        UserScoreDocument score2 = UserScoreDocument.builder().userId(userId).pointsEarned(5).challengeId(UUID.randomUUID()).createdAt(now.minusDays(3)).build();
+        UserScoreDocument score3 = UserScoreDocument.builder().userId(userId).pointsEarned(20).challengeId(UUID.randomUUID()).createdAt(now.minusDays(1)).build();
 
         when(userScoreRepository.findByUserIdOrderByCreatedAtDesc(userId)).thenReturn(Flux.just(score1, score2, score3));
 
@@ -54,10 +63,12 @@ class UserScoreServiceImplTest {
         LocalDateTime now = LocalDateTime.now();
 
         UserScoreDocument latest = UserScoreDocument.builder()
+                .userId(userId)
                 .pointsEarned(10)
                 .createdAt(now)
                 .build();
         UserScoreDocument older = UserScoreDocument.builder()
+                .userId(userId)
                 .pointsEarned(5)
                 .createdAt(now.minusDays(3))
                 .build();
@@ -80,6 +91,7 @@ class UserScoreServiceImplTest {
         String expectedDate = fixedDate.toString();
 
         UserScoreDocument score = UserScoreDocument.builder()
+                .userId(userId)
                 .pointsEarned(10)
                 .challengeId(UUID.randomUUID())
                 .createdAt(fixedDate)
@@ -116,11 +128,13 @@ class UserScoreServiceImplTest {
         LocalDateTime now = LocalDateTime.now();
 
         UserScoreDocument validScore = UserScoreDocument.builder()
+                .userId(userId)
                 .challengeId(UUID.randomUUID())
                 .pointsEarned(10)
                 .createdAt(now)
                 .build();
         UserScoreDocument invalidScore = UserScoreDocument.builder()
+                .userId(userId)
                 .challengeId(UUID.randomUUID())
                 .pointsEarned(null)
                 .createdAt(now.minusDays(3))
@@ -138,14 +152,10 @@ class UserScoreServiceImplTest {
 
     @Test
     void givenScoresInSameWeek_whenGetUserScoresHistoryChart_thenWeeklyPointsEarnedIsCorrect() {
-
-        UserScoreDocument score1 = UserScoreDocument.builder()
-                .userId(userId).pointsEarned(50).challengeId(UUID.randomUUID()).createdAt(WEEK_10_MONDAY).build();
-        UserScoreDocument score2 = UserScoreDocument.builder()
-                .userId(userId).pointsEarned(100).challengeId(UUID.randomUUID()).createdAt(WEEK_10_WEDNESDAY).build();
-
         when(userScoreRepository.findByUserIdOrderByCreatedAtAsc(userId))
-                .thenReturn(Flux.just(score1, score2));
+                .thenReturn(Flux.just(
+                        scoreDoc(50, WEEK_10_MONDAY),
+                        scoreDoc(100, WEEK_10_WEDNESDAY)));
 
         StepVerifier.create(userScoreService.getUserScoresHistoryChart(userId))
                 .expectNextMatches(response ->
@@ -156,13 +166,11 @@ class UserScoreServiceImplTest {
 
     @Test
     void givenScoresAcrossMultipleWeeks_whenGetUserScoresHistoryChart_thenAccumulatedAtEndIsProgressiveSum() {
-        UserScoreDocument score1 = UserScoreDocument.builder()
-                .userId(userId).pointsEarned(150).challengeId(UUID.randomUUID()).createdAt(WEEK_10_MONDAY).build();
-        UserScoreDocument score2 = UserScoreDocument.builder()
-                .userId(userId).pointsEarned(75).challengeId(UUID.randomUUID()).createdAt(WEEK_11_MONDAY).build();
-
         when(userScoreRepository.findByUserIdOrderByCreatedAtAsc(userId))
-                .thenReturn(Flux.just(score1, score2));
+                .thenReturn(Flux.just(
+                        scoreDoc(150, WEEK_10_MONDAY),
+                        scoreDoc(75, WEEK_11_MONDAY)
+                ));
 
         StepVerifier.create(userScoreService.getUserScoresHistoryChart(userId))
                 .expectNextMatches(response ->
@@ -173,11 +181,8 @@ class UserScoreServiceImplTest {
 
     @Test
     void givenScores_whenGetUserScoresHistoryChart_thenPeriodFormatIsIsoWeek() {
-        UserScoreDocument score = UserScoreDocument.builder()
-                .userId(userId).pointsEarned(50).challengeId(UUID.randomUUID()).createdAt(WEEK_10_MONDAY).build();
-
         when(userScoreRepository.findByUserIdOrderByCreatedAtAsc(userId))
-                .thenReturn(Flux.just(score));
+                .thenReturn(Flux.just(scoreDoc(50, WEEK_10_MONDAY)));
 
         StepVerifier.create(userScoreService.getUserScoresHistoryChart(userId))
                 .expectNextMatches(response ->
@@ -187,13 +192,11 @@ class UserScoreServiceImplTest {
 
     @Test
     void givenScoresAcrossMultipleWeeks_whenGetUserScoresHistoryChart_thenTotalPointsEqualsLastAccumulatedAtEnd() {
-        UserScoreDocument score1 = UserScoreDocument.builder()
-                .userId(userId).pointsEarned(150).challengeId(UUID.randomUUID()).createdAt(WEEK_10_MONDAY).build();
-        UserScoreDocument score2 = UserScoreDocument.builder()
-                .userId(userId).pointsEarned(75).challengeId(UUID.randomUUID()).createdAt(WEEK_11_MONDAY).build();
-
         when(userScoreRepository.findByUserIdOrderByCreatedAtAsc(userId))
-                .thenReturn(Flux.just(score1, score2));
+                .thenReturn(Flux.just(
+                        scoreDoc(150, WEEK_10_MONDAY),
+                        scoreDoc(75, WEEK_11_MONDAY)
+                ));
 
         StepVerifier.create(userScoreService.getUserScoresHistoryChart(userId))
                 .expectNextMatches(response ->
@@ -204,7 +207,6 @@ class UserScoreServiceImplTest {
 
     @Test
     void givenNoScores_whenGetUserScoresHistoryChart_thenReturnsTotalPointsZeroAndEmptyHistory() {
-
         when(userScoreRepository.findByUserIdOrderByCreatedAtAsc(userId))
                 .thenReturn(Flux.empty());
 
@@ -218,13 +220,9 @@ class UserScoreServiceImplTest {
     @SuppressWarnings("java:S2699") // to be extended with activityType when #275/#276 are merged
     @Test
     void givenMixedSourcesInSameWeek_whenGetUserScoresHistoryChart_thenAllPointsAreSummedTogether() {
-        UserScoreDocument source1 = UserScoreDocument.builder()
-                .userId(userId).pointsEarned(30).challengeId(UUID.randomUUID()).createdAt(WEEK_10_MONDAY).build();
-        UserScoreDocument source2 = UserScoreDocument.builder()
-                .userId(userId).pointsEarned(60).challengeId(UUID.randomUUID()).createdAt(WEEK_10_TUESDAY).build();
-
         when(userScoreRepository.findByUserIdOrderByCreatedAtAsc(userId))
-                .thenReturn(Flux.just(source1, source2));
+                .thenReturn(Flux.just(scoreDoc(30, WEEK_10_MONDAY),
+                        scoreDoc(60, WEEK_10_TUESDAY)));
 
         StepVerifier.create(userScoreService.getUserScoresHistoryChart(userId))
                 .expectNextMatches(response ->
@@ -235,13 +233,10 @@ class UserScoreServiceImplTest {
 
     @Test
     void givenScoresOnSundayAndNextMonday_whenGetUserScoresHistoryChart_thenBelongToDifferentWeeks() {
-        UserScoreDocument sundayScore = UserScoreDocument.builder()
-                .userId(userId).pointsEarned(50).challengeId(UUID.randomUUID()).createdAt(WEEK_10_SUNDAY).build();
-        UserScoreDocument mondayScore = UserScoreDocument.builder()
-                .userId(userId).pointsEarned(75).challengeId(UUID.randomUUID()).createdAt(WEEK_11_MONDAY).build();
-
         when(userScoreRepository.findByUserIdOrderByCreatedAtAsc(userId))
-                .thenReturn(Flux.just(sundayScore, mondayScore));
+                .thenReturn(Flux.just(
+                        scoreDoc(50, WEEK_10_SUNDAY),
+                        scoreDoc(75, WEEK_11_MONDAY)));
 
         StepVerifier.create(userScoreService.getUserScoresHistoryChart(userId))
                 .expectNextMatches(response ->
