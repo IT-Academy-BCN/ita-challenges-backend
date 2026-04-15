@@ -267,29 +267,29 @@ class UserScoreRepositoryIntegrationTest {
         UUID testUserId = UUID.randomUUID();
 
         UserScoreDocument first = UserScoreDocument.builder()
+                .activityType(ActivityType.CHALLENGE_COMPLETED)
                 .id(UUID.randomUUID())
                 .userId(testUserId)
                 .username("testuser")
                 .challengeId(UUID.randomUUID())
                 .pointsEarned(10)
-                .activityType(ActivityType.CHALLENGE_COMPLETED)
                 .createdAt(LocalDateTime.of(2024, 3, 1, 10, 0))
                 .build();
         UserScoreDocument second = UserScoreDocument.builder()
+                .activityType(ActivityType.CHALLENGE_COMPLETED)
                 .id(UUID.randomUUID())
                 .userId(testUserId)
                 .username("testuser")
                 .challengeId(UUID.randomUUID())
                 .pointsEarned(15)
-                .activityType(ActivityType.CHALLENGE_COMPLETED)
                 .createdAt(LocalDateTime.of(2024, 3, 5, 10, 0))
                 .build();
         UserScoreDocument third = UserScoreDocument.builder()
+                .activityType(ActivityType.CHALLENGE_COMPLETED)
                 .id(UUID.randomUUID())
                 .userId(testUserId).username("testuser")
                 .challengeId(UUID.randomUUID())
                 .pointsEarned(20)
-                .activityType(ActivityType.CHALLENGE_COMPLETED)
                 .createdAt(LocalDateTime.of(2024, 3, 10, 10, 0))
                 .build();
 
