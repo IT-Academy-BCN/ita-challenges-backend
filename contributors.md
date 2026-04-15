@@ -126,3 +126,4 @@
 * Adrià Lorente Arnau - https://github.com/alaw810
 * Jordi Casas González - https://github.com/JordiCasas87
 * Esther Arias Valor - https://github.com/eariasvalor
+* Yvan Gabrieli - https://github.com/yvangabrieli
