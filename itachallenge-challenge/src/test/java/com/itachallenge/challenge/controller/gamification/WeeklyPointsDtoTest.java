@@ -28,7 +28,7 @@ class WeeklyPointsDtoTest {
                 .accumulatedAtEnd(0)
                 .build();
 
-        assertThat(dto.getPointsEarned()).isEqualTo(0);
-        assertThat(dto.getAccumulatedAtEnd()).isEqualTo(0);
+        assertThat(dto.getPointsEarned()).isZero();
+        assertThat(dto.getAccumulatedAtEnd()).isZero();
     }
 }

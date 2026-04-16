@@ -46,7 +46,7 @@ class ScoresHistoryResponseDtoTest {
                 .history(List.of())
                 .build();
 
-        assertThat(dto.getTotalPoints()).isEqualTo(0);
+        assertThat(dto.getTotalPoints()).isZero();
         assertThat(dto.getHistory()).isEmpty();
     }
 }
