@@ -102,7 +102,6 @@ public class ResourceServiceImpl implements IResourceService {
                 .doOnError(error -> log.error("Error creating resource {}", error.getMessage()))
                 .onErrorResume(error -> {
                     log.error("Handling error {}", error.getMessage());
-
                     return Mono.error(new RuntimeException("Error creating resource"));
                 });
     }
