@@ -12,6 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 
+import java.time.LocalDateTime;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
@@ -76,6 +77,49 @@ class LeaderboardServiceImplTest {
                     assertThat(throwable)
                             .isInstanceOf(InternalServerErrorException.class)
                             .hasMessage("Unable to retrieve leaderboard data. Please try again later.");
+                })
+                .verify();
+    }
+
+    @Test
+    void getWeeklyLeagues_splitsIntoGoldSilverBronze_withAlphabeticalTieBreak() {
+        when(userScoreRepository.aggregateUserScoresByPeriod(org.mockito.ArgumentMatchers.any(LocalDateTime.class),
+                org.mockito.ArgumentMatchers.any(LocalDateTime.class)))
+                .thenReturn(Flux.concat(
+                        Flux.just(
+                                new LeaderboardAggregationResult("zoe", 100),
+                                new LeaderboardAggregationResult("anna", 100),
+                                new LeaderboardAggregationResult("mike", 90)
+                        ),
+                        Flux.range(1, 30)
+                                .map(i -> new LeaderboardAggregationResult("user" + i, 89 - i))
+                ));
+
+        StepVerifier.create(leaderboardServiceImpl.getWeeklyLeagues())
+                .assertNext(response -> {
+                    assertThat(response.getGold()).hasSize(10);
+                    assertThat(response.getSilver()).hasSize(20);
+                    assertThat(response.getBronze()).hasSize(3);
+
+                    // Tie on points 100 must be resolved alphabetically
+                    assertThat(response.getGold().get(0).getUsername()).isEqualTo("anna");
+                    assertThat(response.getGold().get(1).getUsername()).isEqualTo("zoe");
+                    assertThat(response.getGold().get(2).getUsername()).isEqualTo("mike");
+                })
+                .verifyComplete();
+    }
+
+    @Test
+    void getWeeklyLeagues_whenRepositoryFails_throwsInternalServiceException() {
+        when(userScoreRepository.aggregateUserScoresByPeriod(org.mockito.ArgumentMatchers.any(LocalDateTime.class),
+                org.mockito.ArgumentMatchers.any(LocalDateTime.class)))
+                .thenReturn(Flux.error(new RuntimeException("Database connection failed.")));
+
+        StepVerifier.create(leaderboardServiceImpl.getWeeklyLeagues())
+                .expectErrorSatisfies(throwable -> {
+                    assertThat(throwable)
+                            .isInstanceOf(InternalServerErrorException.class)
+                            .hasMessage("Unable to retrieve weekly leagues data. Please try again later.");
                 })
                 .verify();
     }
