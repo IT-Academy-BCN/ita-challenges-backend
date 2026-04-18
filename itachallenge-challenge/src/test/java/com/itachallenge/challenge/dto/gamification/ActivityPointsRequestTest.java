@@ -42,7 +42,7 @@ class ActivityPointsRequestTest {
         ActivityPointsRequest r2 = new ActivityPointsRequest(userId, ActivityType.CODE_REVIEW);
 
         assertThat(r1).isEqualTo(r2);
-        assertThat(r1).hasSameHashCodeAs(r2); // 🔥 sonar fix
+        assertThat(r1).hasSameHashCodeAs(r2);
     }
 
     @Test
@@ -85,5 +85,35 @@ class ActivityPointsRequestTest {
 
         assertThat(request.toString())
                 .contains("CODE_REVIEW");
+    }
+
+    @Test
+    void shouldHandleEmptyConstructorCompletely() {
+        ActivityPointsRequest request = new ActivityPointsRequest();
+
+        assertThat(request.getUserId()).isNull();
+        assertThat(request.getActivityType()).isNull();
+
+        request.setUserId(UUID.randomUUID());
+        request.setActivityType(ActivityType.CODE_REVIEW);
+
+        assertThat(request.getUserId()).isNotNull();
+        assertThat(request.getActivityType()).isEqualTo(ActivityType.CODE_REVIEW);
+    }
+
+    @Test
+    void shouldBeEqualToItself() {
+        ActivityPointsRequest request =
+                new ActivityPointsRequest(UUID.randomUUID(), ActivityType.CODE_REVIEW);
+
+        assertThat(request).isEqualTo(request);
+    }
+
+    @Test
+    void shouldHandleEqualsWithNullFields() {
+        ActivityPointsRequest r1 = new ActivityPointsRequest(null, null);
+        ActivityPointsRequest r2 = new ActivityPointsRequest(null, null);
+
+        assertThat(r1).isEqualTo(r2);
     }
 }

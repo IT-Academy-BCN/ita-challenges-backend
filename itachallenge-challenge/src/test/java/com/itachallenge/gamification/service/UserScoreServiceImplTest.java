@@ -179,4 +179,54 @@ class UserScoreServiceImplTest {
 
         verifyNoInteractions(userScoreRepository);
     }
+
+    @Test
+    void givenChallengeCompletedWithoutChallengeId_whenRegisterPoints_thenError() {
+
+        var result = userScoreService.registerPoints(
+                userId,
+                ActivityType.CHALLENGE_COMPLETED,
+                null
+        );
+
+        StepVerifier.create(result)
+                .expectError(IllegalArgumentException.class)
+                .verify();
+
+        verifyNoInteractions(userScoreRepository);
+    }
+
+    @Test
+    void givenNonChallengeTypeWithChallengeId_whenRegisterPoints_thenError() {
+
+        var result = userScoreService.registerPoints(
+                userId,
+                ActivityType.CODE_REVIEW,
+                UUID.randomUUID()
+        );
+
+        StepVerifier.create(result)
+                .expectError(IllegalArgumentException.class)
+                .verify();
+
+        verifyNoInteractions(userScoreRepository);
+    }
+
+    @Test
+    void givenChallengeCompletedWithValidChallengeId_whenRegisterPoints_thenSaved() {
+
+        when(userScoreRepository.save(any()))
+                .thenAnswer(i -> Mono.just(i.getArgument(0)));
+
+        var result = userScoreService.registerPoints(
+                userId,
+                ActivityType.CHALLENGE_COMPLETED,
+                UUID.randomUUID()
+        );
+
+        StepVerifier.create(result)
+                .verifyComplete();
+
+        verify(userScoreRepository).save(any());
+    }
 }
