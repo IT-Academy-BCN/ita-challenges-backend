@@ -53,7 +53,6 @@ public class UserScoreServiceImpl implements UserScoreService {
                 .toList();
 
         return PointsHistoryResponseDto.builder()
-                .username(docs.isEmpty() ? "" : Optional.ofNullable(docs.getFirst().getUsername()).orElse(""))
                 .totalPoints(totalPoints)
                 .history(history)
                 .build();
@@ -81,6 +80,7 @@ public class UserScoreServiceImpl implements UserScoreService {
 
         List<WeeklyPointsDto> history = new ArrayList<>();
         int accumulated = 0;
+
         for (Map.Entry<String, Integer> entry : pointsByWeek.entrySet()) {
             accumulated += entry.getValue();
             history.add(WeeklyPointsDto.builder()
@@ -99,14 +99,14 @@ public class UserScoreServiceImpl implements UserScoreService {
     }
 
     @Override
-    public Mono<Void> registerPoints(UUID userId, String username, ActivityType type, UUID challengeId) {
+    public Mono<Void> registerPoints(UUID userId, ActivityType type, UUID challengeId) {
+
+        if (userId == null) {
+            return Mono.error(new IllegalArgumentException("userId cannot be null"));
+        }
 
         if (type == null) {
             return Mono.error(new IllegalArgumentException("ActivityType cannot be null"));
-        }
-
-        if (userId == null){
-            return Mono.error(new IllegalArgumentException("userId cannot be null or blank"));
         }
 
         if (type == ActivityType.CHALLENGE_COMPLETED && challengeId == null) {
@@ -118,13 +118,11 @@ public class UserScoreServiceImpl implements UserScoreService {
         }
 
         int points = type.getPoints();
-
         UUID finalChallengeId = (type == ActivityType.CHALLENGE_COMPLETED) ? challengeId : null;
 
         UserScoreDocument document = UserScoreDocument.builder()
                 .id(UUID.randomUUID())
                 .userId(userId)
-                .username(username)
                 .activityType(type)
                 .pointsEarned(points)
                 .createdAt(LocalDateTime.now())
@@ -145,7 +143,7 @@ public class UserScoreServiceImpl implements UserScoreService {
             return Mono.error(new IllegalArgumentException("ActivityType cannot be null"));
         }
 
-        return registerPoints(userId, "system", activityType, null)
+        return registerPoints(userId, activityType, null)
                 .thenReturn(activityType.getPoints());
     }
 }
