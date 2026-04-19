@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import reactor.core.publisher.Flux;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 public interface UserScoreRepository extends ReactiveMongoRepository<UserScoreDocument, UUID> {
@@ -28,4 +29,21 @@ public interface UserScoreRepository extends ReactiveMongoRepository<UserScoreDo
             "{$sort: {totalPoints: -1}}"
     })
     Flux<LeaderboardAggregationResult> aggregateUserScores();
+
+    @Aggregation(pipeline = {
+            "{ $match: { created_at: { $gte: ?0, $lte: ?1 } } }",
+            "{$sort: {user_id: 1, created_at: -1}}",
+            """
+             {
+               $group: {
+                 _id: '$user_id',
+                 username: {$first: '$username'},
+                 totalPoints: {$sum: '$points_earned'}
+               }
+             }
+            """,
+            "{$project: {_id: 0, username: 1, totalPoints: 1}}",
+            "{$sort: {totalPoints: -1}}"
+    })
+    Flux<LeaderboardAggregationResult> aggregateUserScoresByPeriod(LocalDateTime fromInclusive, LocalDateTime toInclusive);
 }

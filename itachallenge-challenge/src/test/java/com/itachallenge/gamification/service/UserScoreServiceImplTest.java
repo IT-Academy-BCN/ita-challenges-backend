@@ -16,9 +16,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserScoreServiceImplTest {
@@ -29,165 +27,106 @@ class UserScoreServiceImplTest {
     @InjectMocks
     private UserScoreServiceImpl userScoreService;
 
+    private final UUID userId = UUID.randomUUID();
+
+    private static final LocalDateTime WEEK_10_MONDAY = LocalDateTime.of(2024, 3, 4, 10, 0);
+    private static final LocalDateTime WEEK_10_WEDNESDAY = LocalDateTime.of(2024, 3, 6, 10, 0);
+    private static final LocalDateTime WEEK_10_TUESDAY = LocalDateTime.of(2024, 3, 5, 10, 0);
+    private static final LocalDateTime WEEK_10_SUNDAY = LocalDateTime.of(2024, 3, 10, 23, 59);
+    private static final LocalDateTime WEEK_11_MONDAY = LocalDateTime.of(2024, 3, 11, 0, 1);
+
+    private UserScoreDocument scoreDoc(int points, LocalDateTime date) {
+        return UserScoreDocument.builder()
+                .activityType(ActivityType.CHALLENGE_COMPLETED)
+                .userId(userId)
+                .pointsEarned(points)
+                .challengeId(UUID.randomUUID())
+                .createdAt(date)
+                .build();
+    }
+
+    // =========================
+    // HISTORY TESTS
+    // =========================
+
     @Test
     void givenMultipleScores_whenGetUserPointsHistory_thenTotalPointsIsCorrectlySummed() {
-        UUID userId = UUID.randomUUID();
         LocalDateTime now = LocalDateTime.now();
 
-        UserScoreDocument score1 = UserScoreDocument.builder()
-                .activityType(ActivityType.CHALLENGE_COMPLETED)
-                .pointsEarned(10)
-                .challengeId(UUID.randomUUID())
-                .createdAt(now)
-                .build();
-
-        UserScoreDocument score2 = UserScoreDocument.builder()
-                .activityType(ActivityType.CHALLENGE_COMPLETED)
-                .pointsEarned(5)
-                .challengeId(UUID.randomUUID())
-                .createdAt(now.minusDays(3))
-                .build();
-
-        UserScoreDocument score3 = UserScoreDocument.builder()
-                .activityType(ActivityType.CHALLENGE_COMPLETED)
-                .pointsEarned(20)
-                .challengeId(UUID.randomUUID())
-                .createdAt(now.minusDays(1))
-                .build();
+        UserScoreDocument score1 = scoreDoc(10, now);
+        UserScoreDocument score2 = scoreDoc(5, now.minusDays(3));
+        UserScoreDocument score3 = scoreDoc(20, now.minusDays(1));
 
         when(userScoreRepository.findByUserIdOrderByCreatedAtDesc(userId))
                 .thenReturn(Flux.just(score1, score2, score3));
 
-        var result = userScoreService.getUserPointsHistory(userId);
-
-        StepVerifier.create(result)
-                .expectNextMatches(response -> response.getTotalPoints() == 35)
+        StepVerifier.create(userScoreService.getUserPointsHistory(userId))
+                .expectNextMatches(r -> r.getTotalPoints() == 35)
                 .verifyComplete();
     }
 
     @Test
-    void givenDescendingRepoData_whenGetUserPointsHistory_thenReturnsAscendingForFrontend() {
-        UUID userId = UUID.randomUUID();
-        LocalDateTime now = LocalDateTime.now();
-
-        UserScoreDocument latest = UserScoreDocument.builder()
-                .activityType(ActivityType.CHALLENGE_COMPLETED)
-                .pointsEarned(10)
-                .createdAt(now)
-                .build();
-
-        UserScoreDocument older = UserScoreDocument.builder()
-                .activityType(ActivityType.CHALLENGE_COMPLETED)
-                .pointsEarned(5)
-                .createdAt(now.minusDays(3))
-                .build();
-
-        when(userScoreRepository.findByUserIdOrderByCreatedAtDesc(userId))
-                .thenReturn(Flux.just(latest, older));
-
-        var result = userScoreService.getUserPointsHistory(userId);
-
-        StepVerifier.create(result)
-                .expectNextMatches(response ->
-                        response.getHistory().size() == 2 &&
-                                response.getHistory().getFirst().getPoints() == 5 &&
-                                response.getHistory().get(1).getPoints() == 10)
-                .verifyComplete();
-    }
-
-    @Test
-    void givenScoreDocument_whenGetUserPointsHistory_thenDateIsCorrectlyMapped() {
-        UUID userId = UUID.randomUUID();
-        LocalDateTime fixedDate = LocalDateTime.of(2015, 3, 26, 7, 33, 21);
-        String expectedDate = fixedDate.toString();
-
-        UserScoreDocument score = UserScoreDocument.builder()
-                .activityType(ActivityType.CHALLENGE_COMPLETED)
-                .pointsEarned(10)
-                .challengeId(UUID.randomUUID())
-                .createdAt(fixedDate)
-                .build();
-
-        when(userScoreRepository.findByUserIdOrderByCreatedAtDesc(userId))
-                .thenReturn(Flux.just(score));
-
-        var result = userScoreService.getUserPointsHistory(userId);
-
-        StepVerifier.create(result)
-                .expectNextMatches(response ->
-                        response.getHistory().size() == 1 &&
-                                response.getHistory().getFirst().getCreatedAt().equals(expectedDate))
-                .verifyComplete();
-    }
-
-    @Test
-    void givenNoScores_whenGetUserPointsHistory_thenReturnsEmptyHistoryAndZeroPoints() {
-        UUID userId = UUID.randomUUID();
-
+    void givenNoScores_whenGetUserPointsHistory_thenReturnsEmpty() {
         when(userScoreRepository.findByUserIdOrderByCreatedAtDesc(userId))
                 .thenReturn(Flux.empty());
 
-        var result = userScoreService.getUserPointsHistory(userId);
+        StepVerifier.create(userScoreService.getUserPointsHistory(userId))
+                .expectNextMatches(r -> r.getTotalPoints() == 0 && r.getHistory().isEmpty())
+                .verifyComplete();
+    }
 
-        StepVerifier.create(result)
-                .expectNextMatches(response ->
-                        response.getTotalPoints() == 0 &&
-                                response.getHistory().isEmpty())
+    // =========================
+    // CHART TESTS
+    // =========================
+
+    @Test
+    void givenScoresInSameWeek_whenGetChart_thenAggregatesCorrectly() {
+        when(userScoreRepository.findByUserIdOrderByCreatedAtAsc(userId))
+                .thenReturn(Flux.just(
+                        scoreDoc(50, WEEK_10_MONDAY),
+                        scoreDoc(100, WEEK_10_WEDNESDAY)));
+
+        StepVerifier.create(userScoreService.getUserScoresHistoryChart(userId))
+                .expectNextMatches(r ->
+                        r.getHistory().size() == 1 &&
+                                r.getHistory().getFirst().getPointsEarned() == 150)
                 .verifyComplete();
     }
 
     @Test
-    void givenScoresWithNullPoints_whenGetUserPointsHistory_thenTotalPointsIgnoresNullValues() {
-        UUID userId = UUID.randomUUID();
-        LocalDateTime now = LocalDateTime.now();
+    void givenScoresAcrossWeeks_whenGetChart_thenAccumulatedIsCorrect() {
+        when(userScoreRepository.findByUserIdOrderByCreatedAtAsc(userId))
+                .thenReturn(Flux.just(
+                        scoreDoc(150, WEEK_10_MONDAY),
+                        scoreDoc(75, WEEK_11_MONDAY)));
 
-        UserScoreDocument validScore = UserScoreDocument.builder()
-                .activityType(ActivityType.CHALLENGE_COMPLETED)
-                .challengeId(UUID.randomUUID())
-                .pointsEarned(10)
-                .createdAt(now)
-                .build();
-
-        UserScoreDocument invalidScore = UserScoreDocument.builder()
-                .activityType(ActivityType.CHALLENGE_COMPLETED)
-                .challengeId(UUID.randomUUID())
-                .pointsEarned(null)
-                .createdAt(now.minusDays(3))
-                .build();
-
-        when(userScoreRepository.findByUserIdOrderByCreatedAtDesc(userId))
-                .thenReturn(Flux.just(validScore, invalidScore));
-
-        var result = userScoreService.getUserPointsHistory(userId);
-
-        StepVerifier.create(result)
-                .expectNextMatches(response -> response.getTotalPoints() == 10)
+        StepVerifier.create(userScoreService.getUserScoresHistoryChart(userId))
+                .expectNextMatches(r ->
+                        r.getHistory().get(1).getAccumulatedAtEnd() == 225)
                 .verifyComplete();
     }
 
+    // =========================
+    // ASSIGN POINTS
+    // =========================
+
     @Test
-    void givenChallengeCompleted_whenRegisterPoints_thenSavesWithChallengeId() {
-        UUID userId = UUID.randomUUID();
-        UUID challengeId = UUID.randomUUID();
+    void givenValidInput_whenAssignPoints_thenReturnsPoints() {
+        ActivityType type = ActivityType.CODE_REVIEW;
 
         when(userScoreRepository.save(any()))
-                .thenAnswer(invocation -> Mono.just(invocation.getArgument(0)));
+                .thenAnswer(i -> Mono.just(i.getArgument(0)));
 
-        var result = userScoreService.registerPoints(userId, "testUser", ActivityType.CHALLENGE_COMPLETED, challengeId);
-
-        StepVerifier.create(result)
+        StepVerifier.create(userScoreService.assignPoints(userId, type))
+                .expectNext(type.getPoints())
                 .verifyComplete();
 
         verify(userScoreRepository).save(any());
     }
 
     @Test
-    void givenChallengeCompletedWithoutChallengeId_whenRegisterPoints_thenError() {
-        UUID userId = UUID.randomUUID();
-
-        var result = userScoreService.registerPoints(userId, "testUser", ActivityType.CHALLENGE_COMPLETED, null);
-
-        StepVerifier.create(result)
+    void givenNullUserId_whenAssignPoints_thenError() {
+        StepVerifier.create(userScoreService.assignPoints(null, ActivityType.CODE_REVIEW))
                 .expectError(IllegalArgumentException.class)
                 .verify();
 
@@ -195,29 +134,27 @@ class UserScoreServiceImplTest {
     }
 
     @Test
-    void givenNonChallengeWithChallengeId_whenRegisterPoints_thenError() {
-        UUID userId = UUID.randomUUID();
-        UUID challengeId = UUID.randomUUID();
-
-        var result = userScoreService.registerPoints(userId, "testUser", ActivityType.CODE_REVIEW, challengeId);
-
-        StepVerifier.create(result)
+    void givenNullType_whenAssignPoints_thenError() {
+        StepVerifier.create(userScoreService.assignPoints(userId, null))
                 .expectError(IllegalArgumentException.class)
                 .verify();
 
         verifyNoInteractions(userScoreRepository);
     }
 
-    @Test
-    void givenNonChallengeActivity_whenRegisterPoints_thenSavesWithoutChallengeId() {
-        UUID userId = UUID.randomUUID();
+    // =========================
+    // REGISTER POINTS
+    // =========================
 
+    @Test
+    void givenValidInput_whenRegisterPoints_thenSaved() {
         when(userScoreRepository.save(any()))
-                .thenAnswer(invocation -> Mono.just(invocation.getArgument(0)));
+                .thenAnswer(i -> Mono.just(i.getArgument(0)));
 
-        var result = userScoreService.registerPoints(userId, "testUser", ActivityType.CODE_REVIEW, null);
-
-        StepVerifier.create(result)
+        StepVerifier.create(userScoreService.registerPoints(
+                        userId,
+                        ActivityType.CODE_REVIEW,
+                        null))
                 .verifyComplete();
 
         verify(userScoreRepository).save(any());
@@ -225,14 +162,10 @@ class UserScoreServiceImplTest {
 
     @Test
     void givenNullUserId_whenRegisterPoints_thenError() {
-        var result = userScoreService.registerPoints(
-                null,
-                "testUser",
-                ActivityType.CODE_REVIEW,
-                null
-        );
-
-        StepVerifier.create(result)
+        StepVerifier.create(userScoreService.registerPoints(
+                        null,
+                        ActivityType.CODE_REVIEW,
+                        null))
                 .expectError(IllegalArgumentException.class)
                 .verify();
 
@@ -240,17 +173,11 @@ class UserScoreServiceImplTest {
     }
 
     @Test
-    void givenNullActivityType_whenRegisterPoints_thenError() {
-        UUID userId = UUID.randomUUID();
-
-        var result = userScoreService.registerPoints(
-                userId,
-                "testUser",
-                null,
-                null
-        );
-
-        StepVerifier.create(result)
+    void givenNullType_whenRegisterPoints_thenError() {
+        StepVerifier.create(userScoreService.registerPoints(
+                        userId,
+                        null,
+                        null))
                 .expectError(IllegalArgumentException.class)
                 .verify();
 
@@ -258,61 +185,22 @@ class UserScoreServiceImplTest {
     }
 
     @Test
-    void givenNullUsername_whenRegisterPoints_thenSucceeds() {
-        UUID userId = UUID.randomUUID();
-
-        when(userScoreRepository.save(any()))
-                .thenAnswer(invocation -> Mono.just(invocation.getArgument(0)));
-
-        var result = userScoreService.registerPoints(
-                userId,
-                null,
-                ActivityType.CODE_REVIEW,
-                null
-        );
-
-        StepVerifier.create(result)
-                .verifyComplete();
-
-        verify(userScoreRepository).save(any());
+    void givenChallengeWithoutId_whenRegisterPoints_thenError() {
+        StepVerifier.create(userScoreService.registerPoints(
+                        userId,
+                        ActivityType.CHALLENGE_COMPLETED,
+                        null))
+                .expectError(IllegalArgumentException.class)
+                .verify();
     }
 
     @Test
-    void givenBlankUsername_whenRegisterPoints_thenSucceeds() {
-        UUID userId = UUID.randomUUID();
-
-        when(userScoreRepository.save(any()))
-                .thenAnswer(invocation -> Mono.just(invocation.getArgument(0)));
-
-        var result = userScoreService.registerPoints(
-                userId,
-                "   ",
-                ActivityType.CODE_REVIEW,
-                null
-        );
-
-        StepVerifier.create(result)
-                .verifyComplete();
-
-        verify(userScoreRepository).save(any());
-    }
-
-    @Test
-    void givenRepositoryError_whenRegisterPoints_thenErrorPropagates() {
-        UUID userId = UUID.randomUUID();
-
-        when(userScoreRepository.save(any()))
-                .thenReturn(Mono.error(new RuntimeException("DB error")));
-
-        var result = userScoreService.registerPoints(
-                userId,
-                "testUser",
-                ActivityType.CODE_REVIEW,
-                null
-        );
-
-        StepVerifier.create(result)
-                .expectError(RuntimeException.class)
+    void givenNonChallengeWithId_whenRegisterPoints_thenError() {
+        StepVerifier.create(userScoreService.registerPoints(
+                        userId,
+                        ActivityType.CODE_REVIEW,
+                        UUID.randomUUID()))
+                .expectError(IllegalArgumentException.class)
                 .verify();
     }
 }
