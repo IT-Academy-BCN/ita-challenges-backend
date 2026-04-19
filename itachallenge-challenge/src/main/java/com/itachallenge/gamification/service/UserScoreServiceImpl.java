@@ -52,7 +52,6 @@ public class UserScoreServiceImpl implements UserScoreService {
                 .toList();
 
         return PointsHistoryResponseDto.builder()
-                .username("") // eliminado uso de username real
                 .totalPoints(totalPoints)
                 .history(history)
                 .build();
