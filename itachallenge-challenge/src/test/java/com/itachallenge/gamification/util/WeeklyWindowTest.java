@@ -1,5 +1,6 @@
 package com.itachallenge.gamification.util;
 
+import com.itachallenge.gamification.service.WeeklyWindow;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;

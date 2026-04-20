@@ -2,7 +2,7 @@ package com.itachallenge.gamification.repository;
 
 import com.itachallenge.gamification.document.UserScoreDocument;
 import com.itachallenge.gamification.repository.projection.LeaderboardAggregationResult;
-import com.itachallenge.gamification.util.WeeklyWindow;
+import com.itachallenge.gamification.service.WeeklyWindow;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -7,5 +7,4 @@ import reactor.core.publisher.Mono;
 public interface LeaderboardService {
     Mono<LeaderboardResponseDto> getLeaderboard();
     Mono<WeeklyLeaguesResponseDto> getWeeklyLeagues();
-    Mono<WeeklyLeaguesResult> getWeeklyLeagues();
 }
