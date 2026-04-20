@@ -2,10 +2,10 @@ package com.itachallenge.gamification.service;
 
 import com.itachallenge.challenge.dto.gamification.LeaderboardEntryDto;
 import com.itachallenge.challenge.dto.gamification.LeaderboardResponseDto;
+import com.itachallenge.challenge.dto.gamification.WeeklyLeaguesResponseDto;
 import com.itachallenge.challenge.exception.InternalServerErrorException;
 import com.itachallenge.gamification.repository.UserScoreRepository;
 import com.itachallenge.gamification.repository.projection.LeaderboardAggregationResult;
-import com.itachallenge.gamification.util.WeeklyWindow;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +15,6 @@ import reactor.core.publisher.Mono;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -45,7 +44,7 @@ public class LeaderboardServiceImpl implements LeaderboardService {
     }
 
     @Override
-    public Mono<WeeklyLeaguesResult> getWeeklyLeagues() {
+    public Mono<WeeklyLeaguesResponseDto> getWeeklyLeagues() {
         WeeklyWindow weeklyWindow = WeeklyWindow.fromReferenceDateTime(ZonedDateTime.now(LEADERBOARD_ZONE));
         return userScoreRepository.aggregateUserScoresByPeriod(
                         weeklyWindow.getFromInclusive(),
@@ -53,7 +52,7 @@ public class LeaderboardServiceImpl implements LeaderboardService {
                 )
                 .map(this::mapToEntryDto)
                 .collectList()
-                .map(this::sortAndSplitByLeague)
+                .map(this::splitByLeague)
                 .onErrorResume(e -> {
                     log.error("Critical error in weekly leagues service - database unavailable. {}", e.getMessage());
                     return Mono.error(new InternalServerErrorException(
@@ -70,18 +69,14 @@ public class LeaderboardServiceImpl implements LeaderboardService {
     }
 
     /**
-     * Orders weekly entries by points (desc) and username (asc, null-safe), then splits into leagues.
+     * Splits a list already ordered by the repository aggregation ({@code totalPoints} desc, {@code username} asc).
      */
-    private WeeklyLeaguesResult sortAndSplitByLeague(List<LeaderboardEntryDto> entries) {
+    private WeeklyLeaguesResponseDto splitByLeague(List<LeaderboardEntryDto> entries) {
         List<LeaderboardEntryDto> ordered = new ArrayList<>(entries);
-        ordered.sort(Comparator
-                .comparing(LeaderboardEntryDto::getTotalPoints, Comparator.nullsLast(Comparator.reverseOrder()))
-                .thenComparing(LeaderboardEntryDto::getUsername, Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER)));
-
         int goldEnd = Math.min(GOLD_LIMIT, ordered.size());
         int silverEnd = Math.min(GOLD_LIMIT + SILVER_LIMIT, ordered.size());
 
-        return WeeklyLeaguesResult.builder()
+        return WeeklyLeaguesResponseDto.builder()
                 .gold(new ArrayList<>(ordered.subList(0, goldEnd)))
                 .silver(new ArrayList<>(ordered.subList(goldEnd, silverEnd)))
                 .bronze(new ArrayList<>(ordered.subList(silverEnd, ordered.size())))

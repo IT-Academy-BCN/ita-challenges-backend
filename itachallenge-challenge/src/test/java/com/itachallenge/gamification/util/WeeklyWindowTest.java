@@ -1,5 +1,6 @@
 package com.itachallenge.gamification.util;
 
+import com.itachallenge.gamification.service.WeeklyWindow;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
@@ -7,6 +8,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class WeeklyWindowTest {
 
@@ -30,5 +32,10 @@ class WeeklyWindowTest {
 
         assertEquals(LocalDateTime.of(2025, 12, 29, 0, 0, 0, 0), window.getFromInclusive());
         assertEquals(LocalDateTime.of(2026, 1, 4, 23, 59, 59, 999_999_999), window.getToInclusive());
+    }
+
+    @Test
+    void fromReferenceDateTime_whenReferenceIsNull_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> WeeklyWindow.fromReferenceDateTime(null));
     }
 }

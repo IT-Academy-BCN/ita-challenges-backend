@@ -2,7 +2,7 @@ package com.itachallenge.gamification.repository;
 
 import com.itachallenge.gamification.document.UserScoreDocument;
 import com.itachallenge.gamification.repository.projection.LeaderboardAggregationResult;
-import com.itachallenge.gamification.util.WeeklyWindow;
+import com.itachallenge.gamification.service.WeeklyWindow;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -218,6 +218,98 @@ class UserScoreRepositoryIntegrationTest {
         StepVerifier.create(userScoreRepository.aggregateUserScoresByPeriod(from, to))
                 .expectNextMatches(agg ->
                         agg.getUsername().equals("boundary_user") && agg.getTotalPoints() == 9)
+                .verifyComplete();
+    }
+
+    @Test
+    void givenUsersWithSameTotalPoints_whenAggregateUserScores_thenTieBreaksByUsernameAscending() {
+        userScoreRepository.deleteAll().block();
+
+        UserScoreDocument alice = UserScoreDocument.builder()
+                .id(UUID.randomUUID())
+                .userId(UUID.randomUUID())
+                .username("alice")
+                .challengeId(UUID.randomUUID())
+                .pointsEarned(20)
+                .createdAt(LocalDateTime.of(2026, 4, 8, 10, 0))
+                .build();
+
+        UserScoreDocument bob = UserScoreDocument.builder()
+                .id(UUID.randomUUID())
+                .userId(UUID.randomUUID())
+                .username("bob")
+                .challengeId(UUID.randomUUID())
+                .pointsEarned(20)
+                .createdAt(LocalDateTime.of(2026, 4, 8, 11, 0))
+                .build();
+
+        UserScoreDocument charlie = UserScoreDocument.builder()
+                .id(UUID.randomUUID())
+                .userId(UUID.randomUUID())
+                .username("charlie")
+                .challengeId(UUID.randomUUID())
+                .pointsEarned(10)
+                .createdAt(LocalDateTime.of(2026, 4, 8, 12, 0))
+                .build();
+
+        mongoTemplate.insert(alice).block();
+        mongoTemplate.insert(bob).block();
+        mongoTemplate.insert(charlie).block();
+
+        StepVerifier.create(userScoreRepository.aggregateUserScores())
+                .expectNextMatches(agg ->
+                        agg.getUsername().equals("alice") && agg.getTotalPoints() == 20)
+                .expectNextMatches(agg ->
+                        agg.getUsername().equals("bob") && agg.getTotalPoints() == 20)
+                .expectNextMatches(agg ->
+                        agg.getUsername().equals("charlie") && agg.getTotalPoints() == 10)
+                .verifyComplete();
+    }
+
+    @Test
+    void givenPeriodUsersWithSameTotalPoints_whenAggregateUserScoresByPeriod_thenTieBreaksByUsernameAscending() {
+        userScoreRepository.deleteAll().block();
+
+        WeeklyWindow window = WeeklyWindow.fromReferenceDateTime(REFERENCE_WEEK_DATE_TIME);
+        LocalDateTime from = window.getFromInclusive();
+        LocalDateTime to = window.getToInclusive();
+
+        UserScoreDocument alice = UserScoreDocument.builder()
+                .id(UUID.randomUUID())
+                .userId(UUID.randomUUID())
+                .username("alice")
+                .challengeId(UUID.randomUUID())
+                .pointsEarned(15)
+                .createdAt(from.plusDays(1))
+                .build();
+
+        UserScoreDocument bob = UserScoreDocument.builder()
+                .id(UUID.randomUUID())
+                .userId(UUID.randomUUID())
+                .username("bob")
+                .challengeId(UUID.randomUUID())
+                .pointsEarned(15)
+                .createdAt(from.plusDays(2))
+                .build();
+
+        UserScoreDocument outside = UserScoreDocument.builder()
+                .id(UUID.randomUUID())
+                .userId(UUID.randomUUID())
+                .username("outside")
+                .challengeId(UUID.randomUUID())
+                .pointsEarned(99)
+                .createdAt(to.plusNanos(1))
+                .build();
+
+        mongoTemplate.insert(alice).block();
+        mongoTemplate.insert(bob).block();
+        mongoTemplate.insert(outside).block();
+
+        StepVerifier.create(userScoreRepository.aggregateUserScoresByPeriod(from, to))
+                .expectNextMatches(agg ->
+                        agg.getUsername().equals("alice") && agg.getTotalPoints() == 15)
+                .expectNextMatches(agg ->
+                        agg.getUsername().equals("bob") && agg.getTotalPoints() == 15)
                 .verifyComplete();
     }
 

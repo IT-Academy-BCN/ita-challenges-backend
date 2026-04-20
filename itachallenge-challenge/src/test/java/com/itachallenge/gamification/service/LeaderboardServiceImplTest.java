@@ -13,6 +13,8 @@ import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
@@ -82,18 +84,19 @@ class LeaderboardServiceImplTest {
     }
 
     @Test
-    void getWeeklyLeagues_splitsIntoGoldSilverBronze_withAlphabeticalTieBreak() {
+    void getWeeklyLeagues_splitsIntoGoldSilverBronze_preservingRepositoryOrder() {
+        // Order matches Mongo aggregation: totalPoints desc, username asc (same as DB $sort)
+        List<LeaderboardAggregationResult> asReturnedByDb = new ArrayList<>();
+        asReturnedByDb.add(new LeaderboardAggregationResult("anna", 100));
+        asReturnedByDb.add(new LeaderboardAggregationResult("zoe", 100));
+        asReturnedByDb.add(new LeaderboardAggregationResult("mike", 90));
+        for (int i = 1; i <= 30; i++) {
+            asReturnedByDb.add(new LeaderboardAggregationResult("user" + i, 89 - i));
+        }
+
         when(userScoreRepository.aggregateUserScoresByPeriod(org.mockito.ArgumentMatchers.any(LocalDateTime.class),
                 org.mockito.ArgumentMatchers.any(LocalDateTime.class)))
-                .thenReturn(Flux.concat(
-                        Flux.just(
-                                new LeaderboardAggregationResult("zoe", 100),
-                                new LeaderboardAggregationResult("anna", 100),
-                                new LeaderboardAggregationResult("mike", 90)
-                        ),
-                        Flux.range(1, 30)
-                                .map(i -> new LeaderboardAggregationResult("user" + i, 89 - i))
-                ));
+                .thenReturn(Flux.fromIterable(asReturnedByDb));
 
         StepVerifier.create(leaderboardServiceImpl.getWeeklyLeagues())
                 .assertNext(response -> {
@@ -101,7 +104,7 @@ class LeaderboardServiceImplTest {
                     assertThat(response.getSilver()).hasSize(20);
                     assertThat(response.getBronze()).hasSize(3);
 
-                    // Tie on points 100 must be resolved alphabetically
+                    // Service preserves repository order and only splits into leagues.
                     assertThat(response.getGold().get(0).getUsername()).isEqualTo("anna");
                     assertThat(response.getGold().get(1).getUsername()).isEqualTo("zoe");
                     assertThat(response.getGold().get(2).getUsername()).isEqualTo("mike");
@@ -122,5 +125,58 @@ class LeaderboardServiceImplTest {
                             .hasMessage("Unable to retrieve weekly leagues data. Please try again later.");
                 })
                 .verify();
+    }
+
+    @Test
+    void getWeeklyLeagues_whenLessThanTenEntries_keepsSilverAndBronzeEmpty() {
+        when(userScoreRepository.aggregateUserScoresByPeriod(org.mockito.ArgumentMatchers.any(LocalDateTime.class),
+                org.mockito.ArgumentMatchers.any(LocalDateTime.class)))
+                .thenReturn(Flux.fromIterable(createOrderedAggregations(5)));
+
+        StepVerifier.create(leaderboardServiceImpl.getWeeklyLeagues())
+                .assertNext(response -> {
+                    assertThat(response.getGold()).hasSize(5);
+                    assertThat(response.getSilver()).isEmpty();
+                    assertThat(response.getBronze()).isEmpty();
+                })
+                .verifyComplete();
+    }
+
+    @Test
+    void getWeeklyLeagues_whenExactlyTenEntries_putsAllUsersInGoldOnly() {
+        when(userScoreRepository.aggregateUserScoresByPeriod(org.mockito.ArgumentMatchers.any(LocalDateTime.class),
+                org.mockito.ArgumentMatchers.any(LocalDateTime.class)))
+                .thenReturn(Flux.fromIterable(createOrderedAggregations(10)));
+
+        StepVerifier.create(leaderboardServiceImpl.getWeeklyLeagues())
+                .assertNext(response -> {
+                    assertThat(response.getGold()).hasSize(10);
+                    assertThat(response.getSilver()).isEmpty();
+                    assertThat(response.getBronze()).isEmpty();
+                })
+                .verifyComplete();
+    }
+
+    @Test
+    void getWeeklyLeagues_whenExactlyThirtyEntries_putsUsersInGoldAndSilverOnly() {
+        when(userScoreRepository.aggregateUserScoresByPeriod(org.mockito.ArgumentMatchers.any(LocalDateTime.class),
+                org.mockito.ArgumentMatchers.any(LocalDateTime.class)))
+                .thenReturn(Flux.fromIterable(createOrderedAggregations(30)));
+
+        StepVerifier.create(leaderboardServiceImpl.getWeeklyLeagues())
+                .assertNext(response -> {
+                    assertThat(response.getGold()).hasSize(10);
+                    assertThat(response.getSilver()).hasSize(20);
+                    assertThat(response.getBronze()).isEmpty();
+                })
+                .verifyComplete();
+    }
+
+    private List<LeaderboardAggregationResult> createOrderedAggregations(int totalUsers) {
+        List<LeaderboardAggregationResult> ordered = new ArrayList<>();
+        for (int i = 0; i < totalUsers; i++) {
+            ordered.add(new LeaderboardAggregationResult("user" + i, 100 - i));
+        }
+        return ordered;
     }
 }

@@ -1,6 +1,5 @@
-package com.itachallenge.gamification.service;
+package com.itachallenge.challenge.dto.gamification;
 
-import com.itachallenge.challenge.dto.gamification.LeaderboardEntryDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,7 +11,7 @@ import java.util.List;
 @Builder
 @Jacksonized
 @AllArgsConstructor
-public class WeeklyLeaguesResult {
+public class WeeklyLeaguesResponseDto {
     private final List<LeaderboardEntryDto> gold;
     private final List<LeaderboardEntryDto> silver;
     private final List<LeaderboardEntryDto> bronze;

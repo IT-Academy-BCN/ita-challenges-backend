@@ -1,4 +1,4 @@
-package com.itachallenge.gamification.util;
+package com.itachallenge.gamification.service;
 
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
