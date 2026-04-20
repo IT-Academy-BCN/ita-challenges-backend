@@ -137,7 +137,7 @@ class SubmissionServiceImplTest {
                 .verifyComplete();
 
         verify(challengeService, never()).addChallengeToSolved(anyString());
-        verify(userScoreService, never()).registerPoints(any(), any(),any(), any());
+        verify(userScoreService, never()).registerPoints(any(), any(), any());
     }
 
     @Test
@@ -171,7 +171,7 @@ class SubmissionServiceImplTest {
         when(challengeService.addChallengeToSolved(challengeUuid.toString()))
                 .thenReturn(Mono.just(new SolvedDto(true, 3)));
 
-        when(userScoreService.registerPoints(userUuid,null, ActivityType.CHALLENGE_COMPLETED, challengeUuid)).thenReturn(Mono.empty());
+        when(userScoreService.registerPoints(userUuid, ActivityType.CHALLENGE_COMPLETED, challengeUuid)).thenReturn(Mono.empty());
 
         StepVerifier.create(submissionService.processSubmissionAction(userUuid.toString(), request))
                 .assertNext(response -> {
@@ -182,7 +182,7 @@ class SubmissionServiceImplTest {
                 .verifyComplete();
 
         verify(challengeService).addChallengeToSolved(challengeUuid.toString());
-        verify(userScoreService).registerPoints(userUuid, null, ActivityType.CHALLENGE_COMPLETED, challengeUuid);
+        verify(userScoreService).registerPoints(userUuid, ActivityType.CHALLENGE_COMPLETED, challengeUuid);
     }
 
     @Test
@@ -215,7 +215,7 @@ class SubmissionServiceImplTest {
                 .verify();
 
         verify(challengeService, never()).addChallengeToSolved(anyString());
-        verify(userScoreService, never()).registerPoints(any(), any(), any(), any());
+        verify(userScoreService, never()).registerPoints(any(), any(), any());
     }
 
     @Test
@@ -240,7 +240,6 @@ class SubmissionServiceImplTest {
         StepVerifier.create(submissionService.processSubmissionAction(userUuid.toString(), request))
                 .assertNext(response -> Assertions.assertEquals(SubmissionStatus.IN_PROGRESS.name(), response.getStatus()))
                 .verifyComplete();
-        verify(userScoreService, never()).registerPoints(any(), any(),any(), any());
+        verify(userScoreService, never()).registerPoints(any(), any(),any());
     }
-
 }

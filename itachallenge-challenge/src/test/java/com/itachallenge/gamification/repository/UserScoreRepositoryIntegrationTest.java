@@ -44,9 +44,6 @@ class UserScoreRepositoryIntegrationTest {
     private ReactiveMongoTemplate mongoTemplate;
 
     private UUID userId1, userId2, userId3;
-    private static final String USERNAME_1 = "user1";
-    private static final String USERNAME_2 = "user2";
-    private static final String USERNAME_3 = "user3";
 
     @BeforeEach
     void setUp() {
@@ -59,26 +56,18 @@ class UserScoreRepositoryIntegrationTest {
         Flux<LeaderboardAggregationResult> result = userScoreRepository.aggregateUserScores();
 
         StepVerifier.create(result)
-                .expectNextMatches(dto ->
-                        dto.getUsername().equals(USERNAME_3) && dto.getTotalPoints() == 50)
-                .expectNextMatches(agg ->
-                        agg.getUsername().equals(USERNAME_1) && agg.getTotalPoints() == 35)
-                .expectNextMatches(agg ->
-                        agg.getUsername().equals(USERNAME_2) && agg.getTotalPoints() == 25)
+                .expectNextMatches(dto -> dto.getTotalPoints() == 50)
+                .expectNextMatches(agg -> agg.getTotalPoints() == 35)
+                .expectNextMatches(agg -> agg.getTotalPoints() == 25)
                 .verifyComplete();
     }
 
     @Test
-    void givenUserWithMultipleUsernames_whenAggregateUserScores_thenReturnMostRecentUsername() {
+    void givenScoresWithoutUsername_whenAggregateUserScores_thenReturnResultsWithoutFailing() {
         Flux<LeaderboardAggregationResult> result = userScoreRepository.aggregateUserScores();
 
         StepVerifier.create(result)
-                .expectNextMatches(dto ->
-                        dto.getUsername().equals(USERNAME_3))
-                .expectNextMatches(dto ->
-                        dto.getUsername().equals(USERNAME_1))
-                .expectNextMatches(dto ->
-                        dto.getUsername().equals(USERNAME_2))
+                .expectNextCount(3)
                 .verifyComplete();
     }
 
@@ -100,14 +89,14 @@ class UserScoreRepositoryIntegrationTest {
         userId2 = UUID.randomUUID();
         userId3 = UUID.randomUUID();
 
-        UserScoreDocument user1Score1 = buildScore(userId1, "old_username", 10, now.minusDays(2));
-        UserScoreDocument user1Score2 = buildScore(userId1, USERNAME_1, 15, now.minusDays(1));
-        UserScoreDocument user1Score3 = buildScore(userId1, USERNAME_1, 10, now);
+        UserScoreDocument user1Score1 = buildScore(userId1, 10, now.minusDays(2));
+        UserScoreDocument user1Score2 = buildScore(userId1, 15, now.minusDays(1));
+        UserScoreDocument user1Score3 = buildScore(userId1, 10, now);
 
-        UserScoreDocument user2Score1 = buildScore(userId2, USERNAME_2, 20, LocalDateTime.now());
-        UserScoreDocument user2Score2 = buildScore(userId2, USERNAME_2, 5, LocalDateTime.now().minusDays(1));
+        UserScoreDocument user2Score1 = buildScore(userId2, 20, LocalDateTime.now());
+        UserScoreDocument user2Score2 = buildScore(userId2, 5, LocalDateTime.now().minusDays(1));
 
-        UserScoreDocument user3Score1 = buildScore(userId3, USERNAME_3, 50, LocalDateTime.now());
+        UserScoreDocument user3Score1 = buildScore(userId3, 50, LocalDateTime.now());
 
         userScoreRepository.saveAll(Flux.just(
                 user1Score1, user1Score2, user1Score3,
@@ -124,21 +113,18 @@ class UserScoreRepositoryIntegrationTest {
 
         UserScoreDocument first = buildScore(
                 testUserId,
-                "testuser",
                 10,
                 LocalDateTime.of(2024, 3, 1, 10, 0)
         );
 
         UserScoreDocument second = buildScore(
                 testUserId,
-                "testuser",
                 15,
                 LocalDateTime.of(2024, 3, 5, 10, 0)
         );
 
         UserScoreDocument third = buildScore(
                 testUserId,
-                "testuser",
                 20,
                 LocalDateTime.of(2024, 3, 10, 10, 0)
         );
@@ -176,14 +162,12 @@ class UserScoreRepositoryIntegrationTest {
 
     private UserScoreDocument buildScore(
             UUID userId,
-            String username,
             int points,
             LocalDateTime createdAt
     ) {
         return UserScoreDocument.builder()
                 .id(UUID.randomUUID())
                 .userId(userId)
-                .username(username)
                 .challengeId(UUID.randomUUID())
                 .pointsEarned(points)
                 .activityType(ActivityType.CHALLENGE_COMPLETED)

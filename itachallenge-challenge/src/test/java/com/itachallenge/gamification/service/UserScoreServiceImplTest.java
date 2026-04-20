@@ -89,7 +89,7 @@ class UserScoreServiceImplTest {
         when(userScoreRepository.save(any()))
                 .thenAnswer(invocation -> Mono.just(invocation.getArgument(0)));
 
-        var result = userScoreService.registerPoints(userId, "testUser", ActivityType.CHALLENGE_COMPLETED, challengeId);
+        var result = userScoreService.registerPoints(userId, ActivityType.CHALLENGE_COMPLETED, challengeId);
 
         StepVerifier.create(result).verifyComplete();
 
@@ -100,7 +100,7 @@ class UserScoreServiceImplTest {
     void givenChallengeCompletedWithoutChallengeId_whenRegisterPoints_thenError() {
         UUID userId = UUID.randomUUID();
 
-        var result = userScoreService.registerPoints(userId, "testUser", ActivityType.CHALLENGE_COMPLETED, null);
+        var result = userScoreService.registerPoints(userId, ActivityType.CHALLENGE_COMPLETED, null);
 
         StepVerifier.create(result)
                 .expectError(IllegalArgumentException.class)
@@ -113,7 +113,7 @@ class UserScoreServiceImplTest {
     void givenNonChallengeWithChallengeId_whenRegisterPoints_thenError() {
         UUID userId = UUID.randomUUID();
 
-        var result = userScoreService.registerPoints(userId, "testUser", ActivityType.CODE_REVIEW, UUID.randomUUID());
+        var result = userScoreService.registerPoints(userId, ActivityType.CODE_REVIEW, UUID.randomUUID());
 
         StepVerifier.create(result)
                 .expectError(IllegalArgumentException.class)
@@ -129,7 +129,7 @@ class UserScoreServiceImplTest {
         when(userScoreRepository.save(any()))
                 .thenAnswer(invocation -> Mono.just(invocation.getArgument(0)));
 
-        var result = userScoreService.registerPoints(userId, "testUser", ActivityType.CODE_REVIEW, null);
+        var result = userScoreService.registerPoints(userId, ActivityType.CODE_REVIEW, null);
 
         StepVerifier.create(result).verifyComplete();
 
@@ -160,7 +160,7 @@ class UserScoreServiceImplTest {
         assertThat(saved.getUserId()).isEqualTo(userId);
         assertThat(saved.getActivityType()).isEqualTo(activityType);
         assertThat(saved.getPointsEarned()).isEqualTo(activityType.getPoints());
-        assertThat(saved.getUsername()).isEqualTo("system");
+        assertThat(saved.getUsername()).isNull();
     }
 
     @Test
@@ -221,7 +221,6 @@ class UserScoreServiceImplTest {
     void givenNullUserId_whenRegisterPoints_thenError() {
         var result = userScoreService.registerPoints(
                 null,
-                "testUser",
                 ActivityType.CODE_REVIEW,
                 null
         );
@@ -239,7 +238,6 @@ class UserScoreServiceImplTest {
 
         var result = userScoreService.registerPoints(
                 userId,
-                "testUser",
                 null,
                 null
         );
@@ -252,7 +250,8 @@ class UserScoreServiceImplTest {
     }
 
     @Test
-    void givenNullUsername_whenRegisterPoints_thenSucceeds() {
+    void givenValidNonChallengeInput_whenRegisterPoints_thenSucceeds()
+    {
         UUID userId = UUID.randomUUID();
 
         when(userScoreRepository.save(any()))
@@ -260,27 +259,6 @@ class UserScoreServiceImplTest {
 
         var result = userScoreService.registerPoints(
                 userId,
-                null,
-                ActivityType.CODE_REVIEW,
-                null
-        );
-
-        StepVerifier.create(result)
-                .verifyComplete();
-
-        verify(userScoreRepository).save(any());
-    }
-
-    @Test
-    void givenBlankUsername_whenRegisterPoints_thenSucceeds() {
-        UUID userId = UUID.randomUUID();
-
-        when(userScoreRepository.save(any()))
-                .thenAnswer(invocation -> Mono.just(invocation.getArgument(0)));
-
-        var result = userScoreService.registerPoints(
-                userId,
-                "   ",
                 ActivityType.CODE_REVIEW,
                 null
         );
@@ -300,7 +278,6 @@ class UserScoreServiceImplTest {
 
         var result = userScoreService.registerPoints(
                 userId,
-                "testUser",
                 ActivityType.CODE_REVIEW,
                 null
         );

@@ -96,7 +96,7 @@ public class SubmissionServiceImpl implements SubmissionService {
                             }))
                             .flatMap(saved -> {
                                 if (saved.getStatus() == SubmissionStatus.SUBMITTED_COMPLETE) {
-                                    return userScoreService.registerPoints(userUuid, null, ActivityType.CHALLENGE_COMPLETED, challengeUuid)
+                                    return userScoreService.registerPoints(userUuid, ActivityType.CHALLENGE_COMPLETED, challengeUuid)
                                             .then(challengeService.addChallengeToSolved(challengeUuid.toString()))
                                             .map(solvedDto -> SubmissionActionResponseDto.builder()
                                                     .submissionText(saved.getSubmissionText())
