@@ -77,6 +77,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Integration Tests** for full end-to-end flow validation using Testcontainers (MongoDB),
   ensuring data consistency with blocking setup/teardown.
 
+#### Peer submissions (Story #191)
+- `ChallengePeerSubmissionsController` with `GET /itachallenge/api/v1/challenges/{challengeId}/peer-submissions` (OpenAPI documented); controller and tests under `com.itachallenge.challenge.controller` following existing submission packaging (no separate `peer` package).
+- Returns up to 10 peer submissions from other users; `403 Forbidden` if the requester has not submitted the challenge (`SUBMITTED_COMPLETE` or `SUBMITTED_INCOMPLETE`); ordered by `createdAt` descending.
+- `PeerSubmissionItemDto`: `submission_id`, `language_id`, `submitted_at`, `submission_text`, `status`, `author` (nullable for legacy submissions).
+- `SubmissionDocument`: `createdAt`; optional `submittedByUsername` exposed as `author` in peer submissions.
+- Repository: `existsByUserIdAndChallengeIdAndStatusIn`; `findTop10ByChallengeIdAndUserIdNotAndStatusInOrderByCreatedAtDesc`.
+- `SubmissionService` / `SubmissionServiceImpl`: `getPeerSubmissions`.
+- POST submissions: optional `Authorization` header to persist `submittedByUsername` when present (backward compatible for existing clients).
+- Controller parses JWT user id to `UUID` before calling the service (avoids redundant `String` overload path); `400` if user id is not a valid UUID.
+- Tests: `ChallengePeerSubmissionsControllerTest`, `SubmissionServiceImplTest`, `SubmissionDocumentTest`.
+- Postman: `Challenge / peer-submissions`; notes on `Challenge / create-or-update submission` for optional `Authorization`.
+
 ### [itachallenge-user-3.2.4-RELEASE] - 2026-03-16
 
 ### Changed

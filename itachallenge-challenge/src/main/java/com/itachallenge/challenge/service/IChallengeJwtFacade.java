@@ -6,6 +6,5 @@ public interface IChallengeJwtFacade {
 
     String getUserUuIdFromAuthenticationHeader(String authHeader);
     Claims extractAllClaims(String token);
-
-
+    String getUsernameFromAuthenticationHeader(String authHeader);
 }

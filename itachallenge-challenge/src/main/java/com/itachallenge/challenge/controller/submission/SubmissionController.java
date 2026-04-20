@@ -1,6 +1,7 @@
 package com.itachallenge.challenge.controller.submission;
 
 import com.itachallenge.challenge.dto.submission.SubmissionActionRequestDto;
+import com.itachallenge.challenge.dto.submission.SubmissionActionResponseDto;
 import com.itachallenge.challenge.dto.submission.SubmissionDto;
 import com.itachallenge.submission.service.SubmissionService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,16 +11,13 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
-import com.itachallenge.challenge.dto.submission.SubmissionActionResponseDto;
-import org.springframework.http.ResponseEntity;
 import reactor.core.publisher.Mono;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 
 
@@ -30,7 +28,6 @@ import jakarta.validation.Valid;
 @RequestMapping("/itachallenge/api/v1/users/{userId}/submissions")
 public class SubmissionController {
 
-    private static final Logger log = LoggerFactory.getLogger(SubmissionController.class);
     private final SubmissionService submissionService;
 
     @GetMapping
@@ -71,6 +68,12 @@ public class SubmissionController {
                             in = ParameterIn.PATH,
                             required = true,
                             description = "User UUID"
+                    ),
+                    @Parameter(
+                            name = "Authorization",
+                            in = ParameterIn.HEADER,
+                            required = false,
+                            description = "Optional Bearer token for authenticated requests."
                     )
             },
             responses = {
@@ -89,12 +92,11 @@ public class SubmissionController {
     )
     public Mono<ResponseEntity<SubmissionActionResponseDto>> createOrUpdateSubmission(
             @PathVariable String userId,
-            @Valid @RequestBody SubmissionActionRequestDto request
+            @Valid @RequestBody SubmissionActionRequestDto request,
+            @RequestHeader(name = "Authorization", required = false) String authHeader
     ) {
-        return submissionService.processSubmissionAction(userId, request)
+        return submissionService.processSubmissionAction(userId, request, authHeader)
                 .map(ResponseEntity::ok);
     }
-
-
 
 }

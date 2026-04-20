@@ -20,6 +20,9 @@ import reactor.core.publisher.Mono;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
@@ -119,6 +122,7 @@ class SubmissionControllerTest {
 
         verify(submissionService).getAllSubmissionsByUser(userId);
     }
+
     @Test
     void postSubmission_returns200_whenServiceSucceeds() {
         String userId = UUID.randomUUID().toString();
@@ -137,7 +141,7 @@ class SubmissionControllerTest {
                 .status("IN_PROGRESS")
                 .build();
 
-        when(submissionService.processSubmissionAction(eq(userId), any(SubmissionActionRequestDto.class)))
+        when(submissionService.processSubmissionAction(eq(userId), any(SubmissionActionRequestDto.class),isNull()))
                 .thenReturn(Mono.just(response));
 
         client().post()
@@ -151,7 +155,41 @@ class SubmissionControllerTest {
                 .jsonPath("$.submission_text").isEqualTo("draft text")
                 .jsonPath("$.status").isEqualTo("IN_PROGRESS");
 
-        verify(submissionService).processSubmissionAction(eq(userId), any(SubmissionActionRequestDto.class));
+        verify(submissionService).processSubmissionAction(eq(userId), any(SubmissionActionRequestDto.class), isNull());
+    }
+
+    @Test
+    void postSubmission_passesAuthorizationHeaderToService_whenHeaderPresent() {
+        String userId = UUID.randomUUID().toString();
+        String authHeader = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.test";
+
+        SubmissionActionRequestDto request = SubmissionActionRequestDto.builder()
+                .challengeId(UUID.randomUUID())
+                .languageId(UUID.randomUUID())
+                .action(SubmissionAction.SAVE)
+                .submissionText("draft text")
+                .build();
+
+        SubmissionActionResponseDto response = SubmissionActionResponseDto.builder()
+                .submissionText("draft text")
+                .isSolved(false)
+                .timesSolved(null)
+                .status("IN_PROGRESS")
+                .build();
+
+        when(submissionService.processSubmissionAction(eq(userId), any(SubmissionActionRequestDto.class), eq(authHeader)))
+                .thenReturn(Mono.just(response));
+
+        client().post()
+                .uri("/itachallenge/api/v1/users/{userId}/submissions", userId)
+                .header("Authorization", authHeader)
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .bodyValue(request)
+                .exchange()
+                .expectStatus().isOk();
+
+        verify(submissionService).processSubmissionAction(eq(userId), any(SubmissionActionRequestDto.class), eq(authHeader));
     }
 
     @Test
@@ -174,7 +212,7 @@ class SubmissionControllerTest {
                 .expectStatus().isBadRequest();
 
         verify(submissionService, never())
-                .processSubmissionAction(any(), any());
+                .processSubmissionAction(any(), any(), any());
     }
 
 
@@ -190,7 +228,7 @@ class SubmissionControllerTest {
                 .build();
 
 
-        when(submissionService.processSubmissionAction(eq(userId), any(SubmissionActionRequestDto.class)))
+        when(submissionService.processSubmissionAction(eq(userId), any(SubmissionActionRequestDto.class), isNull()))
                 .thenReturn(Mono.error(new UnmodifiableSubmissionException("Submission already completed")));
 
         client().post()
@@ -201,7 +239,7 @@ class SubmissionControllerTest {
                 .exchange()
                 .expectStatus().isEqualTo(409);
 
-        verify(submissionService).processSubmissionAction(eq(userId), any(SubmissionActionRequestDto.class));
+        verify(submissionService).processSubmissionAction(eq(userId), any(SubmissionActionRequestDto.class), isNull());
     }
 
     @Test
@@ -225,7 +263,7 @@ class SubmissionControllerTest {
                 .expectStatus().isBadRequest();
 
         verify(submissionService, never())
-                .processSubmissionAction(any(), any());
+                .processSubmissionAction(any(), any(), any());
     }
 
 }
