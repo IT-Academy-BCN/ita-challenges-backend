@@ -126,4 +126,57 @@ class LeaderboardServiceImplTest {
                 })
                 .verify();
     }
+
+    @Test
+    void getWeeklyLeagues_whenLessThanTenEntries_keepsSilverAndBronzeEmpty() {
+        when(userScoreRepository.aggregateUserScoresByPeriod(org.mockito.ArgumentMatchers.any(LocalDateTime.class),
+                org.mockito.ArgumentMatchers.any(LocalDateTime.class)))
+                .thenReturn(Flux.fromIterable(createOrderedAggregations(5)));
+
+        StepVerifier.create(leaderboardServiceImpl.getWeeklyLeagues())
+                .assertNext(response -> {
+                    assertThat(response.getGold()).hasSize(5);
+                    assertThat(response.getSilver()).isEmpty();
+                    assertThat(response.getBronze()).isEmpty();
+                })
+                .verifyComplete();
+    }
+
+    @Test
+    void getWeeklyLeagues_whenExactlyTenEntries_putsAllUsersInGoldOnly() {
+        when(userScoreRepository.aggregateUserScoresByPeriod(org.mockito.ArgumentMatchers.any(LocalDateTime.class),
+                org.mockito.ArgumentMatchers.any(LocalDateTime.class)))
+                .thenReturn(Flux.fromIterable(createOrderedAggregations(10)));
+
+        StepVerifier.create(leaderboardServiceImpl.getWeeklyLeagues())
+                .assertNext(response -> {
+                    assertThat(response.getGold()).hasSize(10);
+                    assertThat(response.getSilver()).isEmpty();
+                    assertThat(response.getBronze()).isEmpty();
+                })
+                .verifyComplete();
+    }
+
+    @Test
+    void getWeeklyLeagues_whenExactlyThirtyEntries_putsUsersInGoldAndSilverOnly() {
+        when(userScoreRepository.aggregateUserScoresByPeriod(org.mockito.ArgumentMatchers.any(LocalDateTime.class),
+                org.mockito.ArgumentMatchers.any(LocalDateTime.class)))
+                .thenReturn(Flux.fromIterable(createOrderedAggregations(30)));
+
+        StepVerifier.create(leaderboardServiceImpl.getWeeklyLeagues())
+                .assertNext(response -> {
+                    assertThat(response.getGold()).hasSize(10);
+                    assertThat(response.getSilver()).hasSize(20);
+                    assertThat(response.getBronze()).isEmpty();
+                })
+                .verifyComplete();
+    }
+
+    private List<LeaderboardAggregationResult> createOrderedAggregations(int totalUsers) {
+        List<LeaderboardAggregationResult> ordered = new ArrayList<>();
+        for (int i = 0; i < totalUsers; i++) {
+            ordered.add(new LeaderboardAggregationResult("user" + i, 100 - i));
+        }
+        return ordered;
+    }
 }
