@@ -27,7 +27,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(  webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @AutoConfigureWebTestClient
 @Testcontainers(disabledWithoutDocker = true)
@@ -51,7 +51,7 @@ class FavoriteControllerIntegrationTest {
     private UserRepository userRepository;
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         favoriteRepository.deleteAll().block();
         userRepository.deleteAll().block();
     }
@@ -103,7 +103,7 @@ class FavoriteControllerIntegrationTest {
     }
 
     @Test
-    void getUserFavorites_WithMultipleFavoritesFromDifferentUsers_ReturnsOnlyUserFavorites(){
+    void getUserFavorites_WithMultipleFavoritesFromDifferentUsers_ReturnsOnlyUserFavorites() {
         String user1 = createUser("user1");
         String user2 = createUser("user2");
 
@@ -121,7 +121,8 @@ class FavoriteControllerIntegrationTest {
                 .exchange()
                 .expectStatus().isOk()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON)
-                .expectBody(new ParameterizedTypeReference<Set<String>>() {})
+                .expectBody(new ParameterizedTypeReference<Set<String>>() {
+                })
                 .value(favorites -> {
                             assertThat(favorites).hasSize(2);
                             assertThat(favorites).containsExactlyInAnyOrder(challengeId1, challengeId2);
