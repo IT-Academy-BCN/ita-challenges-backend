@@ -2,6 +2,7 @@ package com.itachallenge.challenge.controller.gamification;
 
 import com.itachallenge.challenge.dto.gamification.LeaderboardEntryDto;
 import com.itachallenge.challenge.dto.gamification.LeaderboardResponseDto;
+import com.itachallenge.challenge.dto.gamification.WeeklyLeaguesResponseDto;
 import com.itachallenge.challenge.exception.InternalServerErrorException;
 import com.itachallenge.gamification.service.LeaderboardService;
 import org.junit.jupiter.api.Test;
@@ -82,5 +83,64 @@ class LeaderboardControllerTest {
                 .expectStatus().is5xxServerError();
 
         verify(leaderboardService).getLeaderboard();
+    }
+
+    @Test
+    void getWeeklyLeagues_returnsOkAndThreeArrays() {
+        WeeklyLeaguesResponseDto response = WeeklyLeaguesResponseDto.builder()
+                .gold(List.of(LeaderboardEntryDto.builder().username("userG1").totalPoints(100).build()))
+                .silver(List.of(LeaderboardEntryDto.builder().username("userS1").totalPoints(70).build()))
+                .bronze(List.of(LeaderboardEntryDto.builder().username("userB1").totalPoints(40).build()))
+                .build();
+
+        when(leaderboardService.getWeeklyLeagues()).thenReturn(Mono.just(response));
+
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/leaderboard/weekly")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.gold.length()").isEqualTo(1)
+                .jsonPath("$.silver.length()").isEqualTo(1)
+                .jsonPath("$.bronze.length()").isEqualTo(1)
+                .jsonPath("$.gold[0].username").isEqualTo("userG1")
+                .jsonPath("$.gold[0].total_points").isEqualTo(100);
+
+        verify(leaderboardService).getWeeklyLeagues();
+    }
+
+    @Test
+    void getWeeklyLeagues_whenEmpty_returnsOkAndEmptyArrays() {
+        WeeklyLeaguesResponseDto emptyResponse = WeeklyLeaguesResponseDto.builder()
+                .gold(Collections.emptyList())
+                .silver(Collections.emptyList())
+                .bronze(Collections.emptyList())
+                .build();
+
+        when(leaderboardService.getWeeklyLeagues()).thenReturn(Mono.just(emptyResponse));
+
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/leaderboard/weekly")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.gold").isEmpty()
+                .jsonPath("$.silver").isEmpty()
+                .jsonPath("$.bronze").isEmpty();
+
+        verify(leaderboardService).getWeeklyLeagues();
+    }
+
+    @Test
+    void getWeeklyLeagues_whenServiceError_returns500Error() {
+        when(leaderboardService.getWeeklyLeagues())
+                .thenReturn(Mono.error(new InternalServerErrorException("DB error")));
+
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/leaderboard/weekly")
+                .exchange()
+                .expectStatus().is5xxServerError();
+
+        verify(leaderboardService).getWeeklyLeagues();
     }
 }

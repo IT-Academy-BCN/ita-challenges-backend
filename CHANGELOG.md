@@ -15,11 +15,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - `PointsHistoryResponseDto` and `PointHistoryEntryDto` — replaced by the new response structure (GitHub Task [#300], PR [#...])
 ### [itachallenge-challenge-3.5.0-RELEASE] - 2026-04-09
+## [itachallenge-challenge-3.5.0 - RELEASED] 2026-04-09
 
 [Gamification]
 
 ### Added
 
+#### Weekly Leaderboard API
+- Added new endpoint `GET /itachallenge/api/v1/leaderboard/weekly` to expose weekly leagues ranking.
+- Added response contract `WeeklyLeaguesResponseDto` with league arrays:
+  - `gold`
+  - `silver`
+  - `bronze`
+- Reused `LeaderboardEntryDto` as league entry shape (`username`, `total_points`) to keep consistency with existing leaderboard responses.
+
+#### Controller Layer
+- Extended `LeaderboardController` with weekly leaderboard route wiring.
+- Added OpenAPI/Swagger documentation for the new weekly endpoint (200 and 500 responses).
+
+#### Tests
+- Extended `LeaderboardControllerTest` for weekly endpoint scenarios:
+  - successful response with `gold/silver/bronze`,
+  - empty arrays response,
+  - service error mapped to 5xx.
+- Verified existing global leaderboard endpoint `GET /itachallenge/api/v1/leaderboard` remains unchanged.
 #### Activity Types API
 - Added `ActivityType` enum as the shared source of truth for available point-generating activity types.
 - Added `GET /itachallenge/api/v1/activity-types` endpoint to expose available activity types for frontend consumption.
