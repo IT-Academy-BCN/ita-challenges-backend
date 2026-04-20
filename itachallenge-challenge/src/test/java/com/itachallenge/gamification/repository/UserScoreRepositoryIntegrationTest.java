@@ -50,6 +50,9 @@ class UserScoreRepositoryIntegrationTest {
     private static final String USERNAME_1 = "user1";
     private static final String USERNAME_2 = "user2";
     private static final String USERNAME_3 = "user3";
+    private static final ZoneId LEAGUE_ZONE = ZoneId.of("Europe/Madrid");
+    private static final ZonedDateTime REFERENCE_WEEK_DATE_TIME =
+            ZonedDateTime.of(2026, 4, 8, 12, 0, 0, 0, LEAGUE_ZONE);
 
     @BeforeEach
     void setUp() {
@@ -100,8 +103,7 @@ class UserScoreRepositoryIntegrationTest {
     void givenEmptyDatabase_whenAggregateUserScoresByPeriod_thenReturnsEmpty() {
         userScoreRepository.deleteAll().block();
 
-        WeeklyWindow window = WeeklyWindow.fromReferenceDateTime(
-                ZonedDateTime.of(2026, 4, 8, 12, 0, 0, 0, ZoneId.of("Europe/Madrid")));
+        WeeklyWindow window = WeeklyWindow.fromReferenceDateTime(REFERENCE_WEEK_DATE_TIME);
         LocalDateTime from = window.getFromInclusive();
         LocalDateTime to = window.getToInclusive();
 
@@ -115,8 +117,7 @@ class UserScoreRepositoryIntegrationTest {
 
         UUID weeklyUserId = UUID.randomUUID();
         UUID outsideUserId = UUID.randomUUID();
-        WeeklyWindow window = WeeklyWindow.fromReferenceDateTime(
-                ZonedDateTime.of(2026, 4, 8, 10, 0, 0, 0, ZoneId.of("Europe/Madrid")));
+        WeeklyWindow window = WeeklyWindow.fromReferenceDateTime(REFERENCE_WEEK_DATE_TIME);
         LocalDateTime from = window.getFromInclusive();
         LocalDateTime to = window.getToInclusive();
 
@@ -163,8 +164,7 @@ class UserScoreRepositoryIntegrationTest {
         userScoreRepository.deleteAll().block();
 
         UUID userId = UUID.randomUUID();
-        WeeklyWindow window = WeeklyWindow.fromReferenceDateTime(
-                ZonedDateTime.of(2026, 4, 8, 12, 0, 0, 0, ZoneId.of("Europe/Madrid")));
+        WeeklyWindow window = WeeklyWindow.fromReferenceDateTime(REFERENCE_WEEK_DATE_TIME);
         LocalDateTime from = window.getFromInclusive();
         LocalDateTime to = window.getToInclusive();
 
@@ -182,6 +182,42 @@ class UserScoreRepositoryIntegrationTest {
         StepVerifier.create(userScoreRepository.aggregateUserScoresByPeriod(from, to))
                 .expectNextMatches(agg ->
                         agg.getUsername().equals("edge_user") && agg.getTotalPoints() == 7)
+                .verifyComplete();
+    }
+
+    @Test
+    void givenScoresAtSundayEndAndMondayStart_whenAggregateUserScoresByPeriod_thenSundayIncludedAndMondayExcluded() {
+        userScoreRepository.deleteAll().block();
+
+        UUID boundaryUserId = UUID.randomUUID();
+        WeeklyWindow window = WeeklyWindow.fromReferenceDateTime(REFERENCE_WEEK_DATE_TIME);
+        LocalDateTime from = window.getFromInclusive();
+        LocalDateTime to = window.getToInclusive();
+
+        UserScoreDocument sundayLastInstant = UserScoreDocument.builder()
+                .id(UUID.randomUUID())
+                .userId(boundaryUserId)
+                .username("boundary_user")
+                .challengeId(UUID.randomUUID())
+                .pointsEarned(9)
+                .createdAt(to)
+                .build();
+
+        UserScoreDocument mondayFirstInstant = UserScoreDocument.builder()
+                .id(UUID.randomUUID())
+                .userId(boundaryUserId)
+                .username("boundary_user")
+                .challengeId(UUID.randomUUID())
+                .pointsEarned(11)
+                .createdAt(to.plusNanos(1))
+                .build();
+
+        mongoTemplate.insert(sundayLastInstant).block();
+        mongoTemplate.insert(mondayFirstInstant).block();
+
+        StepVerifier.create(userScoreRepository.aggregateUserScoresByPeriod(from, to))
+                .expectNextMatches(agg ->
+                        agg.getUsername().equals("boundary_user") && agg.getTotalPoints() == 9)
                 .verifyComplete();
     }
 
