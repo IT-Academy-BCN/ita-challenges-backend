@@ -1,6 +1,7 @@
 package com.itachallenge.gamification.repository;
 
 import com.itachallenge.gamification.document.UserScoreDocument;
+import com.itachallenge.gamification.enums.ActivityType;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -23,19 +24,19 @@ class UserScoreRepositoryTest {
 
     @Test
     void givenExistingScores_whenFindByUsername_thenReturnsSortedByDescendingDates() {
-        UserScoreDocument score1 = UserScoreDocument.builder()
+        UserScoreDocument score1 = UserScoreDocument.builder().activityType(ActivityType.CHALLENGE_COMPLETED)
                 .id(UUID.randomUUID())
                 .userId(userId)
                 .pointsEarned(3)
                 .createdAt(LocalDateTime.now())
                 .build();
-        UserScoreDocument score2 = UserScoreDocument.builder()
+        UserScoreDocument score2 = UserScoreDocument.builder().activityType(ActivityType.CHALLENGE_COMPLETED)
                 .id(UUID.randomUUID())
                 .userId(userId)
                 .pointsEarned(1)
                 .createdAt(LocalDateTime.now().minusDays(3))
                 .build();
-        UserScoreDocument score3 = UserScoreDocument.builder()
+        UserScoreDocument score3 = UserScoreDocument.builder().activityType(ActivityType.CHALLENGE_COMPLETED)
                 .id(UUID.randomUUID())
                 .userId(userId)
                 .pointsEarned(2)
@@ -54,13 +55,13 @@ class UserScoreRepositoryTest {
 
     @Test
     void givenExistingScores_whenFindByUserIdOrderByCreatedAtAsc_thenReturnsSortedByAscendingDates() {
-        UserScoreDocument score1 = UserScoreDocument.builder()
+        UserScoreDocument score1 = UserScoreDocument.builder().activityType(ActivityType.CHALLENGE_COMPLETED)
                 .id(UUID.randomUUID()).userId(userId)
                 .pointsEarned(3).createdAt(LocalDateTime.now()).build();
-        UserScoreDocument score2 = UserScoreDocument.builder()
+        UserScoreDocument score2 = UserScoreDocument.builder().activityType(ActivityType.CHALLENGE_COMPLETED)
                 .id(UUID.randomUUID()).userId(userId)
                 .pointsEarned(1).createdAt(LocalDateTime.now().minusDays(3)).build();
-        UserScoreDocument score3 = UserScoreDocument.builder()
+        UserScoreDocument score3 = UserScoreDocument.builder().activityType(ActivityType.CHALLENGE_COMPLETED)
                 .id(UUID.randomUUID()).userId(userId)
                 .pointsEarned(2).createdAt(LocalDateTime.now().minusDays(1)).build();
 
