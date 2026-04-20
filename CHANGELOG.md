@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Unified Point Assignment Logic
 
-* Added `registerPoints(UUID userId, String username, ActivityType type, UUID challengeId)` method in `UserScoreServiceImpl` as the single entry point for point persistence.
+* Added `registerPoints(UUID useerId, ActivityType type, UUID challengeId)` method in `UserScoreServiceImpl` as the single entry point for point persistence.
 * Enabled support for both academy activities (`CODE_REVIEW`, `PRESENTATION`) and challenge completions (`CHALLENGE_COMPLETED`).
 * Implemented validation logic for inputs:
   * `userId` and `type` are mandatory
