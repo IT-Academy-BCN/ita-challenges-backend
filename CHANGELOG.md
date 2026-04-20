@@ -24,6 +24,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 * Fixed flaky reactive integration tests by ensuring proper response consumption (`expectBody()`).
 
+#### Activity Types API
+- Added `ActivityType` enum as the shared source of truth for available point-generating activity types.
+- Added `GET /itachallenge/api/v1/activity-types` endpoint to expose available activity types for frontend consumption.
+- Added service, DTO, and controller support for activity type retrieval, along with unit and controller tests.
 
 ## [itachallenge-challenge-3.4.0 - RELEASED] 2026-03-23
 
