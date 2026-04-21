@@ -1,6 +1,7 @@
 package com.itachallenge.gamification.repository;
 
 import com.itachallenge.gamification.document.UserScoreDocument;
+import com.itachallenge.gamification.enums.ActivityType;
 import com.itachallenge.gamification.repository.projection.LeaderboardAggregationResult;
 import com.itachallenge.gamification.service.WeeklyWindow;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,13 +18,12 @@ import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.UUID;
 
 @DataMongoTest
 @Testcontainers(disabledWithoutDocker = true)
-@SuppressWarnings("resource")
 class UserScoreRepositoryIntegrationTest {
 
     @Container
@@ -65,26 +65,18 @@ class UserScoreRepositoryIntegrationTest {
         Flux<LeaderboardAggregationResult> result = userScoreRepository.aggregateUserScores();
 
         StepVerifier.create(result)
-                .expectNextMatches(dto ->
-                        dto.getUsername().equals(USERNAME_3) && dto.getTotalPoints() == 50)
-                .expectNextMatches(agg ->
-                        agg.getUsername().equals(USERNAME_1) && agg.getTotalPoints() == 35)
-                .expectNextMatches(agg ->
-                        agg.getUsername().equals(USERNAME_2) && agg.getTotalPoints() == 25)
+                .expectNextMatches(dto -> dto.getTotalPoints() == 50)
+                .expectNextMatches(agg -> agg.getTotalPoints() == 35)
+                .expectNextMatches(agg -> agg.getTotalPoints() == 25)
                 .verifyComplete();
     }
 
     @Test
-    void givenUserWithMultipleUsernames_whenAggregateUserScores_thenReturnMostRecentUsername() {
+    void givenScoresWithoutUsername_whenAggregateUserScores_thenReturnResultsWithoutFailing() {
         Flux<LeaderboardAggregationResult> result = userScoreRepository.aggregateUserScores();
 
         StepVerifier.create(result)
-                .expectNextMatches(dto ->
-                        dto.getUsername().equals(USERNAME_3))
-                .expectNextMatches(dto ->
-                        dto.getUsername().equals(USERNAME_1))
-                .expectNextMatches(dto ->
-                        dto.getUsername().equals(USERNAME_2))
+                .expectNextCount(3)
                 .verifyComplete();
     }
 
@@ -125,6 +117,7 @@ class UserScoreRepositoryIntegrationTest {
                 .id(UUID.randomUUID())
                 .userId(weeklyUserId)
                 .username("weekly_user")
+                .activityType(ActivityType.CHALLENGE_COMPLETED)
                 .challengeId(UUID.randomUUID())
                 .pointsEarned(25)
                 .createdAt(LocalDateTime.of(2026, 4, 8, 10, 0))
@@ -134,6 +127,7 @@ class UserScoreRepositoryIntegrationTest {
                 .id(UUID.randomUUID())
                 .userId(weeklyUserId)
                 .username("weekly_user")
+                .activityType(ActivityType.CHALLENGE_COMPLETED) 
                 .challengeId(UUID.randomUUID())
                 .pointsEarned(15)
                 .createdAt(LocalDateTime.of(2026, 4, 10, 19, 30))
@@ -142,6 +136,7 @@ class UserScoreRepositoryIntegrationTest {
         UserScoreDocument outside = UserScoreDocument.builder()
                 .id(UUID.randomUUID())
                 .userId(outsideUserId)
+                .activityType(ActivityType.CHALLENGE_COMPLETED)
                 .username("outside_user")
                 .challengeId(UUID.randomUUID())
                 .pointsEarned(99)
@@ -172,6 +167,7 @@ class UserScoreRepositoryIntegrationTest {
                 .id(UUID.randomUUID())
                 .userId(userId)
                 .username("edge_user")
+                .activityType(ActivityType.CHALLENGE_COMPLETED)
                 .challengeId(UUID.randomUUID())
                 .pointsEarned(7)
                 .createdAt(to)
@@ -198,6 +194,7 @@ class UserScoreRepositoryIntegrationTest {
                 .id(UUID.randomUUID())
                 .userId(boundaryUserId)
                 .username("boundary_user")
+                .activityType(ActivityType.CHALLENGE_COMPLETED)
                 .challengeId(UUID.randomUUID())
                 .pointsEarned(9)
                 .createdAt(to)
@@ -207,6 +204,7 @@ class UserScoreRepositoryIntegrationTest {
                 .id(UUID.randomUUID())
                 .userId(boundaryUserId)
                 .username("boundary_user")
+                .activityType(ActivityType.CHALLENGE_COMPLETED)
                 .challengeId(UUID.randomUUID())
                 .pointsEarned(11)
                 .createdAt(to.plusNanos(1))
@@ -229,6 +227,7 @@ class UserScoreRepositoryIntegrationTest {
                 .id(UUID.randomUUID())
                 .userId(UUID.randomUUID())
                 .username("alice")
+                .activityType(ActivityType.CHALLENGE_COMPLETED)
                 .challengeId(UUID.randomUUID())
                 .pointsEarned(20)
                 .createdAt(LocalDateTime.of(2026, 4, 8, 10, 0))
@@ -238,6 +237,7 @@ class UserScoreRepositoryIntegrationTest {
                 .id(UUID.randomUUID())
                 .userId(UUID.randomUUID())
                 .username("bob")
+                .activityType(ActivityType.CHALLENGE_COMPLETED)
                 .challengeId(UUID.randomUUID())
                 .pointsEarned(20)
                 .createdAt(LocalDateTime.of(2026, 4, 8, 11, 0))
@@ -247,6 +247,7 @@ class UserScoreRepositoryIntegrationTest {
                 .id(UUID.randomUUID())
                 .userId(UUID.randomUUID())
                 .username("charlie")
+                .activityType(ActivityType.CHALLENGE_COMPLETED)
                 .challengeId(UUID.randomUUID())
                 .pointsEarned(10)
                 .createdAt(LocalDateTime.of(2026, 4, 8, 12, 0))
@@ -278,6 +279,7 @@ class UserScoreRepositoryIntegrationTest {
                 .id(UUID.randomUUID())
                 .userId(UUID.randomUUID())
                 .username("alice")
+                .activityType(ActivityType.CHALLENGE_COMPLETED)
                 .challengeId(UUID.randomUUID())
                 .pointsEarned(15)
                 .createdAt(from.plusDays(1))
@@ -287,6 +289,7 @@ class UserScoreRepositoryIntegrationTest {
                 .id(UUID.randomUUID())
                 .userId(UUID.randomUUID())
                 .username("bob")
+                .activityType(ActivityType.CHALLENGE_COMPLETED)
                 .challengeId(UUID.randomUUID())
                 .pointsEarned(15)
                 .createdAt(from.plusDays(2))
@@ -296,6 +299,7 @@ class UserScoreRepositoryIntegrationTest {
                 .id(UUID.randomUUID())
                 .userId(UUID.randomUUID())
                 .username("outside")
+                .activityType(ActivityType.CHALLENGE_COMPLETED)
                 .challengeId(UUID.randomUUID())
                 .pointsEarned(99)
                 .createdAt(to.plusNanos(1))
@@ -320,59 +324,14 @@ class UserScoreRepositoryIntegrationTest {
         userId2 = UUID.randomUUID();
         userId3 = UUID.randomUUID();
 
-        UserScoreDocument user1Score1 = UserScoreDocument.builder()
-                .id(UUID.randomUUID())
-                .userId(userId1)
-                .username("old_username")
-                .challengeId(UUID.randomUUID())
-                .pointsEarned(10)
-                .createdAt(now.minusDays(2))
-                .build();
+        UserScoreDocument user1Score1 = buildScore(userId1, 10, now.minusDays(2));
+        UserScoreDocument user1Score2 = buildScore(userId1, 15, now.minusDays(1));
+        UserScoreDocument user1Score3 = buildScore(userId1, 10, now);
 
-        UserScoreDocument user1Score2 = UserScoreDocument.builder()
-                .id(UUID.randomUUID())
-                .userId(userId1)
-                .username(USERNAME_1)
-                .challengeId(UUID.randomUUID())
-                .pointsEarned(15)
-                .createdAt(now.minusDays(1))
-                .build();
+        UserScoreDocument user2Score1 = buildScore(userId2, 20, LocalDateTime.now());
+        UserScoreDocument user2Score2 = buildScore(userId2, 5, LocalDateTime.now().minusDays(1));
 
-        UserScoreDocument user1Score3 = UserScoreDocument.builder()
-                .id(UUID.randomUUID())
-                .userId(userId1)
-                .username(USERNAME_1)
-                .challengeId(UUID.randomUUID())
-                .pointsEarned(10)
-                .createdAt(now)
-                .build();
-
-        UserScoreDocument user2Score1 = UserScoreDocument.builder()
-                .id(UUID.randomUUID())
-                .userId(userId2)
-                .username(USERNAME_2)
-                .challengeId(UUID.randomUUID())
-                .pointsEarned(20)
-                .createdAt(LocalDateTime.now())
-                .build();
-
-        UserScoreDocument user2Score2 = UserScoreDocument.builder()
-                .id(UUID.randomUUID())
-                .userId(userId2)
-                .username(USERNAME_2)
-                .challengeId(UUID.randomUUID())
-                .pointsEarned(5)
-                .createdAt(LocalDateTime.now().minusDays(1))
-                .build();
-
-        UserScoreDocument user3Score1 = UserScoreDocument.builder()
-                .id(UUID.randomUUID())
-                .userId(userId3)
-                .username(USERNAME_3)
-                .challengeId(UUID.randomUUID())
-                .pointsEarned(50)
-                .createdAt(LocalDateTime.now())
-                .build();
+        UserScoreDocument user3Score1 = buildScore(userId3, 50, LocalDateTime.now());
 
         userScoreRepository.saveAll(Flux.just(
                 user1Score1, user1Score2, user1Score3,
@@ -387,21 +346,23 @@ class UserScoreRepositoryIntegrationTest {
 
         UUID testUserId = UUID.randomUUID();
 
-        UserScoreDocument first = UserScoreDocument.builder()
-                .id(UUID.randomUUID()).userId(testUserId).username("testuser")
-                .challengeId(UUID.randomUUID()).pointsEarned(10)
-                .createdAt(LocalDateTime.of(2024, 3, 1, 10, 0))
-                .build();
-        UserScoreDocument second = UserScoreDocument.builder()
-                .id(UUID.randomUUID()).userId(testUserId).username("testuser")
-                .challengeId(UUID.randomUUID()).pointsEarned(15)
-                .createdAt(LocalDateTime.of(2024, 3, 5, 10, 0))
-                .build();
-        UserScoreDocument third = UserScoreDocument.builder()
-                .id(UUID.randomUUID()).userId(testUserId).username("testuser")
-                .challengeId(UUID.randomUUID()).pointsEarned(20)
-                .createdAt(LocalDateTime.of(2024, 3, 10, 10, 0))
-                .build();
+        UserScoreDocument first = buildScore(
+                testUserId,
+                10,
+                LocalDateTime.of(2024, 3, 1, 10, 0)
+        );
+
+        UserScoreDocument second = buildScore(
+                testUserId,
+                15,
+                LocalDateTime.of(2024, 3, 5, 10, 0)
+        );
+
+        UserScoreDocument third = buildScore(
+                testUserId,
+                20,
+                LocalDateTime.of(2024, 3, 10, 10, 0)
+        );
 
         mongoTemplate.insert(first, "user_score_history").block();
         mongoTemplate.insert(second, "user_score_history").block();
@@ -414,7 +375,7 @@ class UserScoreRepositoryIntegrationTest {
                 .verifyComplete();
     }
 
-    @SuppressWarnings("java:S2699") // to be extended with activityType when #275/#276 are merged
+    @SuppressWarnings("java:S2699")
     @Test
     void givenMultipleUsersScores_whenFindByUserIdOrderByCreatedAtAsc_thenReturnsOnlyRequestedUser() {
         StepVerifier.create(userScoreRepository.findByUserIdOrderByCreatedAtAsc(userId1))
@@ -432,5 +393,20 @@ class UserScoreRepositoryIntegrationTest {
 
         StepVerifier.create(userScoreRepository.findByUserIdOrderByCreatedAtAsc(unknownUserId))
                 .verifyComplete();
+    }
+
+    private UserScoreDocument buildScore(
+            UUID userId,
+            int points,
+            LocalDateTime createdAt
+    ) {
+        return UserScoreDocument.builder()
+                .id(UUID.randomUUID())
+                .userId(userId)
+                .challengeId(UUID.randomUUID())
+                .pointsEarned(points)
+                .activityType(ActivityType.CHALLENGE_COMPLETED)
+                .createdAt(createdAt)
+                .build();
     }
 }

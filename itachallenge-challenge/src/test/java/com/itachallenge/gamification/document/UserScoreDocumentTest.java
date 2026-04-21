@@ -1,11 +1,13 @@
 package com.itachallenge.gamification.document;
 
+import com.itachallenge.gamification.enums.ActivityType;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 class UserScoreDocumentTest {
 
@@ -19,6 +21,7 @@ class UserScoreDocumentTest {
         LocalDateTime createdAt = LocalDateTime.now();
 
         UserScoreDocument document = UserScoreDocument.builder()
+                .activityType(ActivityType.CHALLENGE_COMPLETED)
                 .id(id)
                 .userId(userId)
                 .username(username)
@@ -33,5 +36,18 @@ class UserScoreDocumentTest {
         assertThat(document.getChallengeId()).isEqualTo(challengeId);
         assertThat(document.getPointsEarned()).isEqualTo(points);
         assertThat(document.getCreatedAt()).isEqualTo(createdAt);
+    }
+
+    @Test
+    void givenNullActivityType_whenBuildingUserScoreDocument_thenThrowsException() {
+        assertThatThrownBy(() ->
+                UserScoreDocument.builder()
+                        .id(UUID.randomUUID())
+                        .userId(UUID.randomUUID())
+                        .username("Pepito")
+                        .pointsEarned(10)
+                        .createdAt(LocalDateTime.now())
+                        .build()
+        ).isInstanceOf(NullPointerException.class);
     }
 }
