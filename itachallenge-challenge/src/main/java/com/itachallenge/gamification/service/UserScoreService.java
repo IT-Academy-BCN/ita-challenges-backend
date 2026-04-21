@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public interface UserScoreService {
 
-    Mono<PointsHistoryResponseDto> getUserPointsHistory(UUID userId);
+    Mono<ScoresHistoryResponseDto> getUserScoresHistoryChart(UUID userId);
 
     Mono<Void> registerPoints(UUID userId, ActivityType type, UUID challengeId);
 

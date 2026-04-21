@@ -1,6 +1,6 @@
 package com.itachallenge.challenge.controller.gamification;
 
-import com.itachallenge.challenge.dto.gamification.PointsHistoryResponseDto;
+import com.itachallenge.challenge.dto.gamification.ScoresHistoryResponseDto;
 import com.itachallenge.gamification.service.UserScoreService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -27,8 +27,8 @@ public class UserScoreController {
 
     @GetMapping("/history")
     @Operation(
-            summary = "Get user points history.",
-            description = "Returns the total points and the history of points earned by a user.",
+            summary = "Get user weekly points history.",
+            description = "Returns the total points and the weekly aggregated history of points earned by a user.",
             parameters = {
                     @Parameter(
                             name = "userId",
@@ -43,7 +43,7 @@ public class UserScoreController {
                             description = "OK - empty array if none.",
                             content = @Content(
                                     mediaType = "application/json",
-                                    schema = @Schema(implementation = PointsHistoryResponseDto.class)
+                                    schema = @Schema(implementation = ScoresHistoryResponseDto.class)
                             )
                     ),
                     @ApiResponse(
@@ -52,10 +52,10 @@ public class UserScoreController {
                     )
             }
     )
-    public Mono<PointsHistoryResponseDto> getUserPointsHistory(@PathVariable String userId) {
+    public Mono<ScoresHistoryResponseDto> getUserPointsHistory(@PathVariable String userId) {
         log.info("Requesting points history for user: {}", userId);
         UUID userUuid = UUID.fromString(userId);
 
-        return userScoreService.getUserPointsHistory(userUuid);
+        return userScoreService.getUserScoresHistoryChart(userUuid);
     }
 }

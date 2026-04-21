@@ -581,6 +581,27 @@
           "response": []
         },
         {
+          "name": "Get Activity Types",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://{{ip}}:{{challenge_port}}/itachallenge/api/v1/activity-types",
+              "protocol": "http",
+              "host": ["{{ip}}"],
+              "port": "{{challenge_port}}",
+              "path": ["itachallenge", "api", "v1", "activity-types"]
+            },
+            "description": "Returns the list of available activity types."
+          },
+          "response": []
+        },
+        {
           "name": "Get Leaderboard",
           "request": {
             "method": "GET",

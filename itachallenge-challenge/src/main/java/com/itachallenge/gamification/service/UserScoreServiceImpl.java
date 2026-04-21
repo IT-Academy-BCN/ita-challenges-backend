@@ -1,7 +1,5 @@
 package com.itachallenge.gamification.service;
 
-import com.itachallenge.challenge.dto.gamification.PointHistoryEntryDto;
-import com.itachallenge.challenge.dto.gamification.PointsHistoryResponseDto;
 import com.itachallenge.challenge.dto.gamification.ScoresHistoryResponseDto;
 import com.itachallenge.challenge.dto.gamification.WeeklyPointsDto;
 import com.itachallenge.gamification.document.UserScoreDocument;
@@ -12,13 +10,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 import java.time.temporal.WeekFields;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -28,40 +20,10 @@ public class UserScoreServiceImpl implements UserScoreService {
     private static final String AGGREGATION_TYPE_WEEKLY = "WEEKLY";
 
     @Override
-    public Mono<PointsHistoryResponseDto> getUserPointsHistory(UUID userId) {
-        return userScoreRepository.findByUserIdOrderByCreatedAtDesc(userId)
-                .collectList()
-                .map(this::buildHistoryResponse);
-    }
-
-    @Override
     public Mono<ScoresHistoryResponseDto> getUserScoresHistoryChart(UUID userId) {
         return userScoreRepository.findByUserIdOrderByCreatedAtAsc(userId)
                 .collectList()
                 .map(docs -> buildChartResponse(userId, docs));
-    }
-
-    private PointsHistoryResponseDto buildHistoryResponse(List<UserScoreDocument> docs) {
-        int totalPoints = docs.stream()
-                .map(UserScoreDocument::getPointsEarned)
-                .filter(Objects::nonNull)
-                .mapToInt(Integer::intValue)
-                .sum();
-
-        List<PointHistoryEntryDto> history = docs.stream()
-                .sorted(Comparator.comparing(
-                        UserScoreDocument::getCreatedAt,
-                        Comparator.nullsLast(Comparator.naturalOrder())))
-                .map(doc -> PointHistoryEntryDto.builder()
-                        .createdAt(doc.getCreatedAt() != null ? doc.getCreatedAt().toString() : "")
-                        .points(doc.getPointsEarned() != null ? doc.getPointsEarned() : 0)
-                        .build())
-                .toList();
-
-        return PointsHistoryResponseDto.builder()
-                .totalPoints(totalPoints)
-                .history(history)
-                .build();
     }
 
     @Override
