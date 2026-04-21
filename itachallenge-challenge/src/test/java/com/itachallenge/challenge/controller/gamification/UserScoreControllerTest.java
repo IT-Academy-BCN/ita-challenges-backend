@@ -1,7 +1,7 @@
 package com.itachallenge.challenge.controller.gamification;
 
-import com.itachallenge.challenge.dto.gamification.PointHistoryEntryDto;
-import com.itachallenge.challenge.dto.gamification.PointsHistoryResponseDto;
+import com.itachallenge.challenge.dto.gamification.ScoresHistoryResponseDto;
+import com.itachallenge.challenge.dto.gamification.WeeklyPointsDto;
 import com.itachallenge.gamification.service.UserScoreService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,18 +32,20 @@ class UserScoreControllerTest {
 
     @Test
     void getUserPointsHistory_givenValidUserId_thenReturns200AndHistory() {
-        PointHistoryEntryDto entry = PointHistoryEntryDto.builder()
-                .createdAt("2026-03-06T11:11:11")
-                .points(10)
+        WeeklyPointsDto entry = WeeklyPointsDto.builder()
+                .period("2024-W10")
+                .pointsEarned(150)
+                .accumulatedAtEnd(150)
                 .build();
 
-        PointsHistoryResponseDto responseDto = PointsHistoryResponseDto.builder()
-                .username("testUser")
-                .totalPoints(10)
+        ScoresHistoryResponseDto responseDto = ScoresHistoryResponseDto.builder()
+                .userId(validUserId)
+                .totalPoints(150)
+                .aggregationType("WEEKLY")
                 .history(List.of(entry))
                 .build();
 
-        when(userScoreService.getUserPointsHistory(validUserId)).thenReturn(Mono.just(responseDto));
+        when(userScoreService.getUserScoresHistoryChart(validUserId)).thenReturn(Mono.just(responseDto));
 
         webTestClient.get()
                 .uri(HISTORY_URL, validUserId)
@@ -52,22 +54,25 @@ class UserScoreControllerTest {
                 .expectStatus().isOk()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON)
                 .expectBody()
-                .jsonPath("$.username").isEqualTo("testUser")
-                .jsonPath("$.totalPoints").isEqualTo(10)
+                .jsonPath("$.user_id").isEqualTo(validUserId.toString())
+                .jsonPath("$.total_points").isEqualTo(150)
+                .jsonPath("$.aggregation_type").isEqualTo("WEEKLY")
                 .jsonPath("$.history.length()").isEqualTo(1)
-                .jsonPath("$.history[0].points").isEqualTo(10)
-                .jsonPath("$.history[0].date").isEqualTo("2026-03-06T11:11:11");
+                .jsonPath("$.history[0].period").isEqualTo("2024-W10")
+                .jsonPath("$.history[0].points_earned").isEqualTo(150)
+                .jsonPath("$.history[0].accumulated_at_end").isEqualTo(150);
     }
 
     @Test
     void getUserPointsHistory_givenValidUserId_whenUserHasNoPoints_thenReturns200AndEmptyList() {
-        PointsHistoryResponseDto emptyResponse = PointsHistoryResponseDto.builder()
-                .username("testUser")
+        ScoresHistoryResponseDto emptyResponse = ScoresHistoryResponseDto.builder()
+                .userId(validUserId)
                 .totalPoints(0)
+                .aggregationType("WEEKLY")
                 .history(List.of())
                 .build();
 
-        when(userScoreService.getUserPointsHistory(validUserId)).thenReturn(Mono.just(emptyResponse));
+        when(userScoreService.getUserScoresHistoryChart(validUserId)).thenReturn(Mono.just(emptyResponse));
 
         webTestClient.get()
                 .uri(HISTORY_URL, validUserId)
@@ -76,8 +81,7 @@ class UserScoreControllerTest {
                 .expectStatus().isOk()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON)
                 .expectBody()
-                .jsonPath("$.username").isEqualTo("testUser")
-                .jsonPath("$.totalPoints").isEqualTo(0)
+                .jsonPath("$.total_points").isEqualTo(0)
                 .jsonPath("$.history").isEmpty();
     }
 
